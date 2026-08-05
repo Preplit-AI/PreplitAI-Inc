@@ -5,7 +5,7 @@ import { translations, Language } from '@/i18n/translations';
 
 interface DocumentViewerProps {
   document: {
-    id: number;
+    id: string | number;
     file_name: string;
     raw_file_url?: string;
     extracted_text?: string;

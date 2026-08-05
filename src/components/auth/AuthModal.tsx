@@ -4,11 +4,12 @@ import { X, Mail, Lock, User, AlertCircle } from 'lucide-react';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: (user: any, token: string) => void;
+  onSuccess?: (user: any, token: string) => void;
+  defaultTab?: 'login' | 'signup' | 'register';
 }
 
-export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+export function AuthModal({ isOpen, onClose, onSuccess, defaultTab = 'login' }: AuthModalProps) {
+  const [mode, setMode] = useState<'login' | 'register'>(defaultTab === 'signup' ? 'register' : defaultTab);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
