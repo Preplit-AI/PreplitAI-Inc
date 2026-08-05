@@ -1,0 +1,140 @@
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs').promises;
+const documentParser = require('../services/documentParser');
+const authMiddleware = require('../middleware/auth');
+const db = require('../db/database');
+
+// Configure multer for file upload
+const storage = multer.diskStorage({
+  destination: async (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '../uploads');
+    try {
+      await fs.mkdir(uploadDir, { recursive: true });
+      cb(null, uploadDir);
+    } catch (error) {
+      cb(error);
+    }
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'text/plain'
+  ];
+
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only PDF, DOC, DOCX, and TXT files are allowed.'), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  }
+});
+
+// BUG-005 FIX: Upload now requires authentication.
+// After a successful upload the document is recorded in user_uploads
+// so uploads are always tied to an authenticated user.
+router.post('/', authMiddleware, upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    console.log('File uploaded:', req.file.filename);
+
+    const storedPath = path.join(__dirname, '../uploads', req.file.filename);
+    console.log('Stored path:', storedPath, 'mimetype:', req.file.mimetype, 'originalname:', req.file.originalname);
+
+    // Parse the document
+    const text = await documentParser.parseDocument(storedPath, req.file.mimetype);
+
+    // BUG-005 FIX: Record this upload in user_uploads tied to the authenticated user
+    await db.query(
+      'INSERT INTO user_uploads (user_id, document_id, file_name) VALUES ($1, $2, $3)',
+      [req.userId, req.file.filename, req.file.originalname]
+    );
+
+    res.json({
+      success: true,
+      documentId: req.file.filename,
+      fileName: req.file.originalname,
+      textPreview: text.substring(0, 200) + '...',
+      wordCount: text.split(' ').length,
+      message: 'Document uploaded and processed successfully'
+    });
+
+  } catch (error) {
+    console.error('Upload error:', error);
+
+    // Clean up file if parsing failed
+    if (req.file) {
+      try {
+        const storedPath = path.join(__dirname, '../uploads', req.file.filename);
+        await fs.unlink(storedPath);
+      } catch (unlinkError) {
+        console.error('Failed to delete file:', unlinkError);
+      }
+    }
+
+    res.status(500).json({
+      error: 'Failed to process document',
+      message: error.message
+    });
+  }
+});
+
+// BUG-005 FIX: Raw text upload also requires authentication
+router.post('/text', authMiddleware, async (req, res) => {
+  try {
+    const { text, title } = req.body;
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: 'Text is required' });
+    }
+
+    const filename = (title || 'notes').replace(/[^a-zA-Z0-9]/g, '_') + '-' + Date.now() + '-' + Math.round(Math.random() * 1E9) + '.txt';
+    const uploadDir = path.join(__dirname, '../uploads');
+    await fs.mkdir(uploadDir, { recursive: true });
+
+    const storedPath = path.join(uploadDir, filename);
+    await fs.writeFile(storedPath, text, 'utf-8');
+
+    // Record in user_uploads
+    await db.query(
+      'INSERT INTO user_uploads (user_id, document_id, file_name) VALUES ($1, $2, $3)',
+      [req.userId, filename, title || 'pasted-notes.txt']
+    );
+
+    res.json({
+      success: true,
+      documentId: filename,
+      fileName: (title || 'pasted-notes.txt'),
+      textPreview: text.substring(0, 200) + '...',
+      wordCount: text.split(/\s+/).filter(Boolean).length,
+      message: 'Raw text notes processed successfully'
+    });
+  } catch (error) {
+    console.error('Raw text upload error:', error);
+    res.status(500).json({
+      error: 'Failed to process raw text notes',
+      message: error.message
+    });
+  }
+});
+
+module.exports = router;
