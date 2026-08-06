@@ -27,28 +27,28 @@ export function SubscriptionModal({
     {
       id: 'free',
       name: 'Free',
-      priceMonthly: 0,
-      priceAnnual: 0,
-      units: '500 Monthly AI Units',
-      features: ['Grounded RAG Chat', 'Basic Quizzes & Flashcards', '10MB Max File Size', '2 Study Spaces'],
+      priceMonthly: '₩0',
+      priceAnnual: '₩0',
+      units: 'Limited Uploads & Daily Chats',
+      features: ['Grounded RAG Chat', 'Basic Quizzes & Flashcards', 'Korean ↔ English basic translation', '2 Study Spaces'],
       popular: false
     },
     {
       id: 'pro',
-      name: 'Pro',
-      priceMonthly: 19,
-      priceAnnual: 15,
-      units: '5,000 Monthly AI Units',
-      features: ['All Free features', 'Unlimited Summaries & Podcasts', 'Predicted Exam Question Generator', '50MB Max File Size', '10 Study Spaces', 'Priority Queue Access'],
+      name: 'Student Pro',
+      priceMonthly: '₩12,900',
+      priceAnnual: '₩9,900',
+      units: 'Unlimited AI Chats & Uploads',
+      features: ['Interactive Learning Mode', 'AI Video Lecture & Podcast Mode', 'Predicted Exam Question Generator', 'Full AI Learning Analytics', 'Korean Academic Assistant', 'Unlimited Study Spaces'],
       popular: true
     },
     {
-      id: 'max',
-      name: 'Max',
-      priceMonthly: 49,
-      priceAnnual: 39,
-      units: '20,000 Monthly AI Units',
-      features: ['All Pro features', 'Full AI Video Lecture Generator', 'Advanced Reasoning Models (GPT-4o/Sonnet)', '200MB Max File Size', 'Unlimited Study Spaces'],
+      id: 'institution',
+      name: 'Institution',
+      priceMonthly: 'Custom',
+      priceAnnual: 'Custom',
+      units: 'University-Wide Licensing',
+      features: ['All Student Pro features', 'Bulk seat licensing & LMS integration', 'Administrator Dashboard & Analytics', 'SAML SSO & SCIM Provisioning', 'Dedicated Customer Support'],
       popular: false
     }
   ];
@@ -141,8 +141,8 @@ export function SubscriptionModal({
                     {pkg.name}
                   </div>
                   <div className="flex items-baseline gap-1 mb-1">
-                    <span className={`text-[24px] font-bold tracking-tight ${pkg.popular ? 'text-white dark:text-[#111]' : 'text-[#111] dark:text-white'}`}>
-                      ${price}
+                    <span className={`text-[22px] font-bold tracking-tight ${pkg.popular ? 'text-white dark:text-[#111]' : 'text-[#111] dark:text-white'}`}>
+                      {price}
                     </span>
                     <span className={`text-[11px] ${pkg.popular ? 'text-white/60 dark:text-[#111]/60' : 'text-[#aaa] dark:text-[#555]'}`}>
                       /mo
