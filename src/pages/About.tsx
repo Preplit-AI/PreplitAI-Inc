@@ -126,7 +126,6 @@ const About = () => {
           className="relative z-10"
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#630000]/8 dark:bg-[#630000]/20 border border-[#630000]/20 dark:border-[#630000]/30 mb-8">
-            <Star className="w-3.5 h-3.5 text-[#630000] dark:text-[#ffaaaa]" />
             <span className="text-[12.5px] font-semibold text-[#630000] dark:text-[#ffaaaa] tracking-wide">Our Story</span>
           </div>
 
@@ -146,19 +145,19 @@ const About = () => {
         </motion.div>
       </section>
 
-      {/* ── Tagline Banner ─────────────────────────────────────────────── */}
+      {/* ── Tagline Banner (Consistent Dark Styling) ────────────────── */}
       <motion.section
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeIn}
         custom={0}
-        className="border-y border-gray-100 dark:border-white/[0.06] bg-[#630000] dark:bg-[#630000]/90 py-10 px-6 text-center"
+        className="border-y border-gray-200 dark:border-white/10 bg-gray-950 text-white py-12 px-6 text-center"
       >
         <p className="text-white text-xl sm:text-2xl md:text-3xl font-bold tracking-tight max-w-3xl mx-auto leading-snug">
           "Transform Any Study Material into an Interactive Learning Experience."
         </p>
-        <p className="text-white/60 text-sm mt-3 font-medium tracking-widest uppercase">PreplitAI Tagline</p>
+        <p className="text-[#c84040] text-xs mt-3 font-semibold tracking-widest uppercase">PreplitAI Tagline</p>
       </motion.section>
 
       {/* ── Story / Timeline ───────────────────────────────────────────── */}
@@ -385,9 +384,9 @@ const About = () => {
         </motion.div>
       </section>
 
-      {/* ── CTA ────────────────────────────────────────────────────────── */}
-      <section className="border-t border-gray-100 dark:border-white/[0.06] bg-[#630000] dark:bg-[#630000]/90">
-        <div className="max-w-4xl mx-auto px-6 py-24 text-center">
+      {/* ── CTA Section (Consistent with Image 1) ────────────────────── */}
+      <section className="bg-gray-950">
+        <div className="max-w-4xl mx-auto px-6 py-28 text-center">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -395,28 +394,30 @@ const About = () => {
             variants={fadeUp}
             custom={0}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-5 leading-tight">
-              Ready to transform how you study?
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-6 leading-tight">
+              Start studying smarter
+              <br />
+              <span className="text-[#c84040]">in minutes, not hours.</span>
             </h2>
-            <p className="text-white/70 text-[17px] mb-10 max-w-xl mx-auto leading-relaxed">
-              Join students turning their lecture slides, PDFs, and textbooks into interactive learning experiences with PreplitAI.
+            <p className="text-lg text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed">
+              Join thousands of students who use PreplitAI to master their course materials faster with grounded AI.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button
+              <Button 
                 asChild
-                className="h-13 px-8 rounded-xl bg-white hover:bg-gray-100 text-[#630000] font-semibold text-[15px] shadow-lg transition-all hover:scale-[0.98]"
+                className="text-[15px] px-8 py-3 h-12 bg-white hover:bg-gray-100 text-black rounded-full font-medium transition-all duration-200 shadow-lg shadow-white/10 hover:shadow-xl hover:-translate-y-0.5"
               >
-                <a href="/preplitai-chat">
-                  Open the Workspace
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <a href="/preplitai-chat" className="flex items-center gap-2">
+                  <span>Launch Workspace Free</span>
+                  <ArrowRight className="h-4 w-4" />
                 </a>
               </Button>
-              <Button
+              <Button 
                 asChild
                 variant="outline"
-                className="h-13 px-8 rounded-xl border-white/30 text-white hover:bg-white/10 font-medium text-[15px] transition-all hover:scale-[0.98] bg-transparent"
+                className="text-[15px] px-8 py-3 h-12 rounded-full font-medium border border-white/20 bg-transparent text-white hover:bg-white/10 transition-all duration-200"
               >
-                <a href="/enterprise">Enterprise &amp; Universities</a>
+                <a href="/pricing">View Subscription Plans</a>
               </Button>
             </div>
           </motion.div>

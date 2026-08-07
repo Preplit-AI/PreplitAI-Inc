@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { MessageSquare, BookOpen, HelpCircle, Radio, FileText, Send, Paperclip, Mic, ChevronRight } from 'lucide-react';
+import { MessageSquare, BookOpen, HelpCircle, Radio, FileText, Send, Paperclip, Mic, ChevronRight, BarChart2, Zap, Sparkles } from 'lucide-react';
 import { QuizView } from './QuizView';
 import { PodcastView } from './PodcastView';
 import { FlashcardView } from './FlashcardView';
 import { SummaryView } from './SummaryView';
 import { ExpectedExamView } from './ExpectedExamView';
+import { AnalyticsView } from './AnalyticsView';
+import { InteractiveLearningView } from './InteractiveLearningView';
+import { VoiceMode } from './VoiceMode';
 import { MessageList } from '../chat/MessageList';
 import { translations, Language } from '@/i18n/translations';
 
@@ -43,18 +46,21 @@ export function ToolPanel({
   };
 
   const tabs = [
-    { id: 'chat',       label: t.chat,       icon: MessageSquare },
-    { id: 'flashcards', label: t.flashcards,  icon: BookOpen },
-    { id: 'quizzes',    label: t.quizzes,     icon: HelpCircle },
-    { id: 'podcast',    label: t.podcast,     icon: Radio },
-    { id: 'summary',    label: t.summary,     icon: FileText },
+    { id: 'chat',        label: t.chat,        icon: MessageSquare },
+    { id: 'flashcards',  label: t.flashcards,  icon: BookOpen },
+    { id: 'quizzes',     label: t.quizzes,     icon: HelpCircle },
+    { id: 'interactive', label: 'Interactive', icon: Zap },
+    { id: 'podcast',     label: t.podcast,     icon: Radio },
+    { id: 'summary',     label: t.summary,     icon: FileText },
+    { id: 'expected',    label: t.expected || 'Expected', icon: Sparkles },
+    { id: 'analytics',   label: 'Analytics',   icon: BarChart2 },
   ];
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#111]">
 
-      {/* Tab bar */}
-      <div className="flex items-center gap-0.5 px-3 pt-2.5 pb-0 border-b border-[#e8e8e8] dark:border-white/[0.06] overflow-x-auto whitespace-nowrap scrollbar-none">
+      {/* Tab bar — non-scrollable, all 8 features visible */}
+      <div className="grid grid-cols-4 sm:grid-cols-8 gap-0.5 px-2 pt-2 pb-0 border-b border-[#e8e8e8] dark:border-white/[0.06] w-full bg-white dark:bg-[#111] shrink-0">
         {tabs.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -62,29 +68,18 @@ export function ToolPanel({
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`flex items-center gap-1.5 px-2.5 pb-2 pt-0.5 text-[12px] font-medium border-b-2 transition-all shrink-0 ${
+              className={`flex flex-col sm:flex-row items-center justify-center gap-1 py-1.5 px-0.5 text-[11px] font-medium border-b-2 transition-all w-full truncate ${
                 isActive
-                  ? 'border-[#111] dark:border-white text-[#111] dark:text-white'
-                  : 'border-transparent text-[#999] dark:text-[#555] hover:text-[#555] dark:hover:text-[#999]'
+                  ? 'border-[#111] dark:border-white text-[#111] dark:text-white bg-[#f7f7f7] dark:bg-white/[0.04]'
+                  : 'border-transparent text-[#888] dark:text-[#666] hover:text-[#333] dark:hover:text-[#aaa]'
               }`}
+              title={tab.label}
             >
-              <Icon className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{tab.label}</span>
+              <Icon className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate max-w-full">{tab.label}</span>
             </button>
           );
         })}
-        <div className="flex-1" />
-        <button
-          onClick={() => onTabChange(activeTab === 'expected' ? 'chat' : 'expected')}
-          className={`flex items-center gap-1 px-2.5 pb-2 pt-0.5 text-[12px] font-medium border-b-2 transition-all ${
-            activeTab === 'expected'
-              ? 'border-[#111] dark:border-white text-[#111] dark:text-white'
-              : 'border-transparent text-[#999] dark:text-[#555] hover:text-[#555] dark:hover:text-[#999]'
-          }`}
-          title={t.expected}
-        >
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
       </div>
 
       {/* Content */}
@@ -97,8 +92,10 @@ export function ToolPanel({
         {activeTab === 'quizzes'    && <QuizView quizData={quizData} onGenerateNewQuiz={onGenerateQuiz} />}
         {activeTab === 'podcast'    && <PodcastView podcastData={podcastData} onGeneratePodcast={onGeneratePodcast} />}
         {activeTab === 'flashcards' && <FlashcardView flashcardData={flashcardData} onGenerateNew={onGenerateFlashcards} />}
+        {activeTab === 'interactive' && <InteractiveLearningView language={language} />}
         {activeTab === 'summary'    && <SummaryView summaryData={summaryData} onGenerateSummary={onGenerateSummary} />}
         {activeTab === 'expected'   && <ExpectedExamView examData={examData} onGenerateExam={onGenerateExam} />}
+        {activeTab === 'analytics'  && <AnalyticsView language={language} />}
       </div>
 
       {/* Chat input */}
@@ -118,9 +115,7 @@ export function ToolPanel({
             <button type="button" className="p-1 rounded-md text-[#ccc] dark:text-[#444] hover:text-[#888] dark:hover:text-[#888] transition-colors">
               <Paperclip className="w-3.5 h-3.5" />
             </button>
-            <button type="button" className="p-1 rounded-md text-[#ccc] dark:text-[#444] hover:text-[#888] dark:hover:text-[#888] transition-colors">
-              <Mic className="w-3.5 h-3.5" />
-            </button>
+            <VoiceMode onTranscript={(text) => setInputText(prev => prev + (prev ? ' ' : '') + text)} />
             <button
               type="submit"
               disabled={!inputText.trim()}

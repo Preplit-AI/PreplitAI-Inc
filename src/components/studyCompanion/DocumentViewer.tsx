@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Search, Volume2, Download, Maximize2, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, FileText, Sparkles, MessageSquare, HelpCircle, BookOpen, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { translations, Language } from '@/i18n/translations';
+import { VideoPlayer } from './VideoPlayer';
 
 interface DocumentViewerProps {
   document: {
@@ -13,10 +14,11 @@ interface DocumentViewerProps {
   } | null;
   onSelectAction?: (action: string, selectedText: string) => void;
   onOpenUpload?: () => void;
+  onBack?: () => void;
   language?: Language;
 }
 
-export function DocumentViewer({ document, onSelectAction, onOpenUpload, language = 'en' }: DocumentViewerProps) {
+export function DocumentViewer({ document, onSelectAction, onOpenUpload, onBack, language = 'en' }: DocumentViewerProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(19);
   const [zoomLevel, setZoomLevel] = useState(100);
@@ -80,6 +82,25 @@ export function DocumentViewer({ document, onSelectAction, onOpenUpload, languag
   };
 
   const textContent = document?.extracted_text || null;
+  const isYoutube = document?.type === 'youtube' || document?.file_name.toLowerCase().includes('youtube');
+
+  if (isYoutube && document) {
+    return (
+      <div className="flex flex-col h-full bg-white dark:bg-[#111] overflow-hidden relative">
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-[#e8e8e8] dark:border-white/[0.06] bg-white dark:bg-[#111]">
+          {onBack && (
+            <button onClick={onBack} className="p-1.5 rounded-md hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] text-[#aaa] dark:text-[#555] hover:text-[#666] dark:hover:text-[#999] transition-colors">
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+          )}
+          <span className="text-[13px] font-medium text-[#111] dark:text-[#eee] truncate max-w-[200px]">
+            {document.file_name}
+          </span>
+        </div>
+        <VideoPlayer videoUrl={document.raw_file_url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'} title={document.file_name} onAskAboutVideo={(q) => onSelectAction?.('chat', q)} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#111] overflow-hidden relative" ref={containerRef}>
@@ -87,6 +108,11 @@ export function DocumentViewer({ document, onSelectAction, onOpenUpload, languag
       {textContent && (
         <div className="flex items-center justify-between px-4 py-2 border-b border-[#e8e8e8] dark:border-white/[0.06] bg-white dark:bg-[#111]">
           <div className="flex items-center gap-1">
+            {onBack && (
+              <button onClick={onBack} className="mr-1 p-1.5 rounded-md hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] text-[#aaa] dark:text-[#555] hover:text-[#666] dark:hover:text-[#999] transition-colors">
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+            )}
             <button className="p-1.5 rounded-md hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] text-[#aaa] dark:text-[#555] hover:text-[#666] dark:hover:text-[#999] transition-colors" title={t.searchDoc}>
               <Search className="w-3.5 h-3.5" />
             </button>

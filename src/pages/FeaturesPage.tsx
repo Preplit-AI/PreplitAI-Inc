@@ -124,7 +124,7 @@ const FeaturesPage = () => {
             variant="outline"
             className="px-8 h-12 text-sm font-semibold border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl"
           >
-            <a href="/enterprise#contact">Talk to sales</a>
+            <a href="/sales">Talk to sales</a>
           </Button>
         </motion.div>
       </section>

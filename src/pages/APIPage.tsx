@@ -33,7 +33,7 @@ const APIPage = () => {
             Build AI lecture workflows, generate videos, and search knowledge from your apps.
           </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
-          <a href="/enterprise#contact">
+          <a href="/sales">
             <Button className="px-6 py-5 h-auto text-sm font-semibold">Request access</Button>
           </a>
         </div>

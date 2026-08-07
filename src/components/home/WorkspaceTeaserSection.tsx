@@ -6,38 +6,32 @@ export const WorkspaceTeaserSection = () => {
     {
       icon: MessageSquare,
       title: "Grounded RAG Chat",
-      desc: "Ask questions and get instant answers backed directly by your course PDFs and lecture notes with page citations.",
-      accent: "from-blue-500/10 to-indigo-500/10 border-blue-500/20"
+      desc: "Ask questions and get instant answers backed directly by your course PDFs and lecture notes with precise page citations.",
     },
     {
       icon: HelpCircle,
       title: "AI Quiz Generator",
-      desc: "Auto-generate practice exams with multiple choice, fill-in-the-blank, and short answers matching your syllabus.",
-      accent: "from-purple-500/10 to-pink-500/10 border-purple-500/20"
+      desc: "Auto-generate practice exams with multiple choice, fill-in-the-blank, and short answers mapped to your syllabus.",
     },
     {
       icon: BookOpen,
       title: "Smart Flashcards",
-      desc: "Master key terms with active recall flashcard decks extracted directly from your study documents.",
-      accent: "from-emerald-500/10 to-teal-500/10 border-emerald-500/20"
+      desc: "Master key terminology with active recall flashcard decks extracted directly from your study documents.",
     },
     {
       icon: FileText,
       title: "Dense Summaries",
       desc: "Convert lengthy textbooks and slide decks into crisp, structured bullet-point executive summaries.",
-      accent: "from-amber-500/10 to-orange-500/10 border-amber-500/20"
     },
     {
       icon: Radio,
       title: "Audio Podcast Generator",
       desc: "Listen on the go with two-speaker AI conversational podcast episodes discussing your course topics.",
-      accent: "from-rose-500/10 to-red-500/10 border-rose-500/20"
     },
     {
       icon: Target,
-      title: "Predicted Exam Questions",
+      title: "Expected Exam Questions",
       desc: "Generate target exam items with step-by-step model answers and probability ratings.",
-      accent: "from-cyan-500/10 to-blue-500/10 border-cyan-500/20"
     }
   ];
 
@@ -49,13 +43,13 @@ export const WorkspaceTeaserSection = () => {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 dark:bg-white/10 text-xs font-semibold uppercase tracking-wider text-[#630000] dark:text-red-400 mb-4">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>AI Study Companion Playground</span>
+            <span>Interactive Workspace</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-black dark:text-white mb-4 leading-tight">
             Explore PreplitAI Workspace
           </h2>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-            Upload your course materials and unlock an all-in-one AI learning suite tailored directly to your syllabus.
+            Upload your course materials and unlock an all-in-one AI learning suite tailored directly to your curriculum.
           </p>
         </div>
 
@@ -88,10 +82,10 @@ export const WorkspaceTeaserSection = () => {
         <div className="p-8 sm:p-10 rounded-3xl bg-black dark:bg-white text-white dark:text-black flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="text-left space-y-1">
             <h3 className="text-xl sm:text-2xl font-bold tracking-tight">
-              Ready to start learning with PreplitAI?
+              Ready to elevate your study sessions?
             </h3>
             <p className="text-sm opacity-80">
-              Open the interactive AI Chat Playground now — no setup required.
+              Open the interactive AI Workspace now — free to start.
             </p>
           </div>
           <Button

@@ -1,42 +1,46 @@
-import { ArrowRight } from "lucide-react";
-
-const steps = [
-  {
-    number: "01",
-    label: "Upload Documents",
-    headline: "Drop your PDFs & notes.\nCreate your study space.",
-    image: "/step1-upload.png",
-    alt: "File upload interface",
-    accent: "bg-black",
-  },
-  {
-    number: "02",
-    label: "Grounded AI Analysis",
-    headline: "AI indexes your material into grounded vector context.",
-    image: "/step2-ai.png",
-    alt: "AI processing interface",
-    accent: "bg-black",
-  },
-  {
-    number: "03",
-    label: "Interactive Mastery",
-    headline: "Chat, solve quizzes, generate flashcards & predicted exams.",
-    image: "/step3-video.png",
-    alt: "Study Companion interface",
-    accent: "bg-black",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const HowItWorks = () => {
+  const { language } = useLanguage();
+  const isKo = language === 'ko';
+
+  const steps = [
+    {
+      number: "01",
+      label: isKo ? "01. 학습 자료 업로드" : "01. Upload Material",
+      headline: isKo ? "PDF, 슬라이드, 노트를 업로드하여\n나만의 스터디 스페이스를 만드세요." : "Upload your PDFs, slides & notes.\nCreate your study space.",
+      image: "/step1-upload.png",
+      alt: "File upload interface",
+      accent: "bg-black",
+    },
+    {
+      number: "02",
+      label: isKo ? "02. AI 지식 베이스 구축" : "02. AI Knowledge Base",
+      headline: isKo ? "AI가 업로드된 자료를 실시간으로 분석하고 출처를 구조화합니다." : "AI processes and indexes your material for perfect recall.",
+      image: "/step2-ai.png",
+      alt: "AI processing interface",
+      accent: "bg-black",
+    },
+    {
+      number: "03",
+      label: isKo ? "03. 맞춤 학업 마스터" : "03. Interactive Mastery",
+      headline: isKo ? "9가지 AI 전용 학업 도구로 학습하고 숙달도를 완벽하게 추적하세요." : "Study with 9 AI tools and track your mastery progress.",
+      image: "/step3-video.png",
+      alt: "Study interface",
+      accent: "bg-black",
+    },
+  ];
+
   return (
     <section className="py-24 px-6 bg-white dark:bg-[#0a0a0a]">
       <div className="max-w-6xl mx-auto">
-
         {/* Header — minimal */}
         <div className="mb-14">
-          <p className="text-[13px] font-semibold uppercase tracking-widest text-[#630000] mb-3">How it works</p>
+          <p className="text-[13px] font-semibold uppercase tracking-widest text-[#630000] mb-3">
+            {isKo ? '학습 워크플로우' : 'How it works'}
+          </p>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black dark:text-white max-w-lg leading-tight">
-            From documents to exam readiness in three steps.
+            {isKo ? '문서 업로드부터 시험 완벽 대비까지 3단계.' : 'From documents to exam readiness in three steps.'}
           </h2>
         </div>
 

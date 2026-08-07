@@ -4,13 +4,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { TopNav } from "@/components/layout/TopNav";
 import { Analytics } from "@/components/seo/Analytics";
 import { RouteChangeTracker } from "@/components/seo/RouteChangeTracker";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Pricing from "./pages/Pricing";
-import Enterprise from "./pages/Enterprise";
 import FeaturesPage from "./pages/FeaturesPage";
 import RequestDemo from "./pages/RequestDemo";
 import StatusPage from "./pages/Status";
@@ -21,13 +21,15 @@ import AccountOverview from "./pages/AccountOverview";
 import AccountSettings from "./pages/AccountSettings";
 import Credits from "./pages/Credits";
 import PreplitAIChat from "./pages/PreplitAIChat";
+import Blog from "./pages/Blog";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <TooltipProvider>
         <Analytics />
         <Toaster />
         <Sonner />
@@ -37,12 +39,12 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/pricing" element={<Pricing />} />
-            <Route path="/enterprise" element={<Enterprise />} />
             <Route path="/features" element={<FeaturesPage />} />
             <Route path="/demo" element={<RequestDemo />} />
             <Route path="/status" element={<StatusPage />} />
             <Route path="/developers" element={<APIPage />} />
             <Route path="/about" element={<About />} />
+            <Route path="/blog" element={<Blog />} />
             <Route path="/sales" element={<TalkToSales />} />
             <Route path="/account" element={<AccountOverview />} />
             <Route path="/settings" element={<AccountSettings />} />
@@ -54,6 +56,7 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
+   </LanguageProvider>
   </QueryClientProvider>
 );
 

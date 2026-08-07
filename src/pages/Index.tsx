@@ -36,14 +36,14 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] overflow-x-hidden">
       <SEOHead
-        title="PreplitAI — AI Study Companion & Workspace"
-        description="Transform course materials into grounded AI study spaces. Grounded Chat, Quizzes, Flashcards, Summaries, Podcasts, and Predicted Exams."
-        keywords={["AI study companion", "grounded RAG chat", "AI flashcards", "AI quiz generator", "predicted exam generator"]}
+        title="PreplitAI | AI Study Companion & Workspace"
+        description="Transform any study material into an interactive learning experience. Built for Korean university students with 9 AI-powered tools."
+        keywords={["AI study companion", "Korean university students", "AI learning analytics", "AI flashcards", "AI quiz generator", "expected exam questions"]}
         url={canonical}
         canonical={canonical}
         schemaMarkup={schema}
       />
-      <Hero onGetStarted={() => { window.location.href = '/preplitai-chat'; }} />
+      <Hero />
       <HowItWorks />
       <Features />
       <WorkspaceTeaserSection />

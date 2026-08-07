@@ -1,79 +1,32 @@
 import {
-  BookOpen,
   User,
   LogOut,
-  ChevronDown,
   Menu,
   LayoutDashboard,
   Settings,
-  MessageSquare,
-  HelpCircle,
-  Headphones,
-  Target,
-  Video,
-  BarChart2,
   Globe,
-  Zap,
-  Code2,
-  Activity,
-  Building2,
-  DollarSign,
-  Info,
-  FlaskConical,
-  ArrowUpRight,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { CreditBadge } from "@/components/credits/CreditBadge";
 import { useState } from "react";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
 import { useLocation } from "react-router-dom";
-
-/* ─── Explore menu data ─────────────────────────────────────────────── */
-const exploreTools = [
-  { icon: MessageSquare, label: "AI Study Chat",         desc: "Grounded RAG chat with citations",        href: "/preplitai-chat" },
-  { icon: BookOpen,      label: "Smart Flashcards",      desc: "Auto-generated spaced-repetition decks",  href: "/preplitai-chat" },
-  { icon: HelpCircle,    label: "Smart Quiz Generator",  desc: "MCQ, short-answer & fill-in-the-blank",   href: "/preplitai-chat" },
-  { icon: Headphones,    label: "Podcast Learning",      desc: "Turn any document into an audio podcast", href: "/preplitai-chat" },
-  { icon: Video,         label: "AI Video Lectures",     desc: "Generate micro-lectures from slides",      href: "/preplitai-chat" },
-  { icon: Target,        label: "Predicted Exam Qs",     desc: "AI-predicted questions from past papers",  href: "/preplitai-chat" },
-  { icon: Zap,           label: "Interactive Learning",  desc: "Simulations, diagrams & exercises",        href: "/preplitai-chat" },
-  { icon: BarChart2,     label: "Learning Analytics",    desc: "Track progress and weak spots",            href: "/preplitai-chat" },
-  { icon: Globe,         label: "Korean Academic Assist","desc": "Bilingual support for Korean students",  href: "/preplitai-chat" },
-];
-
-const exploreCompany = [
-  { icon: Info,      label: "About",      desc: "Our story and mission",                href: "/about" },
-  { icon: Building2, label: "Enterprise", desc: "For universities & organizations",     href: "/enterprise" },
-  { icon: DollarSign,label: "Pricing",    desc: "Free, Pro and Max plans",              href: "/pricing" },
-  { icon: Activity,  label: "Status",     desc: "System health & uptime",               href: "/status" },
-];
-
-const exploreDev = [
-  { icon: Code2,       label: "API",          desc: "Build with PreplitAI",           href: "/api" },
-  { icon: FlaskConical,label: "Request Demo", desc: "See PreplitAI in action",        href: "/demo" },
-];
 
 export const TopNav = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { language, toggleLanguage } = useLanguage();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<"login" | "signup">("login");
 
@@ -81,282 +34,183 @@ export const TopNav = () => {
     return null;
   }
 
-  const Trigger = ({ label }: { label: string }) => (
-    <NavigationMenuTrigger className="text-sm font-medium text-black dark:text-white rounded-md px-3 py-2 transition bg-transparent data-[state=open]:bg-transparent hover:bg-black/5 dark:hover:bg-white/10">
-      {label}
-    </NavigationMenuTrigger>
-  );
+  const isKo = language === 'ko';
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-black/70 backdrop-blur-md border-b border-gray-200/50 dark:border-white/10 transition-all duration-300">
-      <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
-        {/* Left: Logo */}
-        <a href="/" className="flex items-center gap-2 group">
-          <img src="/logo.png" alt="PreplitAI Logo" className="h-11 w-auto transition-transform group-hover:scale-105 dark:drop-shadow-[0_0_1px_rgba(255,255,255,1)]" />
-          <span className="text-[17px] font-semibold tracking-tight text-black dark:text-white">PreplitAI</span>
-        </a>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-gray-200/60 dark:border-white/10 transition-all duration-300">
+        <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between">
+          {/* Left: Logo */}
+          <a href="/" className="flex items-center gap-2 group shrink-0">
+            <img src="/logo.png" alt="PreplitAI Logo" className="h-9 w-auto transition-transform group-hover:scale-105 dark:drop-shadow-[0_0_1px_rgba(255,255,255,1)]" />
+            <span className="text-[17px] font-semibold tracking-tight text-black dark:text-white">PreplitAI</span>
+          </a>
 
-        {/* Center: Menu (desktop) */}
-        <div className="hidden md:block">
-          <NavigationMenu>
-            <NavigationMenuList className="items-center gap-2">
-              {/* Simple links */}
-              <NavigationMenuItem>
-                <a href="/features" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">Features</a>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <a href="/enterprise" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">Enterprise</a>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <a href="/preplitai-chat" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">Chat</a>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <a href="/pricing" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">Pricing</a>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <a href="/about" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">About</a>
-              </NavigationMenuItem>
+          {/* Center: Clean Simple Navigation Links (desktop) */}
+          <nav className="hidden md:flex items-center gap-1">
+            <a href="/features" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+              {isKo ? '기능' : 'Features'}
+            </a>
+            <a href="/pricing" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+              {isKo ? '요금제' : 'Pricing'}
+            </a>
+            <a href="/about" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+              {isKo ? '소개' : 'About'}
+            </a>
+            <a href="/blog" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+              {isKo ? '블로그' : 'Blog'}
+            </a>
+          </nav>
 
-              {/* Explore mega menu */}
-              <NavigationMenuItem>
-                <Trigger label="Explore" />
-                <NavigationMenuContent className="rounded-2xl border border-gray-200/60 dark:border-white/10 shadow-2xl bg-white/95 dark:bg-[#0f0f0f]/95 backdrop-blur-xl md:w-[680px]">
-                  <div className="p-5">
+          {/* Right: Actions (desktop) */}
+          <div className="hidden md:flex items-center gap-3">
+            {/* KR | EN Language Switcher Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/10 hover:bg-gray-100 dark:hover:bg-white/20 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
+              title="Switch Language (한국어 / English)"
+            >
+              <Globe className="w-3.5 h-3.5 text-black dark:text-white" />
+              <span className={isKo ? 'text-black dark:text-white font-bold' : 'text-gray-400 dark:text-gray-500'}>KR</span>
+              <span className="text-gray-300 dark:text-gray-600">|</span>
+              <span className={!isKo ? 'text-black dark:text-white font-bold' : 'text-gray-400 dark:text-gray-500'}>EN</span>
+            </button>
 
-                    {/* Launch CTA banner */}
-                    <a
-                      href="/preplitai-chat"
-                      className="flex items-center justify-between gap-3 rounded-xl bg-black dark:bg-white text-white dark:text-black px-4 py-3 mb-4 hover:opacity-90 transition-opacity group"
-                    >
-                      <div>
-                        <p className="text-[13px] font-bold leading-snug">Open the AI Study Workspace</p>
-                        <p className="text-[11.5px] text-white/60 dark:text-black/50 mt-0.5">Chat, Quiz, Flashcards, Podcast &amp; more</p>
-                      </div>
-                      <ArrowUpRight className="w-4 h-4 shrink-0 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </a>
+            {user && <CreditBadge />}
 
-                    <div className="grid grid-cols-3 gap-x-6 gap-y-1">
-
-                      {/* Column 1: AI Tools */}
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 px-2 mb-2">AI Tools</p>
-                        <ul className="space-y-0.5">
-                          {exploreTools.slice(0, 5).map((item) => {
-                            const Icon = item.icon;
-                            return (
-                              <li key={item.label}>
-                                <a
-                                  href={item.href}
-                                  className="flex items-center gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-black/5 dark:hover:bg-white/[0.07] group"
-                                >
-                                  <div className="w-7 h-7 rounded-lg bg-gray-100 dark:bg-white/\[0.08\] text-gray-500 dark:text-gray-400 flex items-center justify-center shrink-0">
-                                    <Icon className="w-3.5 h-3.5" />
-                                  </div>
-                                  <div>
-                                    <p className="text-[12.5px] font-semibold text-black dark:text-white leading-snug">{item.label}</p>
-                                    <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">{item.desc}</p>
-                                  </div>
-                                </a>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-
-                      {/* Column 2: More AI Tools */}
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 px-2 mb-2">More Tools</p>
-                        <ul className="space-y-0.5">
-                          {exploreTools.slice(5).map((item) => {
-                            const Icon = item.icon;
-                            return (
-                              <li key={item.label}>
-                                <a
-                                  href={item.href}
-                                  className="flex items-center gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-black/5 dark:hover:bg-white/[0.07] group"
-                                >
-                                  <div className="w-7 h-7 rounded-lg bg-gray-100 dark:bg-white/\[0.08\] text-gray-500 dark:text-gray-400 flex items-center justify-center shrink-0">
-                                    <Icon className="w-3.5 h-3.5" />
-                                  </div>
-                                  <div>
-                                    <p className="text-[12.5px] font-semibold text-black dark:text-white leading-snug">{item.label}</p>
-                                    <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">{item.desc}</p>
-                                  </div>
-                                </a>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-
-                      {/* Column 3: Company + Developers */}
-                      <div className="space-y-4">
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 px-2 mb-2">Company</p>
-                          <ul className="space-y-0.5">
-                            {exploreCompany.map((item) => {
-                              const Icon = item.icon;
-                              return (
-                                <li key={item.label}>
-                                  <a
-                                    href={item.href}
-                                    className="flex items-center gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-black/5 dark:hover:bg-white/[0.07]"
-                                  >
-                                    <Icon className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 shrink-0" />
-                                    <div>
-                                      <p className="text-[12.5px] font-semibold text-black dark:text-white leading-snug">{item.label}</p>
-                                      <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">{item.desc}</p>
-                                    </div>
-                                  </a>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </div>
-
-                        <div className="border-t border-gray-100 dark:border-white/[0.06] pt-3">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 px-2 mb-2">Developers</p>
-                          <ul className="space-y-0.5">
-                            {exploreDev.map((item) => {
-                              const Icon = item.icon;
-                              return (
-                                <li key={item.label}>
-                                  <a
-                                    href={item.href}
-                                    className="flex items-center gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-black/5 dark:hover:bg-white/[0.07]"
-                                  >
-                                    <Icon className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 shrink-0" />
-                                    <div>
-                                      <p className="text-[12.5px] font-semibold text-black dark:text-white leading-snug">{item.label}</p>
-                                      <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">{item.desc}</p>
-                                    </div>
-                                  </a>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </div>
-                      </div>
-
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white">
+                    <User className="h-4 w-4 mr-2" />
+                    <span className="max-w-[120px] truncate">{user.name}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      <p className="font-medium text-black dark:text-white">{user.name}</p>
+                      <p className="w-[200px] truncate text-sm text-gray-500">{user.email}</p>
                     </div>
                   </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-
-        {/* Right: Actions (desktop) */}
-        <div className="hidden md:flex items-center gap-4">
-          {user && <CreditBadge />}
-          <a href="/demo" className="text-sm font-medium text-black dark:text-white hover:opacity-80">Request a demo</a>
-
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white">
-                  <User className="h-4 w-4 mr-2" />
-                  {user.name}
-                  <ChevronDown className="ml-1 h-3 w-3" />
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <a href="/preplitai-chat" className="cursor-pointer text-black dark:text-white">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      <span>{isKo ? 'AI 스터디 워크스페이스' : 'AI Study Workspace'}</span>
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href="/settings" className="cursor-pointer text-black dark:text-white">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>{isKo ? '계정 설정' : 'Account Settings'}</span>
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-600 dark:text-red-400">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>{isKo ? '로그아웃' : 'Logout'}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  onClick={() => { setAuthTab("login"); setShowAuthModal(true); }}
+                  className="text-sm font-medium text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
+                >
+                  {isKo ? '로그인' : 'Log in'}
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[220px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-1 shadow-xl">
-                <DropdownMenuItem asChild className="cursor-pointer rounded-md">
-                  <a href="/account" className="flex w-full items-center gap-2 px-2 py-2 text-sm text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800">
-                    <LayoutDashboard className="h-4 w-4 text-gray-500" />
-                    <span>Account Overview</span>
+                <Button
+                  asChild
+                  className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black rounded-full font-medium text-sm px-4 h-9 shadow-sm"
+                >
+                  <a href="/preplitai-chat" className="flex items-center gap-1.5">
+                    <span>{isKo ? '워크스페이스 시작' : 'Launch Workspace'}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer rounded-md">
-                  <a href="/settings" className="flex w-full items-center gap-2 px-2 py-2 text-sm text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800">
-                    <Settings className="h-4 w-4 text-gray-500" />
-                    <span>Account Settings</span>
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout} className="cursor-pointer rounded-md text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                onClick={() => { setAuthTab("login"); setShowAuthModal(true); }}
-                className="hover:bg-transparent text-[14px] text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white font-medium px-2"
-              >
-                Log in
-              </Button>
-              <Button
-                onClick={() => { setAuthTab("signup"); setShowAuthModal(true); }}
-                className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black font-medium text-[14px] rounded-lg px-4 h-9 shadow-sm transition-all hover:scale-[0.98]"
-              >
-                Sign Up
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {/* Mobile menu trigger */}
-        <div className="md:hidden">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open menu" className="text-black dark:text-white">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-full max-w-[100vw] bg-white dark:bg-gray-950 p-6">
-              <nav className="mt-2 space-y-1">
-                <a href="/preplitai-chat" className="block px-3 py-3 rounded-md font-semibold text-black dark:text-white bg-black/5 dark:bg-white/10">Launch Workspace (Chat)</a>
-                <a href="/features" className="block px-3 py-3 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">Features</a>
-                <a href="/enterprise" className="block px-3 py-3 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">Enterprise</a>
-                <a href="/pricing" className="block px-3 py-3 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">Pricing</a>
-                <a href="/about" className="block px-3 py-3 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">About</a>
-                <a href="/demo" className="block px-3 py-3 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">Request a demo</a>
-              </nav>
-
-              <div className="mt-4 border-t border-gray-200 dark:border-gray-800 pt-4 px-1">
-                {user ? (
-                  <div className="space-y-3">
-                    <div className="px-2 text-sm text-gray-600 dark:text-gray-400">Signed in as</div>
-                    <div className="px-2 font-medium text-black dark:text-white">{user.name}</div>
-                    <Button onClick={logout} className="w-full bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black">
-                      <LogOut className="h-4 w-4 mr-2" /> Logout
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={() => { setAuthTab("login"); setShowAuthModal(true); }}
-                      className="border-gray-300 dark:border-gray-700"
-                    >
-                      Login
-                    </Button>
-                    <Button
-                      onClick={() => { setAuthTab("signup"); setShowAuthModal(true); }}
-                      className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black"
-                    >
-                      Sign Up
-                    </Button>
-                  </div>
-                )}
+                </Button>
               </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
+            )}
+          </div>
 
-      {/* Auth modal — rendered once (was duplicated in the original) */}
+          {/* Mobile menu trigger + KR/EN toggle */}
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/10 text-xs font-semibold"
+              title="언어 변경 (KR / EN)"
+            >
+              <Globe className="w-3.5 h-3.5 text-black dark:text-white" />
+              <span className={isKo ? 'text-black dark:text-white font-bold' : 'text-gray-400'}>KR</span>
+              <span>|</span>
+              <span className={!isKo ? 'text-black dark:text-white font-bold' : 'text-gray-400'}>EN</span>
+            </button>
+
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="Open menu" className="text-black dark:text-white">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-full max-w-[100vw] bg-white dark:bg-gray-950 p-6 overflow-y-auto">
+                <nav className="mt-4 space-y-2">
+                  <a href="/preplitai-chat" className="block px-4 py-3 rounded-xl font-semibold text-white bg-[#630000] hover:bg-[#7a0000] shadow-sm text-center">
+                    {isKo ? 'AI 학습 워크스페이스 시작' : 'Launch Workspace'}
+                  </a>
+                  <a href="/features" className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
+                    {isKo ? '기능' : 'Features'}
+                  </a>
+                  <a href="/pricing" className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
+                    {isKo ? '요금제' : 'Pricing'}
+                  </a>
+                  <a href="/about" className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
+                    {isKo ? '소개' : 'About'}
+                  </a>
+                  <a href="/blog" className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
+                    {isKo ? '블로그' : 'Blog'}
+                  </a>
+                </nav>
+
+                <div className="mt-6 border-t border-gray-200 dark:border-gray-800 pt-6">
+                  {user ? (
+                    <div className="space-y-3">
+                      <div className="px-2 text-sm text-gray-600 dark:text-gray-400">Signed in as</div>
+                      <div className="px-2 font-medium text-black dark:text-white">{user.name}</div>
+                      <Button onClick={logout} className="w-full bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black">
+                        <LogOut className="h-4 w-4 mr-2" /> {isKo ? '로그아웃' : 'Logout'}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button
+                        variant="outline"
+                        onClick={() => { setAuthTab("login"); setShowAuthModal(true); }}
+                        className="border-gray-300 dark:border-gray-700"
+                      >
+                        {isKo ? '로그인' : 'Login'}
+                      </Button>
+                      <Button
+                        onClick={() => { setAuthTab("signup"); setShowAuthModal(true); }}
+                        className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black"
+                      >
+                        {isKo ? '회원가입' : 'Sign Up'}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+      </header>
+      <div className="h-14" />
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         defaultTab={authTab}
       />
-    </header>
-    <div className="h-14" />
-  </>);
+    </>
+  );
 };

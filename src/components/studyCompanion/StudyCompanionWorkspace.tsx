@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Search, History, Folder, Settings, User, BookOpen, Radio, FileText, Upload, X, ChevronUp, MessageSquare, HelpCircle, Trash2, Menu } from 'lucide-react';
+import { Plus, Search, History, Folder, Settings, User, BookOpen, Radio, FileText, Upload, X, ChevronUp, MessageSquare, HelpCircle, Trash2, Menu, Home, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { DocumentViewer } from './DocumentViewer';
 import { ToolPanel } from './ToolPanel';
 import { SettingsModal } from './SettingsModal';
+import { GlobalSearch } from './GlobalSearch';
 import { AccountMenu } from './AccountMenu';
 import { ManageSubscriptionModal } from '../common/ManageSubscriptionModal';
 import { SubscriptionModal } from '../common/SubscriptionModal';
-import { PlanBadge } from '../common/PlanBadge';
 import { AuthModal } from '../auth/AuthModal';
-import { translations, Language } from '@/i18n/translations';
+import { WorkspaceHome } from './WorkspaceHome';
+import { ResourceLibrary } from './ResourceLibrary';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translations } from '@/i18n/translations';
 
 async function extractTextFromFile(file: File): Promise<string> {
   return new Promise((resolve) => {
@@ -58,6 +61,7 @@ export function StudyCompanionWorkspace() {
   const [activeTab, setActiveTab] = useState('chat');
   const [mobileTab, setMobileTab] = useState<'document' | 'tools'>('tools');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [documents, setDocuments] = useState<LocalDocument[]>([]);
   const [activeDocument, setActiveDocument] = useState<LocalDocument | null>(null);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
@@ -68,9 +72,10 @@ export function StudyCompanionWorkspace() {
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
   const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
   const [newSpaceInput, setNewSpaceInput] = useState('');
+  const { language, setLanguage } = useLanguage();
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('light');
-  const [language, setLanguage] = useState<Language>('en');
   const [defaultModel, setDefaultModel] = useState<string>('GPT-5 / Llama 3.1');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Spaces state (no dummy data)
   const [spaces, setSpaces] = useState<Array<{ id: string; name: string }>>([]);
@@ -107,6 +112,18 @@ export function StudyCompanionWorkspace() {
       root.classList.remove('dark');
     }
   }, [theme]);
+
+  // Global Search shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Load spaces from backend on mount
   useEffect(() => {
@@ -525,6 +542,15 @@ export function StudyCompanionWorkspace() {
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-[#fafafa] dark:bg-[#0f0f0f] text-[#111] dark:text-[#f0f0f0] overflow-hidden">
+      
+      <GlobalSearch 
+        isOpen={isSearchOpen} 
+        onClose={() => setIsSearchOpen(false)} 
+        onNavigate={(id, type) => {
+          if (type === 'space') setActiveSpaceId(id);
+          else if (type === 'chat') setActiveTab('chat');
+        }}
+      />
 
       {/* ── Mobile Top Header Bar ── */}
       <header className="flex md:hidden items-center justify-between px-4 py-2.5 bg-white dark:bg-[#111] border-b border-[#e8e8e8] dark:border-white/[0.06] shrink-0 z-20">
@@ -594,6 +620,13 @@ export function StudyCompanionWorkspace() {
 
               {/* Spaces */}
               <div className="space-y-0.5">
+                <button
+                  onClick={() => { setActiveSpaceId(''); setActiveDocument(null); setIsMobileSidebarOpen(false); }}
+                  className={`nav-item w-full mb-2 ${!activeSpaceId ? 'active' : ''}`}
+                >
+                  <Home className="w-4 h-4 shrink-0 text-[#999]" />
+                  <span>Home</span>
+                </button>
                 <div className="flex items-center justify-between px-2.5 mb-1">
                   <span className="section-label">Spaces</span>
                   <button
@@ -664,15 +697,23 @@ export function StudyCompanionWorkspace() {
       )}
 
       {/* ── Left Sidebar (Desktop) ── */}
-      <aside className="w-56 bg-white dark:bg-[#111] border-r border-[#e8e8e8] dark:border-white/[0.06] flex flex-col hidden md:flex shrink-0">
+      <aside className={`${isSidebarCollapsed ? 'w-16' : 'w-56'} transition-all duration-200 bg-white dark:bg-[#111] border-r border-[#e8e8e8] dark:border-white/[0.06] flex flex-col hidden md:flex shrink-0`}>
 
-        {/* Brand */}
-        <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#e8e8e8] dark:border-white/[0.06]">
-          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        {/* Brand & Collapse Toggle */}
+        <div className="flex items-center justify-between px-3 py-3.5 border-b border-[#e8e8e8] dark:border-white/[0.06]">
+          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity overflow-hidden">
             <img src="/logo.png" alt="PreplitAI" className="w-7 h-7 object-contain shrink-0" />
-            <span className="font-semibold text-[14px] text-[#111] dark:text-white tracking-tight">PreplitAI</span>
+            {!isSidebarCollapsed && (
+              <span className="font-semibold text-[14px] text-[#111] dark:text-white tracking-tight truncate">PreplitAI</span>
+            )}
           </a>
-          <PlanBadge />
+          <button
+            onClick={() => setIsSidebarCollapsed(prev => !prev)}
+            className="p-1 rounded-md text-[#888] dark:text-[#666] hover:text-[#111] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors shrink-0"
+            title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+          >
+            {isSidebarCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+          </button>
         </div>
 
         {/* Nav */}
@@ -681,47 +722,63 @@ export function StudyCompanionWorkspace() {
           {/* Add Content */}
           <button
             onClick={() => setIsUploadOpen(true)}
-            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[12.5px] font-medium bg-[#111] dark:bg-white text-white dark:text-[#111] hover:bg-[#333] dark:hover:bg-[#e8e8e8] transition-all"
+            className={`w-full flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'gap-2 px-2.5'} py-1.5 rounded-md text-[12.5px] font-medium bg-[#111] dark:bg-white text-white dark:text-[#111] hover:bg-[#333] dark:hover:bg-[#e8e8e8] transition-all`}
+            title={t.addContent}
           >
-            <Plus className="w-3.5 h-3.5" />
-            <span>{t.addContent}</span>
+            <Plus className="w-4 h-4 shrink-0" />
+            {!isSidebarCollapsed && <span>{t.addContent}</span>}
           </button>
 
           {/* Spaces */}
           <div className="space-y-0.5">
-            <div className="flex items-center justify-between px-2.5 mb-1">
-              <span className="section-label">Spaces</span>
-              <button
-                onClick={() => setIsCreateSpaceOpen(true)}
-                className="w-4 h-4 flex items-center justify-center text-[#aaa] dark:text-[#555] hover:text-[#111] dark:hover:text-white transition-colors rounded"
-                title="Create New Space"
-              >
-                <Plus className="w-3 h-3" />
-              </button>
-            </div>
+            <button
+              onClick={() => { setActiveSpaceId(''); setActiveDocument(null); }}
+              className={`nav-item w-full mb-2 ${!activeSpaceId ? 'active' : ''} ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+              title="Home"
+            >
+              <Home className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
+              {!isSidebarCollapsed && <span>Home</span>}
+            </button>
+            
+            {!isSidebarCollapsed && (
+              <div className="flex items-center justify-between px-2.5 mb-1">
+                <span className="section-label">Spaces</span>
+                <button
+                  onClick={() => setIsCreateSpaceOpen(true)}
+                  className="w-4 h-4 flex items-center justify-center text-[#aaa] dark:text-[#555] hover:text-[#111] dark:hover:text-white transition-colors rounded"
+                  title="Create New Space"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+
             {spaces.length > 0 ? (
               spaces.map(s => (
                 <div key={s.id} className="relative group">
                   <button
                     onClick={() => setActiveSpaceId(s.id)}
-                    className={`nav-item justify-between ${activeSpaceId === s.id ? 'active' : ''}`}
+                    className={`nav-item justify-between ${activeSpaceId === s.id ? 'active' : ''} ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+                    title={s.name}
                   >
                     <div className="flex items-center gap-2 truncate">
-                      <Folder className="w-3.5 h-3.5 shrink-0 text-[#999] dark:text-[#666]" />
-                      <span className="truncate">{s.name}</span>
+                      <Folder className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
+                      {!isSidebarCollapsed && <span className="truncate">{s.name}</span>}
                     </div>
-                    <button
-                      onClick={(e) => handleDeleteSpace(s.id, e)}
-                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-[#e0e0e0] dark:hover:bg-white/10 text-[#999] hover:text-rose-500 transition-all shrink-0"
-                      title="Delete Space"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
+                    {!isSidebarCollapsed && (
+                      <button
+                        onClick={(e) => handleDeleteSpace(s.id, e)}
+                        className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-[#e0e0e0] dark:hover:bg-white/10 text-[#999] hover:text-rose-500 transition-all shrink-0"
+                        title="Delete Space"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    )}
                   </button>
                 </div>
               ))
             ) : (
-              <div className="px-2.5 py-1 text-[11px] text-[#aaa] dark:text-[#555] italic">No spaces created yet</div>
+              !isSidebarCollapsed && <div className="px-2.5 py-1 text-[11px] text-[#aaa] dark:text-[#555] italic">No spaces created yet</div>
             )}
           </div>
 
@@ -729,13 +786,13 @@ export function StudyCompanionWorkspace() {
 
           {/* Nav links */}
           <div className="space-y-0.5">
-            <button className="nav-item">
-              <Search className="w-3.5 h-3.5 shrink-0 text-[#999] dark:text-[#666]" />
-              <span>{t.search}</span>
+            <button className={`nav-item w-full ${isSidebarCollapsed ? 'justify-center px-0' : ''}`} onClick={() => setIsSearchOpen(true)} title={t.search}>
+              <Search className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
+              {!isSidebarCollapsed && <span>{t.search}</span>}
             </button>
-            <button className="nav-item">
-              <History className="w-3.5 h-3.5 shrink-0 text-[#999] dark:text-[#666]" />
-              <span>{t.history}</span>
+            <button className={`nav-item w-full ${isSidebarCollapsed ? 'justify-center px-0' : ''}`} title={t.history}>
+              <History className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
+              {!isSidebarCollapsed && <span>{t.history}</span>}
             </button>
           </div>
 
@@ -744,15 +801,16 @@ export function StudyCompanionWorkspace() {
             <>
               <div className="sidebar-divider" />
               <div className="space-y-0.5">
-                <span className="section-label block mb-1">{t.documents}</span>
+                {!isSidebarCollapsed && <span className="section-label block mb-1">{t.documents}</span>}
                 {documents.map(doc => (
                   <button
                     key={doc.id}
                     onClick={() => setActiveDocument(doc)}
-                    className={`nav-item ${activeDocument?.id === doc.id ? 'active' : ''}`}
+                    className={`nav-item ${activeDocument?.id === doc.id ? 'active' : ''} ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+                    title={doc.file_name}
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${doc.type === 'past_exam' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-                    <span className="truncate">{doc.file_name}</span>
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${doc.type === 'past_exam' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
+                    {!isSidebarCollapsed && <span className="truncate">{doc.file_name}</span>}
                   </button>
                 ))}
               </div>
@@ -772,40 +830,61 @@ export function StudyCompanionWorkspace() {
           />
           <button
             onClick={() => setIsAccountMenuOpen(p => !p)}
-            className="nav-item w-full justify-between"
+            className={`nav-item w-full ${isSidebarCollapsed ? 'justify-center px-0' : 'justify-between'}`}
+            title={t.myAccount}
           >
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-full bg-[#111] dark:bg-white flex items-center justify-center shrink-0">
                 <User className="w-3 h-3 text-white dark:text-[#111]" />
               </div>
-              <span className="text-[12px] font-medium text-[#111] dark:text-[#ddd] truncate">{t.myAccount}</span>
+              {!isSidebarCollapsed && <span className="text-[12px] font-medium text-[#111] dark:text-[#ddd] truncate">{t.myAccount}</span>}
             </div>
-            <ChevronUp className={`w-3 h-3 text-[#aaa] transition-transform ${isAccountMenuOpen ? '' : 'rotate-180'}`} />
+            {!isSidebarCollapsed && <ChevronUp className={`w-3 h-3 text-[#aaa] transition-transform ${isAccountMenuOpen ? '' : 'rotate-180'}`} />}
           </button>
           <button
             onClick={() => setIsSettingsOpen(true)}
-            className="nav-item w-full mt-0.5"
+            className={`nav-item w-full mt-0.5 ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title={t.settings}
           >
-            <Settings className="w-3.5 h-3.5 shrink-0 text-[#999] dark:text-[#666]" />
-            <span>{t.settings}</span>
+            <Settings className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
+            {!isSidebarCollapsed && <span>{t.settings}</span>}
           </button>
         </div>
       </aside>
 
       {/* ── Main Content ── */}
       <main className="flex-1 flex gap-0 overflow-hidden relative">
-        {/* Document Viewer */}
+        {/* Document Viewer / Resource Library / Workspace Home */}
         <div className={`flex-1 min-w-0 h-full ${mobileTab === 'document' ? 'block' : 'hidden md:block'}`}>
-          <DocumentViewer
-            document={activeDocument}
-            onSelectAction={handleSelectAction}
-            onOpenUpload={() => setIsUploadOpen(true)}
-            language={language}
-          />
+          {!activeSpaceId ? (
+            <WorkspaceHome
+              onCreateSpace={() => setIsCreateSpaceOpen(true)}
+              onSelectSpace={(id) => setActiveSpaceId(id)}
+              onUploadContent={() => setIsUploadOpen(true)}
+              spaces={spaces}
+            />
+          ) : !activeDocument ? (
+            <ResourceLibrary
+              documents={documents}
+              onSelectDocument={(doc) => {
+                const fullDoc = documents.find(d => d.id === doc.id);
+                if (fullDoc) setActiveDocument(fullDoc);
+              }}
+              onUpload={() => setIsUploadOpen(true)}
+            />
+          ) : (
+            <DocumentViewer
+              document={activeDocument}
+              onSelectAction={handleSelectAction}
+              onOpenUpload={() => setIsUploadOpen(true)}
+              onBack={() => setActiveDocument(null)}
+              language={language}
+            />
+          )}
         </div>
 
-        {/* Tool Panel */}
-        <div className={`w-full md:w-[440px] xl:w-[480px] h-full shrink-0 border-l border-[#e8e8e8] dark:border-white/[0.06] ${mobileTab === 'tools' ? 'block' : 'hidden md:block'}`}>
+        {/* Tool Panel — Made spacious and wide */}
+        <div className={`w-full md:w-[540px] lg:w-[640px] xl:w-[740px] h-full shrink-0 border-l border-[#e8e8e8] dark:border-white/[0.06] ${mobileTab === 'tools' ? 'block' : 'hidden md:block'}`}>
           <ToolPanel
             activeTab={activeTab}
             onTabChange={setActiveTab}

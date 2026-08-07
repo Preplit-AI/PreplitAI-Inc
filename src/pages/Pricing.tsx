@@ -127,8 +127,7 @@ const Pricing = () => {
           {/* 1. Free Tier */}
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={1} className="p-8 rounded-3xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111] hover:border-gray-300 dark:hover:border-white/20 transition-colors flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <GraduationCap className="w-5 h-5 text-gray-500" />
+              <div className="mb-2">
                 <h3 className="text-xl font-bold text-black dark:text-white">Free</h3>
               </div>
               <p className="text-[13.5px] text-gray-500 dark:text-gray-400 mb-6 min-h-[40px]">
@@ -155,13 +154,11 @@ const Pricing = () => {
 
           {/* 2. Student Pro Tier (Popular) */}
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={2} className="relative p-8 rounded-3xl border-2 border-[#630000] bg-white dark:bg-[#111] flex flex-col justify-between shadow-xl shadow-[#630000]/10 dark:shadow-none">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#630000] text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-sm flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#630000] text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-sm">
               Most Popular for Students
             </div>
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-5 h-5 text-[#630000] dark:text-[#ff9999]" />
+              <div className="mb-2">
                 <h3 className="text-xl font-bold text-black dark:text-white">Student Pro</h3>
               </div>
               <p className="text-[13.5px] text-gray-500 dark:text-gray-400 mb-6 min-h-[40px]">
@@ -194,8 +191,7 @@ const Pricing = () => {
           {/* 3. Institution Tier */}
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={3} className="p-8 rounded-3xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111] hover:border-gray-300 dark:hover:border-white/20 transition-colors flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Building2 className="w-5 h-5 text-gray-500" />
+              <div className="mb-2">
                 <h3 className="text-xl font-bold text-black dark:text-white">Institution</h3>
               </div>
               <p className="text-[13.5px] text-gray-500 dark:text-gray-400 mb-6 min-h-[40px]">
@@ -205,7 +201,7 @@ const Pricing = () => {
                 <span className="text-3xl font-bold tracking-tight text-black dark:text-white">Custom</span>
               </div>
               <Button asChild variant="outline" className="w-full mb-8 h-11 rounded-xl border-gray-200 dark:border-white/10 transition-all hover:scale-[0.98]">
-                <a href="/enterprise">Contact Sales</a>
+                <a href="/sales">Contact Sales</a>
               </Button>
               <div className="space-y-3.5">
                 <p className="text-[13px] font-semibold text-black dark:text-white">Everything in Student Pro, plus:</p>
