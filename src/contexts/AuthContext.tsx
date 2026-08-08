@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { API_BASE_URL, TOKEN_STORAGE_KEY } from '@/constants/config';
+import { isDeveloperUser, notifyDeveloperOnly } from '@/utils/developerAccess';
 
 interface User {
   id: number;
   email: string;
   name: string;
+  role?: string;
+  isDeveloper?: boolean;
   creditBalance?: number;
 }
 
@@ -13,6 +16,8 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
+  isDeveloper: boolean;
+  checkDeveloperAccess: (functionName?: string, isKo?: boolean) => boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
@@ -168,8 +173,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const isDeveloper = isDeveloperUser(user);
+
+  const checkDeveloperAccess = (functionName?: string, isKo: boolean = false): boolean => {
+    if (!isDeveloperUser(user)) {
+      notifyDeveloperOnly(functionName, isKo);
+      return false;
+    }
+    return true;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, signup, logout, updateProfile, changePassword }}>
+    <AuthContext.Provider value={{ user, token, loading, isDeveloper, checkDeveloperAccess, login, signup, logout, updateProfile, changePassword }}>
       {children}
     </AuthContext.Provider>
   );

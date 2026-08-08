@@ -11,6 +11,7 @@ import { AuthModal } from '../auth/AuthModal';
 import { WorkspaceHome } from './WorkspaceHome';
 import { ResourceLibrary } from './ResourceLibrary';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { translations } from '@/i18n/translations';
 
 async function extractTextFromFile(file: File): Promise<string> {
@@ -73,6 +74,7 @@ export function StudyCompanionWorkspace() {
   const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
   const [newSpaceInput, setNewSpaceInput] = useState('');
   const { language, setLanguage } = useLanguage();
+  const { user, isDeveloper, checkDeveloperAccess } = useAuth();
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('light');
   const [defaultModel, setDefaultModel] = useState<string>('GPT-5 / Llama 3.1');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -233,6 +235,10 @@ export function StudyCompanionWorkspace() {
 
   // Upload Document to Space API
   const handleUpload = async () => {
+    const isKo = language === 'ko';
+    if (!checkDeveloperAccess(isKo ? '문서 업로드 및 인덱싱' : 'Document Ingestion & Upload', isKo)) {
+      return;
+    }
     setIsUploading(true);
     try {
       let extractedText = '';
@@ -316,6 +322,10 @@ export function StudyCompanionWorkspace() {
   };
 
   const handleExportData = () => {
+    const isKo = language === 'ko';
+    if (!checkDeveloperAccess(isKo ? '데이터 내보내기' : 'Data Export', isKo)) {
+      return;
+    }
     const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), documents: documents.map(d => ({ file_name: d.file_name, type: d.type })), quiz: quizData, flashcards: flashcardData, summary: summaryData }, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `preplitai_export_${Date.now()}.json`; a.click();
@@ -333,6 +343,10 @@ export function StudyCompanionWorkspace() {
 
   // Grounded RAG Chat API
   const handleSendMessage = async (text: string) => {
+    const isKo = language === 'ko';
+    if (!checkDeveloperAccess(isKo ? 'AI 챗답변 생성' : 'AI Study Chat Query', isKo)) {
+      return;
+    }
     const userMsg = { id: Date.now().toString(), role: 'user' as const, content: text };
     setMessages(prev => [...prev, userMsg]);
     setIsGenerating(true);
@@ -376,6 +390,10 @@ export function StudyCompanionWorkspace() {
 
   // Generate Quiz API
   const handleGenerateQuiz = async () => {
+    const isKo = language === 'ko';
+    if (!checkDeveloperAccess(isKo ? '스마트 퀴즈 생성' : 'Smart Quiz Generator', isKo)) {
+      return;
+    }
     if (!docText && documents.length === 0) {
       setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
       setActiveTab('chat');
@@ -408,6 +426,10 @@ export function StudyCompanionWorkspace() {
 
   // Generate Flashcards API
   const handleGenerateFlashcards = async () => {
+    const isKo = language === 'ko';
+    if (!checkDeveloperAccess(isKo ? '스마트 플래시카드 생성' : 'Flashcard Generator', isKo)) {
+      return;
+    }
     if (!docText && documents.length === 0) {
       setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
       setActiveTab('chat');
@@ -440,6 +462,10 @@ export function StudyCompanionWorkspace() {
 
   // Generate Summary API
   const handleGenerateSummary = async () => {
+    const isKo = language === 'ko';
+    if (!checkDeveloperAccess(isKo ? 'AI 요약 노트 생성' : 'AI Summary Generator', isKo)) {
+      return;
+    }
     if (!docText && documents.length === 0) {
       setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
       setActiveTab('chat');
@@ -472,6 +498,10 @@ export function StudyCompanionWorkspace() {
 
   // Generate Podcast API
   const handleGeneratePodcast = async () => {
+    const isKo = language === 'ko';
+    if (!checkDeveloperAccess(isKo ? '팟캐스트 오디오 생성' : 'Podcast Audio Generator', isKo)) {
+      return;
+    }
     if (!docText && documents.length === 0) {
       setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
       setActiveTab('chat');
@@ -503,6 +533,10 @@ export function StudyCompanionWorkspace() {
 
   // Generate Expected Exam API
   const handleGenerateExam = async () => {
+    const isKo = language === 'ko';
+    if (!checkDeveloperAccess(isKo ? '출제 예상 문제 예측' : 'Predicted Exam Generator', isKo)) {
+      return;
+    }
     if (!docText && documents.length === 0) {
       setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
       setActiveTab('chat');
