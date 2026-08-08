@@ -70,6 +70,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const login = async (email: string, password: string) => {
+    if (!isDeveloperUser({ email })) {
+      notifyDeveloperOnly('User Login Authentication');
+      const errMsg = 'Developer Access Only: System login is restricted to authorized developer accounts.';
+      toast.error(errMsg);
+      throw new Error(errMsg);
+    }
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
@@ -97,6 +103,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signup = async (email: string, password: string, name: string) => {
+    if (!isDeveloperUser({ email })) {
+      notifyDeveloperOnly('User Account Registration');
+      const errMsg = 'Developer Access Only: Account registration is restricted to authorized developer accounts.';
+      toast.error(errMsg);
+      throw new Error(errMsg);
+    }
     try {
       const response = await fetch(`${API_BASE_URL}/auth/signup`, {
         method: 'POST',

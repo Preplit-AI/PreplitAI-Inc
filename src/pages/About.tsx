@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/layout/Footer";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   ArrowRight,
   MessageSquare,
@@ -38,114 +39,113 @@ const fadeIn: any = {
   }),
 };
 
-/* ─── Data ───────────────────────────────────────────────────────────── */
-const pillars = [
-  { icon: MessageSquare, label: "AI Study Chat",           desc: "Grounded RAG chat with exact page citations — no hallucinations." },
-  { icon: Zap,           label: "Interactive Learning",    desc: "Visual simulations, concept maps & drag-and-drop exercises." },
-  { icon: Video,         label: "AI Video Lectures",       desc: "Generate micro-lecture videos directly from your study material." },
-  { icon: Headphones,    label: "Podcast Learning Mode",   desc: "Turn any PDF or slides into a conversational audio podcast." },
-  { icon: BookOpen,      label: "Smart Flashcards",        desc: "Spaced-repetition decks auto-generated from your content." },
-  { icon: HelpCircle,    label: "Smart Quiz Generator",    desc: "MCQ, short-answer & fill-in-the-blank quizzes on demand." },
-  { icon: Target,        label: "Expected Exam Questions", desc: "AI-predicted exam questions based on past papers & syllabi." },
-  { icon: BarChart2,     label: "Learning Analytics",      desc: "Track weak spots and time-on-task to study smarter every session." },
-  { icon: Globe,         label: "Korean Academic Assist.", desc: "Bilingual support for Korean domestic & international students." },
-];
-
-const values = [
-  {
-    icon: Lightbulb,
-    title: "Understanding over memorising",
-    body:  "We design every feature to build genuine comprehension — not to help students cram and forget.",
-  },
-  {
-    icon: Heart,
-    title: "Student-first, always",
-    body:  "Every decision starts with a single question: does this make a real student's study session better?",
-  },
-  {
-    icon: Users,
-    title: "Accessible globally",
-    body:  "Language should never be a barrier to learning. Multilingual support is built into the core of PreplitAI.",
-  },
-  {
-    icon: Sparkles,
-    title: "Honest AI",
-    body:  "Our Grounded RAG engine cites sources. If PreplitAI doesn't know, it says so — no fabrications.",
-  },
-];
-
-const timeline = [
-  {
-    year: "The Problem",
-    title: "Students were studying harder, not smarter.",
-    body:  "University students were drowning in PDFs, textbook chapters, and recorded lectures — with no intelligent way to engage with the material. Passive reading wasn't working.",
-  },
-  {
-    year: "The Insight",
-    title: "AI could transform any material into a tutor.",
-    body:  "What if any document — a slide deck, a textbook chapter, a YouTube lecture — could become an interactive teacher that quizzes you, explains concepts visually, and predicts what will appear on your exam?",
-  },
-  {
-    year: "The Build",
-    title: "PreplitAI: One complete study workspace.",
-    body:  "We combined Grounded RAG chat, adaptive quizzes, smart flashcards, AI-generated podcasts, video lectures, and predicted exam questions into a single seamless platform — your complete AI study companion.",
-  },
-  {
-    year: "Today",
-    title: "Focused on Korean higher education first.",
-    body:  "Our initial market is Korean university students and international students studying in Korea — a fast-growing, tech-forward community demanding AI-native learning tools.",
-  },
-];
-
 /* ─── Component ─────────────────────────────────────────────────────── */
 const About = () => {
-  const siteUrl   = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";
+  const { language } = useLanguage();
+  const isKo = language === 'ko';
+
+  const pillars = [
+    { icon: MessageSquare, label: isKo ? "AI 스터디 챗" : "AI Study Chat", desc: isKo ? "정확한 페이지 출처 인용 기반 Q&A — 환각 없는 답변." : "Grounded RAG chat with exact page citations — no hallucinations." },
+    { icon: Zap, label: isKo ? "인터랙티브 학습" : "Interactive Learning", desc: isKo ? "시각적 시뮬레이션, 개념도 및 드래그앤드롭 실습." : "Visual simulations, concept maps & drag-and-drop exercises." },
+    { icon: Video, label: isKo ? "AI 비디오 강의" : "AI Video Lectures", desc: isKo ? "교재 및 슬라이드 기반 마이크로 강의 영상 생성." : "Generate micro-lecture videos directly from your study material." },
+    { icon: Headphones, label: isKo ? "팟캐스트 학습 모드" : "Podcast Learning Mode", desc: isKo ? "전공 서적 및 슬라이드를 대화형 오디오 팟캐스트로 변환." : "Turn any PDF or slides into a conversational audio podcast." },
+    { icon: BookOpen, label: isKo ? "스마트 플래시카드" : "Smart Flashcards", desc: isKo ? "콘텐츠에서 자동 추출되는 간격 반복 학습덱." : "Spaced-repetition decks auto-generated from your content." },
+    { icon: HelpCircle, label: isKo ? "스마트 퀴즈 생성기" : "Smart Quiz Generator", desc: isKo ? "객관식·주관식·빈칸 채우기 퀴즈 맞춤 생성." : "MCQ, short-answer & fill-in-the-blank quizzes on demand." },
+    { icon: Target, label: isKo ? "출제 예상 문제" : "Expected Exam Questions", desc: isKo ? "기출 및 족보 분석 기반 AI 예상 문제 예측." : "AI-predicted exam questions based on past papers & syllabi." },
+    { icon: BarChart2, label: isKo ? "학습 성과 분석" : "Learning Analytics", desc: isKo ? "취약 개념 및 공부 시간을 추적해 스마트하게 대비." : "Track weak spots and time-on-task to study smarter every session." },
+    { icon: Globe, label: isKo ? "한국 대학 학업 어시스턴트" : "Korean Academic Assist.", desc: isKo ? "한국 대학생 및 GKS 외국인 유학생을 위한 이중언어 지원." : "Bilingual support for Korean domestic & international students." },
+  ];
+
+  const values = [
+    {
+      icon: Lightbulb,
+      title: isKo ? "단순 암기가 아닌 깊은 이해" : "Understanding over memorising",
+      body: isKo ? "벼락치기 후 잊어버리는 공부가 아닌, 진정한 개념 이해를 돕도록 모든 기능을 설계합니다." : "We design every feature to build genuine comprehension — not to help students cram and forget.",
+    },
+    {
+      icon: Heart,
+      title: "언제나 학생 중심",
+      body: isKo ? "모든 의사결정의 중심에는 '이 기능이 실제 학생의 공부를 돕는가?'라는 질문이 있습니다." : "Every decision starts with a single question: does this make a real student's study session better?",
+    },
+    {
+      icon: Users,
+      title: "글로벌 접근성",
+      body: isKo ? "언어가 학업의 장벽이 되어서는 안 됩니다. 이중언어 학습 지원이 PreplitAI의 핵심입니다." : "Language should never be a barrier to learning. Multilingual support is built into the core of PreplitAI.",
+    },
+    {
+      icon: Sparkles,
+      title: "정직한 AI",
+      body: isKo ? "저희 AI 엔진은 출처를 명확히 밝힙니다. 근거가 없으면 솔직하게 한계를 안내합니다." : "Our Grounded RAG engine cites sources. If PreplitAI doesn't know, it says so — no fabrications.",
+    },
+  ];
+
+  const timeline = [
+    {
+      year: isKo ? "문제 발견" : "The Problem",
+      title: isKo ? "학생들은 스마트하게 공부하지 못하고 있었습니다." : "Students were studying harder, not smarter.",
+      body: isKo ? "수많은 PDF 슬라이드, 교재, 강의 녹음 속에서 효율적인 학습 방법을 찾지 못하고 있었습니다." : "University students were drowning in PDFs, textbook chapters, and recorded lectures — with no intelligent way to engage with the material.",
+    },
+    {
+      year: isKo ? "새로운 인사이트" : "The Insight",
+      title: isKo ? "AI가 모든 자료를 1대1 튜터로 만들 수 있습니다." : "AI could transform any material into a tutor.",
+      body: isKo ? "강의 슬라이드와 교재가 나에게 질문을 던지고, 시각적으로 설명하며, 시험 문제를 예측해주는 튜터가 된다면 어떨까요?" : "What if any document — a slide deck, a textbook chapter, a YouTube lecture — could become an interactive teacher that quizzes you?",
+    },
+    {
+      year: isKo ? "플랫폼 개발" : "The Build",
+      title: isKo ? "PreplitAI: 단 하나의 올인원 스터디 워크스페이스." : "PreplitAI: One complete study workspace.",
+      body: isKo ? "출처 인용 챗봇, 퀴즈, 플래시카드, 팟캐스트, 출제 예상 문제를 하나의 통합 워크스페이스로 완성했습니다." : "We combined Grounded RAG chat, adaptive quizzes, smart flashcards, AI-generated podcasts, and predicted exam questions into one platform.",
+    },
+    {
+      year: isKo ? "현재" : "Today",
+      title: isKo ? "한국 고등교육 및 유학생 지원에 집중." : "Focused on Korean higher education first.",
+      body: isKo ? "한국 대학생과 GKS 장학생 및 외국인 유학생들이 가장 신뢰하는 AI 학업 플랫폼으로 성장하고 있습니다." : "Our initial market is Korean university students and international students studying in Korea — demanding AI-native learning tools.",
+    },
+  ];
+
+  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";
   const canonical = `${siteUrl}/about`;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] overflow-x-hidden">
+    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] overflow-x-hidden text-black dark:text-white">
       <SEOHead
-        title="About PreplitAI — AI Study Companion for University Students"
-        description="PreplitAI transforms any study material into an interactive learning experience. Learn about our mission, our 9-pillar AI study platform, and our focus on Korean higher education."
+        title={isKo ? "PreplitAI 소개 — 대학생을 위한 AI 학업 파트너" : "About PreplitAI — AI Study Companion for University Students"}
+        description={isKo ? "모든 학습 자료를 인터랙티브 학업 경험으로 변환하는 PreplitAI의 미션과 이야기를 확인하세요." : "PreplitAI transforms any study material into an interactive learning experience."}
         url={canonical}
         canonical={canonical}
       />
 
       {/* ── Hero ───────────────────────────────────────────────────────── */}
       <section className="relative max-w-6xl mx-auto px-6 pt-36 pb-20 text-center">
-        {/* background glow */}
         <div className="pointer-events-none absolute inset-0 flex items-start justify-center overflow-hidden">
           <div className="w-[700px] h-[700px] rounded-full bg-[#630000]/6 dark:bg-[#630000]/12 blur-[140px] -translate-y-1/4" />
         </div>
 
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-          custom={0}
-          className="relative z-10"
-        >
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0} className="relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#630000]/8 dark:bg-[#630000]/20 border border-[#630000]/20 dark:border-[#630000]/30 mb-8">
-            <span className="text-[12.5px] font-semibold text-[#630000] dark:text-[#ffaaaa] tracking-wide">Our Story</span>
+            <span className="text-[12.5px] font-semibold text-[#630000] dark:text-[#ffaaaa] tracking-wide">
+              {isKo ? '회사 스토리' : 'Our Story'}
+            </span>
           </div>
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-black dark:text-white leading-[1.08] tracking-tight mb-7">
-            We're building the world's
+            {isKo ? '세계에서 가장 강력한 ' : "We're building the world's "}
             <br className="hidden sm:block" />
-            <span className="text-[#630000] dark:text-[#ff9999]"> most powerful AI</span>
+            <span className="text-[#630000] dark:text-[#ff9999]">
+              {isKo ? 'AI 학업 파트너' : 'most powerful AI'}
+            </span>
             <br className="hidden sm:block" />
-            study companion.
+            {isKo ? '를 만들어갑니다.' : 'study companion.'}
           </h1>
 
           <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            PreplitAI transforms any study material — lecture slides, PDFs, textbooks, handwritten notes,
-            YouTube videos — into personalized, interactive learning experiences designed to help students
-            understand, retain, and excel.
+            {isKo
+              ? 'PreplitAI는 강의 슬라이드, PDF, 전공 서적, 손글씨 노트, 유튜브 영상을 맞춤형 인터랙티브 학습 경험으로 전환합니다.'
+              : 'PreplitAI transforms any study material — lecture slides, PDFs, textbooks, handwritten notes, YouTube videos — into personalized, interactive learning experiences.'}
           </p>
         </motion.div>
       </section>
 
-      {/* ── Tagline Banner (Consistent Dark Styling) ────────────────── */}
+      {/* ── Tagline Banner ────────────────── */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -155,29 +155,25 @@ const About = () => {
         className="border-y border-gray-200 dark:border-white/10 bg-gray-950 text-white py-12 px-6 text-center"
       >
         <p className="text-white text-xl sm:text-2xl md:text-3xl font-bold tracking-tight max-w-3xl mx-auto leading-snug">
-          "Transform Any Study Material into an Interactive Learning Experience."
+          {isKo
+            ? '"모든 학습 자료를 1대1 인터랙티브 학습 경험으로 변환합니다."'
+            : '"Transform Any Study Material into an Interactive Learning Experience."'}
         </p>
         <p className="text-[#c84040] text-xs mt-3 font-semibold tracking-widest uppercase">PreplitAI Tagline</p>
       </motion.section>
 
       {/* ── Story / Timeline ───────────────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-6 py-28">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeUp}
-          custom={0}
-          className="mb-16 text-center"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight">How we got here</h2>
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="mb-16 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight">
+            {isKo ? 'PreplitAI가 걸어온 길' : 'How we got here'}
+          </h2>
           <p className="text-gray-500 dark:text-gray-400 mt-3 text-[16px] max-w-xl mx-auto">
-            From a simple frustration to a complete AI learning platform.
+            {isKo ? '학업에 대한 사소한 답답함에서 완성형 AI 학업 플랫폼으로.' : 'From a simple frustration to a complete AI learning platform.'}
           </p>
         </motion.div>
 
         <div className="relative">
-          {/* vertical line */}
           <div className="absolute left-6 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[#630000]/40 via-[#630000]/20 to-transparent hidden sm:block" />
 
           <div className="space-y-12">
@@ -191,144 +187,50 @@ const About = () => {
                 custom={i}
                 className={`flex flex-col sm:flex-row gap-6 sm:gap-12 ${i % 2 === 1 ? 'sm:flex-row-reverse text-left sm:text-right' : ''}`}
               >
-                {/* content */}
                 <div className="flex-1">
-                  <div className={`inline-block text-[11px] font-bold uppercase tracking-widest text-[#630000] dark:text-[#ff9999] mb-2 px-2.5 py-1 rounded-full bg-[#630000]/8 dark:bg-[#630000]/15`}>
+                  <div className="inline-block text-[11px] font-bold uppercase tracking-widest text-[#630000] dark:text-[#ff9999] mb-2 px-2.5 py-1 rounded-full bg-[#630000]/8 dark:bg-[#630000]/15">
                     {item.year}
                   </div>
                   <h3 className="text-xl font-bold text-black dark:text-white mb-2">{item.title}</h3>
                   <p className="text-gray-500 dark:text-gray-400 leading-relaxed text-[15px]">{item.body}</p>
                 </div>
-
-                {/* dot */}
-                <div className="hidden sm:flex items-start justify-center w-6 shrink-0 mt-1">
-                  <div className="w-3 h-3 rounded-full bg-[#630000] ring-4 ring-white dark:ring-[#0a0a0a] mt-1.5" />
-                </div>
-
-                {/* spacer */}
-                <div className="flex-1 hidden sm:block" />
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Mission & Vision ───────────────────────────────────────────── */}
-      <section className="border-t border-gray-100 dark:border-white/[0.06] bg-gray-50/60 dark:bg-white/[0.02]">
-        <div className="max-w-5xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-10">
-          {[
-            {
-              eyebrow: "Our Mission",
-              title: "Make high-quality, personalized learning accessible to every student on earth.",
-              body: "University students deserve more than a chatbot. PreplitAI combines tutoring, exam preparation, interactive simulations, video generation, quizzes, podcasts, flashcards, and adaptive analytics into a single AI-powered workspace — so every student can study the way their brain actually learns.",
-            },
-            {
-              eyebrow: "Our Vision",
-              title: "A world where no student is left behind because of how they learn.",
-              body: "Not everyone learns the same way. Some students need visual diagrams. Others need audio explanations. Some need relentless quiz practice. PreplitAI adapts to every learner — regardless of language, background, or learning style — starting with Korean university students and international students studying in Korea.",
-            },
-          ].map((block, i) => (
-            <motion.div
-              key={i}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeUp}
-              custom={i}
-              className="bg-white dark:bg-[#111] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-8 md:p-10 hover:border-[#630000]/30 dark:hover:border-[#630000]/40 transition-colors"
-            >
-              <p className="text-[12px] font-bold uppercase tracking-widest text-[#630000] dark:text-[#ff9999] mb-3">{block.eyebrow}</p>
-              <h2 className="text-xl md:text-2xl font-bold text-black dark:text-white mb-4 leading-snug">{block.title}</h2>
-              <p className="text-gray-500 dark:text-gray-400 text-[15px] leading-relaxed">{block.body}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── 9 Pillars ──────────────────────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-6 py-24">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeUp}
-          custom={0}
-          className="text-center mb-14"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight mb-3">
-            9 pillars. One workspace.
-          </h2>
-          <p className="text-gray-500 dark:text-gray-400 text-[16px] max-w-xl mx-auto">
-            Every tool in PreplitAI exists to turn passive study material into active, engaging learning.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {pillars.map((p, i) => {
-            const Icon = p.icon;
-            return (
-              <motion.div
-                key={p.label}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-30px" }}
-                variants={fadeUp}
-                custom={i}
-                className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-white/[0.08] bg-white dark:bg-[#111] p-6 hover:border-[#630000]/40 dark:hover:border-[#630000]/50 hover:shadow-lg transition-all duration-300"
-              >
-                {/* hover glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#630000]/4 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative z-10">
-                  <div className="w-10 h-10 rounded-xl bg-[#630000]/8 dark:bg-[#630000]/15 text-[#630000] dark:text-[#ff9999] flex items-center justify-center mb-4 group-hover:bg-[#630000]/15 dark:group-hover:bg-[#630000]/25 transition-colors">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h3 className="font-semibold text-[15px] text-black dark:text-white mb-1.5">{p.label}</h3>
-                  <p className="text-[13.5px] text-gray-500 dark:text-gray-400 leading-relaxed">{p.desc}</p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ── Values ─────────────────────────────────────────────────────── */}
-      <section className="border-t border-gray-100 dark:border-white/[0.06] bg-gray-50/60 dark:bg-white/[0.02]">
-        <div className="max-w-5xl mx-auto px-6 py-24">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
-            className="text-center mb-14"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight mb-3">
-              What we believe in
+      {/* ── 9 Pillars Grid ────────────────────────────────────────────── */}
+      <section className="bg-gray-50/70 dark:bg-[#0d0d0d] py-28 px-6 border-y border-gray-200/60 dark:border-white/10">
+        <div className="max-w-6xl mx-auto">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white tracking-tight">
+              {isKo ? '9가지 핵심 AI 학습 도구' : 'The 9 Pillars of PreplitAI'}
             </h2>
-            <p className="text-gray-500 dark:text-gray-400 text-[16px] max-w-xl mx-auto">
-              The principles that guide every product decision at PreplitAI.
+            <p className="text-gray-500 dark:text-gray-400 mt-3 text-[16px] max-w-xl mx-auto">
+              {isKo ? '하나의 스터디 워크스페이스에 통합된 맞춤형 학습 도구 모음.' : 'A complete toolkit integrated inside every Study Space.'}
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 gap-6">
-            {values.map((v, i) => {
-              const Icon = v.icon;
+          <div className="grid md:grid-cols-3 gap-6">
+            {pillars.map((p, i) => {
+              const Icon = p.icon;
               return (
                 <motion.div
-                  key={v.title}
+                  key={p.label}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
                   variants={fadeUp}
-                  custom={i}
-                  className="flex gap-5 p-7 bg-white dark:bg-[#111] rounded-2xl border border-gray-200 dark:border-white/[0.08] hover:border-[#630000]/30 dark:hover:border-[#630000]/40 transition-colors"
+                  custom={i % 3}
+                  className="p-6 rounded-2xl bg-white dark:bg-[#141414] border border-gray-200/80 dark:border-white/10 shadow-xs hover:border-[#630000]/40 transition-colors flex flex-col justify-between"
                 >
-                  <div className="w-11 h-11 rounded-xl bg-[#630000]/8 dark:bg-[#630000]/15 text-[#630000] dark:text-[#ff9999] flex items-center justify-center shrink-0">
-                    <Icon className="w-5 h-5" />
-                  </div>
                   <div>
-                    <h3 className="font-semibold text-[15px] text-black dark:text-white mb-2">{v.title}</h3>
-                    <p className="text-[14px] text-gray-500 dark:text-gray-400 leading-relaxed">{v.body}</p>
+                    <div className="w-10 h-10 rounded-xl bg-[#630000]/8 dark:bg-[#630000]/25 text-[#630000] dark:text-[#ffaaaa] flex items-center justify-center mb-4">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-lg font-bold text-black dark:text-white mb-2">{p.label}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{p.desc}</p>
                   </div>
                 </motion.div>
               );
@@ -337,90 +239,58 @@ const About = () => {
         </div>
       </section>
 
-      {/* ── Market Focus ───────────────────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-6 py-24">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeUp}
-          custom={0}
-          className="grid md:grid-cols-5 gap-10 items-center"
-        >
-          <div className="md:col-span-3">
-            <p className="text-[12px] font-bold uppercase tracking-widest text-[#630000] dark:text-[#ff9999] mb-3">Where we're focused</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight mb-5 leading-tight">
-              Starting with Korean university students — and going global.
-            </h2>
-            <p className="text-gray-500 dark:text-gray-400 text-[15.5px] leading-relaxed mb-5">
-              Korea's higher education landscape is one of the world's most competitive. With over 600,000 international students expected by 2027 and a surging demand for AI-powered learning tools, Korea is the ideal launchpad for PreplitAI.
-            </p>
-            <p className="text-gray-500 dark:text-gray-400 text-[15.5px] leading-relaxed">
-              Our Korean Academic Assistant bridges the language gap for GKS scholars and exchange students studying in Korean, while our adaptive AI tools help domestic students excel in high-stakes exams.
-            </p>
-          </div>
+      {/* ── Core Values ────────────────────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-6 py-28">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white tracking-tight">
+            {isKo ? 'PreplitAI의 핵심 가치' : 'What we stand for'}
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 text-[16px] max-w-xl mx-auto">
+            {isKo ? '저희가 제품을 빌드할 때 지키는 4가지 원칙.' : 'The principles guiding every product decision we make.'}
+          </p>
+        </motion.div>
 
-          <div className="md:col-span-2 grid grid-cols-2 gap-4">
-            {[
-              { value: "600K+", label: "Int'l students in Korea by 2027" },
-              { value: "9",     label: "AI study pillars in one workspace" },
-              { value: "1",     label: "Focused market, global potential" },
-              { value: "∞",     label: "Learning styles supported" },
-            ].map((s, i) => (
+        <div className="grid md:grid-cols-2 gap-8">
+          {values.map((v, i) => {
+            const Icon = v.icon;
+            return (
               <motion.div
-                key={i}
+                key={v.title}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i}
-                className="p-5 bg-white dark:bg-[#111] border border-gray-200 dark:border-white/[0.08] rounded-2xl text-center hover:border-[#630000]/30 dark:hover:border-[#630000]/40 transition-colors"
+                className="p-8 rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#121212] flex gap-5 items-start"
               >
-                <div className="text-3xl font-bold text-[#630000] dark:text-[#ff9999] mb-1">{s.value}</div>
-                <div className="text-[12px] text-gray-500 dark:text-gray-400 leading-tight">{s.label}</div>
+                <div className="w-12 h-12 rounded-2xl bg-black/5 dark:bg-white/10 text-black dark:text-white flex items-center justify-center shrink-0">
+                  <Icon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-black dark:text-white mb-2">{v.title}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{v.body}</p>
+                </div>
               </motion.div>
-            ))}
-          </div>
-        </motion.div>
+            );
+          })}
+        </div>
       </section>
 
-      {/* ── CTA Section (Consistent with Image 1) ────────────────────── */}
-      <section className="bg-gray-950">
-        <div className="max-w-4xl mx-auto px-6 py-28 text-center">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-6 leading-tight">
-              Start studying smarter
-              <br />
-              <span className="text-[#c84040]">in minutes, not hours.</span>
-            </h2>
-            <p className="text-lg text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed">
-              Join thousands of students who use PreplitAI to master their course materials faster with grounded AI.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button 
-                asChild
-                className="text-[15px] px-8 py-3 h-12 bg-white hover:bg-gray-100 text-black rounded-full font-medium transition-all duration-200 shadow-lg shadow-white/10 hover:shadow-xl hover:-translate-y-0.5"
-              >
-                <a href="/preplitai-chat" className="flex items-center gap-2">
-                  <span>Launch Workspace Free</span>
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button 
-                asChild
-                variant="outline"
-                className="text-[15px] px-8 py-3 h-12 rounded-full font-medium border border-white/20 bg-transparent text-white hover:bg-white/10 transition-all duration-200"
-              >
-                <a href="/pricing">View Subscription Plans</a>
-              </Button>
-            </div>
-          </motion.div>
+      {/* ── Bottom CTA Banner (Consistent Dark Styling) ────────────────── */}
+      <section className="px-6 pb-24 max-w-6xl mx-auto">
+        <div className="rounded-3xl bg-gray-950 text-white p-10 sm:p-14 text-center relative overflow-hidden border border-gray-800 shadow-2xl">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
+            {isKo ? '스마트 학습을 시작할 준비가 되셨나요?' : 'Ready to study smarter?'}
+          </h2>
+          <p className="text-gray-400 text-base max-w-xl mx-auto mb-8">
+            {isKo ? '강의 슬라이드나 PDF를 업로드하고 나만의 AI 스터디 튜터를 무료로 경험해보세요.' : 'Upload your first document and experience an interactive AI study companion today.'}
+          </p>
+          <Button asChild size="lg" className="rounded-full bg-white text-black hover:bg-gray-100 font-semibold text-base px-8 h-12">
+            <a href="/preplitai-chat" className="flex items-center gap-2">
+              <span>{isKo ? '워크스페이스 시작하기' : 'Launch Workspace'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </Button>
         </div>
       </section>
 

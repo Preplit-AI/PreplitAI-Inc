@@ -1,37 +1,53 @@
 import { Button } from "@/components/ui/button";
-import { MessageSquare, HelpCircle, BookOpen, FileText, Radio, Target, ArrowRight, Sparkles } from "lucide-react";
+import { MessageSquare, HelpCircle, BookOpen, FileText, Radio, Target, ArrowRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const WorkspaceTeaserSection = () => {
+  const { language } = useLanguage();
+  const isKo = language === 'ko';
+
   const features = [
     {
       icon: MessageSquare,
-      title: "Grounded RAG Chat",
-      desc: "Ask questions and get instant answers backed directly by your course PDFs and lecture notes with precise page citations.",
+      title: isKo ? "출처 인용 RAG AI 챗" : "Grounded RAG Chat",
+      desc: isKo
+        ? "전공 서적 및 강의 PDF에 관해 질문하면 환각 없이 원문 페이지를 명확히 인용하며 답변합니다."
+        : "Ask questions and get instant answers backed directly by your course PDFs and lecture notes with precise page citations.",
     },
     {
       icon: HelpCircle,
-      title: "AI Quiz Generator",
-      desc: "Auto-generate practice exams with multiple choice, fill-in-the-blank, and short answers mapped to your syllabus.",
+      title: isKo ? "AI 퀴즈 생성기" : "AI Quiz Generator",
+      desc: isKo
+        ? "실제 시험 출제 스타일(객관식, 빈칸, 단답형)에 맞춘 실전 모의고사 퀴즈를 자동 생성합니다."
+        : "Auto-generate practice exams with multiple choice, fill-in-the-blank, and short answers mapped to your syllabus.",
     },
     {
       icon: BookOpen,
-      title: "Smart Flashcards",
-      desc: "Master key terminology with active recall flashcard decks extracted directly from your study documents.",
+      title: isKo ? "스마트 플래시카드" : "Smart Flashcards",
+      desc: isKo
+        ? "교재의 주요 개념과 암기 키워드를 자동 추출하여 간격 반복 학습덱을 생성합니다."
+        : "Master key terminology with active recall flashcard decks extracted directly from your study documents.",
     },
     {
       icon: FileText,
-      title: "Dense Summaries",
-      desc: "Convert lengthy textbooks and slide decks into crisp, structured bullet-point executive summaries.",
+      title: isKo ? "핵심 요약 노트" : "Dense Summaries",
+      desc: isKo
+        ? "수백 페이지의 전공서와 강의 슬라이드를 구조화된 핵심 족보 요약집으로 정리합니다."
+        : "Convert lengthy textbooks and slide decks into crisp, structured bullet-point executive summaries.",
     },
     {
       icon: Radio,
-      title: "Audio Podcast Generator",
-      desc: "Listen on the go with two-speaker AI conversational podcast episodes discussing your course topics.",
+      title: isKo ? "오디오 팟캐스트 생성기" : "Audio Podcast Generator",
+      desc: isKo
+        ? "이동 중에도 학습할 수 있도록 학습 자료를 2인 대화형 AI 팟캐스트 오디오로 변환합니다."
+        : "Listen on the go with two-speaker AI conversational podcast episodes discussing your course topics.",
     },
     {
       icon: Target,
-      title: "Expected Exam Questions",
-      desc: "Generate target exam items with step-by-step model answers and probability ratings.",
+      title: isKo ? "출제 예상 문제 예측" : "Expected Exam Questions",
+      desc: isKo
+        ? "기출 패턴과 교수님 강의 특징을 분석하여 시험 출제 확률이 높은 예상 문제를 뽑아줍니다."
+        : "Generate target exam items with step-by-step model answers and probability ratings.",
     }
   ];
 
@@ -41,15 +57,13 @@ export const WorkspaceTeaserSection = () => {
 
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 dark:bg-white/10 text-xs font-semibold uppercase tracking-wider text-[#630000] dark:text-red-400 mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Interactive Workspace</span>
-          </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-black dark:text-white mb-4 leading-tight">
-            Explore PreplitAI Workspace
+            {isKo ? 'PreplitAI 워크스페이스 탐색' : 'Explore PreplitAI Workspace'}
           </h2>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-            Upload your course materials and unlock an all-in-one AI learning suite tailored directly to your curriculum.
+            {isKo
+              ? '강의 자료를 업로드하면 나만의 커리큘럼에 맞춰진 올인원 AI 학습 튜터가 열립니다.'
+              : 'Upload your course materials and unlock an all-in-one AI learning suite tailored directly to your curriculum.'}
           </p>
         </div>
 
@@ -82,10 +96,10 @@ export const WorkspaceTeaserSection = () => {
         <div className="p-8 sm:p-10 rounded-3xl bg-black dark:bg-white text-white dark:text-black flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="text-left space-y-1">
             <h3 className="text-xl sm:text-2xl font-bold tracking-tight">
-              Ready to elevate your study sessions?
+              {isKo ? '학습 효율을 극대화할 준비가 되셨나요?' : 'Ready to elevate your study sessions?'}
             </h3>
             <p className="text-sm opacity-80">
-              Open the interactive AI Workspace now — free to start.
+              {isKo ? '지금 바로 인터랙티브 AI 워크스페이스를 무료로 시작하세요.' : 'Open the interactive AI Workspace now — free to start.'}
             </p>
           </div>
           <Button
@@ -93,7 +107,7 @@ export const WorkspaceTeaserSection = () => {
             className="px-7 py-3 h-12 text-[14px] font-semibold bg-white dark:bg-black text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all shrink-0"
           >
             <a href="/preplitai-chat" className="flex items-center gap-2">
-              <span>Launch Workspace</span>
+              <span>{isKo ? '워크스페이스 열기' : 'Launch Workspace'}</span>
               <ArrowRight className="w-4 h-4" />
             </a>
           </Button>
