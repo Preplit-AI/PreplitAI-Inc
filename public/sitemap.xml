@@ -1,18 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://yourdomain.com/</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://preplitai.com/</loc>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://yourdomain.com/features</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://preplitai.com/gks</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://yourdomain.com/pricing</loc>
+    <loc>https://preplitai.com/gks/dashboard</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://preplitai.com/gks/scholar-materials</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://preplitai.com/gks/alumni-review</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://preplitai.com/features</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://preplitai.com/pricing</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://preplitai.com/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://preplitai.com/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://preplitai.com/api-docs</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://preplitai.com/status</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.50</priority>
   </url>
 </urlset>

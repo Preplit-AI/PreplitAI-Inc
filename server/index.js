@@ -59,8 +59,11 @@ app.use(express.static(path.join(__dirname, 'public'), {
 
 const subscriptionRoutes = require('./routes/subscription');
 
+const gksRoutes = require('./routes/gks');
+
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/gks', gksRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/lecture', lectureRoutes);
 app.use('/api/video', videoRoutes);

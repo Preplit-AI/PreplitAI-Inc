@@ -307,6 +307,82 @@ const initializeDatabase = async () => {
       )
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS gks_profiles (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        session_token VARCHAR(255) UNIQUE NOT NULL,
+        user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+        track VARCHAR(50) DEFAULT 'embassy',
+        degree_level VARCHAR(50) DEFAULT 'master',
+        country VARCHAR(100),
+        target_field VARCHAR(150),
+        first_choice_university VARCHAR(150),
+        second_choice_university VARCHAR(150),
+        third_choice_university VARCHAR(150),
+        academic_gpa VARCHAR(50),
+        topik_level VARCHAR(20),
+        english_score VARCHAR(50),
+        english_test_type VARCHAR(50) DEFAULT 'IELTS',
+        english_test_score VARCHAR(50),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS gks_manual_reviews (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        session_token VARCHAR(255) NOT NULL,
+        applicant_name VARCHAR(255) NOT NULL,
+        applicant_email VARCHAR(255) NOT NULL,
+        target_track VARCHAR(50) NOT NULL,
+        notes TEXT,
+        status VARCHAR(50) DEFAULT 'pending',
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS gks_applications (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        profile_id UUID REFERENCES gks_profiles(id) ON DELETE CASCADE,
+        status VARCHAR(50) DEFAULT 'draft',
+        readiness_score INT DEFAULT 0,
+        evaluation_summary JSONB DEFAULT '{}'::jsonb,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS gks_documents (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        application_id UUID REFERENCES gks_applications(id) ON DELETE CASCADE,
+        document_type VARCHAR(50) NOT NULL,
+        file_name VARCHAR(255),
+        file_url TEXT,
+        extracted_text TEXT NOT NULL,
+        word_count INT DEFAULT 0,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS gks_evaluations (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        application_id UUID REFERENCES gks_applications(id) ON DELETE CASCADE,
+        readiness_score INT NOT NULL,
+        narrative_fit_score INT NOT NULL,
+        academic_fit_score INT NOT NULL,
+        korea_fit_score INT NOT NULL,
+        feasibility_score INT NOT NULL,
+        document_diagnostics JSONB NOT NULL DEFAULT '{}'::jsonb,
+        action_items JSONB NOT NULL DEFAULT '[]'::jsonb,
+        raw_ai_response JSONB DEFAULT '{}'::jsonb,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `);
+
     // Seed default subscription plans & capabilities if empty
     await pool.query(`
       INSERT INTO subscription_plans (id, version, name, description, monthly_price, annual_price, is_public, status)

@@ -22,6 +22,10 @@ import AccountSettings from "./pages/AccountSettings";
 import Credits from "./pages/Credits";
 import PreplitAIChat from "./pages/PreplitAIChat";
 import Blog from "./pages/Blog";
+import GKSPlatform from "./pages/GKSPlatform";
+import GKSDashboard from "./pages/GKSDashboard";
+import GKSScholarMaterials from "./pages/GKSScholarMaterials";
+import GKSAlumniReview from "./pages/GKSAlumniReview";
 
 const queryClient = new QueryClient();
 
@@ -40,9 +44,13 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/features" element={<FeaturesPage />} />
-            <Route path="/demo" element={<RequestDemo />} />
+            <Route path="/request-demo" element={<RequestDemo />} />
             <Route path="/status" element={<StatusPage />} />
-            <Route path="/developers" element={<APIPage />} />
+            <Route path="/api-docs" element={<APIPage />} />
+            <Route path="/gks" element={<GKSPlatform />} />
+            <Route path="/gks/dashboard" element={<GKSDashboard />} />
+            <Route path="/gks/scholar-materials" element={<GKSScholarMaterials />} />
+            <Route path="/gks/alumni-review" element={<GKSAlumniReview />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/sales" element={<TalkToSales />} />

@@ -102,16 +102,46 @@ const About = () => {
     },
   ];
 
-  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";
+  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://preplitai.com";
   const canonical = `${siteUrl}/about`;
+
+  const founderSchema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: "Khan Muhammad Ahsan",
+      jobTitle: "Founder & Chief Executive Officer",
+      worksFor: {
+        "@type": "Organization",
+        name: "PreplitAI",
+        url: "https://preplitai.com"
+      },
+      description: "Khan Muhammad Ahsan is the Founder and Chief Architect of PreplitAI, building AI study companion tools and GKS application prep solutions."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      name: "About PreplitAI & Founder Khan Muhammad Ahsan",
+      url: canonical,
+      mainEntity: {
+        "@type": "Organization",
+        name: "PreplitAI",
+        founder: {
+          "@type": "Person",
+          name: "Khan Muhammad Ahsan"
+        }
+      }
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] overflow-x-hidden text-black dark:text-white">
       <SEOHead
-        title={isKo ? "PreplitAI 소개 — 대학생을 위한 AI 학업 파트너" : "About PreplitAI — AI Study Companion for University Students"}
-        description={isKo ? "모든 학습 자료를 인터랙티브 학업 경험으로 변환하는 PreplitAI의 미션과 이야기를 확인하세요." : "PreplitAI transforms any study material into an interactive learning experience."}
+        title={isKo ? "PreplitAI 소개 & 설립자 Khan Muhammad Ahsan — AI 학업 파트너" : "About PreplitAI & Founder Khan Muhammad Ahsan — AI Study Companion"}
+        description={isKo ? "설립자 Khan Muhammad Ahsan이 이끄는 PreplitAI의 미션과 GKS2026 AI 준비 플랫폼 스토리를 확인하세요." : "Learn about PreplitAI, founded by Khan Muhammad Ahsan to revolutionize AI study tools and Global Korea Scholarship (GKS) preparation."}
         url={canonical}
         canonical={canonical}
+        schemaMarkup={founderSchema}
       />
 
       {/* ── Hero ───────────────────────────────────────────────────────── */}
@@ -235,6 +265,31 @@ const About = () => {
                 </motion.div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Founder Entity Section ───────────────────────────────────── */}
+      <section className="max-w-4xl mx-auto px-6 py-16 border-b border-gray-200/60 dark:border-white/10">
+        <div className="p-8 sm:p-10 rounded-3xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center gap-8">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#630000] text-white flex items-center justify-center font-bold text-2xl tracking-wider shrink-0 shadow-lg border-2 border-white/20">
+            KMA
+          </div>
+          <div className="space-y-3 text-center sm:text-left">
+            <div>
+              <span className="text-xs font-bold text-[#630000] dark:text-[#c84040] uppercase tracking-wider block">
+                {isKo ? '설립자 & 총괄 엔지니어' : 'Founder & Chief Executive Officer'}
+              </span>
+              <h3 className="text-2xl font-bold text-black dark:text-white">Khan Muhammad Ahsan</h3>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+              {isKo
+                ? 'Khan Muhammad Ahsan은 PreplitAI의 설립자이자 총괄 설계자입니다. AI 기술과 학업 워크스페이스를 결합하여 한국 대학생 및 Global Korea Scholarship (GKS) 지원자들을 위한 혁신적인 학습 및 서류 평가 플랫폼을 개발하고 있습니다.'
+                : 'Khan Muhammad Ahsan is the Founder and Chief Executive Officer of PreplitAI. He leads the engineering and vision behind PreplitAI\'s RAG study engine and GKS2026 application review platform.'}
+            </p>
+            <div className="text-xs text-gray-500 font-medium">
+              Khan Muhammad Ahsan is the founder of PreplitAI.
+            </div>
           </div>
         </div>
       </section>

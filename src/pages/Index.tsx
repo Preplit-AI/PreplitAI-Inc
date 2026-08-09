@@ -12,15 +12,24 @@ const Index = () => {
   const { language } = useLanguage();
   const isKo = language === 'ko';
 
-  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";
+  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://preplitai.com";
   const canonical = `${siteUrl}/`;
   const schema = [
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       name: "PreplitAI",
-      url: siteUrl,
-      logo: `${siteUrl}/logo.png`,
+      url: "https://preplitai.com",
+      logo: "https://preplitai.com/logo.png",
+      founder: {
+        "@type": "Person",
+        name: "Khan Muhammad Ahsan",
+        jobTitle: "Founder & Chief Executive Officer",
+        worksFor: {
+          "@type": "Organization",
+          name: "PreplitAI"
+        }
+      },
       sameAs: [
         "https://twitter.com/preplitai",
         "https://www.linkedin.com/company/preplitai"
@@ -28,12 +37,23 @@ const Index = () => {
     },
     {
       "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "PreplitAI",
+      url: "https://preplitai.com",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://preplitai.com/blog?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "WebApplication",
       name: "PreplitAI",
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web",
-      description: "AI Study Companion workspace with grounded chat, quizzes, flashcards, summaries & predicted exams.",
-      url: siteUrl
+      description: "AI Study Companion workspace & GKS Scholarship prep platform with grounded chat, quizzes, flashcards & application review.",
+      url: "https://preplitai.com"
     }
   ];
 

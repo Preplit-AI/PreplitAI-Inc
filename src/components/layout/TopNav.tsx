@@ -29,6 +29,7 @@ export const TopNav = () => {
   const { language, toggleLanguage } = useLanguage();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<"login" | "signup">("login");
+  const [gksMenuOpen, setGksMenuOpen] = useState(false);
 
   if (location.pathname === "/preplitai-chat") {
     return null;
@@ -48,6 +49,43 @@ export const TopNav = () => {
 
           {/* Center: Clean Simple Navigation Links (desktop) */}
           <nav className="hidden md:flex items-center gap-1">
+            <div 
+              className="relative py-2"
+              onMouseEnter={() => setGksMenuOpen(true)}
+              onMouseLeave={() => setGksMenuOpen(false)}
+            >
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setGksMenuOpen(!gksMenuOpen);
+                }}
+                className="text-[14px] font-semibold px-3 py-1.5 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>GKS2026 Prep</span>
+                <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gray-900 dark:bg-white text-white dark:text-black">NEW</span>
+                <span className="text-[10px] text-gray-500 ml-0.5">{gksMenuOpen ? '▲' : '▼'}</span>
+              </button>
+
+              {/* CONTINUOUS HOVER ZONE WRAPPER (NO GAP PIXELS) */}
+              {gksMenuOpen && (
+                <div className="absolute top-full left-0 pt-1 w-64 z-50">
+                  <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-2">
+                    <a href="/gks/dashboard" className="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                      <div className="font-bold text-gray-900 dark:text-white">{isKo ? 'GKS2026 AI 워크스페이스' : 'GKS2026 AI Workbench'}</div>
+                      <div className="text-[11px] text-gray-500 dark:text-gray-400 font-normal mt-0.5">{isKo ? '서류 종합 분석 & 준비도 점수' : 'Dossier review & readiness score'}</div>
+                    </a>
+                    <a href="/gks/scholar-materials" className="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors mt-1">
+                      <div className="font-bold text-gray-900 dark:text-white">{isKo ? '합격자 샘플 서류 자료실' : 'Scholar Materials Library'}</div>
+                      <div className="text-[11px] text-gray-500 dark:text-gray-400 font-normal mt-0.5">{isKo ? '역대 장학생 합격 서류 & 가이드' : 'Past scholars sample essays'}</div>
+                    </a>
+                    <a href="/gks/alumni-review" className="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors mt-1">
+                      <div className="font-bold text-gray-900 dark:text-white">{isKo ? '1:1 동문 첨삭 신청' : '1-on-1 Alumni Review'}</div>
+                      <div className="text-[11px] text-gray-500 dark:text-gray-400 font-normal mt-0.5">{isKo ? '장학생 출신 48시간 맞춤 피드백' : '48-hour scholar manual review'}</div>
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
             <a href="/features" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
               {isKo ? '기능' : 'Features'}
             </a>
@@ -156,6 +194,16 @@ export const TopNav = () => {
               </SheetTrigger>
               <SheetContent side="left" className="w-full max-w-[100vw] bg-white dark:bg-gray-950 p-6 overflow-y-auto">
                 <nav className="mt-4 space-y-2">
+                  <a href="/gks" className="block px-4 py-3 rounded-xl font-semibold text-[#630000] dark:text-[#c84040] bg-red-500/10 hover:bg-red-500/20 text-center flex items-center justify-center gap-2">
+                    <span>GKS2026 Prep</span>
+                    <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-[#630000] dark:bg-[#c84040] text-white">NEW</span>
+                  </a>
+                  <a href="/gks/scholar-materials" className="block px-4 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 font-medium text-xs text-center">
+                    {isKo ? '합격자 샘플 서류 자료실' : 'Scholar Materials Library'}
+                  </a>
+                  <a href="/gks/alumni-review" className="block px-4 py-2.5 rounded-lg text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/10 font-medium text-xs text-center">
+                    {isKo ? '1:1 동문 서류 첨삭 신청' : '1-on-1 Alumni Review'}
+                  </a>
                   <a href="/preplitai-chat" className="block px-4 py-3 rounded-xl font-semibold text-white bg-[#630000] hover:bg-[#7a0000] shadow-sm text-center">
                     {isKo ? 'AI 학습 워크스페이스 시작' : 'Launch Workspace'}
                   </a>

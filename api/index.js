@@ -9,6 +9,7 @@ const videoRoutes = require('../server/routes/video');
 const authRoutes = require('../server/routes/auth');
 const creditsRoutes = require('../server/routes/credits');
 const paymentsRoutes = require('../server/routes/payments');
+const gksRoutes = require('../server/routes/gks');
 require('../server/db/database'); // Initialize database
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/gks', gksRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/lecture', lectureRoutes);
 app.use('/api/video', videoRoutes);

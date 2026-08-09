@@ -16,7 +16,7 @@ export const SITE_NAME = 'PreplitAI';
 
 /** Default site URL (overridden by VITE_SITE_URL env var) */
 export const DEFAULT_SITE_URL =
-  (import.meta as any).env?.VITE_SITE_URL || 'https://yourdomain.com';
+  (import.meta as any).env?.VITE_SITE_URL || 'https://preplitai.com';
 
 // ── Video Generation Defaults ──────────────────────────────────────────────
 
