@@ -66,11 +66,18 @@ export const Hero = () => {
               </Button>
               
               <Button 
-                asChild
                 variant="outline"
-                className="text-[15px] px-7 py-3 h-12 rounded-full font-medium border border-gray-300 dark:border-gray-700 bg-white text-black dark:bg-transparent dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 justify-center"
+                onClick={() => {
+                  const el = document.getElementById('features');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    window.location.href = '/features';
+                  }
+                }}
+                className="text-[15px] px-7 py-3 h-12 rounded-full font-medium border border-gray-300 dark:border-gray-700 bg-white text-black dark:bg-transparent dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 justify-center cursor-pointer"
               >
-                <a href="#features">{isKo ? '기능 둘러보기' : 'Explore Features'}</a>
+                <span>{isKo ? '기능 둘러보기' : 'Explore Features'}</span>
               </Button>
             </div>
 
