@@ -13,7 +13,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem('preplitai_lang');
-    return (saved === 'ko' || saved === 'en') ? saved : 'ko';
+    return (saved === 'ko' || saved === 'en') ? saved : 'en';
   });
 
   const setLanguage = (lang: Language) => {
@@ -40,7 +40,7 @@ export const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (!context) {
     return {
-      language: 'ko' as Language,
+      language: 'en' as Language,
       setLanguage: () => {},
       toggleLanguage: () => {}
     };
