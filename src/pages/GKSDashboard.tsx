@@ -584,7 +584,7 @@ export default function GKSDashboard() {
                 <select
                   value={profile.track}
                   onChange={e => setProfile({ ...profile, track: e.target.value })}
-                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#630000]"
+                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-sm sm:text-xs text-gray-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white h-10 sm:h-9"
                 >
                   <option value="embassy">Embassy Track (공관전형 - 최대 3개 대학)</option>
                   <option value="university">University Track (대학전형 - 단일 1개 대학)</option>
@@ -596,7 +596,7 @@ export default function GKSDashboard() {
                 <select
                   value={profile.degreeLevel}
                   onChange={e => setProfile({ ...profile, degreeLevel: e.target.value })}
-                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#630000]"
+                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-sm sm:text-xs text-gray-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white h-10 sm:h-9"
                 >
                   <option value="undergraduate">Undergraduate (학사 과정)</option>
                   <option value="master">Master's Degree (석사 과정)</option>
@@ -610,7 +610,7 @@ export default function GKSDashboard() {
                   value={profile.country}
                   onChange={e => setProfile({ ...profile, country: e.target.value })}
                   placeholder="e.g. Philippines"
-                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-xs rounded-xl py-2"
+                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
                 />
               </div>
 
@@ -620,7 +620,7 @@ export default function GKSDashboard() {
                   value={profile.targetField}
                   onChange={e => setProfile({ ...profile, targetField: e.target.value })}
                   placeholder="e.g. Computer Science & AI"
-                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-xs rounded-xl py-2"
+                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
                 />
               </div>
 
@@ -630,7 +630,7 @@ export default function GKSDashboard() {
                   value={profile.academicGpa}
                   onChange={e => setProfile({ ...profile, academicGpa: e.target.value })}
                   placeholder="e.g. 3.88 / 4.0"
-                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-xs rounded-xl py-2"
+                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
                 />
               </div>
 
@@ -639,7 +639,7 @@ export default function GKSDashboard() {
                 <select
                   value={profile.topikLevel}
                   onChange={e => setProfile({ ...profile, topikLevel: e.target.value })}
-                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#630000]"
+                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-sm sm:text-xs text-gray-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white h-10 sm:h-9"
                 >
                   <option value="None">None (미소지)</option>
                   <option value="TOPIK 1">TOPIK Level 1</option>
@@ -656,7 +656,7 @@ export default function GKSDashboard() {
                 <select
                   value={profile.englishTestType}
                   onChange={e => setProfile({ ...profile, englishTestType: e.target.value })}
-                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#630000]"
+                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-sm sm:text-xs text-gray-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white h-10 sm:h-9"
                 >
                   <option value="IELTS">IELTS Academic</option>
                   <option value="TOEFL">TOEFL iBT</option>
@@ -671,7 +671,7 @@ export default function GKSDashboard() {
                   value={profile.englishTestScore}
                   onChange={e => setProfile({ ...profile, englishTestScore: e.target.value })}
                   placeholder="e.g. IELTS 7.5"
-                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-xs rounded-xl py-2"
+                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
                 />
               </div>
 
@@ -684,7 +684,7 @@ export default function GKSDashboard() {
                     value={profile.firstChoiceUniversity}
                     onChange={e => setProfile({ ...profile, firstChoiceUniversity: e.target.value })}
                     placeholder="1st Choice: Seoul National University"
-                    className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-xs rounded-xl"
+                    className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
                   />
                   {profile.track === 'embassy' && (
                     <>
@@ -692,13 +692,13 @@ export default function GKSDashboard() {
                         value={profile.secondChoiceUniversity}
                         onChange={e => setProfile({ ...profile, secondChoiceUniversity: e.target.value })}
                         placeholder="2nd Choice: KAIST"
-                        className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-xs rounded-xl"
+                        className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
                       />
                       <Input
                         value={profile.thirdChoiceUniversity}
                         onChange={e => setProfile({ ...profile, thirdChoiceUniversity: e.target.value })}
                         placeholder="3rd Choice: Korea University"
-                        className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-xs rounded-xl"
+                        className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
                       />
                     </>
                   )}
