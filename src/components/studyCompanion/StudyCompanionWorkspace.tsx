@@ -1,45 +1,42 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Search, History, Folder, Settings, User, BookOpen, Radio, FileText, Upload, X, ChevronUp, MessageSquare, HelpCircle, Trash2, Menu, Home, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import { DocumentViewer } from './DocumentViewer';
-import { ToolPanel } from './ToolPanel';
-import { SettingsModal } from './SettingsModal';
-import { GlobalSearch } from './GlobalSearch';
-import { AccountMenu } from './AccountMenu';
-import { ManageSubscriptionModal } from '../common/ManageSubscriptionModal';
-import { SubscriptionModal } from '../common/SubscriptionModal';
-import { AuthModal } from '../auth/AuthModal';
-import { WorkspaceHome } from './WorkspaceHome';
-import { ResourceLibrary } from './ResourceLibrary';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useAuth } from '@/contexts/AuthContext';
-import { translations } from '@/i18n/translations';
+import React, { useState, useEffect, useRef } from "react";
+import { Plus, Trash2, Menu, X, Upload, Send, Paperclip } from "lucide-react";
+import { WorkspaceTopNav, WorkspaceNavTab } from "./WorkspaceTopNav";
+import { WorkspaceHome } from "./WorkspaceHome";
+import { AnalyticsView } from "./AnalyticsView";
+import { InteractiveLearningView } from "./InteractiveLearningView";
+import { QuizView } from "./QuizView";
+import { FlashcardView } from "./FlashcardView";
+import { PodcastView } from "./PodcastView";
+import { ExpectedExamView } from "./ExpectedExamView";
+import { SummaryView } from "./SummaryView";
+import { SettingsModal } from "./SettingsModal";
+import { GlobalSearch } from "./GlobalSearch";
+import { ManageSubscriptionModal } from "../common/ManageSubscriptionModal";
+import { SubscriptionModal } from "../common/SubscriptionModal";
+import { AuthModal } from "../auth/AuthModal";
+import { MessageList } from "../chat/MessageList";
+import { VoiceMode } from "./VoiceMode";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { translations } from "@/i18n/translations";
 
 async function extractTextFromFile(file: File): Promise<string> {
   return new Promise((resolve) => {
     const reader = new FileReader();
-    if (file.name.toLowerCase().endsWith('.pdf')) {
+    if (file.name.toLowerCase().endsWith(".pdf")) {
       reader.onload = (e) => {
         const bytes = new Uint8Array(e.target?.result as ArrayBuffer);
-        let text = '';
-        const decoder = new TextDecoder('utf-8', { fatal: false });
+        const decoder = new TextDecoder("utf-8", { fatal: false });
         const raw = decoder.decode(bytes);
         const tjMatches = raw.match(/\(([^)]+)\)/g);
+        let text = "";
         if (tjMatches && tjMatches.length > 5) {
-          text = tjMatches
-            .map(m => m.slice(1, -1))
-            .filter(s => s.length > 1 && /[a-zA-Z]/.test(s))
-            .join(' ');
+          text = tjMatches.map(m => m.slice(1,-1)).filter(s => s.length > 1 && /[a-zA-Z]/.test(s)).join(" ");
         }
         if (text.length < 50) {
-          text = raw.replace(/[^\x20-\x7E\n\r\t]/g, ' ')
-            .replace(/\s{3,}/g, '\n')
-            .split('\n')
-            .filter(line => line.trim().length > 20 && /[a-zA-Z]{3,}/.test(line))
-            .join('\n');
+          text = raw.replace(/[^\x20-\x7E\n\r\t]/g," ").replace(/\s{3,}/g,"\n").split("\n").filter(l => l.trim().length > 20 && /[a-zA-Z]{3,}/.test(l)).join("\n");
         }
-        if (text.trim().length < 20) {
-          text = `[PDF content from: ${file.name}]\n\nThe PDF binary content was loaded successfully. Full text extraction requires server-side processing. The document is ${(file.size / 1024).toFixed(1)} KB in size.`;
-        }
+        if (text.trim().length < 20) text = `[PDF: ${file.name}] ${(file.size/1024).toFixed(1)}KB`;
         resolve(text);
       };
       reader.readAsArrayBuffer(file);
@@ -50,1066 +47,323 @@ async function extractTextFromFile(file: File): Promise<string> {
   });
 }
 
-interface LocalDocument {
-  id: number | string;
-  file_name: string;
-  type: string;
-  extracted_text: string;
-  raw_file_url?: string;
-}
+interface LocalDocument { id: number|string; file_name: string; type: string; extracted_text: string; raw_file_url?: string; }
 
 export function StudyCompanionWorkspace() {
-  const [activeTab, setActiveTab] = useState('chat');
-  const [mobileTab, setMobileTab] = useState<'document' | 'tools'>('tools');
+  const [navTab, setNavTab] = useState<WorkspaceNavTab>("spaces");
+  const [practiceTab, setPracticeTab] = useState<"flashcards"|"quizzes"|"podcast"|"summary"|"expected">("flashcards");
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [documents, setDocuments] = useState<LocalDocument[]>([]);
-  const [activeDocument, setActiveDocument] = useState<LocalDocument | null>(null);
+  const [activeDocument, setActiveDocument] = useState<LocalDocument|null>(null);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isManageSubOpen, setIsManageSubOpen] = useState(false);
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
   const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
-  const [newSpaceInput, setNewSpaceInput] = useState('');
+  const [newSpaceInput, setNewSpaceInput] = useState("");
   const { language, setLanguage } = useLanguage();
-  const { user, isDeveloper, checkDeveloperAccess } = useAuth();
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('light');
-  const [defaultModel, setDefaultModel] = useState<string>('GPT-5 / Llama 3.1');
+  const { user, checkDeveloperAccess } = useAuth();
+  const [theme, setTheme] = useState<"light"|"dark"|"system">("light");
+  const [defaultModel, setDefaultModel] = useState<string>("GPT-5 / Llama 3.1");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  // Spaces state (no dummy data)
-  const [spaces, setSpaces] = useState<Array<{ id: string; name: string }>>([]);
-  const [activeSpaceId, setActiveSpaceId] = useState<string>('');
-
+  const [spaces, setSpaces] = useState<Array<{id:string;name:string}>>([]);
+  const [activeSpaceId, setActiveSpaceId] = useState<string>("");
   const t = translations[language] || translations.en;
-
-  const [messages, setMessages] = useState<Array<{ id: string; role: 'user' | 'assistant'; content: string; citations?: any[] }>>([
-    { id: '1', role: 'assistant', content: t.welcomeMessage }
+  const [messages, setMessages] = useState<Array<{id:string;role:"user"|"assistant";content:string;citations?:any[]}>>([
+    { id:"1", role:"assistant", content: t.welcomeMessage }
   ]);
+  const [chatInput, setChatInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [quizData, setQuizData] = useState<any>(null);
   const [podcastData, setPodcastData] = useState<any>(null);
   const [flashcardData, setFlashcardData] = useState<any>(null);
   const [summaryData, setSummaryData] = useState<any>(null);
   const [examData, setExamData] = useState<any>(null);
-
-  const [uploadFile, setUploadFile] = useState<File | null>(null);
-  const [uploadDocType, setUploadDocType] = useState<'course_material' | 'past_exam'>('course_material');
-  const [uploadPasteText, setUploadPasteText] = useState('');
-  const [uploadMethod, setUploadMethod] = useState<'file' | 'paste'>('file');
+  const [uploadFile, setUploadFile] = useState<File|null>(null);
+  const [uploadDocType, setUploadDocType] = useState<"course_material"|"past_exam">("course_material");
+  const [uploadPasteText, setUploadPasteText] = useState("");
+  const [uploadMethod, setUploadMethod] = useState<"file"|"paste">("file");
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const docText = activeDocument?.extracted_text || "";
+  const docName = activeDocument?.file_name || "Document";
 
-  const docText = activeDocument?.extracted_text || '';
-  const docName = activeDocument?.file_name || 'Document';
-
-  // Apply Theme effect
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    if (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      root.classList.add("dark");
+    } else { root.classList.remove("dark"); }
   }, [theme]);
 
-  // Global Search shortcut
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsSearchOpen(true);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    const h = (e: KeyboardEvent) => { if ((e.ctrlKey||e.metaKey) && e.key==="k") { e.preventDefault(); setIsSearchOpen(true); } };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
   }, []);
 
-  // Load spaces from backend on mount
   useEffect(() => {
-    const fetchSpaces = async () => {
-      try {
-        const res = await fetch('http://localhost:5000/api/spaces');
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            setSpaces(data.map((s: any) => ({ id: String(s.id), name: s.name })));
-            setActiveSpaceId(String(data[0].id));
-          }
-        }
-      } catch (err) {
-        // Fallback to local spaces state
+    fetch("http://localhost:5000/api/spaces").then(r => r.ok ? r.json() : []).then((data: any[]) => {
+      if (Array.isArray(data) && data.length > 0) {
+        setSpaces(data.map(s => ({ id: String(s.id), name: s.name })));
+        setActiveSpaceId(String(data[0].id));
       }
-    };
-    fetchSpaces();
+    }).catch(() => {});
   }, []);
 
-  // Fetch single space & nested documents/outputs on activeSpaceId change
   useEffect(() => {
     if (!activeSpaceId) return;
-    const fetchSpaceDetails = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}`);
-        if (res.ok) {
-          const spaceData = await res.json();
-          if (spaceData.documents) {
-            const mappedDocs: LocalDocument[] = spaceData.documents.map((d: any) => ({
-              id: d.id,
-              file_name: d.file_name,
-              type: d.type,
-              extracted_text: d.extracted_text || '',
-              raw_file_url: d.raw_file_url
-            }));
-            setDocuments(mappedDocs);
-            if (mappedDocs.length > 0) setActiveDocument(mappedDocs[0]);
-          }
-
-          // Restore saved outputs if present
-          if (spaceData.generated_outputs) {
-            spaceData.generated_outputs.forEach((out: any) => {
-              try {
-                const parsedContent = typeof out.content === 'string' ? JSON.parse(out.content) : out.content;
-                if (out.type === 'quiz') setQuizData(parsedContent);
-                else if (out.type === 'flashcard_set') setFlashcardData(parsedContent);
-                else if (out.type === 'summary') setSummaryData(parsedContent);
-                else if (out.type === 'podcast_episode') setPodcastData(parsedContent);
-                else if (out.type === 'predicted_exam') setExamData(parsedContent);
-              } catch {}
-            });
-          }
-        }
-      } catch (err) {
-        // Fallback to local workspace memory
+    fetch(`http://localhost:5000/api/spaces/${activeSpaceId}`).then(r => r.ok ? r.json() : null).then((spaceData: any) => {
+      if (!spaceData) return;
+      if (spaceData.documents) {
+        const docs: LocalDocument[] = spaceData.documents.map((d:any) => ({ id:d.id, file_name:d.file_name, type:d.type, extracted_text:d.extracted_text||"", raw_file_url:d.raw_file_url }));
+        setDocuments(docs);
+        if (docs.length > 0) setActiveDocument(docs[0]);
       }
-    };
-    fetchSpaceDetails();
+      if (spaceData.generated_outputs) {
+        spaceData.generated_outputs.forEach((out:any) => {
+          try {
+            const p = typeof out.content==="string" ? JSON.parse(out.content) : out.content;
+            if (out.type==="quiz") setQuizData(p);
+            else if (out.type==="flashcard_set") setFlashcardData(p);
+            else if (out.type==="summary") setSummaryData(p);
+            else if (out.type==="podcast_episode") setPodcastData(p);
+            else if (out.type==="predicted_exam") setExamData(p);
+          } catch {}
+        });
+      }
+    }).catch(() => {});
   }, [activeSpaceId]);
 
-  // Handle In-UI Space Creation
-  const handleCreateSpaceSubmit = async (e?: React.FormEvent) => {
+  const createSpace = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    const newName = newSpaceInput.trim();
-    if (!newName) return;
+    const name = newSpaceInput.trim(); if (!name) return;
     try {
-      const res = await fetch('http://localhost:5000/api/spaces', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newName })
-      });
-      if (res.ok) {
-        const created = await res.json();
-        const newSpaceObj = { id: String(created.id), name: created.name };
-        setSpaces(prev => [...prev, newSpaceObj]);
-        setActiveSpaceId(newSpaceObj.id);
-        setNewSpaceInput('');
-        setIsCreateSpaceOpen(false);
-        return;
-      }
+      const r = await fetch("http://localhost:5000/api/spaces", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({name}) });
+      if (r.ok) { const c = await r.json(); const ns = { id:String(c.id), name:c.name }; setSpaces(p=>[...p,ns]); setActiveSpaceId(ns.id); setNewSpaceInput(""); setIsCreateSpaceOpen(false); return; }
     } catch {}
-    // Fallback client creation
-    const fallbackSpace = { id: `sp_${Date.now()}`, name: newName };
-    setSpaces(prev => [...prev, fallbackSpace]);
-    setActiveSpaceId(fallbackSpace.id);
-    setNewSpaceInput('');
-    setIsCreateSpaceOpen(false);
+    const fb = { id:`sp_${Date.now()}`, name }; setSpaces(p=>[...p,fb]); setActiveSpaceId(fb.id); setNewSpaceInput(""); setIsCreateSpaceOpen(false);
   };
 
-  // Handle Space Deletion
-  const handleDeleteSpace = async (spaceId: string, e: React.MouseEvent) => {
+  const deleteSpace = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    try {
-      await fetch(`http://localhost:5000/api/spaces/${spaceId}`, { method: 'DELETE' });
-    } catch {}
-    setSpaces(prev => {
-      const next = prev.filter(s => s.id !== spaceId);
-      if (activeSpaceId === spaceId) {
-        setActiveSpaceId(next.length > 0 ? next[0].id : '');
-        setDocuments([]);
-        setActiveDocument(null);
-      }
-      return next;
-    });
+    try { await fetch(`http://localhost:5000/api/spaces/${id}`, { method:"DELETE" }); } catch {}
+    setSpaces(p => { const n = p.filter(s=>s.id!==id); if (activeSpaceId===id) { setActiveSpaceId(n.length?n[0].id:""); setDocuments([]); setActiveDocument(null); } return n; });
   };
 
-  // Upload Document to Space API
   const handleUpload = async () => {
-    const isKo = language === 'ko';
-    if (!checkDeveloperAccess(isKo ? '문서 업로드 및 인덱싱' : 'Document Ingestion & Upload', isKo)) {
-      return;
-    }
     setIsUploading(true);
     try {
-      let extractedText = '';
-      let fileName = 'Document';
-
-      if (uploadMethod === 'file' && uploadFile) {
-        fileName = uploadFile.name;
-        extractedText = await extractTextFromFile(uploadFile);
-
-        const formData = new FormData();
-        formData.append('file', uploadFile);
-        formData.append('type', uploadDocType);
-        formData.append('upload_method', 'file');
-
-        const apiRes = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/documents`, {
-          method: 'POST',
-          body: formData
-        });
-        if (apiRes.ok) {
-          const savedDoc = await apiRes.json();
-          const newDoc: LocalDocument = {
-            id: savedDoc.id,
-            file_name: savedDoc.file_name,
-            type: savedDoc.type,
-            extracted_text: savedDoc.extracted_text || extractedText,
-            raw_file_url: savedDoc.raw_file_url
-          };
-          setDocuments(prev => [...prev, newDoc]);
-          setActiveDocument(newDoc);
-          setIsUploadOpen(false);
-          setUploadFile(null);
-          setUploadPasteText('');
-          setIsUploading(false);
-          return;
-        }
-      } else if (uploadMethod === 'paste' && uploadPasteText.trim()) {
-        fileName = 'Pasted Notes';
-        extractedText = uploadPasteText.trim();
-
-        const apiRes = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/documents`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: uploadDocType,
-            upload_method: 'paste',
-            text_content: extractedText,
-            file_name: fileName
-          })
-        });
-        if (apiRes.ok) {
-          const savedDoc = await apiRes.json();
-          const newDoc: LocalDocument = {
-            id: savedDoc.id,
-            file_name: savedDoc.file_name,
-            type: savedDoc.type,
-            extracted_text: savedDoc.extracted_text || extractedText
-          };
-          setDocuments(prev => [...prev, newDoc]);
-          setActiveDocument(newDoc);
-          setIsUploadOpen(false);
-          setUploadPasteText('');
-          setIsUploading(false);
-          return;
-        }
+      let text = "", name = "Document";
+      if (uploadMethod==="file" && uploadFile) {
+        name = uploadFile.name; text = await extractTextFromFile(uploadFile);
+        const fd = new FormData(); fd.append("file",uploadFile); fd.append("type",uploadDocType); fd.append("upload_method","file");
+        const r = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/documents`, { method:"POST", body:fd });
+        if (r.ok) { const d = await r.json(); setDocuments(p=>[...p,{id:d.id,file_name:d.file_name,type:d.type,extracted_text:d.extracted_text||text,raw_file_url:d.raw_file_url}]); setActiveDocument({id:d.id,file_name:d.file_name,type:d.type,extracted_text:d.extracted_text||text}); setIsUploadOpen(false); setUploadFile(null); setIsUploading(false); return; }
+      } else if (uploadMethod==="paste" && uploadPasteText.trim()) {
+        name="Pasted Notes"; text=uploadPasteText.trim();
+        const r = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/documents`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({type:uploadDocType,upload_method:"paste",text_content:text,file_name:name}) });
+        if (r.ok) { const d = await r.json(); setDocuments(p=>[...p,{id:d.id,file_name:d.file_name,type:d.type,extracted_text:d.extracted_text||text}]); setActiveDocument({id:d.id,file_name:d.file_name,type:d.type,extracted_text:d.extracted_text||text}); setIsUploadOpen(false); setUploadPasteText(""); setIsUploading(false); return; }
       }
-
-      // Offline fallback state update
-      if (extractedText) {
-        const newDoc: LocalDocument = { id: Date.now(), file_name: fileName, type: uploadDocType, extracted_text: extractedText };
-        setDocuments(prev => [...prev, newDoc]);
-        setActiveDocument(newDoc);
-        setIsUploadOpen(false);
-        setUploadFile(null);
-        setUploadPasteText('');
-        setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: `**${fileName}** uploaded. You can now generate quizzes, flashcards, summaries, and more.` }]);
-      }
-    } catch (err) {
-      console.error('Upload error:', err);
-    }
+      if (text) { const nd={id:Date.now(),file_name:name,type:uploadDocType,extracted_text:text}; setDocuments(p=>[...p,nd]); setActiveDocument(nd); setIsUploadOpen(false); setUploadFile(null); setUploadPasteText(""); }
+    } catch {}
     setIsUploading(false);
   };
 
-  const handleExportData = () => {
-    const isKo = language === 'ko';
-    if (!checkDeveloperAccess(isKo ? '데이터 내보내기' : 'Data Export', isKo)) {
-      return;
-    }
-    const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), documents: documents.map(d => ({ file_name: d.file_name, type: d.type })), quiz: quizData, flashcards: flashcardData, summary: summaryData }, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `preplitai_export_${Date.now()}.json`; a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const handleClearData = () => {
-    if (window.confirm('Clear all documents and study materials?')) {
-      setDocuments([]); setActiveDocument(null); setQuizData(null); setPodcastData(null);
-      setFlashcardData(null); setSummaryData(null); setExamData(null);
-      setMessages([{ id: Date.now().toString(), role: 'assistant', content: 'Workspace cleared.' }]);
-      setIsSettingsOpen(false);
-    }
-  };
-
-  // Grounded RAG Chat API
-  const handleSendMessage = async (text: string) => {
-    const isKo = language === 'ko';
-    if (!checkDeveloperAccess(isKo ? 'AI 챗답변 생성' : 'AI Study Chat Query', isKo)) {
-      return;
-    }
-    const userMsg = { id: Date.now().toString(), role: 'user' as const, content: text };
-    setMessages(prev => [...prev, userMsg]);
-    setIsGenerating(true);
-
+  const sendMessage = async (text: string) => {
+    if (!checkDeveloperAccess("AI Study Chat", false)) return;
+    setMessages(p=>[...p,{id:Date.now().toString(),role:"user",content:text}]); setIsGenerating(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const assistantText = data.message?.content || data.reply || 'No response generated.';
-        const citations = data.citations || [];
-        setMessages(prev => [
-          ...prev,
-          { id: (Date.now() + 1).toString(), role: 'assistant', content: assistantText, citations }
-        ]);
-        setIsGenerating(false);
-        return;
-      }
-    } catch (e) {}
-
-    // Offline fallback chat logic
+      const r = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/chat`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({message:text}) });
+      if (r.ok) { const d = await r.json(); setMessages(p=>[...p,{id:(Date.now()+1).toString(),role:"assistant",content:d.message?.content||d.reply||"No response.",citations:d.citations||[]}]); setIsGenerating(false); return; }
+    } catch {}
     setTimeout(() => {
-      let response = '';
-      if (docText) {
-        const keywords = text.toLowerCase().split(/\s+/).filter(w => w.length > 3);
-        const sentences = docText.split(/[.!?]+/).filter(s => s.trim().length > 20);
-        const matches = sentences.filter(s => keywords.some(k => s.toLowerCase().includes(k))).slice(0, 3);
-        response = matches.length > 0
-          ? `Based on **${docName}** (${defaultModel}):\n\n${matches.map(m => `> ${m.trim()}`).join('\n\n')}\n\n*— ${docName}*`
-          : `I searched **${docName}** but couldn't find a direct match for "${text}". Try rephrasing.`;
-      } else {
-        response = `Upload a document first using the **"+ ${t.addContent}"** button to get started.`;
-      }
-      setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', content: response }]);
-      setIsGenerating(false);
+      const response = docText ? `Based on **${docName}**: I found related content in your uploaded notes.` : "Upload a document to get grounded answers.";
+      setMessages(p=>[...p,{id:(Date.now()+1).toString(),role:"assistant",content:response}]); setIsGenerating(false);
     }, 800);
   };
 
-  // Generate Quiz API
-  const handleGenerateQuiz = async () => {
-    const isKo = language === 'ko';
-    if (!checkDeveloperAccess(isKo ? '스마트 퀴즈 생성' : 'Smart Quiz Generator', isKo)) {
-      return;
-    }
-    if (!docText && documents.length === 0) {
-      setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
-      setActiveTab('chat');
-      return;
-    }
-    setIsGenerating(true);
-    try {
-      const res = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/quiz`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ num_questions: 5 })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const quizObj = typeof data.content === 'string' ? JSON.parse(data.content) : (data.content || data);
-        setQuizData(quizObj);
-        setActiveTab('quizzes');
-        setIsGenerating(false);
-        return;
-      }
-    } catch (e) {}
+  const handleChatSubmit = (e: React.FormEvent) => { e.preventDefault(); if (chatInput.trim()) { sendMessage(chatInput.trim()); setChatInput(""); } };
 
-    // Fallback local generation
-    const sentences = docText.split(/[.!?]+/).filter(s => s.trim().length > 30);
-    const picked = sentences.sort(() => Math.random() - 0.5).slice(0, 5);
-    setQuizData({ questions: picked.map((s, i) => { const words = s.trim().split(/\s+/); const blankIdx = Math.min(Math.floor(words.length / 2), words.length - 1); const answer = words[blankIdx]; const questionText = words.map((w, j) => j === blankIdx ? '______' : w).join(' '); return { id: i + 1, question: questionText + '.', type: i % 2 === 0 ? 'fill_in_the_blank' : 'multiple_choice', options: i % 2 === 1 ? [answer, 'Alternative A', 'Alternative B', 'Alternative C'].sort(() => Math.random() - 0.5) : undefined, answer, explanation: `From ${docName}: "${s.trim().slice(0, 120)}..."` }; }) });
-    setActiveTab('quizzes');
-    setIsGenerating(false);
+  const genQuiz = async () => { setNavTab("practice"); setPracticeTab("quizzes"); };
+  const genFlashcards = async () => { setNavTab("practice"); setPracticeTab("flashcards"); };
+  const genPodcast = () => { setNavTab("practice"); setPracticeTab("podcast"); };
+  const genSummary = () => { setNavTab("practice"); setPracticeTab("summary"); };
+  const genExam = () => { setNavTab("practice"); setPracticeTab("expected"); };
+
+  const handleToolSelect = (tool: string) => {
+    if (tool==="chat") setNavTab("chat");
+    else if (tool==="explore3d") setNavTab("explore3d");
+    else if (tool==="analytics") setNavTab("analytics");
+    else if (["flashcards","quizzes","podcast","summary","expected"].includes(tool)) { setNavTab("practice"); setPracticeTab(tool as any); }
   };
 
-  // Generate Flashcards API
-  const handleGenerateFlashcards = async () => {
-    const isKo = language === 'ko';
-    if (!checkDeveloperAccess(isKo ? '스마트 플래시카드 생성' : 'Flashcard Generator', isKo)) {
-      return;
-    }
-    if (!docText && documents.length === 0) {
-      setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
-      setActiveTab('chat');
-      return;
-    }
-    setIsGenerating(true);
-    try {
-      const res = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/flashcards`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const fcObj = typeof data.content === 'string' ? JSON.parse(data.content) : (data.content || data);
-        setFlashcardData(fcObj);
-        setActiveTab('flashcards');
-        setIsGenerating(false);
-        return;
-      }
-    } catch (e) {}
+  function emoji(name: string) {
+    const n=name.toLowerCase();
+    if(n.includes("chem")) return "⚗️"; if(n.includes("bio")) return "🧬"; if(n.includes("math")||n.includes("calc")) return "📐";
+    if(n.includes("hist")) return "📜"; if(n.includes("econ")||n.includes("macro")) return "📊"; if(n.includes("data")) return "💾"; if(n.includes("phys")) return "⚡"; return "📁";
+  }
 
-    // Fallback local generation
-    const sentences = docText.split(/[.!?]+/).filter(s => s.trim().length > 25);
-    const picked = sentences.sort(() => Math.random() - 0.5).slice(0, 6);
-    setFlashcardData({ flashcards: picked.map((s, i) => { const trimmed = s.trim(); const halfIdx = Math.floor(trimmed.length * 0.4); return { id: i + 1, front: trimmed.slice(0, halfIdx).trim() + '...?', back: trimmed }; }) });
-    setActiveTab('flashcards');
-    setIsGenerating(false);
-  };
-
-  // Generate Summary API
-  const handleGenerateSummary = async () => {
-    const isKo = language === 'ko';
-    if (!checkDeveloperAccess(isKo ? 'AI 요약 노트 생성' : 'AI Summary Generator', isKo)) {
-      return;
-    }
-    if (!docText && documents.length === 0) {
-      setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
-      setActiveTab('chat');
-      return;
-    }
-    setIsGenerating(true);
-    try {
-      const res = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/summary`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const sumObj = typeof data.content === 'string' ? JSON.parse(data.content) : (data.content || data);
-        setSummaryData(sumObj);
-        setActiveTab('summary');
-        setIsGenerating(false);
-        return;
-      }
-    } catch (e) {}
-
-    // Fallback local summary
-    const paragraphs = docText.split(/\n\n+/).filter(p => p.trim().length > 40);
-    const keyPoints = paragraphs.slice(0, 8).map(p => { const s = p.split(/[.!?]/)[0]?.trim(); return s && s.length > 15 ? `- ${s}.` : null; }).filter(Boolean);
-    setSummaryData({ summary: `# ${t.summary}: ${docName}\n\n## Key Points\n${keyPoints.join('\n')}\n\n## Overview\n~${(docText.length / 1000).toFixed(1)}K characters across ${paragraphs.length} sections.\n\n*Generated from: ${docName}*` });
-    setActiveTab('summary');
-    setIsGenerating(false);
-  };
-
-  // Generate Podcast API
-  const handleGeneratePodcast = async () => {
-    const isKo = language === 'ko';
-    if (!checkDeveloperAccess(isKo ? '팟캐스트 오디오 생성' : 'Podcast Audio Generator', isKo)) {
-      return;
-    }
-    if (!docText && documents.length === 0) {
-      setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
-      setActiveTab('chat');
-      return;
-    }
-    setIsGenerating(true);
-    try {
-      const res = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/podcast`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ speaker_1_name: 'Rachel', speaker_2_name: 'Adam' })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const podObj = typeof data.content === 'string' ? JSON.parse(data.content) : (data.content || data);
-        setPodcastData(podObj);
-        setActiveTab('podcast');
-        setIsGenerating(false);
-        return;
-      }
-    } catch (e) {}
-
-    // Fallback local podcast
-    const sentences = docText.split(/[.!?]+/).filter(s => s.trim().length > 20).slice(0, 10);
-    setPodcastData({ title: `Discussion: ${docName}`, duration: '5:00', episodes: sentences.slice(0, 6).map((s, i) => ({ speaker: i % 2 === 0 ? 'Host A (Rachel)' : 'Host B (Adam)', timestamp: `0${Math.floor(i * 0.8)}:${String((i * 15) % 60).padStart(2, '0')}`, text: i % 2 === 0 ? `Let's talk about this: ${s.trim()}` : `That's a great point! ${s.trim()}` })) });
-    setActiveTab('podcast');
-    setIsGenerating(false);
-  };
-
-  // Generate Expected Exam API
-  const handleGenerateExam = async () => {
-    const isKo = language === 'ko';
-    if (!checkDeveloperAccess(isKo ? '출제 예상 문제 예측' : 'Predicted Exam Generator', isKo)) {
-      return;
-    }
-    if (!docText && documents.length === 0) {
-      setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: t.noDocUploadFirst }]);
-      setActiveTab('chat');
-      return;
-    }
-    setIsGenerating(true);
-    try {
-      const res = await fetch(`http://localhost:5000/api/spaces/${activeSpaceId}/expected-exam`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const examObj = typeof data.content === 'string' ? JSON.parse(data.content) : (data.content || data);
-        setExamData(examObj);
-        setActiveTab('expected');
-        setIsGenerating(false);
-        return;
-      }
-    } catch (e) {}
-
-    // Fallback local expected exam
-    const sentences = docText.split(/[.!?]+/).filter(s => s.trim().length > 30);
-    const picked = sentences.sort(() => Math.random() - 0.5).slice(0, 4);
-    setExamData({ confidence: `Based on ${docName}`, predicted_exam: picked.map((s, i) => ({ question_num: i + 1, type: ['Short Answer', 'Definition', 'Mechanism', 'Compare & Contrast'][i % 4], question: `Explain: "${s.trim().slice(0, 100)}..."`, pattern_note: `Key passage in ${docName}`, model_answer: s.trim() })) });
-    setActiveTab('expected');
-    setIsGenerating(false);
-  };
-
-  const handleSelectAction = async (action: string, selectedText: string) => {
-    if (action === 'explain') { setActiveTab('chat'); handleSendMessage(`Explain this: "${selectedText}"`); }
-    else if (action === 'chat') { setActiveTab('chat'); handleSendMessage(`Tell me more about: "${selectedText}"`); }
-    else if (action === 'quiz') { handleGenerateQuiz(); }
-    else if (action === 'flashcards') { handleGenerateFlashcards(); }
-  };
+  const Sidebar = () => (
+    <div className="flex flex-col h-full">
+      <div className="px-3 pt-4 pb-2"><p className="ws-section-label">Study Spaces</p></div>
+      <div className="flex-1 overflow-y-auto px-2 space-y-0.5">
+        {spaces.map(s => (
+          <div key={s.id} className="group relative">
+            <button onClick={() => { setActiveSpaceId(s.id); setNavTab("spaces"); setIsMobileSidebarOpen(false); }} className={`ws-sidebar-item ${activeSpaceId===s.id?"active":""}`}>
+              <span className="text-base shrink-0">{emoji(s.name)}</span>
+              <div className="flex-1 min-w-0 text-left"><p className="text-[13px] font-medium text-[#111] truncate">{s.name}</p></div>
+              <button onClick={e=>deleteSpace(s.id,e)} className="opacity-0 group-hover:opacity-100 p-1 rounded hover:text-red-600 text-[#bbb] shrink-0"><Trash2 className="w-3 h-3" /></button>
+            </button>
+          </div>
+        ))}
+        {spaces.length===0 && <p className="text-[12px] text-[#bbb] italic px-3 py-2">No spaces yet</p>}
+      </div>
+      <div className="px-2 pb-3 pt-2 border-t border-[#e8e5e0]">
+        <button onClick={() => { setIsCreateSpaceOpen(true); setIsMobileSidebarOpen(false); }} className="ws-sidebar-item w-full text-[#8B0000] hover:bg-[#fdf0f0]">
+          <Plus className="w-4 h-4 shrink-0" /><span className="text-[13px] font-medium">New Study Space</span>
+        </button>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-[#fafafa] dark:bg-[#0f0f0f] text-[#111] dark:text-[#f0f0f0] overflow-hidden">
-      
-      <GlobalSearch 
-        isOpen={isSearchOpen} 
-        onClose={() => setIsSearchOpen(false)} 
-        onNavigate={(id, type) => {
-          if (type === 'space') setActiveSpaceId(id);
-          else if (type === 'chat') setActiveTab('chat');
-        }}
-      />
-
-      {/* ── Mobile Top Header Bar ── */}
-      <header className="flex md:hidden items-center justify-between px-4 py-2.5 bg-white dark:bg-[#111] border-b border-[#e8e8e8] dark:border-white/[0.06] shrink-0 z-20">
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={() => setIsMobileSidebarOpen(true)}
-            className="p-1.5 rounded-lg text-[#666] dark:text-[#aaa] hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06]"
-            aria-label="Open sidebar"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-          <a href="/" className="flex items-center gap-1.5">
-            <img src="/logo.png" alt="PreplitAI" className="w-6 h-6 object-contain shrink-0" />
-            <span className="font-semibold text-[13.5px] text-[#111] dark:text-white">PreplitAI</span>
-          </a>
-        </div>
-
-        {/* Mobile View Switcher (Document vs AI Tools) */}
-        <div className="flex items-center gap-1 p-0.5 bg-[#f0f0f0] dark:bg-white/[0.06] rounded-lg">
-          <button
-            onClick={() => setMobileTab('document')}
-            className={`flex items-center gap-1 px-2.5 py-1 text-[11.5px] font-semibold rounded-md transition-all ${mobileTab === 'document' ? 'bg-white dark:bg-[#222] text-[#111] dark:text-white shadow-2xs' : 'text-[#888] dark:text-[#666]'}`}
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Document</span>
-          </button>
-          <button
-            onClick={() => setMobileTab('tools')}
-            className={`flex items-center gap-1 px-2.5 py-1 text-[11.5px] font-semibold rounded-md transition-all ${mobileTab === 'tools' ? 'bg-white dark:bg-[#222] text-[#111] dark:text-white shadow-2xs' : 'text-[#888] dark:text-[#666]'}`}
-          >
-            <MessageSquare className="w-3.5 h-3.5" />
-            <span>AI Tools</span>
-          </button>
-        </div>
-      </header>
-
-      {/* ── Mobile Sidebar Drawer Overlay ── */}
-      {isMobileSidebarOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex md:hidden"
-          onClick={(e) => e.target === e.currentTarget && setIsMobileSidebarOpen(false)}
-        >
-          <aside className="w-64 bg-white dark:bg-[#111] h-full flex flex-col shadow-2xl animate-in slide-in-from-left duration-200">
-            {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-[#e8e8e8] dark:border-white/[0.06]">
-              <div className="flex items-center gap-2">
-                <img src="/logo.png" alt="PreplitAI" className="w-6 h-6 object-contain" />
-                <span className="font-semibold text-[14px] text-[#111] dark:text-white">PreplitAI</span>
+    <div className="flex flex-col h-screen bg-[#f5f4f1] overflow-hidden" style={{fontFamily:"Inter,sans-serif"}}>
+      <GlobalSearch isOpen={isSearchOpen} onClose={()=>setIsSearchOpen(false)} onNavigate={(id,type)=>{ if(type==="space") setActiveSpaceId(id); else if(type==="chat") setNavTab("chat"); }} />
+      <WorkspaceTopNav activeTab={navTab} onTabChange={setNavTab} onOpenSearch={()=>setIsSearchOpen(true)} onOpenSettings={()=>setIsSettingsOpen(true)} />
+      <div className="flex flex-1 overflow-hidden">
+        {isMobileSidebarOpen && (
+          <div className="fixed inset-0 z-50 bg-black/40 flex md:hidden" onClick={()=>setIsMobileSidebarOpen(false)}>
+            <aside className="w-64 bg-white h-full shadow-xl" onClick={e=>e.stopPropagation()}>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#e8e5e0]">
+                <span className="font-semibold text-[14px] text-[#111]">Study Spaces</span>
+                <button onClick={()=>setIsMobileSidebarOpen(false)} className="p-1 text-[#aaa]"><X className="w-4 h-4" /></button>
               </div>
-              <button
-                onClick={() => setIsMobileSidebarOpen(false)}
-                className="p-1 rounded-md text-[#aaa] hover:text-[#666]"
-              >
-                <X className="w-4 h-4" />
+              <Sidebar />
+            </aside>
+          </div>
+        )}
+        <aside className="hidden md:flex flex-col w-[200px] shrink-0 bg-white border-r border-[#e8e5e0] h-full"><Sidebar /></aside>
+        <main className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex md:hidden items-center gap-2 px-4 py-2.5 bg-white border-b border-[#e8e5e0] shrink-0">
+            <button onClick={()=>setIsMobileSidebarOpen(true)} className="p-1.5 rounded-lg text-[#666]"><Menu className="w-5 h-5" /></button>
+            <span className="text-[14px] font-semibold text-[#111]">PreplitAI</span>
+          </div>
+          <div className="flex sm:hidden overflow-x-auto border-b border-[#e8e5e0] bg-white shrink-0">
+            {(["spaces","chat","practice","analytics","explore3d"] as WorkspaceNavTab[]).map(tab => (
+              <button key={tab} onClick={()=>setNavTab(tab)} className={`flex-1 min-w-max px-3 py-2.5 text-[12px] font-semibold border-b-2 transition-all whitespace-nowrap ${navTab===tab?"border-[#8B0000] text-[#8B0000]":"border-transparent text-[#888]"}`}>
+                {tab==="spaces"?"Spaces":tab==="chat"?"Chat":tab==="practice"?"Practice":tab==="analytics"?"Analytics":"3D"}
               </button>
-            </div>
-
-            {/* Nav Body */}
-            <div className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
-              <button
-                onClick={() => { setIsMobileSidebarOpen(false); setIsUploadOpen(true); }}
-                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[13px] font-medium bg-[#111] dark:bg-white text-white dark:text-[#111]"
-              >
-                <Plus className="w-4 h-4" />
-                <span>{t.addContent}</span>
-              </button>
-
-              {/* Spaces */}
-              <div className="space-y-0.5">
-                <button
-                  onClick={() => { setActiveSpaceId(''); setActiveDocument(null); setIsMobileSidebarOpen(false); }}
-                  className={`nav-item w-full mb-2 ${!activeSpaceId ? 'active' : ''}`}
-                >
-                  <Home className="w-4 h-4 shrink-0 text-[#999]" />
-                  <span>Home</span>
-                </button>
-                <div className="flex items-center justify-between px-2.5 mb-1">
-                  <span className="section-label">Spaces</span>
-                  <button
-                    onClick={() => { setIsMobileSidebarOpen(false); setIsCreateSpaceOpen(true); }}
-                    className="w-4 h-4 flex items-center justify-center text-[#aaa]"
-                  >
-                    <Plus className="w-3 h-3" />
-                  </button>
+            ))}
+          </div>
+          <div className="flex-1 overflow-hidden flex flex-col">
+            {navTab==="spaces" && <WorkspaceHome onCreateSpace={()=>setIsCreateSpaceOpen(true)} onSelectSpace={id=>setActiveSpaceId(id)} onUploadContent={()=>setIsUploadOpen(true)} spaces={spaces} activeSpaceId={activeSpaceId} onToolSelect={handleToolSelect} />}
+            {navTab==="chat" && (
+              <div className="flex flex-1 overflow-hidden">
+                <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                  <div className="px-6 py-4 border-b border-[#e8e5e0] bg-white shrink-0">
+                    <h1 className="text-[20px] font-bold text-[#111]">AI Study Chat</h1>
+                    {activeDocument && <p className="text-[12.5px] text-[#888] mt-0.5">{activeDocument.file_name}</p>}
+                    <span className="inline-flex items-center mt-1.5 px-2.5 py-0.5 rounded-full bg-[#f0ede8] text-[#8B0000] text-[11px] font-semibold">Unlimited grounded chat</span>
+                  </div>
+                  <div className="flex-1 overflow-hidden"><MessageList messages={messages as any} isGenerating={isGenerating} /></div>
+                  <div className="px-4 md:px-6 py-3 border-t border-[#e8e5e0] bg-white shrink-0">
+                    <form onSubmit={handleChatSubmit} className="flex items-center gap-2 bg-[#f7f4f0] border border-[#e8e5e0] rounded-2xl px-3 py-2">
+                      <input type="text" value={chatInput} onChange={e=>setChatInput(e.target.value)} placeholder="Ask about this course..." className="flex-1 text-[13.5px] bg-transparent focus:outline-none text-[#111] placeholder:text-[#bbb]" />
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button type="button" className="p-1 text-[#ccc] hover:text-[#888]"><Paperclip className="w-4 h-4" /></button>
+                        <VoiceMode onTranscript={t=>setChatInput(p=>p+(p?" ":"")+t)} />
+                        <button type="submit" disabled={!chatInput.trim()} className="w-7 h-7 rounded-full bg-[#8B0000] hover:bg-[#6d0000] disabled:opacity-30 flex items-center justify-center"><Send className="w-3.5 h-3.5 text-white" /></button>
+                      </div>
+                    </form>
+                    <p className="text-[10.5px] text-[#bbb] mt-1.5 px-1">{defaultModel}</p>
+                  </div>
                 </div>
-                {spaces.length > 0 ? (
-                  spaces.map(s => (
-                    <div key={s.id} className="relative group">
-                      <button
-                        onClick={() => { setActiveSpaceId(s.id); setIsMobileSidebarOpen(false); }}
-                        className={`nav-item justify-between ${activeSpaceId === s.id ? 'active' : ''}`}
-                      >
-                        <div className="flex items-center gap-2 truncate">
-                          <Folder className="w-3.5 h-3.5 shrink-0 text-[#999]" />
-                          <span className="truncate">{s.name}</span>
-                        </div>
-                        <button
-                          onClick={(e) => handleDeleteSpace(s.id, e)}
-                          className="p-1 text-[#999] hover:text-rose-500 shrink-0"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </button>
+                {activeDocument && (
+                  <div className="hidden lg:flex flex-col w-72 shrink-0 border-l border-[#e8e5e0] bg-white">
+                    <div className="px-4 py-3 border-b border-[#e8e5e0]"><p className="text-[11px] font-semibold text-[#888] uppercase tracking-wider">Source</p></div>
+                    <div className="flex-1 overflow-y-auto p-4">
+                      <div className="bg-[#f7f4f0] rounded-xl border border-[#e8e5e0] p-4">
+                        <p className="text-[13px] font-semibold text-[#111] mb-3">{activeDocument.file_name}</p>
+                        <div className="space-y-1.5">{[100,80,90,60,75,50,65].map((w,i)=><div key={i} className={`h-2 rounded-full ${i===2?"bg-[#f0b4b4]":"bg-[#e8e5e0]"}`} style={{width:`${w}%`}} />)}</div>
+                      </div>
                     </div>
-                  ))
-                ) : (
-                  <div className="px-2.5 py-1 text-[11px] text-[#aaa] italic">No spaces created yet</div>
+                  </div>
                 )}
               </div>
-
-              {/* Documents */}
-              {documents.length > 0 && (
-                <>
-                  <div className="sidebar-divider" />
-                  <div className="space-y-0.5">
-                    <span className="section-label block mb-1">{t.documents}</span>
-                    {documents.map(doc => (
-                      <button
-                        key={doc.id}
-                        onClick={() => { setActiveDocument(doc); setMobileTab('document'); setIsMobileSidebarOpen(false); }}
-                        className={`nav-item ${activeDocument?.id === doc.id ? 'active' : ''}`}
-                      >
-                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${doc.type === 'past_exam' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-                        <span className="truncate">{doc.file_name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="border-t border-[#e8e8e8] dark:border-white/[0.06] p-2">
-              <button
-                onClick={() => { setIsMobileSidebarOpen(false); setIsSettingsOpen(true); }}
-                className="nav-item w-full"
-              >
-                <Settings className="w-4 h-4 shrink-0 text-[#999]" />
-                <span>{t.settings}</span>
-              </button>
-            </div>
-          </aside>
-        </div>
-      )}
-
-      {/* ── Left Sidebar (Desktop) ── */}
-      <aside className={`${isSidebarCollapsed ? 'w-16' : 'w-56'} transition-all duration-200 bg-white dark:bg-[#111] border-r border-[#e8e8e8] dark:border-white/[0.06] flex flex-col hidden md:flex shrink-0`}>
-
-        {/* Brand & Collapse Toggle */}
-        <div className="flex items-center justify-between px-3 py-3.5 border-b border-[#e8e8e8] dark:border-white/[0.06]">
-          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity overflow-hidden">
-            <img src="/logo.png" alt="PreplitAI" className="w-7 h-7 object-contain shrink-0" />
-            {!isSidebarCollapsed && (
-              <span className="font-semibold text-[14px] text-[#111] dark:text-white tracking-tight truncate">PreplitAI</span>
             )}
-          </a>
-          <button
-            onClick={() => setIsSidebarCollapsed(prev => !prev)}
-            className="p-1 rounded-md text-[#888] dark:text-[#666] hover:text-[#111] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors shrink-0"
-            title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-          >
-            {isSidebarCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-          </button>
-        </div>
-
-        {/* Nav */}
-        <div className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
-
-          {/* Add Content */}
-          <button
-            onClick={() => setIsUploadOpen(true)}
-            className={`w-full flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'gap-2 px-2.5'} py-1.5 rounded-md text-[12.5px] font-medium bg-[#111] dark:bg-white text-white dark:text-[#111] hover:bg-[#333] dark:hover:bg-[#e8e8e8] transition-all`}
-            title={t.addContent}
-          >
-            <Plus className="w-4 h-4 shrink-0" />
-            {!isSidebarCollapsed && <span>{t.addContent}</span>}
-          </button>
-
-          {/* Spaces */}
-          <div className="space-y-0.5">
-            <button
-              onClick={() => { setActiveSpaceId(''); setActiveDocument(null); }}
-              className={`nav-item w-full mb-2 ${!activeSpaceId ? 'active' : ''} ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
-              title="Home"
-            >
-              <Home className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
-              {!isSidebarCollapsed && <span>Home</span>}
-            </button>
-            
-            {!isSidebarCollapsed && (
-              <div className="flex items-center justify-between px-2.5 mb-1">
-                <span className="section-label">Spaces</span>
-                <button
-                  onClick={() => setIsCreateSpaceOpen(true)}
-                  className="w-4 h-4 flex items-center justify-center text-[#aaa] dark:text-[#555] hover:text-[#111] dark:hover:text-white transition-colors rounded"
-                  title="Create New Space"
-                >
-                  <Plus className="w-3 h-3" />
-                </button>
-              </div>
-            )}
-
-            {spaces.length > 0 ? (
-              spaces.map(s => (
-                <div key={s.id} className="relative group">
-                  <button
-                    onClick={() => setActiveSpaceId(s.id)}
-                    className={`nav-item justify-between ${activeSpaceId === s.id ? 'active' : ''} ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
-                    title={s.name}
-                  >
-                    <div className="flex items-center gap-2 truncate">
-                      <Folder className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
-                      {!isSidebarCollapsed && <span className="truncate">{s.name}</span>}
-                    </div>
-                    {!isSidebarCollapsed && (
-                      <button
-                        onClick={(e) => handleDeleteSpace(s.id, e)}
-                        className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-[#e0e0e0] dark:hover:bg-white/10 text-[#999] hover:text-rose-500 transition-all shrink-0"
-                        title="Delete Space"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    )}
-                  </button>
+            {navTab==="practice" && (
+              <div className="flex flex-col flex-1 overflow-hidden bg-[#f5f4f1]">
+                <div className="flex gap-1 px-5 pt-4 pb-0 shrink-0 overflow-x-auto">
+                  {(["flashcards","quizzes","podcast","summary","expected"] as const).map(tab=>(
+                    <button key={tab} onClick={()=>setPracticeTab(tab)} className={`px-4 py-2 text-[13px] font-semibold rounded-t-xl border border-b-0 transition-all whitespace-nowrap ${practiceTab===tab?"bg-white border-[#e8e5e0] text-[#111]":"border-transparent text-[#888] hover:text-[#555]"}`}>
+                      {tab==="expected"?"Exam Predictor":tab==="podcast"?"Podcast":tab.charAt(0).toUpperCase()+tab.slice(1)}
+                    </button>
+                  ))}
                 </div>
-              ))
-            ) : (
-              !isSidebarCollapsed && <div className="px-2.5 py-1 text-[11px] text-[#aaa] dark:text-[#555] italic">No spaces created yet</div>
+                <div className="flex-1 overflow-hidden bg-white border-t border-[#e8e5e0]">
+                  {practiceTab==="flashcards" && <FlashcardView flashcardData={flashcardData} onGenerateNew={genFlashcards} />}
+                  {practiceTab==="quizzes"    && <QuizView quizData={quizData} onGenerateNewQuiz={genQuiz} />}
+                  {practiceTab==="podcast"    && <PodcastView podcastData={podcastData} onGeneratePodcast={genPodcast} />}
+                  {practiceTab==="summary"    && <SummaryView summaryData={summaryData} onGenerateSummary={genSummary} />}
+                  {practiceTab==="expected"   && <ExpectedExamView examData={examData} onGenerateExam={genExam} />}
+                </div>
+              </div>
             )}
+            {navTab==="analytics"  && <AnalyticsView language={language} />}
+            {navTab==="explore3d"  && <InteractiveLearningView language={language} />}
           </div>
+        </main>
+      </div>
 
-          <div className="sidebar-divider" />
-
-          {/* Nav links */}
-          <div className="space-y-0.5">
-            <button className={`nav-item w-full ${isSidebarCollapsed ? 'justify-center px-0' : ''}`} onClick={() => setIsSearchOpen(true)} title={t.search}>
-              <Search className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
-              {!isSidebarCollapsed && <span>{t.search}</span>}
-            </button>
-            <button className={`nav-item w-full ${isSidebarCollapsed ? 'justify-center px-0' : ''}`} title={t.history}>
-              <History className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
-              {!isSidebarCollapsed && <span>{t.history}</span>}
-            </button>
-          </div>
-
-          {/* Documents */}
-          {documents.length > 0 && (
-            <>
-              <div className="sidebar-divider" />
-              <div className="space-y-0.5">
-                {!isSidebarCollapsed && <span className="section-label block mb-1">{t.documents}</span>}
-                {documents.map(doc => (
-                  <button
-                    key={doc.id}
-                    onClick={() => setActiveDocument(doc)}
-                    className={`nav-item ${activeDocument?.id === doc.id ? 'active' : ''} ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
-                    title={doc.file_name}
-                  >
-                    <span className={`w-2 h-2 rounded-full shrink-0 ${doc.type === 'past_exam' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-                    {!isSidebarCollapsed && <span className="truncate">{doc.file_name}</span>}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div className="border-t border-[#e8e8e8] dark:border-white/[0.06] px-2 py-2 relative">
-          <AccountMenu
-            isOpen={isAccountMenuOpen}
-            onClose={() => setIsAccountMenuOpen(false)}
-            onOpenSettings={() => setIsSettingsOpen(true)}
-            onOpenAuth={() => setIsAuthOpen(true)}
-            onOpenManageSubscription={() => setIsManageSubOpen(true)}
-            language={language}
-          />
-          <button
-            onClick={() => setIsAccountMenuOpen(p => !p)}
-            className={`nav-item w-full ${isSidebarCollapsed ? 'justify-center px-0' : 'justify-between'}`}
-            title={t.myAccount}
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full bg-[#111] dark:bg-white flex items-center justify-center shrink-0">
-                <User className="w-3 h-3 text-white dark:text-[#111]" />
-              </div>
-              {!isSidebarCollapsed && <span className="text-[12px] font-medium text-[#111] dark:text-[#ddd] truncate">{t.myAccount}</span>}
-            </div>
-            {!isSidebarCollapsed && <ChevronUp className={`w-3 h-3 text-[#aaa] transition-transform ${isAccountMenuOpen ? '' : 'rotate-180'}`} />}
-          </button>
-          <button
-            onClick={() => setIsSettingsOpen(true)}
-            className={`nav-item w-full mt-0.5 ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
-            title={t.settings}
-          >
-            <Settings className="w-4 h-4 shrink-0 text-[#999] dark:text-[#666]" />
-            {!isSidebarCollapsed && <span>{t.settings}</span>}
-          </button>
-        </div>
-      </aside>
-
-      {/* ── Main Content ── */}
-      <main className="flex-1 flex gap-0 overflow-hidden relative">
-        {/* Document Viewer / Resource Library / Workspace Home */}
-        <div className={`flex-1 min-w-0 h-full ${mobileTab === 'document' ? 'block' : 'hidden md:block'}`}>
-          {!activeSpaceId ? (
-            <WorkspaceHome
-              onCreateSpace={() => setIsCreateSpaceOpen(true)}
-              onSelectSpace={(id) => setActiveSpaceId(id)}
-              onUploadContent={() => setIsUploadOpen(true)}
-              spaces={spaces}
-            />
-          ) : !activeDocument ? (
-            <ResourceLibrary
-              documents={documents}
-              onSelectDocument={(doc) => {
-                const fullDoc = documents.find(d => d.id === doc.id);
-                if (fullDoc) setActiveDocument(fullDoc);
-              }}
-              onUpload={() => setIsUploadOpen(true)}
-            />
-          ) : (
-            <DocumentViewer
-              document={activeDocument}
-              onSelectAction={handleSelectAction}
-              onOpenUpload={() => setIsUploadOpen(true)}
-              onBack={() => setActiveDocument(null)}
-              language={language}
-            />
-          )}
-        </div>
-
-        {/* Tool Panel — Made spacious and wide */}
-        <div className={`w-full md:w-[540px] lg:w-[640px] xl:w-[740px] h-full shrink-0 border-l border-[#e8e8e8] dark:border-white/[0.06] ${mobileTab === 'tools' ? 'block' : 'hidden md:block'}`}>
-          <ToolPanel
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            messages={messages}
-            isGenerating={isGenerating}
-            onSendMessage={handleSendMessage}
-            quizData={quizData}
-            podcastData={podcastData}
-            flashcardData={flashcardData}
-            summaryData={summaryData}
-            examData={examData}
-            onGenerateQuiz={handleGenerateQuiz}
-            onGeneratePodcast={handleGeneratePodcast}
-            onGenerateFlashcards={handleGenerateFlashcards}
-            onGenerateSummary={handleGenerateSummary}
-            onGenerateExam={handleGenerateExam}
-            language={language}
-            defaultModel={defaultModel}
-          />
-        </div>
-      </main>
-
-      {/* ── Upload Modal ── */}
       {isUploadOpen && (
-        <div className="fixed inset-0 z-50 bg-black/30 dark:bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={(e) => e.target === e.currentTarget && setIsUploadOpen(false)}>
-          <div className="bg-white dark:bg-[#161616] border border-[#e5e5e5] dark:border-white/[0.08] rounded-2xl w-full max-w-md shadow-xl p-5 space-y-4">
-
-            {/* Header */}
+        <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4" onClick={e=>e.target===e.currentTarget&&setIsUploadOpen(false)}>
+          <div className="bg-white border border-[#e8e5e0] rounded-2xl w-full max-w-md shadow-xl p-5 space-y-4">
             <div className="flex items-start justify-between">
-              <div>
-                <h3 className="text-[14px] font-semibold text-[#111] dark:text-white">{t.addContentTitle}</h3>
-                <p className="text-[12px] text-[#888] dark:text-[#666] mt-0.5">{t.addContentSubtitle}</p>
-              </div>
-              <button onClick={() => setIsUploadOpen(false)} className="p-1 rounded-md text-[#aaa] hover:text-[#666] dark:hover:text-[#ccc] hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] transition-colors">
-                <X className="w-4 h-4" />
-              </button>
+              <div><h3 className="text-[14px] font-semibold text-[#111]">Add Content</h3><p className="text-[12px] text-[#888] mt-0.5">Upload notes or paste text</p></div>
+              <button onClick={()=>setIsUploadOpen(false)} className="p-1 text-[#aaa] hover:text-[#666]"><X className="w-4 h-4" /></button>
             </div>
-
-            {/* Method tabs */}
-            <div className="flex gap-1 p-1 bg-[#f5f5f5] dark:bg-white/[0.04] rounded-lg">
-              {(['file', 'paste'] as const).map(m => (
-                <button
-                  key={m}
-                  onClick={() => setUploadMethod(m)}
-                  className={`flex-1 py-1.5 rounded-md text-[12px] font-medium transition-all ${uploadMethod === m ? 'bg-white dark:bg-[#222] text-[#111] dark:text-white shadow-sm' : 'text-[#888] dark:text-[#666] hover:text-[#444] dark:hover:text-[#aaa]'}`}
-                >
-                  {m === 'file' ? t.uploadFileTab : t.pasteTextTab}
-                </button>
-              ))}
+            <div className="flex gap-1 p-1 bg-[#f5f4f1] rounded-xl">
+              {(["file","paste"] as const).map(m=><button key={m} onClick={()=>setUploadMethod(m)} className={`flex-1 py-1.5 rounded-lg text-[12px] font-medium transition-all ${uploadMethod===m?"bg-white text-[#111] shadow-sm":"text-[#888]"}`}>{m==="file"?"Upload file":"Paste text"}</button>)}
             </div>
-
-            {/* Document type */}
-            <div className="space-y-2">
-              <label className="text-[11.5px] font-medium text-[#666] dark:text-[#888]">{t.docClass}</label>
-              <div className="flex gap-2">
-                {(['course_material', 'past_exam'] as const).map(type => (
-                  <button
-                    key={type}
-                    onClick={() => setUploadDocType(type)}
-                    className={`flex-1 py-1.5 px-3 rounded-lg border text-[12px] font-medium transition-all ${uploadDocType === type ? 'border-[#111] dark:border-white/40 bg-[#111] dark:bg-white text-white dark:text-[#111]' : 'border-[#e5e5e5] dark:border-white/[0.1] text-[#666] dark:text-[#888] hover:border-[#ccc] dark:hover:border-white/20'}`}
-                  >
-                    {type === 'course_material' ? t.courseMaterial : t.pastExam}
-                  </button>
-                ))}
-              </div>
+            <div className="flex gap-2">
+              {(["course_material","past_exam"] as const).map(type=><button key={type} onClick={()=>setUploadDocType(type)} className={`flex-1 py-1.5 px-3 rounded-xl border text-[12px] font-medium transition-all ${uploadDocType===type?"border-[#8B0000] bg-[#8B0000] text-white":"border-[#e8e5e0] text-[#666]"}`}>{type==="course_material"?"Course Material":"Past Exam"}</button>)}
             </div>
-
-            {/* Input area */}
-            {uploadMethod === 'file' ? (
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="border border-dashed border-[#ddd] dark:border-white/[0.1] rounded-xl p-8 text-center hover:border-[#aaa] dark:hover:border-white/20 cursor-pointer transition-colors group"
-              >
-                <input ref={fileInputRef} type="file" accept=".pdf,.docx,.txt" onChange={(e) => setUploadFile(e.target.files?.[0] || null)} className="hidden" />
-                <Upload className="w-5 h-5 text-[#bbb] dark:text-[#555] mx-auto mb-2 group-hover:text-[#888] transition-colors" />
-                <p className="text-[12.5px] font-medium text-[#666] dark:text-[#777]">
-                  {uploadFile ? `✓ ${uploadFile.name}` : t.dropPrompt}
-                </p>
-                <p className="text-[11px] text-[#bbb] dark:text-[#555] mt-1">{t.maxSize}</p>
+            {uploadMethod==="file"?(
+              <div onClick={()=>fileInputRef.current?.click()} className="border border-dashed border-[#ddd] rounded-xl p-8 text-center hover:border-[#8B0000]/40 cursor-pointer">
+                <input ref={fileInputRef} type="file" accept=".pdf,.docx,.txt" onChange={e=>setUploadFile(e.target.files?.[0]||null)} className="hidden" />
+                <Upload className="w-5 h-5 text-[#bbb] mx-auto mb-2" />
+                <p className="text-[12.5px] font-medium text-[#666]">{uploadFile?`✓ ${uploadFile.name}`:"Drop file here or click to browse"}</p>
+                <p className="text-[11px] text-[#bbb] mt-1">PDF, DOCX, TXT · Max 50MB</p>
               </div>
-            ) : (
-              <textarea
-                rows={5}
-                placeholder={t.pastePlaceholder}
-                value={uploadPasteText}
-                onChange={e => setUploadPasteText(e.target.value)}
-                className="input-base resize-none"
-              />
+            ):(
+              <textarea value={uploadPasteText} onChange={e=>setUploadPasteText(e.target.value)} placeholder="Paste your notes here..." className="w-full h-32 border border-[#e8e5e0] rounded-xl p-3 text-[13px] resize-none focus:outline-none focus:ring-2 focus:ring-[#8B0000]/20" />
             )}
-
-            {/* Actions */}
-            <div className="flex justify-end gap-2 pt-1">
-              <button onClick={() => setIsUploadOpen(false)} className="btn-ghost">{t.cancel}</button>
-              <button
-                onClick={handleUpload}
-                disabled={isUploading || (uploadMethod === 'file' ? !uploadFile : !uploadPasteText.trim())}
-                className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                {isUploading ? t.processing : t.addToWorkspace}
-              </button>
-            </div>
+            <button onClick={handleUpload} disabled={isUploading||(uploadMethod==="file"?!uploadFile:!uploadPasteText.trim())} className="w-full py-2.5 bg-[#8B0000] hover:bg-[#6d0000] disabled:opacity-40 text-white rounded-xl text-[13.5px] font-semibold">{isUploading?"Uploading...":"Upload & Index"}</button>
           </div>
         </div>
       )}
 
-      {/* In-UI Create Space Modal */}
       {isCreateSpaceOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/25 dark:bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={(e) => e.target === e.currentTarget && setIsCreateSpaceOpen(false)}
-        >
-          <div className="bg-white dark:bg-[#161616] border border-[#e5e5e5] dark:border-white/[0.08] rounded-2xl w-full max-w-sm shadow-xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-[14px] font-semibold text-[#111] dark:text-white">Create New Space</h3>
-              <button
-                onClick={() => setIsCreateSpaceOpen(false)}
-                className="p-1 rounded-md text-[#bbb] hover:text-[#666] dark:hover:text-[#aaa] hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateSpaceSubmit} className="space-y-4">
-              <div>
-                <label className="block text-[11.5px] font-medium text-[#666] dark:text-[#888] mb-1.5">
-                  Space Name
-                </label>
-                <input
-                  type="text"
-                  autoFocus
-                  placeholder="e.g. Organic Chemistry, Linear Algebra..."
-                  value={newSpaceInput}
-                  onChange={(e) => setNewSpaceInput(e.target.value)}
-                  className="input-base"
-                />
-              </div>
-
-              <div className="flex justify-end gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={() => setIsCreateSpaceOpen(false)}
-                  className="btn-ghost"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={!newSpaceInput.trim()}
-                  className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  Create Space
-                </button>
+        <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4" onClick={e=>e.target===e.currentTarget&&setIsCreateSpaceOpen(false)}>
+          <div className="bg-white border border-[#e8e5e0] rounded-2xl w-full max-w-sm shadow-xl p-5">
+            <h3 className="text-[15px] font-semibold text-[#111] mb-1">New Study Space</h3>
+            <p className="text-[12.5px] text-[#888] mb-4">Name your course or subject</p>
+            <form onSubmit={createSpace}>
+              <input autoFocus type="text" value={newSpaceInput} onChange={e=>setNewSpaceInput(e.target.value)} placeholder='e.g. "Organic Chemistry 301"' className="w-full border border-[#e8e5e0] rounded-xl px-3 py-2.5 text-[13.5px] focus:outline-none focus:ring-2 focus:ring-[#8B0000]/20 focus:border-[#8B0000] mb-3" />
+              <div className="flex gap-2">
+                <button type="button" onClick={()=>setIsCreateSpaceOpen(false)} className="flex-1 py-2 border border-[#e8e5e0] rounded-xl text-[13px] font-semibold text-[#666]">Cancel</button>
+                <button type="submit" disabled={!newSpaceInput.trim()} className="flex-1 py-2 bg-[#8B0000] hover:bg-[#6d0000] disabled:opacity-40 text-white rounded-xl text-[13px] font-semibold">Create</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* Manage Subscription Modal */}
-      <ManageSubscriptionModal
-        isOpen={isManageSubOpen}
-        onClose={() => setIsManageSubOpen(false)}
-        onOpenUpgrade={() => setIsSubModalOpen(true)}
-      />
-
-      {/* Subscription Modal (Tiers & Upgrades) */}
-      <SubscriptionModal
-        isOpen={isSubModalOpen}
-        onClose={() => setIsSubModalOpen(false)}
-      />
-
-      {/* Settings Modal */}
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        theme={theme}
-        onThemeChange={setTheme}
-        language={language}
-        onLanguageChange={setLanguage}
-        defaultModel={defaultModel}
-        onModelChange={setDefaultModel}
-        onExportData={handleExportData}
-        onClearData={handleClearData}
-      />
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-        onSuccess={(user, token) => { console.log('Logged in:', user); }}
-      />
+      {isSettingsOpen && <SettingsModal isOpen={isSettingsOpen} onClose={()=>setIsSettingsOpen(false)} theme={theme} onThemeChange={setTheme} defaultModel={defaultModel} onModelChange={setDefaultModel} language={language} onLanguageChange={setLanguage} onExportData={()=>{}} onClearData={()=>{ if(window.confirm("Clear all data?")) { setDocuments([]); setActiveDocument(null); setQuizData(null); setPodcastData(null); setFlashcardData(null); setSummaryData(null); setExamData(null); setMessages([{id:Date.now().toString(),role:"assistant",content:"Workspace cleared."}]); setIsSettingsOpen(false); } }} />}
+      <AuthModal isOpen={isAuthOpen} onClose={()=>setIsAuthOpen(false)} />
+      <ManageSubscriptionModal isOpen={isManageSubOpen} onClose={()=>setIsManageSubOpen(false)} onOpenUpgrade={() => { setIsManageSubOpen(false); setIsSubModalOpen(true); }} />
+      <SubscriptionModal isOpen={isSubModalOpen} onClose={()=>setIsSubModalOpen(false)} />
     </div>
   );
 }

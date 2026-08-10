@@ -1,7 +1,7 @@
 const Groq = require('groq-sdk');
 const textFormatter = require('../utils/textFormatter');
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'gsk_dummy_key_for_local_dev_boot' });
 const MODEL_CANDIDATES = [
   'llama-3.3-70b-versatile',
   'llama-3.1-8b-instant',

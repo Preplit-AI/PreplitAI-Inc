@@ -1,118 +1,100 @@
-import React from 'react';
-import { Plus, Upload, BrainCircuit, BookOpen, Radio, Sparkles, Folder } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/contexts/LanguageContext';
+﻿import React from "react";
+import { Plus, TrendingUp, MessageSquare, Zap, Sparkles, BookOpen, HelpCircle, Globe, Radio, BarChart2 } from "lucide-react";
 
-interface Space {
-  id: string;
-  name: string;
-  documentCount?: number;
-  lastAccessed?: string;
-}
-
+interface Space { id: string; name: string; }
 interface WorkspaceHomeProps {
   onCreateSpace: () => void;
   onSelectSpace: (spaceId: string) => void;
   onUploadContent: () => void;
   spaces: Space[];
+  activeSpaceId: string;
+  onToolSelect: (tool: string) => void;
 }
 
-export function WorkspaceHome({ onCreateSpace, onSelectSpace, onUploadContent, spaces }: WorkspaceHomeProps) {
-  const { language } = useLanguage();
-  const isKo = language === 'ko';
-  const displaySpaces = spaces;
+const TOOLS = [
+  { id: "chat",       icon: MessageSquare, label: "AI Study Chat",           desc: "Ask anything, grounded in your notes",    flagship: false },
+  { id: "explore3d",  icon: Zap,           label: "3D Interactive Learning", desc: "Turn any diagram into a 3D model",        flagship: true  },
+  { id: "expected",   icon: Sparkles,      label: "Exam Predictor",          desc: "Predicted questions from your uploads",   flagship: false },
+  { id: "flashcards", icon: BookOpen,      label: "Flashcards",              desc: "Spaced repetition, tuned to you",         flagship: false },
+  { id: "quizzes",    icon: HelpCircle,    label: "Smart Quiz",              desc: "Unlimited quizzes, graded conceptually", flagship: false },
+  { id: "chat",       icon: Globe,         label: "Korean Assistant",        desc: "Bilingual, tuned to your professor",      flagship: false },
+  { id: "podcast",    icon: Radio,         label: "Podcast Mode",            desc: "Study on your commute",                   flagship: false },
+  { id: "analytics",  icon: BarChart2,     label: "Analytics",               desc: "See exactly what to review next",         flagship: false },
+];
 
-  const quickActions = [
-    { icon: BrainCircuit, label: isKo ? '퀴즈 시작' : 'Start a Quiz', desc: isKo ? '실력 테스트' : 'Test your knowledge' },
-    { icon: BookOpen, label: isKo ? '플래시카드 복습' : 'Review Flashcards', desc: isKo ? '간격 반복 학습' : 'Spaced repetition' },
-    { icon: Radio, label: isKo ? '팟캐스트 듣기' : 'Listen to Podcast', desc: isKo ? '이동 중 청취 학습' : 'Learn on the go' },
-    { icon: Sparkles, label: isKo ? '예상문제 예측' : 'Predict Exam', desc: isKo ? '기출 변형 문제 생성' : 'Generate mock questions' }
-  ];
+export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSelect }: WorkspaceHomeProps) {
+  const activeSpace = spaces.find(s => s.id === activeSpaceId) || spaces[0];
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#fafafa] dark:bg-[#0f0f0f] text-[#111] dark:text-[#f0f0f0] p-6 md:p-8 pb-16">
-      <div className="max-w-4xl mx-auto space-y-10">
-        {/* Header Section */}
-        <div className="space-y-6 pt-6">
-          <div className="space-y-2">
-            <h2 className="text-[15px] font-medium text-[#666] dark:text-[#999]">
-              {isKo ? '환영합니다' : 'Welcome back'}
-            </h2>
-            <h1 className="text-[28px] sm:text-[32px] font-semibold tracking-tight">
-              {isKo ? '오늘 어떤 내용을 학습하시겠습니까?' : 'What do you want to learn today?'}
-            </h1>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <Button onClick={onCreateSpace} className="gap-2 bg-[#111] text-white hover:bg-[#333] dark:bg-white dark:text-[#111] dark:hover:bg-[#e8e8e8] rounded-xl px-5 py-5 h-11">
-              <Plus className="w-4 h-4" />
-              <span className="text-[13.5px] font-medium">{isKo ? '새 스페이스 생성' : 'Create New Space'}</span>
-            </Button>
-            <Button onClick={onUploadContent} variant="outline" className="gap-2 rounded-xl px-5 py-5 h-11 border-[#e8e8e8] dark:border-white/[0.1] bg-white dark:bg-[#111]">
-              <Upload className="w-4 h-4" />
-              <span className="text-[13.5px] font-medium">{isKo ? '콘텐츠 업로드' : 'Upload Content'}</span>
-            </Button>
-          </div>
+    <div className="flex-1 flex flex-col overflow-hidden bg-[#f5f4f1] px-5 md:px-8 pt-5 pb-4 gap-4">
+      <div className="flex items-center justify-between shrink-0">
+        <div>
+          <p className="text-[11.5px] text-[#888]">{greeting}</p>
+          <h1 className="text-[22px] font-bold text-[#111] tracking-tight leading-tight">
+            {activeSpace ? activeSpace.name : "Your Workspace"}
+          </h1>
+          <p className="text-[12px] text-[#888] mt-0.5">Midterm in 6 days · Upload notes to get started</p>
         </div>
-
-        {/* Recent Spaces Section */}
-        <div className="space-y-4">
-          <h3 className="text-[13px] font-semibold tracking-wide uppercase text-[#888] dark:text-[#666]">
-            {isKo ? '최근 스페이스' : 'Recent Spaces'}
-          </h3>
-          {displaySpaces.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {displaySpaces.slice(0, 3).map(space => (
-                <button
-                  key={space.id}
-                  onClick={() => onSelectSpace(space.id)}
-                  className="flex flex-col items-start p-5 rounded-2xl bg-white dark:bg-[#111] border border-[#e8e8e8] dark:border-white/[0.06] hover:border-[#ccc] dark:hover:border-white/[0.2] hover:shadow-sm transition-all text-left"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-[#f5f5f5] dark:bg-white/[0.05] flex items-center justify-center mb-4">
-                    <Folder className="w-5 h-5 text-[#666] dark:text-[#999]" />
-                  </div>
-                  <h4 className="text-[15px] font-semibold mb-1 truncate w-full">{space.name}</h4>
-                  <div className="flex items-center gap-2 text-[12.5px] text-[#888] dark:text-[#666]">
-                    <span>{space.documentCount ?? 0} {isKo ? '개 문서' : 'documents'}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div className="p-8 text-center bg-white dark:bg-[#111] border border-dashed border-[#e8e8e8] dark:border-white/[0.08] rounded-2xl">
-              <Folder className="w-8 h-8 text-[#aaa] dark:text-[#555] mx-auto mb-2" />
-              <p className="text-[13.5px] font-medium text-[#666] dark:text-[#aaa]">
-                {isKo ? '생성된 스페이스가 없습니다' : 'No spaces created yet'}
-              </p>
-              <p className="text-[12px] text-[#999] dark:text-[#666] mt-1">
-                {isKo ? '첫 번째 스페이스를 생성하여 학습을 시작해보세요' : 'Create your first study space to get started'}
-              </p>
-              <Button onClick={onCreateSpace} size="sm" className="mt-4 rounded-xl bg-[#111] text-white dark:bg-white dark:text-[#111]">
-                <Plus className="w-4 h-4 mr-1.5" /> {isKo ? '스페이스 생성' : 'Create Space'}
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {/* Quick Actions Section — Fits cleanly with no cutoffs */}
-        <div className="space-y-4 pb-8">
-          <h3 className="text-[13px] font-semibold tracking-wide uppercase text-[#888] dark:text-[#666]">
-            {isKo ? '빠른 실행' : 'Quick Actions'}
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-            {quickActions.map((action, i) => (
-              <button
-                key={i}
-                className="flex flex-col items-center justify-center p-4 min-h-[110px] rounded-2xl bg-white dark:bg-[#111] border border-[#e8e8e8] dark:border-white/[0.06] hover:border-[#ccc] dark:hover:border-white/[0.2] transition-all group text-center"
-              >
-                <action.icon className="w-5 h-5 mb-2 text-[#555] dark:text-[#aaa] group-hover:text-[#111] dark:group-hover:text-white transition-colors shrink-0" />
-                <span className="text-[13px] font-semibold text-[#111] dark:text-white leading-tight">{action.label}</span>
-                <span className="text-[11px] text-[#888] dark:text-[#777] mt-1 leading-normal max-w-full px-1">{action.desc}</span>
-              </button>
-            ))}
+        <div className="bg-[#8B0000] text-white rounded-xl px-4 py-2.5 text-right shrink-0 hidden sm:block">
+          <p className="text-[9px] font-bold uppercase tracking-widest opacity-70 mb-0.5">Exam Readiness</p>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[20px] font-bold">78%</span>
+            <TrendingUp className="w-3.5 h-3.5 opacity-80" />
           </div>
         </div>
       </div>
+
+      <div className="grid grid-cols-3 gap-2.5 shrink-0">
+        {[
+          { icon: "🔥", title: "12-day streak",    sub: "Keep it up!" },
+          { icon: "🃏", title: "24 cards due",      sub: "Ready today" },
+          { icon: "📝", title: "3 exams analyzed", sub: "Exam predictor fed" },
+        ].map((stat, i) => (
+          <div key={i} className="ws-card flex items-center gap-2.5 px-3 py-2.5">
+            <span className="text-xl">{stat.icon}</span>
+            <div className="min-w-0">
+              <p className="text-[12.5px] font-semibold text-[#111] truncate">{stat.title}</p>
+              <p className="text-[11px] text-[#888] truncate">{stat.sub}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex-1 min-h-0 flex flex-col">
+        <p className="text-[11.5px] font-bold text-[#888] uppercase tracking-wider mb-2 shrink-0">Your tools</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 flex-1 min-h-0 auto-rows-fr">
+          {TOOLS.map((tool, i) => {
+            const Icon = tool.icon;
+            return (
+              <button key={i} onClick={() => onToolSelect(tool.id)}
+                className="ws-card text-left px-3 py-3 hover:shadow-md hover:border-[#d0cbc4] transition-all group relative flex flex-col justify-between min-h-0">
+                {tool.flagship && (
+                  <span className="absolute top-2 right-2 bg-[#8B0000] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide">Flagship</span>
+                )}
+                <div className="w-8 h-8 rounded-xl border border-[#e8e5e0] bg-[#f7f4f0] flex items-center justify-center mb-2 group-hover:border-[#8B0000]/30 transition-colors shrink-0">
+                  <Icon className="w-4 h-4 text-[#8B0000]" strokeWidth={1.8} />
+                </div>
+                <div>
+                  <p className="text-[12.5px] font-semibold text-[#111] leading-snug">{tool.label}</p>
+                  <p className="text-[11px] text-[#888] mt-0.5 leading-snug line-clamp-2">{tool.desc}</p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {spaces.length === 0 && (
+        <div className="border border-dashed border-[#d5d0c8] rounded-2xl p-5 text-center bg-white/60 shrink-0">
+          <p className="text-[13px] font-semibold text-[#666]">No study spaces yet</p>
+          <p className="text-[12px] text-[#999] mt-0.5 mb-3">Create a space for each course</p>
+          <button onClick={onCreateSpace} className="ws-btn-primary text-[12.5px] px-4 py-1.5 inline-flex items-center gap-1.5">
+            <Plus className="w-3.5 h-3.5" /> Create first space
+          </button>
+        </div>
+      )}
     </div>
   );
 }

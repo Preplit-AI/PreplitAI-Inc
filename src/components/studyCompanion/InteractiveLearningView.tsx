@@ -1,131 +1,246 @@
-import React, { useState } from 'react';
-import { GripVertical, RotateCcw, Image as ImageIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useRef, useEffect, useState } from "react";
+import { RotateCcw, ZoomIn, ZoomOut, Layers, RefreshCw } from "lucide-react";
 
-export function InteractiveLearningView({ language = 'en' }: { language?: string }) {
-  const [orderingItems] = useState([
-    { id: 1, text: 'Prophase: Chromosomes condense', order: 1 },
-    { id: 2, text: 'Metaphase: Chromosomes align', order: 2 },
-    { id: 3, text: 'Anaphase: Sister chromatids pull apart', order: 3 },
-    { id: 4, text: 'Telophase: Nucleus reforms', order: 4 },
-  ]);
+export function InteractiveLearningView({ language = "en" }: { language?: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [rotation, setRotation] = useState({ x: 20, y: 30 });
+  const [dragging, setDragging] = useState(false);
+  const [lastMouse, setLastMouse] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [activeAtom, setActiveAtom] = useState<number | null>(null);
+
+  // Toluene molecule: benzene ring + methyl group
+  const atoms = [
+    // Benzene ring (carbon)
+    { x: 0,   y: -1.4, z: 0,   element: "C", label: "C1" },
+    { x: 1.2, y: -0.7, z: 0,   element: "C", label: "C2" },
+    { x: 1.2, y:  0.7, z: 0,   element: "C", label: "C3" },
+    { x: 0,   y:  1.4, z: 0,   element: "C", label: "C4" },
+    { x: -1.2,y:  0.7, z: 0,   element: "C", label: "C5" },
+    { x: -1.2,y: -0.7, z: 0,   element: "C", label: "C6" },
+    // Methyl group
+    { x: 0,   y: -2.7, z: 0,   element: "C", label: "CH3" },
+    // Hydrogens on ring
+    { x: 2.1, y: -1.25,z: 0,   element: "H", label: "H" },
+    { x: 2.1, y:  1.25,z: 0,   element: "H", label: "H" },
+    { x: 0,   y:  2.5, z: 0,   element: "H", label: "H" },
+    { x: -2.1,y:  1.25,z: 0,   element: "H", label: "H" },
+    { x: -2.1,y: -1.25,z: 0,   element: "H", label: "H" },
+    // Methyl hydrogens
+    { x: 0.9, y: -3.3, z: 0,   element: "H", label: "H" },
+    { x: -0.9,y: -3.3, z: 0,   element: "H", label: "H" },
+    { x: 0,   y: -3.4, z: 0.9, element: "H", label: "H" },
+  ];
+  const bonds = [
+    [0,1],[1,2],[2,3],[3,4],[4,5],[5,0], // ring
+    [0,6], // methyl
+    [1,7],[2,8],[3,9],[4,10],[5,11], // H on ring
+    [6,12],[6,13],[6,14], // methyl H
+  ];
+
+  const COLORS: Record<string, string> = { C: "#555", H: "#ddd" };
+  const RADII: Record<string, number> = { C: 22, H: 12 };
+
+  const project3D = (x: number, y: number, z: number, rx: number, ry: number, sc: number) => {
+    const cosX = Math.cos((rx * Math.PI) / 180);
+    const sinX = Math.sin((rx * Math.PI) / 180);
+    const cosY = Math.cos((ry * Math.PI) / 180);
+    const sinY = Math.sin((ry * Math.PI) / 180);
+    // Rotate Y
+    const x1 = cosY * x + sinY * z;
+    const z1 = -sinY * x + cosY * z;
+    // Rotate X
+    const y2 = cosX * y - sinX * z1;
+    const z2 = sinX * y + cosX * z1;
+    const scale = 400 / (400 + z2 * 20);
+    return { px: x1 * sc * scale, py: y2 * sc * scale, depth: z2 };
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    const sc = 55 * zoom;
+    const cx = W / 2, cy = H / 2;
+    const projected = atoms.map(a => ({ ...project3D(a.x, a.y, a.z, rotation.x, rotation.y, sc), ...a }));
+    // Sort by depth
+    const sorted = [...projected].sort((a, b) => a.depth - b.depth);
+    // Draw bonds
+    bonds.forEach(([i, j]) => {
+      const a = projected[i], b = projected[j];
+      ctx.beginPath();
+      ctx.moveTo(cx + a.px, cy + a.py);
+      ctx.lineTo(cx + b.px, cy + b.py);
+      ctx.strokeStyle = "#bbb";
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+    });
+    // Draw atoms
+    sorted.forEach(a => {
+      const r = RADII[a.element] * zoom;
+      const isActive = a.label === atoms[activeAtom ?? -1]?.label;
+      const grad = ctx.createRadialGradient(cx + a.px - r * 0.3, cy + a.py - r * 0.3, r * 0.1, cx + a.px, cy + a.py, r);
+      const baseColor = COLORS[a.element] || "#aaa";
+      grad.addColorStop(0, isActive ? "#8B0000" : lighten(baseColor));
+      grad.addColorStop(1, isActive ? "#6d0000" : baseColor);
+      ctx.beginPath();
+      ctx.arc(cx + a.px, cy + a.py, r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+      if (a.element === "C") {
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold " + Math.max(8, Math.round(10 * zoom)) + "px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("C", cx + a.px, cy + a.py);
+      }
+    });
+    // Annotation dots
+    [[0, "1"], [6, "2"]].forEach(([idx, label]) => {
+      const a = projected[idx as number];
+      const dotX = cx + a.px + 18 * zoom;
+      const dotY = cy + a.py - 18 * zoom;
+      ctx.beginPath();
+      ctx.arc(dotX, dotY, 10, 0, Math.PI * 2);
+      ctx.fillStyle = "#8B0000";
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 9px Inter, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(label as string, dotX, dotY);
+    });
+  }, [rotation, zoom, activeAtom]);
+
+  function lighten(hex: string) {
+    const n = parseInt(hex.slice(1), 16);
+    const r = Math.min(255, ((n >> 16) & 0xff) + 60);
+    const g = Math.min(255, ((n >> 8) & 0xff) + 60);
+    const b = Math.min(255, (n & 0xff) + 60);
+    return "rgb(" + r + "," + g + "," + b + ")";
+  }
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setDragging(true);
+    setLastMouse({ x: e.clientX, y: e.clientY });
+  };
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!dragging) return;
+    setRotation(r => ({
+      x: r.x + (e.clientY - lastMouse.y) * 0.5,
+      y: r.y + (e.clientX - lastMouse.x) * 0.5,
+    }));
+    setLastMouse({ x: e.clientX, y: e.clientY });
+  };
+  const handleMouseUp = () => setDragging(false);
+
+  // Touch support
+  const touchStart = useRef({ x: 0, y: 0 });
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const dx = e.touches[0].clientX - touchStart.current.x;
+    const dy = e.touches[0].clientY - touchStart.current.y;
+    setRotation(r => ({ x: r.x + dy * 0.5, y: r.y + dx * 0.5 }));
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto p-4 bg-[#fafafa] dark:bg-[#111] space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Interactive Learning</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Master concepts through visual exercises</p>
-        </div>
-        <Button variant="outline" className="text-xs">Generate New Exercise</Button>
+    <div className="flex-1 overflow-y-auto bg-[#f5f4f1] px-4 md:px-6 py-7">
+      {/* Header */}
+      <div className="mb-2">
+        <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#8B0000] text-white text-[10px] font-bold uppercase tracking-widest mb-3">
+          Flagship Feature
+        </span>
+        <h1 className="text-[26px] font-bold text-[#111] tracking-tight">Interactive 3D Learning</h1>
+        <p className="text-[13px] text-[#888] mt-0.5">Generated automatically from your own notes — not a stock model</p>
+        <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-wider mt-1">Generated From Ch.4, Slide 12</p>
       </div>
 
-      {/* Sequence Ordering */}
-      <div className="bg-white dark:bg-[#1a1a1a] p-5 rounded-2xl border border-gray-200 dark:border-white/[0.08] shadow-sm space-y-4">
-        <div>
-          <div className="inline-flex items-center px-2 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-medium mb-2">Sequence Ordering</div>
-          <h3 className="text-base font-medium text-gray-900 dark:text-gray-100">Order the stages of mitosis</h3>
-        </div>
-        
-        <div className="space-y-2">
-          {orderingItems.map((item, i) => (
-            <div key={item.id} className="flex items-center gap-3 p-3 bg-white dark:bg-[#222] border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-grab">
-              <GripVertical className="w-4 h-4 text-gray-400" />
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800 text-xs font-medium text-gray-600 dark:text-gray-300">
-                {i + 1}
-              </div>
-              <span className="text-sm text-gray-700 dark:text-gray-200">{item.text}</span>
-            </div>
-          ))}
+      <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr_220px] gap-3 mt-4">
+        {/* Left: 2D sketch panel */}
+        <div className="ws-card p-4">
+          <p className="text-[12px] font-semibold text-[#888] mb-2">Ch.4, Slide 12</p>
+          <div className="bg-[#f7f4f0] border border-[#e8e5e0] rounded-xl h-36 flex items-center justify-center mb-3">
+            <svg viewBox="0 0 80 80" className="w-20 h-20 text-[#888]">
+              <polygon points="40,12 58,22 58,42 40,52 22,42 22,22" fill="none" stroke="#888" strokeWidth="2"/>
+              <line x1="40" y1="52" x2="40" y2="68" stroke="#888" strokeWidth="2"/>
+              <text x="40" y="78" textAnchor="middle" fontSize="8" fill="#888">2D skeletal sketch</text>
+            </svg>
+          </div>
+          <div className="flex items-center gap-2 bg-[#f5f4f1] rounded-lg px-3 py-1.5 mb-3">
+            <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 text-[#8B0000]"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="currentColor" strokeWidth="1.5"/><line x1="11" y1="8" x2="5" y2="8" stroke="currentColor" strokeWidth="1.5"/></svg>
+            <span className="text-[11px] text-[#888]">Source: your Ch.4 slides</span>
+          </div>
+          <p className="text-[11.5px] text-[#666] leading-relaxed">
+            PreplitAI reconstructs bond geometry and renders an explorable 3D model automatically.
+          </p>
         </div>
 
-        <div className="flex gap-2 pt-2">
-          <Button size="sm" className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900">Check Order</Button>
-          <Button size="sm" variant="outline"><RotateCcw className="w-3.5 h-3.5 mr-1" /> Reset</Button>
-        </div>
-      </div>
-
-      {/* Concept Matching */}
-      <div className="bg-white dark:bg-[#1a1a1a] p-5 rounded-2xl border border-gray-200 dark:border-white/[0.08] shadow-sm space-y-4">
-        <div>
-          <div className="inline-flex items-center px-2 py-1 rounded-md bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-medium mb-2">Concept Matching</div>
-          <h3 className="text-base font-medium text-gray-900 dark:text-gray-100">Match cell organelles to their functions</h3>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Terms</h4>
-            {['Nucleus', 'Mitochondria', 'Ribosome', 'Cell Membrane'].map(term => (
-              <div key={term} className="p-3 bg-white dark:bg-[#222] border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm cursor-pointer hover:border-emerald-400 transition-colors">
-                {term}
-              </div>
+        {/* Center: 3D viewer */}
+        <div className="ws-card p-3 flex flex-col items-center">
+          <div className="flex gap-2 mb-2 self-start">
+            {[
+              { Icon: RotateCcw, title: "Rotate", action: () => setRotation({ x: 20, y: 30 }) },
+              { Icon: ZoomIn,    title: "Zoom In",  action: () => setZoom(z => Math.min(z + 0.2, 2.5)) },
+              { Icon: ZoomOut,   title: "Zoom Out", action: () => setZoom(z => Math.max(z - 0.2, 0.4)) },
+              { Icon: Layers,    title: "Layers",   action: () => {} },
+              { Icon: RefreshCw, title: "Reset",    action: () => { setRotation({ x: 20, y: 30 }); setZoom(1); } },
+            ].map(({ Icon, title, action }) => (
+              <button key={title} onClick={action} title={title}
+                className="w-7 h-7 rounded-lg border border-[#e8e5e0] bg-[#f7f4f0] hover:border-[#8B0000]/30 flex items-center justify-center text-[#666] hover:text-[#8B0000] transition-colors">
+                <Icon className="w-3.5 h-3.5" />
+              </button>
             ))}
           </div>
-          <div className="space-y-2">
-            <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Definitions</h4>
-            {['Protein synthesis', 'Controls what enters/exits', 'Contains genetic material', 'Energy production'].map(def => (
-              <div key={def} className="p-3 bg-gray-50 dark:bg-[#222] border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-600 dark:text-gray-300 shadow-sm cursor-pointer hover:border-emerald-400 transition-colors">
-                {def}
-              </div>
-            ))}
-          </div>
+          <canvas
+            ref={canvasRef}
+            width={400} height={300}
+            className="w-full rounded-xl cursor-grab active:cursor-grabbing bg-white border border-[#f0ede8]"
+            style={{ maxHeight: 300 }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+          />
+          <p className="text-[11px] text-[#aaa] mt-2">Drag to rotate · Scroll to zoom · Click an atom</p>
         </div>
 
-        <div className="flex gap-2 pt-2">
-          <Button size="sm" className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900">Check Matches</Button>
-          <Button size="sm" variant="outline"><RotateCcw className="w-3.5 h-3.5 mr-1" /> Reset</Button>
-        </div>
-      </div>
-
-      {/* Fill the Gaps */}
-      <div className="bg-white dark:bg-[#1a1a1a] p-5 rounded-2xl border border-gray-200 dark:border-white/[0.08] shadow-sm space-y-4">
-        <div>
-          <div className="inline-flex items-center px-2 py-1 rounded-md bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-xs font-medium mb-2">Fill the Gaps</div>
-          <h3 className="text-base font-medium text-gray-900 dark:text-gray-100">Complete the Passage</h3>
-        </div>
-        
-        <div className="p-4 bg-gray-50 dark:bg-[#222] rounded-xl text-sm text-gray-700 dark:text-gray-300 leading-loose">
-          Photosynthesis is the process used by plants, algae and certain bacteria to harness energy from 
-          <input type="text" className="mx-2 w-24 border-b-2 border-gray-300 dark:border-gray-600 bg-transparent px-1 text-center focus:outline-none focus:border-purple-500" placeholder="blank" /> 
-          and turn it into chemical energy. It takes in 
-          <input type="text" className="mx-2 w-24 border-b-2 border-gray-300 dark:border-gray-600 bg-transparent px-1 text-center focus:outline-none focus:border-purple-500" placeholder="blank" />
-          and water, and produces 
-          <input type="text" className="mx-2 w-24 border-b-2 border-gray-300 dark:border-gray-600 bg-transparent px-1 text-center focus:outline-none focus:border-purple-500" placeholder="blank" />
-          and oxygen as a byproduct.
-        </div>
-
-        <div className="flex gap-2 pt-2">
-          <Button size="sm" className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900">Check Answers</Button>
-        </div>
-      </div>
-
-      {/* Label the Diagram */}
-      <div className="bg-white dark:bg-[#1a1a1a] p-5 rounded-2xl border border-gray-200 dark:border-white/[0.08] shadow-sm space-y-4">
-        <div>
-          <div className="inline-flex items-center px-2 py-1 rounded-md bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-medium mb-2">Label the Diagram</div>
-          <h3 className="text-base font-medium text-gray-900 dark:text-gray-100">Label the Components</h3>
-        </div>
-        
-        <div className="relative w-full h-48 bg-gray-100 dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center">
-          <ImageIcon className="w-8 h-8 text-gray-400 mb-2 absolute" />
-          <span className="text-sm text-gray-500 dark:text-gray-400 mt-12">Diagram Area</span>
-          
-          <div className="absolute top-1/4 left-1/4 w-6 h-6 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-500 rounded-full flex items-center justify-center text-xs font-bold shadow-sm">1</div>
-          <div className="absolute top-1/3 right-1/4 w-6 h-6 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-500 rounded-full flex items-center justify-center text-xs font-bold shadow-sm">2</div>
-          <div className="absolute bottom-1/4 left-1/3 w-6 h-6 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-500 rounded-full flex items-center justify-center text-xs font-bold shadow-sm">3</div>
-        </div>
-
-        <div className="space-y-2 mt-4">
-          {[1, 2, 3].map(num => (
-            <div key={num} className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-700 dark:text-gray-300">{num}</div>
-              <input type="text" className="flex-1 border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#222] rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 dark:text-gray-100" placeholder={`Label ${num}`} />
+        {/* Right: Key facts */}
+        <div className="ws-card p-4">
+          <p className="text-[12px] font-semibold text-[#888] mb-1">Key Facts</p>
+          <h3 className="text-[18px] font-bold text-[#111]">Toluene</h3>
+          <p className="text-[12px] text-[#888] mb-4">C₇H₈ · methylbenzene</p>
+          {[
+            { label: "Molar Mass",     value: "92.14 g/mol" },
+            { label: "Functional Group", value: "Aromatic ring + methyl" },
+            { label: "Ring Type",       value: "Benzene derivative" },
+          ].map(f => (
+            <div key={f.label} className="mb-3">
+              <p className="text-[10px] font-semibold text-[#999] uppercase tracking-wider">{f.label}</p>
+              <p className="text-[13px] font-semibold text-[#111]">{f.value}</p>
             </div>
           ))}
-        </div>
-
-        <div className="flex gap-2 pt-2">
-          <Button size="sm" className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900">Check Labels</Button>
+          <div className="bg-[#fdf0f0] border border-[#f5d0d0] rounded-xl p-3 mb-4">
+            <p className="text-[11.5px] text-[#8B0000] leading-relaxed font-medium">
+              Why it's on your midterm: Prof. Han's Ch.4 problem set uses this ring system in 3 of 6 substitution examples.
+            </p>
+          </div>
+          <p className="text-[10.5px] text-[#aaa] mb-4">📍 Source: your Ch.4 slides, p.12</p>
+          <div className="flex flex-col gap-2">
+            <button className="w-full py-2 rounded-xl bg-[#8B0000] hover:bg-[#6d0000] text-white text-[13px] font-semibold transition-colors">
+              Quiz me
+            </button>
+            <button className="w-full py-2 rounded-xl border border-[#e8e5e0] text-[#111] text-[13px] font-semibold hover:bg-[#f5f4f1] transition-colors">
+              Add to cards
+            </button>
+          </div>
         </div>
       </div>
     </div>

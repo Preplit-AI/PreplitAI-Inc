@@ -134,9 +134,17 @@ export function GKSAdvisorChatbot({ isOpen, onClose }: GKSAdvisorChatbotProps) {
       
       {/* PURE BLACK HEADER BAR WITH OFFICIAL PREPLITAI LOGO */}
       <div className="bg-black text-white px-4 py-3 flex items-center justify-between shrink-0 border-b border-gray-800">
-        <div className="flex items-center gap-2.5">
-          <img src="/logo.png" alt="PreplitAI Logo" className="h-6 w-auto dark:drop-shadow-[0_0_1px_rgba(255,255,255,1)]" />
-          <span className="font-bold text-sm tracking-tight text-white">PreplitAI Advisor</span>
+        <div className="flex items-center gap-3">
+          <span className="w-8 h-8 rounded-full bg-black border border-white/20 flex items-center justify-center shrink-0 overflow-hidden">
+            <img src="/logo.png" alt="PreplitAI" className="w-6 h-6 object-contain" style={{filter:'brightness(0) invert(1)'}} />
+          </span>
+          <div>
+            <span className="font-bold text-[13px] tracking-tight text-white block leading-tight">PreplitAI Advisor</span>
+            <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
+              GKS 2026 Expert
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-3 text-xs text-gray-400">

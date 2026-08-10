@@ -504,222 +504,289 @@ export default function GKSDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 font-sans pb-16 transition-colors duration-300">
+    <div className="h-screen w-screen overflow-hidden bg-[#f5f4f1] text-gray-900 font-sans flex flex-col transition-colors duration-300" style={{fontFamily:'Inter,sans-serif'}}>
       
-      {/* HEADER BAR */}
-      <div className="border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md sticky top-14 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="font-bold text-sm sm:text-base text-gray-900 dark:text-white tracking-tight">GKS2026 Prep Workbench</span>
-          </div>
+      {/* OVERALL APP CONTAINER WITH FLUSH SIDEBAR + MAIN CANVAS */}
+      <div className="flex-1 flex h-screen overflow-hidden">
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <button
-              onClick={() => {
-                setSessionToken('gks_sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9));
-                setCurrentStep(1);
-                setEvaluation(null);
-                toast.info(isKo ? '새로운 진단 세션이 시작되었습니다.' : 'New evaluation session started');
-              }}
-              className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 text-xs font-medium text-gray-700 dark:text-gray-300 transition-all"
-            >
-              <span>{isKo ? '초기화' : 'Reset'}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* MAIN CONTAINER */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
-
-        {/* STEP PROGRESS BAR */}
-        <div className="mb-6 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-2xl p-1.5">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1">
-            {[
-              { num: 1, label: isKo ? '1. 프로필 & 어학' : '1. Profile & Scores' },
-              { num: 2, label: isKo ? '2. 서류 검토' : '2. Documents' },
-              { num: 3, label: isKo ? '3. AI 진단 스캔' : '3. AI Scan' },
-              { num: 4, label: isKo ? '4. 종합 가이드' : '4. Guidance Report' }
-            ].map(step => {
-              const active = currentStep === step.num;
-              const completed = currentStep > step.num;
-              return (
-                <button
-                  key={step.num}
-                  disabled={step.num === 3}
-                  onClick={() => setCurrentStep(step.num)}
-                  className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
-                    active
-                      ? 'bg-white dark:bg-gray-950 text-[#630000] dark:text-[#c84040] shadow-xs border border-gray-200 dark:border-gray-800'
-                      : completed
-                        ? 'text-gray-700 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-800/50'
-                        : 'text-gray-400 dark:text-gray-600 hover:bg-gray-200/30'
-                  }`}
-                >
-                  <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${
-                    active ? 'bg-[#630000] text-white' : completed ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-gray-200 dark:bg-gray-800 text-gray-500'
-                  }`}>
-                    {step.num}
-                  </span>
-                  <span className="truncate">{step.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* STEP 1: APPLICANT PROFILE */}
-        {currentStep === 1 && (
-          <div className="bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 sm:p-6">
-            <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-3 mb-5">
-              <h2 className="text-base font-bold text-gray-900 dark:text-white">
-                {isKo ? '지망 트랙 및 지원자 기본 정보' : 'Applicant Background Profile & Language Test Scores'}
-              </h2>
-              <span className="text-xs text-gray-500">{isKo ? '샘플 데이터 자동 적용' : 'Pre-filled sample data'}</span>
-            </div>
-
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">{isKo ? '지원 트랙' : 'Target Track'}</label>
-                <select
-                  value={profile.track}
-                  onChange={e => setProfile({ ...profile, track: e.target.value })}
-                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-sm sm:text-xs text-gray-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white h-10 sm:h-9"
-                >
-                  <option value="embassy">Embassy Track (공관전형 - 최대 3개 대학)</option>
-                  <option value="university">University Track (대학전형 - 단일 1개 대학)</option>
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">{isKo ? '학위 과정' : 'Degree Program'}</label>
-                <select
-                  value={profile.degreeLevel}
-                  onChange={e => setProfile({ ...profile, degreeLevel: e.target.value })}
-                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-sm sm:text-xs text-gray-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white h-10 sm:h-9"
-                >
-                  <option value="undergraduate">Undergraduate (학사 과정)</option>
-                  <option value="master">Master's Degree (석사 과정)</option>
-                  <option value="doctoral">Doctoral Degree (박사 과정)</option>
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">{isKo ? '출신 국가' : 'Home Country'}</label>
-                <Input
-                  value={profile.country}
-                  onChange={e => setProfile({ ...profile, country: e.target.value })}
-                  placeholder="e.g. Philippines"
-                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">{isKo ? '지망 전공 분야' : 'Target Major / Field'}</label>
-                <Input
-                  value={profile.targetField}
-                  onChange={e => setProfile({ ...profile, targetField: e.target.value })}
-                  placeholder="e.g. Computer Science & AI"
-                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">{isKo ? '학점 (GPA)' : 'Academic GPA / Score'}</label>
-                <Input
-                  value={profile.academicGpa}
-                  onChange={e => setProfile({ ...profile, academicGpa: e.target.value })}
-                  placeholder="e.g. 3.88 / 4.0"
-                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">{isKo ? 'TOPIK 성적' : 'TOPIK Level'}</label>
-                <select
-                  value={profile.topikLevel}
-                  onChange={e => setProfile({ ...profile, topikLevel: e.target.value })}
-                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-sm sm:text-xs text-gray-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white h-10 sm:h-9"
-                >
-                  <option value="None">None (미소지)</option>
-                  <option value="TOPIK 1">TOPIK Level 1</option>
-                  <option value="TOPIK 2">TOPIK Level 2</option>
-                  <option value="TOPIK 3">TOPIK Level 3</option>
-                  <option value="TOPIK 4">TOPIK Level 4</option>
-                  <option value="TOPIK 5">TOPIK Level 5</option>
-                  <option value="TOPIK 6">TOPIK Level 6</option>
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">{isKo ? '영어 시험 종류' : 'English Test Type'}</label>
-                <select
-                  value={profile.englishTestType}
-                  onChange={e => setProfile({ ...profile, englishTestType: e.target.value })}
-                  className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-sm sm:text-xs text-gray-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white h-10 sm:h-9"
-                >
-                  <option value="IELTS">IELTS Academic</option>
-                  <option value="TOEFL">TOEFL iBT</option>
-                  <option value="Duolingo">Duolingo</option>
-                  <option value="None">None (English Native / Medium)</option>
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">{isKo ? '영어 시험 점수' : 'English Test Score'}</label>
-                <Input
-                  value={profile.englishTestScore}
-                  onChange={e => setProfile({ ...profile, englishTestScore: e.target.value })}
-                  placeholder="e.g. IELTS 7.5"
-                  className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
-                />
-              </div>
-
-              <div className="sm:col-span-2 md:col-span-3 space-y-2 pt-2">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 block">
-                  {isKo ? '지망 대학 선택' : 'Target University Choices'}
-                </label>
-                <div className="grid sm:grid-cols-3 gap-3">
-                  <Input
-                    value={profile.firstChoiceUniversity}
-                    onChange={e => setProfile({ ...profile, firstChoiceUniversity: e.target.value })}
-                    placeholder="1st Choice: Seoul National University"
-                    className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
-                  />
-                  {profile.track === 'embassy' && (
-                    <>
-                      <Input
-                        value={profile.secondChoiceUniversity}
-                        onChange={e => setProfile({ ...profile, secondChoiceUniversity: e.target.value })}
-                        placeholder="2nd Choice: KAIST"
-                        className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
-                      />
-                      <Input
-                        value={profile.thirdChoiceUniversity}
-                        onChange={e => setProfile({ ...profile, thirdChoiceUniversity: e.target.value })}
-                        placeholder="3rd Choice: Korea University"
-                        className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-sm sm:text-xs rounded-xl h-10 sm:h-9"
-                      />
-                    </>
-                  )}
+        {/* COMPACT FLUSH SIDEBAR (DESKTOP) */}
+        <aside className="w-60 shrink-0 bg-white border-r border-[#e8e5e0] hidden lg:flex flex-col justify-between p-3.5 h-full overflow-y-auto scrollbar-none">
+          <div className="space-y-4">
+            
+            {/* WORKSPACE HEADER */}
+            <div className="flex items-center justify-between px-1 pt-1 pb-2 border-b border-[#e8e5e0]">
+              <div className="flex items-center gap-2">
+                <img src="/logo.png" alt="PreplitAI" className="h-7 w-auto" />
+                <div>
+                  <div className="font-bold text-[12.5px] text-[#111] tracking-tight">GKS Workbench</div>
+                  <div className="text-[10px] text-[#888] font-medium">PreplitAI Engine</div>
                 </div>
               </div>
+              <button
+                onClick={() => {
+                  setSessionToken('gks_sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9));
+                  setCurrentStep(1);
+                  setEvaluation(null);
+                  toast.info(isKo ? '세션이 초기화되었습니다.' : 'Session reset');
+                }}
+                title="Reset Session"
+                className="text-gray-400 hover:text-black dark:hover:text-white text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-800"
+              >
+                ↺
+              </button>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-800 flex justify-center">
-              <Button
-                onClick={handleSaveProfile}
-                className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black text-xs font-semibold px-8 py-2.5 rounded-full"
-              >
-                <span>{isKo ? '프로필 저장 및 서류 단계 이동' : 'Save Profile & Continue to Documents'}</span>
-              </Button>
+            {/* STEPS GROUP */}
+            <div className="space-y-1">
+              <div className="ws-section-label mb-1">Steps</div>
+              {[
+                { step: 1, label: '1. Profile & Scores', icon: '👤' },
+                { step: 2, label: '2. Application Documents', icon: '📄' },
+                { step: 3, label: '3. AI Diagnostic Scan', icon: '⚡' },
+                { step: 4, label: '4. Guidance Report', icon: '📊' }
+              ].map(item => (
+                <button
+                  key={item.step}
+                  onClick={() => setCurrentStep(item.step)}
+                  className={`ws-sidebar-item ${currentStep === item.step ? 'active' : ''}`}
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <span className="text-sm">{item.icon}</span>
+                    <span className="truncate text-[13px]">{item.label}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="space-y-1">
+              <div className="ws-section-label mb-1">Resources</div>
+              <button onClick={() => setShowScholarMaterials(true)}
+                className="ws-sidebar-item w-full">
+                <div className="flex items-center gap-2.5">
+                  <span>📚</span>
+                  <span className="text-[13px]">Scholar Materials</span>
+                </div>
+                <span className="text-[10px] bg-[#f0ede8] px-1.5 py-0.5 rounded text-[#888] font-bold">48</span>
+              </button>
+              <button onClick={() => setShowManualReviewModal(true)}
+                className="ws-sidebar-item w-full">
+                <div className="flex items-center gap-2.5">
+                  <span>🎓</span>
+                  <span className="text-[13px]">1:1 Alumni Review</span>
+                </div>
+              </button>
+            </div>
+
+          </div>
+
+          <div className="pt-3 border-t border-[#e8e5e0]">
+            <button
+              onClick={() => setShowChatBot(!showChatBot)}
+              className="w-full py-2 px-3 rounded-xl bg-[#8B0000] hover:bg-[#6d0000] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Ask Preplit AI Advisor</span>
+            </button>
+          </div>
+        </aside>
+
+        {/* MAIN WORKBENCH CANVAS */}
+        <main className="flex-1 min-w-0 bg-[#f5f4f1] p-4 sm:p-6 flex flex-col gap-4 overflow-hidden">
+
+          {/* MOBILE ONLY STEP NAVIGATION TABS */}
+          <div className="lg:hidden bg-white p-1 rounded-xl border border-[#e8e5e0] shadow-xs">
+            <div className="grid grid-cols-4 gap-1">
+              {[
+                { num: 1, label: 'Profile' },
+                { num: 2, label: 'Docs' },
+                { num: 3, label: 'Scan' },
+                { num: 4, label: 'Report' }
+              ].map(st => (
+                <button
+                  key={st.num}
+                  disabled={st.num === 3}
+                  onClick={() => setCurrentStep(st.num)}
+                  className={`py-1 text-center text-xs font-bold rounded-lg transition-all ${
+                    currentStep === st.num
+                      ? 'bg-[#8B0000] text-white shadow-xs'
+                      : 'text-[#666] hover:bg-[#f5f4f1]'
+                  }`}
+                >
+                  {st.label}
+                </button>
+              ))}
             </div>
           </div>
-        )}
+
+          <div className="flex items-center justify-between border-b border-[#e8e5e0] pb-3">
+            <div>
+              <h1 className="text-base sm:text-lg font-bold text-[#111] tracking-tight">GKS2026 Workbench</h1>
+              <p className="text-[11px] text-[#888]">NIIED Alignment Engine & Application Readiness Scorecard</p>
+            </div>
+            <Button
+              onClick={handleRunEvaluation}
+              disabled={loading}
+              className="bg-[#8B0000] hover:bg-[#6d0000] text-white font-semibold text-xs rounded-xl h-8 px-4 shrink-0"
+            >
+              {loading ? 'Evaluating...' : 'Run AI Scan'}
+            </Button>
+          </div>
+
+          {/* STEP 1: APPLICANT PROFILE */}
+          {currentStep === 1 && (
+            <div className="flex-1 overflow-y-auto min-h-0 space-y-4">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200">
+                  {isKo ? '지망 트랙 및 지원자 기본 정보' : 'Applicant Background Profile & Language Test Scores'}
+                </h2>
+                <span className="text-[11px] text-gray-400 font-medium">{isKo ? '샘플 데이터 적용됨' : 'Pre-filled sample'}</span>
+              </div>
+
+              {/* 4-COLUMN COMPACT GRID TO ELIMINATE BLANK SPACES */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-700 dark:text-gray-300 block mb-1">{isKo ? '지원 트랙' : 'Target Track'}</label>
+                  <select
+                    value={profile.track}
+                    onChange={e => setProfile({ ...profile, track: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-1.5 text-xs text-gray-900 dark:text-white focus:outline-none h-9"
+                  >
+                    <option value="embassy">Embassy Track (공관전형 - 3대)</option>
+                    <option value="university">University Track (대학전형 - 1대)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-700 dark:text-gray-300 block mb-1">{isKo ? '학위 과정' : 'Degree Program'}</label>
+                  <select
+                    value={profile.degreeLevel}
+                    onChange={e => setProfile({ ...profile, degreeLevel: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-1.5 text-xs text-gray-900 dark:text-white focus:outline-none h-9"
+                  >
+                    <option value="undergraduate">Undergraduate (학사)</option>
+                    <option value="master">Master's Degree (석사)</option>
+                    <option value="doctoral">Doctoral Degree (박사)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-700 dark:text-gray-300 block mb-1">{isKo ? '출신 국가' : 'Home Country'}</label>
+                  <Input
+                    value={profile.country}
+                    onChange={e => setProfile({ ...profile, country: e.target.value })}
+                    placeholder="e.g. Philippines"
+                    className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-xs rounded-xl h-9 px-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-700 dark:text-gray-300 block mb-1">{isKo ? '지망 전공 분야' : 'Target Major / Field'}</label>
+                  <Input
+                    value={profile.targetField}
+                    onChange={e => setProfile({ ...profile, targetField: e.target.value })}
+                    placeholder="e.g. Computer Science & AI"
+                    className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-xs rounded-xl h-9 px-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-700 dark:text-gray-300 block mb-1">{isKo ? '학점 (GPA)' : 'Academic GPA'}</label>
+                  <Input
+                    value={profile.academicGpa}
+                    onChange={e => setProfile({ ...profile, academicGpa: e.target.value })}
+                    placeholder="e.g. 3.88 / 4.0"
+                    className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-xs rounded-xl h-9 px-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-700 dark:text-gray-300 block mb-1">{isKo ? 'TOPIK 성적' : 'TOPIK Level'}</label>
+                  <select
+                    value={profile.topikLevel}
+                    onChange={e => setProfile({ ...profile, topikLevel: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-1.5 text-xs text-gray-900 dark:text-white focus:outline-none h-9"
+                  >
+                    <option value="None">None (미소지)</option>
+                    <option value="TOPIK 1">TOPIK Level 1</option>
+                    <option value="TOPIK 2">TOPIK Level 2</option>
+                    <option value="TOPIK 3">TOPIK Level 3</option>
+                    <option value="TOPIK 4">TOPIK Level 4</option>
+                    <option value="TOPIK 5">TOPIK Level 5</option>
+                    <option value="TOPIK 6">TOPIK Level 6</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-700 dark:text-gray-300 block mb-1">{isKo ? '영어 시험 종류' : 'English Test Type'}</label>
+                  <select
+                    value={profile.englishTestType}
+                    onChange={e => setProfile({ ...profile, englishTestType: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-1.5 text-xs text-gray-900 dark:text-white focus:outline-none h-9"
+                  >
+                    <option value="IELTS">IELTS Academic</option>
+                    <option value="TOEFL">TOEFL iBT</option>
+                    <option value="Duolingo">Duolingo</option>
+                    <option value="None">None (Native / Medium)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-700 dark:text-gray-300 block mb-1">{isKo ? '영어 시험 점수' : 'English Test Score'}</label>
+                  <Input
+                    value={profile.englishTestScore}
+                    onChange={e => setProfile({ ...profile, englishTestScore: e.target.value })}
+                    placeholder="e.g. 7.5"
+                    className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-xs rounded-xl h-9 px-3"
+                  />
+                </div>
+
+                {/* TARGET UNIVERSITY CHOICES */}
+                <div className="col-span-1 sm:col-span-2 lg:col-span-4 pt-2 border-t border-gray-100 dark:border-gray-800 space-y-2">
+                  <label className="text-[11px] font-semibold text-gray-700 dark:text-gray-300 block">
+                    {isKo ? '지망 대학 선택' : 'Target University Choices'}
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <Input
+                      value={profile.firstChoiceUniversity}
+                      onChange={e => setProfile({ ...profile, firstChoiceUniversity: e.target.value })}
+                      placeholder="1st Choice: Seoul National University"
+                      className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-xs rounded-xl h-9 px-3"
+                    />
+                    {profile.track === 'embassy' && (
+                      <>
+                        <Input
+                          value={profile.secondChoiceUniversity}
+                          onChange={e => setProfile({ ...profile, secondChoiceUniversity: e.target.value })}
+                          placeholder="2nd Choice: KAIST"
+                          className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-xs rounded-xl h-9 px-3"
+                        />
+                        <Input
+                          value={profile.thirdChoiceUniversity}
+                          onChange={e => setProfile({ ...profile, thirdChoiceUniversity: e.target.value })}
+                          placeholder="3rd Choice: Korea University"
+                          className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-xs rounded-xl h-9 px-3"
+                        />
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* SAVE & CONTINUE ACTION BUTTON INLINE AT BOTTOM */}
+              <div className="pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+                <Button
+                  onClick={handleSaveProfile}
+                  className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black text-xs font-bold px-6 h-9 rounded-xl shadow-xs"
+                >
+                  <span>{isKo ? '프로필 저장 및 서류 이동 →' : 'Save & Next: Documents →'}</span>
+                </Button>
+              </div>
+            </div>
+          )}
 
         {/* STEP 2: DOCUMENTS CENTER */}
         {currentStep === 2 && (
-          <div className="bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 sm:p-6 space-y-4">
+          <div className="flex-1 overflow-y-auto min-h-0 bg-[#f7f4f0] border border-[#e8e5e0] rounded-2xl p-5 sm:p-6 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-200 dark:border-gray-800 pb-3">
               <div>
                 <h2 className="text-base font-bold text-gray-900 dark:text-white">
@@ -820,7 +887,7 @@ export default function GKSDashboard() {
 
         {/* STEP 3: SCANNING LOADER */}
         {currentStep === 3 && (
-          <div className="max-w-md mx-auto py-16 text-center space-y-4">
+          <div className="flex-1 overflow-y-auto min-h-0 max-w-md mx-auto py-16 text-center space-y-4">
             <div className="w-12 h-12 mx-auto rounded-full border-2 border-gray-200 dark:border-gray-800 border-t-[#630000] animate-spin" />
             <h3 className="text-base font-bold text-gray-900 dark:text-white">
               {isKo ? 'NIIED 심사 기준 서류 종합 진단 중...' : 'Evaluating Dossier Against Official NIIED Standards...'}
@@ -831,7 +898,7 @@ export default function GKSDashboard() {
 
         {/* STEP 4: GUIDANCE REPORT */}
         {currentStep === 4 && evaluation && (
-          <div className="space-y-6">
+          <div className="flex-1 overflow-y-auto min-h-0 space-y-6">
             <div className="grid md:grid-cols-3 gap-6 items-start">
               
               <div className="space-y-4">
@@ -928,15 +995,18 @@ export default function GKSDashboard() {
             </div>
           </div>
         )}
-
+        </main>
       </div>
 
       {/* FLOATING PREPLIT AI GKS ADVISOR TRIGGER BUTTON */}
       <button
         onClick={() => setShowChatBot(!showChatBot)}
-        className="fixed bottom-5 right-5 z-40 px-4 py-2.5 rounded-full bg-[#630000] hover:bg-[#7a0000] text-white shadow-2xl font-bold text-xs transition-all hover:scale-105 flex items-center gap-2 border border-white/20"
+        className="fixed bottom-5 right-5 z-40 flex items-center gap-2.5 bg-black hover:bg-[#1a1a1a] text-white shadow-2xl font-bold text-xs transition-all hover:scale-105 rounded-full pl-1 pr-4 py-1 border border-white/10"
       >
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <span className="w-8 h-8 rounded-full bg-black border-2 border-white/20 flex items-center justify-center shrink-0 overflow-hidden">
+          <img src="/logo.png" alt="PreplitAI" className="w-6 h-6 object-contain" style={{filter:'brightness(0) invert(1)'}} />
+        </span>
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
         <span>Preplit AI GKS Advisor</span>
       </button>
 

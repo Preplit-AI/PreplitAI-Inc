@@ -1,171 +1,167 @@
-import React from 'react';
-import { BarChart2, Activity, Target, CheckCircle2, XCircle } from 'lucide-react';
+import React from "react";
 
 interface AnalyticsViewProps {
   language?: string;
+  hasData?: boolean;
 }
 
-export function AnalyticsView({ language = 'en', hasData = false }: AnalyticsViewProps & { hasData?: boolean }) {
-  const weeklyActivity = hasData ? [
-    { day: 'Mon', hours: 2.5 },
-    { day: 'Tue', hours: 3.2 },
-    { day: 'Wed', hours: 1.5 },
-    { day: 'Thu', hours: 4.0 },
-    { day: 'Fri', hours: 2.8 },
-    { day: 'Sat', hours: 0.5 },
-    { day: 'Sun', hours: 1.2 },
-  ] : [
-    { day: 'Mon', hours: 0 },
-    { day: 'Tue', hours: 0 },
-    { day: 'Wed', hours: 0 },
-    { day: 'Thu', hours: 0 },
-    { day: 'Fri', hours: 0 },
-    { day: 'Sat', hours: 0 },
-    { day: 'Sun', hours: 0 },
-  ];
-  
-  const maxHours = Math.max(...weeklyActivity.map(d => d.hours), 1);
-  const currentDay = 'Thu';
-
-  const topics: Array<{ name: string; score: number }> = hasData ? [
-    { name: 'Cellular Respiration', score: 92 },
-    { name: 'Photosynthesis', score: 75 },
-  ] : [];
-
-  const weakSpots: Array<{ concept: string; missedCount: number }> = hasData ? [
-    { concept: 'Punnett Squares', missedCount: 8 },
-  ] : [];
-
-  const recentQuizzes: Array<{ id: number; date: string; topic: string; score: number; questions: number }> = hasData ? [
-    { id: 1, date: 'Oct 24', topic: 'Cell Biology', score: 85, questions: 20 },
-  ] : [];
-
-  const getProgressColor = (score: number) => {
-    if (score >= 80) return 'bg-green-500';
-    if (score >= 50) return 'bg-amber-500';
-    return 'bg-red-500';
-  };
+// SVG radar chart for topic mastery
+function RadarChart({ topics }: { topics: { name: string; score: number }[] }) {
+  const cx = 160, cy = 160, r = 110;
+  const n = topics.length;
+  const angle = (i: number) => (Math.PI * 2 * i) / n - Math.PI / 2;
+  const point = (i: number, radius: number) => ({
+    x: cx + radius * Math.cos(angle(i)),
+    y: cy + radius * Math.sin(angle(i)),
+  });
+  const polyPoints = topics.map((t, i) => {
+    const p = point(i, (t.score / 100) * r);
+    return p.x + "," + p.y;
+  }).join(" ");
+  const gridLevels = [0.25, 0.5, 0.75, 1];
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-[#111] overflow-y-auto p-6 space-y-8">
-      
-      {/* Header & Streak */}
-      <div className="flex items-center justify-between">
+    <svg viewBox="0 0 320 320" className="w-full max-w-xs mx-auto">
+      {/* Grid rings */}
+      {gridLevels.map((lvl, gi) => {
+        const pts = topics.map((_, i) => {
+          const p = point(i, lvl * r);
+          return p.x + "," + p.y;
+        }).join(" ");
+        return <polygon key={gi} points={pts} fill="none" stroke="#e8e5e0" strokeWidth="1" />;
+      })}
+      {/* Axes */}
+      {topics.map((_, i) => {
+        const p = point(i, r);
+        return <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="#e8e5e0" strokeWidth="1" />;
+      })}
+      {/* Data polygon */}
+      <polygon points={polyPoints} fill="#8B0000" fillOpacity="0.18" stroke="#8B0000" strokeWidth="2" strokeLinejoin="round" />
+      {/* Data dots */}
+      {topics.map((t, i) => {
+        const p = point(i, (t.score / 100) * r);
+        return <circle key={i} cx={p.x} cy={p.y} r="4" fill="#8B0000" />;
+      })}
+      {/* Labels */}
+      {topics.map((t, i) => {
+        const p = point(i, r + 18);
+        return (
+          <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle"
+            className="text-[11px]" fontSize="11" fill="#666" fontFamily="Inter, sans-serif">
+            {t.name}
+          </text>
+        );
+      })}
+    </svg>
+  );
+}
+
+// SVG bar chart for weekly study time
+function BarChart({ data, current }: { data: { day: string; hours: number }[]; current: string }) {
+  const maxH = Math.max(...data.map(d => d.hours), 1);
+  const BAR_H = 80;
+  return (
+    <div className="flex items-end gap-2 h-24 px-1">
+      {data.map((d) => {
+        const h = (d.hours / maxH) * BAR_H;
+        const isToday = d.day === current;
+        return (
+          <div key={d.day} className="flex flex-col items-center gap-1 flex-1">
+            <div
+              className={"w-full rounded-t-sm transition-all " + (isToday ? "bg-[#8B0000]" : "bg-[#e8c5c5]")}
+              style={{ height: Math.max(h, 4) + "px" }}
+            />
+            <span className="text-[10px] text-[#888]">{d.day.slice(0,1)}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export function AnalyticsView({ language = "en" }: AnalyticsViewProps) {
+  const topics = [
+    { name: "Mechanisms",     score: 80 },
+    { name: "Thermo-\ndynamics", score: 65 },
+    { name: "Stereo-\nchemistry", score: 42 },
+    { name: "Spectro-\nscopy", score: 55 },
+    { name: "Nomen-\nclature", score: 70 },
+  ];
+  const weeklyData = [
+    { day: "Mon", hours: 1.5 },
+    { day: "Tue", hours: 2.5 },
+    { day: "Wed", hours: 1.0 },
+    { day: "Thu", hours: 2.2 },
+    { day: "Fri", hours: 1.8 },
+    { day: "Sat", hours: 3.5 },
+    { day: "Sun", hours: 2.0 },
+  ];
+  const reviewNext = [
+    { topic: "Stereochemistry", pct: 42 },
+    { topic: "Spectroscopy",    pct: 55 },
+    { topic: "Thermodynamics",  pct: 61 },
+  ];
+  const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const today = days[new Date().getDay()];
+
+  return (
+    <div className="flex-1 overflow-y-auto bg-[#f5f4f1] px-6 md:px-10 py-7">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-6">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Learning Analytics</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Track your progress and identify weak spots</p>
+          <h1 className="text-[26px] font-bold text-[#111] tracking-tight">Learning Analytics</h1>
+          <p className="text-[13px] text-[#888] mt-0.5">Organic Chemistry 301 · updated today</p>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-orange-50 dark:bg-orange-500/10 border border-orange-100 dark:border-orange-500/20">
-          <Activity className="w-4 h-4 text-orange-500" />
-          <span className="text-sm font-medium text-orange-700 dark:text-orange-400">12 Day Streak</span>
+        <div className="ws-card px-4 py-3 text-right shrink-0 hidden sm:block">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#888] mb-0.5">Exam Readiness</p>
+          <div className="flex items-center gap-1.5 justify-end">
+            <span className="text-[24px] font-bold text-[#111]">78%</span>
+            <div>
+              <svg viewBox="0 0 16 16" className="w-4 h-4 text-green-500"><polyline points="2,12 6,6 10,9 14,3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              <p className="text-[10px] text-green-600 font-semibold">+8%</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Study Activity Chart */}
-        <div className="p-5 rounded-xl border border-gray-200 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02]">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
-            <BarChart2 className="w-4 h-4" /> Study Activity
-          </h3>
-          <div className="flex items-end justify-between h-32 gap-2 mt-6">
-            {weeklyActivity.map((day) => {
-              const isCurrent = day.day === currentDay;
-              const heightPercent = (day.hours / maxHours) * 100;
-              return (
-                <div key={day.day} className="flex flex-col items-center flex-1 gap-2">
-                  <div className="w-full relative flex items-end justify-center h-full">
-                    <div 
-                      className={`w-full max-w-[24px] rounded-t-sm transition-all duration-500 ${isCurrent ? 'bg-indigo-500 dark:bg-indigo-400' : 'bg-gray-200 dark:bg-gray-700'}`}
-                      style={{ height: `${heightPercent}%` }}
-                    />
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Radar chart card */}
+        <div className="ws-card p-5">
+          <p className="text-[13.5px] font-semibold text-[#111] mb-4">Topic mastery</p>
+          <RadarChart topics={topics} />
+        </div>
+
+        {/* Right column */}
+        <div className="flex flex-col gap-4">
+          {/* Bar chart */}
+          <div className="ws-card p-5">
+            <p className="text-[13.5px] font-semibold text-[#111] mb-4">Study time this week</p>
+            <BarChart data={weeklyData} current={today} />
+          </div>
+
+          {/* What to review next */}
+          <div className="ws-card p-5">
+            <p className="text-[13.5px] font-semibold text-[#111] mb-4">What to review next</p>
+            <div className="space-y-3.5">
+              {reviewNext.map((item) => (
+                <div key={item.topic}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[13px] text-[#111]">{item.topic}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[12px] text-[#888]">{item.pct}%</span>
+                      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 text-[#bbb]"><polyline points="5,3 11,8 5,13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
                   </div>
-                  <span className={`text-[10px] font-medium ${isCurrent ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400 dark:text-gray-500'}`}>
-                    {day.day}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Topic Mastery */}
-        <div className="p-5 rounded-xl border border-gray-200 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02]">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
-            <Target className="w-4 h-4" /> Topic Mastery
-          </h3>
-          <div className="space-y-4">
-            {topics.length > 0 ? topics.map(topic => (
-              <div key={topic.name} className="space-y-1.5">
-                <div className="flex justify-between text-xs font-medium">
-                  <span className="text-gray-700 dark:text-gray-300">{topic.name}</span>
-                  <span className="text-gray-500 dark:text-gray-400">{topic.score}%</span>
-                </div>
-                <div className="h-1.5 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-                  <div 
-                    className={`h-full rounded-full ${getProgressColor(topic.score)}`}
-                    style={{ width: `${topic.score}%` }}
-                  />
-                </div>
-              </div>
-            )) : (
-              <p className="text-xs text-gray-400 italic">No topic mastery logged yet. Complete quizzes to track progress.</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Weak Spots */}
-        <div className="space-y-3">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Needs Review</h3>
-          <div className="space-y-3">
-            {weakSpots.map(spot => (
-              <div key={spot.concept} className="flex items-center justify-between p-3 rounded-lg border border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10">
-                <div className="flex items-start gap-3">
-                  <XCircle className="w-4 h-4 text-red-500 mt-0.5" />
-                  <div>
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">{spot.concept}</div>
-                    <div className="text-xs text-red-600 dark:text-red-400">Missed {spot.missedCount} times</div>
+                  <div className="h-1.5 bg-[#f0ede8] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#8B0000] rounded-full" style={{ width: item.pct + "%" }} />
                   </div>
                 </div>
-                <button className="px-3 py-1.5 rounded-md bg-white dark:bg-[#222] border border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#333] transition-colors">
-                  Review
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Quiz History */}
-        <div className="space-y-3">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Recent Quizzes</h3>
-          <div className="border border-gray-200 dark:border-white/[0.06] rounded-xl overflow-hidden bg-white dark:bg-[#111]">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-gray-50 dark:bg-white/[0.02] border-b border-gray-200 dark:border-white/[0.06]">
-                <tr>
-                  <th className="px-4 py-2 font-medium text-gray-500 dark:text-gray-400">Date</th>
-                  <th className="px-4 py-2 font-medium text-gray-500 dark:text-gray-400">Topic</th>
-                  <th className="px-4 py-2 font-medium text-gray-500 dark:text-gray-400 text-right">Score</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-white/[0.04]">
-                {recentQuizzes.map(quiz => (
-                  <tr key={quiz.id}>
-                    <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400 text-xs">{quiz.date}</td>
-                    <td className="px-4 py-2.5 text-gray-900 dark:text-white font-medium">{quiz.topic}</td>
-                    <td className="px-4 py-2.5 text-right">
-                      <span className={`inline-flex items-center gap-1 text-xs font-medium ${quiz.score >= 80 ? 'text-green-600 dark:text-green-400' : quiz.score >= 60 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}`}>
-                        {quiz.score}%
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-      
     </div>
   );
 }
