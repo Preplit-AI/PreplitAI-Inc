@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { API_BASE_URL, TOKEN_STORAGE_KEY } from '@/constants/config';
 import { isDeveloperUser, notifyDeveloperOnly } from '@/utils/developerAccess';
+import { DeveloperEarlyAccessModal } from '@/components/common/DeveloperEarlyAccessModal';
 
 interface User {
   id: number;
@@ -186,9 +187,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const isDeveloper = isDeveloperUser(user);
+  const [earlyAccessModalOpen, setEarlyAccessModalOpen] = useState(false);
+  const [restrictedFeatureName, setRestrictedFeatureName] = useState<string | undefined>();
 
   const checkDeveloperAccess = (functionName?: string, isKo: boolean = false): boolean => {
     if (!isDeveloperUser(user)) {
+      setRestrictedFeatureName(functionName);
+      setEarlyAccessModalOpen(true);
       notifyDeveloperOnly(functionName, isKo);
       return false;
     }
@@ -198,6 +203,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <AuthContext.Provider value={{ user, token, loading, isDeveloper, checkDeveloperAccess, login, signup, logout, updateProfile, changePassword }}>
       {children}
+      <DeveloperEarlyAccessModal
+        isOpen={earlyAccessModalOpen}
+        onClose={() => setEarlyAccessModalOpen(false)}
+        featureName={restrictedFeatureName}
+      />
     </AuthContext.Provider>
   );
 };

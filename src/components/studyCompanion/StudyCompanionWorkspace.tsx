@@ -230,7 +230,13 @@ export function StudyCompanionWorkspace() {
   return (
     <div className="flex flex-col h-screen bg-[#f5f4f1] overflow-hidden" style={{fontFamily:"Inter,sans-serif"}}>
       <GlobalSearch isOpen={isSearchOpen} onClose={()=>setIsSearchOpen(false)} onNavigate={(id,type)=>{ if(type==="space") setActiveSpaceId(id); else if(type==="chat") setNavTab("chat"); }} />
-      <WorkspaceTopNav activeTab={navTab} onTabChange={setNavTab} onOpenSearch={()=>setIsSearchOpen(true)} onOpenSettings={()=>setIsSettingsOpen(true)} />
+      <WorkspaceTopNav
+        activeTab={navTab}
+        onTabChange={setNavTab}
+        onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        onToggleMobileSidebar={() => setIsMobileSidebarOpen(true)}
+      />
       <div className="flex flex-1 overflow-hidden">
         {isMobileSidebarOpen && (
           <div className="fixed inset-0 z-50 bg-black/40 flex md:hidden" onClick={()=>setIsMobileSidebarOpen(false)}>
@@ -245,10 +251,6 @@ export function StudyCompanionWorkspace() {
         )}
         <aside className="hidden md:flex flex-col w-[200px] shrink-0 bg-white border-r border-[#e8e5e0] h-full"><Sidebar /></aside>
         <main className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex md:hidden items-center gap-2 px-4 py-2.5 bg-white border-b border-[#e8e5e0] shrink-0">
-            <button onClick={()=>setIsMobileSidebarOpen(true)} className="p-1.5 rounded-lg text-[#666]"><Menu className="w-5 h-5" /></button>
-            <span className="text-[14px] font-semibold text-[#111]">PreplitAI</span>
-          </div>
           <div className="flex sm:hidden overflow-x-auto border-b border-[#e8e5e0] bg-white shrink-0">
             {(["spaces","chat","practice","analytics","explore3d"] as WorkspaceNavTab[]).map(tab => (
               <button key={tab} onClick={()=>setNavTab(tab)} className={`flex-1 min-w-max px-3 py-2.5 text-[12px] font-semibold border-b-2 transition-all whitespace-nowrap ${navTab===tab?"border-[#8B0000] text-[#8B0000]":"border-transparent text-[#888]"}`}>

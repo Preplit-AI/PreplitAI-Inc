@@ -1,5 +1,6 @@
 ﻿import React from "react";
 import { Plus, TrendingUp, MessageSquare, Zap, Sparkles, BookOpen, HelpCircle, Globe, Radio, BarChart2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Space { id: string; name: string; }
 interface WorkspaceHomeProps {
@@ -23,37 +24,50 @@ const TOOLS = [
 ];
 
 export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSelect }: WorkspaceHomeProps) {
+  const { checkDeveloperAccess } = useAuth();
   const activeSpace = spaces.find(s => s.id === activeSpaceId) || spaces[0];
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
+  const handleToolClick = (tool: { id: string; label: string }) => {
+    if (!checkDeveloperAccess(tool.label)) return;
+    onToolSelect(tool.id);
+  };
+
+  const handleCreateSpaceClick = () => {
+    if (!checkDeveloperAccess("New Study Space")) return;
+    onCreateSpace();
+  };
+
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-[#f5f4f1] px-5 md:px-8 pt-5 pb-4 gap-4">
+    <div className="flex-1 flex flex-col overflow-y-auto md:overflow-hidden bg-[#f5f4f1] px-4 sm:px-6 md:px-8 py-5 gap-4">
+      {/* Greeting Header */}
       <div className="flex items-center justify-between shrink-0">
         <div>
-          <p className="text-[11.5px] text-[#888]">{greeting}</p>
-          <h1 className="text-[22px] font-bold text-[#111] tracking-tight leading-tight">
+          <p className="text-[11.5px] text-[#888] font-medium">{greeting}</p>
+          <h1 className="text-[20px] sm:text-[24px] font-bold text-[#111] tracking-tight leading-tight">
             {activeSpace ? activeSpace.name : "Your Workspace"}
           </h1>
           <p className="text-[12px] text-[#888] mt-0.5">Midterm in 6 days · Upload notes to get started</p>
         </div>
-        <div className="bg-[#8B0000] text-white rounded-xl px-4 py-2.5 text-right shrink-0 hidden sm:block">
+        <div className="bg-[#8B0000] text-white rounded-2xl px-4 py-2.5 text-right shrink-0 hidden sm:block shadow-sm">
           <p className="text-[9px] font-bold uppercase tracking-widest opacity-70 mb-0.5">Exam Readiness</p>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 justify-end">
             <span className="text-[20px] font-bold">78%</span>
-            <TrendingUp className="w-3.5 h-3.5 opacity-80" />
+            <TrendingUp className="w-4 h-4 opacity-90" />
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2.5 shrink-0">
+      {/* Stats Cards - Horizontal Scroll on Mobile, Grid on Desktop */}
+      <div className="flex overflow-x-auto sm:grid sm:grid-cols-3 gap-2.5 shrink-0 scrollbar-none pb-1 sm:pb-0">
         {[
           { icon: "🔥", title: "12-day streak",    sub: "Keep it up!" },
           { icon: "🃏", title: "24 cards due",      sub: "Ready today" },
           { icon: "📝", title: "3 exams analyzed", sub: "Exam predictor fed" },
         ].map((stat, i) => (
-          <div key={i} className="ws-card flex items-center gap-2.5 px-3 py-2.5">
-            <span className="text-xl">{stat.icon}</span>
+          <div key={i} className="ws-card flex items-center gap-3 px-3.5 py-3 min-w-[150px] sm:min-w-0 shrink-0">
+            <span className="text-xl shrink-0">{stat.icon}</span>
             <div className="min-w-0">
               <p className="text-[12.5px] font-semibold text-[#111] truncate">{stat.title}</p>
               <p className="text-[11px] text-[#888] truncate">{stat.sub}</p>
@@ -62,23 +76,29 @@ export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSele
         ))}
       </div>
 
-      <div className="flex-1 min-h-0 flex flex-col">
+      {/* Tools Section */}
+      <div className="flex-1 md:min-h-0 flex flex-col">
         <p className="text-[11.5px] font-bold text-[#888] uppercase tracking-wider mb-2 shrink-0">Your tools</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 flex-1 min-h-0 auto-rows-fr">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:flex-1 md:min-h-0 md:auto-rows-fr">
           {TOOLS.map((tool, i) => {
             const Icon = tool.icon;
             return (
-              <button key={i} onClick={() => onToolSelect(tool.id)}
-                className="ws-card text-left px-3 py-3 hover:shadow-md hover:border-[#d0cbc4] transition-all group relative flex flex-col justify-between min-h-0">
+              <button
+                key={i}
+                onClick={() => handleToolClick(tool)}
+                className="ws-card text-left p-3.5 sm:p-4 hover:shadow-md hover:border-[#d0cbc4] transition-all group relative flex flex-col justify-between min-h-[92px] md:min-h-0"
+              >
                 {tool.flagship && (
-                  <span className="absolute top-2 right-2 bg-[#8B0000] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide">Flagship</span>
+                  <span className="absolute top-2.5 right-2.5 bg-[#8B0000] text-white text-[8.5px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+                    Flagship
+                  </span>
                 )}
                 <div className="w-8 h-8 rounded-xl border border-[#e8e5e0] bg-[#f7f4f0] flex items-center justify-center mb-2 group-hover:border-[#8B0000]/30 transition-colors shrink-0">
                   <Icon className="w-4 h-4 text-[#8B0000]" strokeWidth={1.8} />
                 </div>
                 <div>
-                  <p className="text-[12.5px] font-semibold text-[#111] leading-snug">{tool.label}</p>
-                  <p className="text-[11px] text-[#888] mt-0.5 leading-snug line-clamp-2">{tool.desc}</p>
+                  <p className="text-[13px] font-semibold text-[#111] leading-snug">{tool.label}</p>
+                  <p className="text-[11.5px] text-[#888] mt-0.5 leading-snug line-clamp-2">{tool.desc}</p>
                 </div>
               </button>
             );
@@ -90,7 +110,7 @@ export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSele
         <div className="border border-dashed border-[#d5d0c8] rounded-2xl p-5 text-center bg-white/60 shrink-0">
           <p className="text-[13px] font-semibold text-[#666]">No study spaces yet</p>
           <p className="text-[12px] text-[#999] mt-0.5 mb-3">Create a space for each course</p>
-          <button onClick={onCreateSpace} className="ws-btn-primary text-[12.5px] px-4 py-1.5 inline-flex items-center gap-1.5">
+          <button onClick={handleCreateSpaceClick} className="ws-btn-primary text-[12.5px] px-4 py-2 inline-flex items-center gap-1.5">
             <Plus className="w-3.5 h-3.5" /> Create first space
           </button>
         </div>

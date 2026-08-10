@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { GKSAdvisorChatbot } from '@/components/gks/GKSAdvisorChatbot';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface GKSProfile {
   track: string;
@@ -403,7 +404,10 @@ export default function GKSDashboard() {
     }
   };
 
+  const { checkDeveloperAccess } = useAuth();
+
   const handleRunEvaluation = async () => {
+    if (!checkDeveloperAccess('GKS2026 AI Diagnostic Scan', isKo)) return;
     setLoading(true);
     setCurrentStep(3);
 
@@ -560,7 +564,7 @@ export default function GKSDashboard() {
 
             <div className="space-y-1">
               <div className="ws-section-label mb-1">Resources</div>
-              <button onClick={() => setShowScholarMaterials(true)}
+              <button onClick={() => { if (checkDeveloperAccess('Scholar Materials', isKo)) setShowScholarMaterials(true); }}
                 className="ws-sidebar-item w-full">
                 <div className="flex items-center gap-2.5">
                   <span>📚</span>
@@ -568,7 +572,7 @@ export default function GKSDashboard() {
                 </div>
                 <span className="text-[10px] bg-[#f0ede8] px-1.5 py-0.5 rounded text-[#888] font-bold">48</span>
               </button>
-              <button onClick={() => setShowManualReviewModal(true)}
+              <button onClick={() => { if (checkDeveloperAccess('1:1 Alumni Review', isKo)) setShowManualReviewModal(true); }}
                 className="ws-sidebar-item w-full">
                 <div className="flex items-center gap-2.5">
                   <span>🎓</span>
@@ -581,7 +585,7 @@ export default function GKSDashboard() {
 
           <div className="pt-3 border-t border-[#e8e5e0]">
             <button
-              onClick={() => setShowChatBot(!showChatBot)}
+              onClick={() => { if (checkDeveloperAccess('Preplit AI Advisor', isKo)) setShowChatBot(!showChatBot); }}
               className="w-full py-2 px-3 rounded-xl bg-[#8B0000] hover:bg-[#6d0000] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -1000,7 +1004,7 @@ export default function GKSDashboard() {
 
       {/* FLOATING PREPLIT AI GKS ADVISOR TRIGGER BUTTON */}
       <button
-        onClick={() => setShowChatBot(!showChatBot)}
+        onClick={() => { if (checkDeveloperAccess('GKS Advisor Chatbot', isKo)) setShowChatBot(!showChatBot); }}
         className="fixed bottom-5 right-5 z-40 flex items-center gap-2.5 bg-black hover:bg-[#1a1a1a] text-white shadow-2xl font-bold text-xs transition-all hover:scale-105 rounded-full pl-1 pr-4 py-1 border border-white/10"
       >
         <span className="w-8 h-8 rounded-full bg-black border-2 border-white/20 flex items-center justify-center shrink-0 overflow-hidden">

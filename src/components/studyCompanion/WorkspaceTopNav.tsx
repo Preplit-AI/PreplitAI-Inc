@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, X } from "lucide-react";
+import { Search, X, Menu } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export type WorkspaceNavTab = "spaces" | "chat" | "practice" | "analytics" | "explore3d";
@@ -9,6 +9,7 @@ interface WorkspaceTopNavProps {
   onTabChange: (tab: WorkspaceNavTab) => void;
   onOpenSearch: () => void;
   onOpenSettings: () => void;
+  onToggleMobileSidebar?: () => void;
 }
 
 const TABS: { id: WorkspaceNavTab; label: string }[] = [
@@ -19,7 +20,7 @@ const TABS: { id: WorkspaceNavTab; label: string }[] = [
   { id: "explore3d", label: "Explore 3D" },
 ];
 
-export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSettings }: WorkspaceTopNavProps) {
+export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSettings, onToggleMobileSidebar }: WorkspaceTopNavProps) {
   const { user } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,11 +30,22 @@ export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSe
     : "AI";
 
   return (
-    <header className="ws-topnav">
-      <a href="/" className="flex items-center gap-2 shrink-0 group mr-6 hover:opacity-80 transition-opacity">
-        <img src="/logo.png" alt="PreplitAI Logo" className="h-8 w-auto" />
-        <span className="font-semibold text-[15px] text-[#111] tracking-tight">PreplitAI</span>
+    <header className="ws-topnav px-3 sm:px-6">
+      {onToggleMobileSidebar && (
+        <button
+          onClick={onToggleMobileSidebar}
+          className="md:hidden p-1.5 rounded-lg text-[#555] hover:bg-[#f0ede8] transition-colors mr-2 shrink-0"
+          aria-label="Open menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+      )}
+
+      <a href="/" className="flex items-center gap-2 shrink-0 group mr-2 sm:mr-6 hover:opacity-80 transition-opacity">
+        <img src="/logo.png" alt="PreplitAI Logo" className="h-7 sm:h-8 w-auto" />
+        <span className="font-semibold text-[14px] sm:text-[15px] text-[#111] tracking-tight">PreplitAI</span>
       </a>
+
       <nav className="hidden sm:flex items-center gap-0 flex-1">
         {TABS.map(tab => (
           <button
@@ -45,17 +57,18 @@ export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSe
           </button>
         ))}
       </nav>
-      <div className="flex items-center gap-3 ml-auto">
+
+      <div className="flex items-center gap-2 sm:gap-3 ml-auto">
         {searchOpen ? (
-          <div className="flex items-center gap-2 bg-[#f0ede8] rounded-full px-3 py-1.5 w-52 border border-[#e0dbd4]">
+          <div className="flex items-center gap-2 bg-[#f0ede8] rounded-full px-3 py-1.5 w-40 sm:w-52 border border-[#e0dbd4]">
             <Search className="w-3.5 h-3.5 text-[#888] shrink-0" />
             <input
               autoFocus
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search your course..."
-              className="flex-1 text-[12.5px] bg-transparent focus:outline-none text-[#111] placeholder:text-[#aaa]"
+              placeholder="Search..."
+              className="flex-1 text-[12px] sm:text-[12.5px] bg-transparent focus:outline-none text-[#111] placeholder:text-[#aaa]"
             />
             <button onClick={() => { setSearchOpen(false); setSearchQuery(""); }}>
               <X className="w-3 h-3 text-[#999]" />
@@ -64,15 +77,15 @@ export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSe
         ) : (
           <button
             onClick={() => setSearchOpen(true)}
-            className="flex items-center gap-2 bg-[#f0ede8] hover:bg-[#e8e3dc] rounded-full px-3 py-1.5 w-44 border border-[#e0dbd4] transition-colors"
+            className="flex items-center gap-2 bg-[#f0ede8] hover:bg-[#e8e3dc] rounded-full p-2 sm:px-3 sm:py-1.5 sm:w-44 border border-[#e0dbd4] transition-colors"
           >
             <Search className="w-3.5 h-3.5 text-[#888] shrink-0" />
-            <span className="text-[12.5px] text-[#aaa]">Search your course...</span>
+            <span className="hidden sm:inline text-[12.5px] text-[#aaa]">Search your course...</span>
           </button>
         )}
         <button
           onClick={onOpenSettings}
-          className="w-8 h-8 rounded-full bg-[#8B0000] flex items-center justify-center text-white text-[12px] font-bold shrink-0 hover:bg-[#6d0000] transition-colors"
+          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#8B0000] flex items-center justify-center text-white text-[11px] sm:text-[12px] font-bold shrink-0 hover:bg-[#6d0000] transition-colors"
           title="Account"
         >
           {initials}
