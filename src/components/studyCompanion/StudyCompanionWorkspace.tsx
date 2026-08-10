@@ -204,9 +204,11 @@ export function StudyCompanionWorkspace() {
     if(n.includes("hist")) return "📜"; if(n.includes("econ")||n.includes("macro")) return "📊"; if(n.includes("data")) return "💾"; if(n.includes("phys")) return "⚡"; return "📁";
   }
 
+  const isKo = language === "ko";
+
   const Sidebar = () => (
     <div className="flex flex-col h-full">
-      <div className="px-3 pt-4 pb-2"><p className="ws-section-label">Study Spaces</p></div>
+      <div className="px-3 pt-4 pb-2"><p className="ws-section-label">{isKo ? "스터디 공간" : "Study Spaces"}</p></div>
       <div className="flex-1 overflow-y-auto px-2 space-y-0.5">
         {spaces.map(s => (
           <div key={s.id} className="group relative">
@@ -217,11 +219,11 @@ export function StudyCompanionWorkspace() {
             </button>
           </div>
         ))}
-        {spaces.length===0 && <p className="text-[12px] text-[#bbb] italic px-3 py-2">No spaces yet</p>}
+        {spaces.length===0 && <p className="text-[12px] text-[#bbb] italic px-3 py-2">{isKo ? "생성된 공간 없음" : "No spaces yet"}</p>}
       </div>
       <div className="px-2 pb-3 pt-2 border-t border-[#e8e5e0]">
-        <button onClick={() => { setIsCreateSpaceOpen(true); setIsMobileSidebarOpen(false); }} className="ws-sidebar-item w-full text-[#8B0000] hover:bg-[#fdf0f0]">
-          <Plus className="w-4 h-4 shrink-0" /><span className="text-[13px] font-medium">New Study Space</span>
+        <button onClick={() => { if (checkDeveloperAccess(isKo ? "새 스터디 공간" : "New Study Space", isKo)) { setIsCreateSpaceOpen(true); setIsMobileSidebarOpen(false); } }} className="ws-sidebar-item w-full text-[#8B0000] hover:bg-[#fdf0f0]">
+          <Plus className="w-4 h-4 shrink-0" /><span className="text-[13px] font-medium">{isKo ? "새 스터디 공간" : "New Study Space"}</span>
         </button>
       </div>
     </div>
@@ -242,7 +244,7 @@ export function StudyCompanionWorkspace() {
           <div className="fixed inset-0 z-50 bg-black/40 flex md:hidden" onClick={()=>setIsMobileSidebarOpen(false)}>
             <aside className="w-64 bg-white h-full shadow-xl" onClick={e=>e.stopPropagation()}>
               <div className="flex items-center justify-between px-4 py-3 border-b border-[#e8e5e0]">
-                <span className="font-semibold text-[14px] text-[#111]">Study Spaces</span>
+                <span className="font-semibold text-[14px] text-[#111]">{isKo ? "스터디 공간" : "Study Spaces"}</span>
                 <button onClick={()=>setIsMobileSidebarOpen(false)} className="p-1 text-[#aaa]"><X className="w-4 h-4" /></button>
               </div>
               <Sidebar />
@@ -254,7 +256,7 @@ export function StudyCompanionWorkspace() {
           <div className="flex sm:hidden overflow-x-auto border-b border-[#e8e5e0] bg-white shrink-0">
             {(["spaces","chat","practice","analytics","explore3d"] as WorkspaceNavTab[]).map(tab => (
               <button key={tab} onClick={()=>setNavTab(tab)} className={`flex-1 min-w-max px-3 py-2.5 text-[12px] font-semibold border-b-2 transition-all whitespace-nowrap ${navTab===tab?"border-[#8B0000] text-[#8B0000]":"border-transparent text-[#888]"}`}>
-                {tab==="spaces"?"Spaces":tab==="chat"?"Chat":tab==="practice"?"Practice":tab==="analytics"?"Analytics":"3D"}
+                {tab==="spaces"?(isKo?"공간":"Spaces"):tab==="chat"?(isKo?"채팅":"Chat"):tab==="practice"?(isKo?"연습":"Practice"):tab==="analytics"?(isKo?"분석":"Analytics"):"3D"}
               </button>
             ))}
           </div>
@@ -264,9 +266,9 @@ export function StudyCompanionWorkspace() {
               <div className="flex flex-1 overflow-hidden">
                 <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
                   <div className="px-6 py-4 border-b border-[#e8e5e0] bg-white shrink-0">
-                    <h1 className="text-[20px] font-bold text-[#111]">AI Study Chat</h1>
+                    <h1 className="text-[20px] font-bold text-[#111]">{isKo ? "AI 학습 챗봇" : "AI Study Chat"}</h1>
                     {activeDocument && <p className="text-[12.5px] text-[#888] mt-0.5">{activeDocument.file_name}</p>}
-                    <span className="inline-flex items-center mt-1.5 px-2.5 py-0.5 rounded-full bg-[#f0ede8] text-[#8B0000] text-[11px] font-semibold">Unlimited grounded chat</span>
+                    <span className="inline-flex items-center mt-1.5 px-2.5 py-0.5 rounded-full bg-[#f0ede8] text-[#8B0000] text-[11px] font-semibold">{isKo ? "무제한 교재 출처 인용 챗봇" : "Unlimited grounded chat"}</span>
                   </div>
                   <div className="flex-1 overflow-hidden"><MessageList messages={messages as any} isGenerating={isGenerating} /></div>
                   <div className="px-4 md:px-6 py-3 border-t border-[#e8e5e0] bg-white shrink-0">

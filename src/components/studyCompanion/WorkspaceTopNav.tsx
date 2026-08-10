@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Search, X, Menu } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export type WorkspaceNavTab = "spaces" | "chat" | "practice" | "analytics" | "explore3d";
 
@@ -12,18 +13,20 @@ interface WorkspaceTopNavProps {
   onToggleMobileSidebar?: () => void;
 }
 
-const TABS: { id: WorkspaceNavTab; label: string }[] = [
-  { id: "spaces",    label: "Study Spaces" },
-  { id: "chat",      label: "Chat" },
-  { id: "practice",  label: "Practice" },
-  { id: "analytics", label: "Analytics" },
-  { id: "explore3d", label: "Explore 3D" },
-];
-
 export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSettings, onToggleMobileSidebar }: WorkspaceTopNavProps) {
   const { user } = useAuth();
+  const { language } = useLanguage();
+  const isKo = language === "ko";
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const tabs: { id: WorkspaceNavTab; label: string }[] = [
+    { id: "spaces",    label: isKo ? "스터디 공간" : "Study Spaces" },
+    { id: "chat",      label: isKo ? "AI 채팅" : "Chat" },
+    { id: "practice",  label: isKo ? "연습 문제" : "Practice" },
+    { id: "analytics", label: isKo ? "학습 분석" : "Analytics" },
+    { id: "explore3d", label: isKo ? "3D 탐색" : "Explore 3D" },
+  ];
 
   const initials = user?.email
     ? user.email.slice(0, 2).toUpperCase()
@@ -35,7 +38,7 @@ export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSe
         <button
           onClick={onToggleMobileSidebar}
           className="md:hidden p-1.5 rounded-lg text-[#555] hover:bg-[#f0ede8] transition-colors mr-2 shrink-0"
-          aria-label="Open menu"
+          aria-label={isKo ? "메뉴 열기" : "Open menu"}
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -47,7 +50,7 @@ export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSe
       </a>
 
       <nav className="hidden sm:flex items-center gap-0 flex-1">
-        {TABS.map(tab => (
+        {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
@@ -67,7 +70,7 @@ export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSe
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search..."
+              placeholder={isKo ? "강의 자료 검색..." : "Search..."}
               className="flex-1 text-[12px] sm:text-[12.5px] bg-transparent focus:outline-none text-[#111] placeholder:text-[#aaa]"
             />
             <button onClick={() => { setSearchOpen(false); setSearchQuery(""); }}>
@@ -80,13 +83,13 @@ export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSe
             className="flex items-center gap-2 bg-[#f0ede8] hover:bg-[#e8e3dc] rounded-full p-2 sm:px-3 sm:py-1.5 sm:w-44 border border-[#e0dbd4] transition-colors"
           >
             <Search className="w-3.5 h-3.5 text-[#888] shrink-0" />
-            <span className="hidden sm:inline text-[12.5px] text-[#aaa]">Search your course...</span>
+            <span className="hidden sm:inline text-[12.5px] text-[#aaa]">{isKo ? "강의 자료 검색..." : "Search your course..."}</span>
           </button>
         )}
         <button
           onClick={onOpenSettings}
           className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#8B0000] flex items-center justify-center text-white text-[11px] sm:text-[12px] font-bold shrink-0 hover:bg-[#6d0000] transition-colors"
-          title="Account"
+          title={isKo ? "계정 설정" : "Account"}
         >
           {initials}
         </button>

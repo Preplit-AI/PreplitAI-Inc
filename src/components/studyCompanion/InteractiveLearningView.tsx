@@ -1,7 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import { RotateCcw, ZoomIn, ZoomOut, Layers, RefreshCw } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-export function InteractiveLearningView({ language = "en" }: { language?: string }) {
+export function InteractiveLearningView({ language: langProp }: { language?: string }) {
+  const { language } = useLanguage();
+  const isKo = language === "ko" || langProp === "ko";
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [rotation, setRotation] = useState({ x: 20, y: 30 });
   const [dragging, setDragging] = useState(false);
@@ -154,30 +158,38 @@ export function InteractiveLearningView({ language = "en" }: { language?: string
       {/* Header */}
       <div className="mb-2">
         <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#8B0000] text-white text-[10px] font-bold uppercase tracking-widest mb-3">
-          Flagship Feature
+          {isKo ? "대표 혁신 기능" : "Flagship Feature"}
         </span>
-        <h1 className="text-[26px] font-bold text-[#111] tracking-tight">Interactive 3D Learning</h1>
-        <p className="text-[13px] text-[#888] mt-0.5">Generated automatically from your own notes — not a stock model</p>
-        <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-wider mt-1">Generated From Ch.4, Slide 12</p>
+        <h1 className="text-[26px] font-bold text-[#111] tracking-tight">
+          {isKo ? "3D 인터랙티브 학습" : "Interactive 3D Learning"}
+        </h1>
+        <p className="text-[13px] text-[#888] mt-0.5">
+          {isKo ? "스톡 모델이 아닌, 내 수업 강의 노트 도판에서 자동 생성된 3D 분자 구조" : "Generated automatically from your own notes — not a stock model"}
+        </p>
+        <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-wider mt-1">
+          {isKo ? "4단원 12페이지 도판 기반 추출" : "Generated From Ch.4, Slide 12"}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr_220px] gap-3 mt-4">
         {/* Left: 2D sketch panel */}
         <div className="ws-card p-4">
-          <p className="text-[12px] font-semibold text-[#888] mb-2">Ch.4, Slide 12</p>
+          <p className="text-[12px] font-semibold text-[#888] mb-2">{isKo ? "4단원 12페이지" : "Ch.4, Slide 12"}</p>
           <div className="bg-[#f7f4f0] border border-[#e8e5e0] rounded-xl h-36 flex items-center justify-center mb-3">
             <svg viewBox="0 0 80 80" className="w-20 h-20 text-[#888]">
               <polygon points="40,12 58,22 58,42 40,52 22,42 22,22" fill="none" stroke="#888" strokeWidth="2"/>
               <line x1="40" y1="52" x2="40" y2="68" stroke="#888" strokeWidth="2"/>
-              <text x="40" y="78" textAnchor="middle" fontSize="8" fill="#888">2D skeletal sketch</text>
+              <text x="40" y="78" textAnchor="middle" fontSize="8" fill="#888">{isKo ? "2D 골격 구조식" : "2D skeletal sketch"}</text>
             </svg>
           </div>
           <div className="flex items-center gap-2 bg-[#f5f4f1] rounded-lg px-3 py-1.5 mb-3">
             <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 text-[#8B0000]"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="currentColor" strokeWidth="1.5"/><line x1="11" y1="8" x2="5" y2="8" stroke="currentColor" strokeWidth="1.5"/></svg>
-            <span className="text-[11px] text-[#888]">Source: your Ch.4 slides</span>
+            <span className="text-[11px] text-[#888]">{isKo ? "출처: 4단원 강의 슬라이드" : "Source: your Ch.4 slides"}</span>
           </div>
           <p className="text-[11.5px] text-[#666] leading-relaxed">
-            PreplitAI reconstructs bond geometry and renders an explorable 3D model automatically.
+            {isKo
+              ? "PreplitAI가 결합 기하 구조를 재구성하여 회전 및 조작 가능한 3D 모델을 자동 생성합니다."
+              : "PreplitAI reconstructs bond geometry and renders an explorable 3D model automatically."}
           </p>
         </div>
 
@@ -185,11 +197,11 @@ export function InteractiveLearningView({ language = "en" }: { language?: string
         <div className="ws-card p-3 flex flex-col items-center">
           <div className="flex gap-2 mb-2 self-start">
             {[
-              { Icon: RotateCcw, title: "Rotate", action: () => setRotation({ x: 20, y: 30 }) },
-              { Icon: ZoomIn,    title: "Zoom In",  action: () => setZoom(z => Math.min(z + 0.2, 2.5)) },
-              { Icon: ZoomOut,   title: "Zoom Out", action: () => setZoom(z => Math.max(z - 0.2, 0.4)) },
-              { Icon: Layers,    title: "Layers",   action: () => {} },
-              { Icon: RefreshCw, title: "Reset",    action: () => { setRotation({ x: 20, y: 30 }); setZoom(1); } },
+              { Icon: RotateCcw, title: isKo ? "회전 초기화" : "Rotate", action: () => setRotation({ x: 20, y: 30 }) },
+              { Icon: ZoomIn,    title: isKo ? "확대" : "Zoom In",  action: () => setZoom(z => Math.min(z + 0.2, 2.5)) },
+              { Icon: ZoomOut,   title: isKo ? "축소" : "Zoom Out", action: () => setZoom(z => Math.max(z - 0.2, 0.4)) },
+              { Icon: Layers,    title: isKo ? "레이어" : "Layers",   action: () => {} },
+              { Icon: RefreshCw, title: isKo ? "리셋" : "Reset",    action: () => { setRotation({ x: 20, y: 30 }); setZoom(1); } },
             ].map(({ Icon, title, action }) => (
               <button key={title} onClick={action} title={title}
                 className="w-7 h-7 rounded-lg border border-[#e8e5e0] bg-[#f7f4f0] hover:border-[#8B0000]/30 flex items-center justify-center text-[#666] hover:text-[#8B0000] transition-colors">
@@ -209,18 +221,20 @@ export function InteractiveLearningView({ language = "en" }: { language?: string
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
           />
-          <p className="text-[11px] text-[#aaa] mt-2">Drag to rotate · Scroll to zoom · Click an atom</p>
+          <p className="text-[11px] text-[#aaa] mt-2">
+            {isKo ? "드래그: 회전 · 스크롤: 확대/축소 · 원자 클릭: 상세 정보" : "Drag to rotate · Scroll to zoom · Click an atom"}
+          </p>
         </div>
 
         {/* Right: Key facts */}
         <div className="ws-card p-4">
-          <p className="text-[12px] font-semibold text-[#888] mb-1">Key Facts</p>
-          <h3 className="text-[18px] font-bold text-[#111]">Toluene</h3>
+          <p className="text-[12px] font-semibold text-[#888] mb-1">{isKo ? "핵심 분자 정보" : "Key Facts"}</p>
+          <h3 className="text-[18px] font-bold text-[#111]">Toluene (톨루엔)</h3>
           <p className="text-[12px] text-[#888] mb-4">C₇H₈ · methylbenzene</p>
           {[
-            { label: "Molar Mass",     value: "92.14 g/mol" },
-            { label: "Functional Group", value: "Aromatic ring + methyl" },
-            { label: "Ring Type",       value: "Benzene derivative" },
+            { label: isKo ? "몰 질량" : "Molar Mass",     value: "92.14 g/mol" },
+            { label: isKo ? "작용기" : "Functional Group", value: isKo ? "방향족 고리 + 메틸기" : "Aromatic ring + methyl" },
+            { label: isKo ? "고리 유형" : "Ring Type",       value: isKo ? "벤젠 유도체" : "Benzene derivative" },
           ].map(f => (
             <div key={f.label} className="mb-3">
               <p className="text-[10px] font-semibold text-[#999] uppercase tracking-wider">{f.label}</p>
@@ -229,16 +243,18 @@ export function InteractiveLearningView({ language = "en" }: { language?: string
           ))}
           <div className="bg-[#fdf0f0] border border-[#f5d0d0] rounded-xl p-3 mb-4">
             <p className="text-[11.5px] text-[#8B0000] leading-relaxed font-medium">
-              Why it's on your midterm: Prof. Han's Ch.4 problem set uses this ring system in 3 of 6 substitution examples.
+              {isKo
+                ? "시험 출제 포인트: 한 교수님 4단원 과제 6개 문제 중 3개 치환 반응 예시에 해당 벤젠 고리가 출제되었습니다."
+                : "Why it's on your midterm: Prof. Han's Ch.4 problem set uses this ring system in 3 of 6 substitution examples."}
             </p>
           </div>
-          <p className="text-[10.5px] text-[#aaa] mb-4">📍 Source: your Ch.4 slides, p.12</p>
+          <p className="text-[10.5px] text-[#aaa] mb-4">📍 {isKo ? "출처: 4단원 강의 슬라이드 12p" : "Source: your Ch.4 slides, p.12"}</p>
           <div className="flex flex-col gap-2">
             <button className="w-full py-2 rounded-xl bg-[#8B0000] hover:bg-[#6d0000] text-white text-[13px] font-semibold transition-colors">
-              Quiz me
+              {isKo ? "이 단원 퀴즈 풀기" : "Quiz me"}
             </button>
             <button className="w-full py-2 rounded-xl border border-[#e8e5e0] text-[#111] text-[13px] font-semibold hover:bg-[#f5f4f1] transition-colors">
-              Add to cards
+              {isKo ? "암기 카드에 추가" : "Add to cards"}
             </button>
           </div>
         </div>
