@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { Plus, TrendingUp, MessageSquare, Zap, Sparkles, BookOpen, HelpCircle, Globe, Radio, BarChart2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -79,26 +79,26 @@ export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSele
       {/* Tools Section */}
       <div className="flex-1 md:min-h-0 flex flex-col">
         <p className="text-[11.5px] font-bold text-[#888] uppercase tracking-wider mb-2 shrink-0">Your tools</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:flex-1 md:min-h-0 md:auto-rows-fr">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:flex-1 md:min-h-0 md:auto-rows-fr">
           {TOOLS.map((tool, i) => {
             const Icon = tool.icon;
             return (
               <button
                 key={i}
                 onClick={() => handleToolClick(tool)}
-                className="ws-card text-left p-3.5 sm:p-4 hover:shadow-md hover:border-[#d0cbc4] transition-all group relative flex flex-col justify-between min-h-[92px] md:min-h-0"
+                className="ws-card text-left p-3 sm:p-4 hover:shadow-md hover:border-[#d0cbc4] transition-all group relative flex flex-col justify-between min-h-[76px] sm:min-h-[92px] md:min-h-0"
               >
                 {tool.flagship && (
-                  <span className="absolute top-2.5 right-2.5 bg-[#8B0000] text-white text-[8.5px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+                  <span className="absolute top-2 right-2 sm:top-2.5 sm:right-2.5 bg-[#8B0000] text-white text-[8px] sm:text-[8.5px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full uppercase tracking-wide">
                     Flagship
                   </span>
                 )}
-                <div className="w-8 h-8 rounded-xl border border-[#e8e5e0] bg-[#f7f4f0] flex items-center justify-center mb-2 group-hover:border-[#8B0000]/30 transition-colors shrink-0">
-                  <Icon className="w-4 h-4 text-[#8B0000]" strokeWidth={1.8} />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl border border-[#e8e5e0] bg-[#f7f4f0] flex items-center justify-center mb-1.5 sm:mb-2 group-hover:border-[#8B0000]/30 transition-colors shrink-0">
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#8B0000]" strokeWidth={1.8} />
                 </div>
                 <div>
-                  <p className="text-[13px] font-semibold text-[#111] leading-snug">{tool.label}</p>
-                  <p className="text-[11.5px] text-[#888] mt-0.5 leading-snug line-clamp-2">{tool.desc}</p>
+                  <p className="text-[12.5px] sm:text-[13px] font-semibold text-[#111] leading-snug">{tool.label}</p>
+                  <p className="hidden sm:block text-[11.5px] text-[#888] mt-0.5 leading-snug line-clamp-2">{tool.desc}</p>
                 </div>
               </button>
             );
