@@ -1,5 +1,5 @@
-﻿import React from 'react';
-import { Lock, Sparkles, X, ShieldAlert } from 'lucide-react';
+import React from 'react';
+import { Sparkles, X, ShieldAlert } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DeveloperEarlyAccessModalProps {
@@ -37,8 +37,8 @@ export function DeveloperEarlyAccessModal({ isOpen, onClose, featureName }: Deve
 
         {/* Icon Emblem */}
         <div className="mx-auto w-16 h-16 rounded-2xl bg-[#fdf0f0] dark:bg-[#8B0000]/10 border border-[#f5c2c2] dark:border-[#8B0000]/30 flex items-center justify-center relative">
-          <div className="w-10 h-10 rounded-xl bg-[#8B0000] flex items-center justify-center text-white shadow-md">
-            <Lock className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl bg-[#8B0000] flex items-center justify-center text-white shadow-md p-1.5">
+            <img src="/logo.png" alt="PreplitAI Logo" className="w-full h-full object-contain filter brightness-0 invert" />
           </div>
           <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8B0000] opacity-75"></span>
