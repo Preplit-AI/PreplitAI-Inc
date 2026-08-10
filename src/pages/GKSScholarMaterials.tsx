@@ -48,7 +48,7 @@ export default function GKSScholarMaterials() {
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 font-sans pt-20 transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 font-sans pt-16 sm:pt-20 transition-colors duration-300">
       <SEOHead
         title={isKo ? "GKS 합격자 샘플 서류 자료실 | GKS2026 Prep" : "Previous GKS Scholars Material Library | GKS2026 Prep"}
         description={isKo ? "서울대, KAIST, 고려대 등 역대 GKS 장학생들의 합격 자기소개서, 학업계획서, 추천서 실물 데이터베이스." : "Browse verified high-scoring GKS Personal Statements, Study Plans, and Recommendation letters from past scholars."}
@@ -56,7 +56,7 @@ export default function GKSScholarMaterials() {
         url="https://preplitai.com/gks/scholar-materials"
       />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-4 pb-12 space-y-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-2 sm:pt-4 pb-12 space-y-6">
         
         {/* COMPACT TOP HEADER & SEARCH ROW */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-800 pb-3">

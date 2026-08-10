@@ -57,7 +57,7 @@ export default function GKSPlatform() {
         schemaMarkup={gksSchema}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-12 sm:pb-16 text-center sm:text-left">
         
         {/* TOP BRAND BADGE */}
         <div className="flex justify-center mb-6">

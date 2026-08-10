@@ -116,7 +116,7 @@ const Pricing = () => {
       />
       
       {/* Hero */}
-      <section className="pt-32 pb-14 px-6 text-center">
+      <section className="pt-16 sm:pt-32 pb-12 sm:pb-14 px-4 sm:px-6 text-center">
         <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#630000]/8 dark:bg-[#630000]/20 border border-[#630000]/20 dark:border-[#630000]/30 mb-6">
             <span className="text-[13px] font-medium text-[#630000] dark:text-[#ffaaaa]">

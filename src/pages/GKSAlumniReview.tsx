@@ -52,7 +52,7 @@ export default function GKSAlumniReview() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 font-sans pt-20 transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 font-sans pt-16 sm:pt-20 transition-colors duration-300">
       <SEOHead
         title={isKo ? "GKS 동문 1:1 서류 첨삭 신청 | GKS2026 Prep" : "1-on-1 Alumni Scholar Review | GKS2026 Prep"}
         description={isKo ? "GKS 장학생 출신 평가진이 직접 진행하는 1:1 서류 첨삭 및 48시간 맞춤 심층 피드백." : "Get direct 1-on-1 human dossier review and detailed line-by-line feedback from former GKS scholars."}
@@ -60,7 +60,7 @@ export default function GKSAlumniReview() {
         url="https://preplitai.com/gks/alumni-review"
       />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-4 pb-12 space-y-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-2 sm:pt-4 pb-12 space-y-6">
         
         {/* COMPACT PAGE TITLE & SUBTITLE */}
         <div className="text-center max-w-2xl mx-auto space-y-1.5">

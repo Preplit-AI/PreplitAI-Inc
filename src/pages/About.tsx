@@ -145,7 +145,7 @@ const About = () => {
       />
 
       {/* ── Hero ───────────────────────────────────────────────────────── */}
-      <section className="relative max-w-6xl mx-auto px-6 pt-36 pb-20 text-center">
+      <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-36 pb-12 sm:pb-20 text-center">
         <div className="pointer-events-none absolute inset-0 flex items-start justify-center overflow-hidden">
           <div className="w-[700px] h-[700px] rounded-full bg-[#630000]/6 dark:bg-[#630000]/12 blur-[140px] -translate-y-1/4" />
         </div>

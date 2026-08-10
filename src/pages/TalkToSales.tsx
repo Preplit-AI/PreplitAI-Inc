@@ -19,7 +19,7 @@ const TalkToSales = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white">
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-6 pt-24 pb-8">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-8">
         <h1 className="text-4xl md:text-6xl font-bold text-black dark:text-white">
           {isKo ? '영업팀 문의' : 'Talk to Sales'}
         </h1>

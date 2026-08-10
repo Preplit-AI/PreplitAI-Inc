@@ -90,7 +90,7 @@ const FeaturesPage = () => {
       />
 
       {/* ── Hero ── */}
-      <section className="max-w-5xl mx-auto px-6 pt-32 pb-20 text-center">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-32 pb-12 sm:pb-20 text-center">
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}

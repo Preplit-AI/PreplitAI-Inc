@@ -28,7 +28,7 @@ const APIPage = () => {
         schemaMarkup={breadcrumb}
       />
       {/* Hero */}
-      <section className="relative max-w-7xl mx-auto px-6 pt-24 pb-16">
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-12 sm:pb-16">
         <div className="relative z-10">
           <p className="text-sm font-semibold text-[#630000] dark:text-[#ff9999] mb-4">
             {isKo ? '개발자 센터' : 'Developers'}

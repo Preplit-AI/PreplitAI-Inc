@@ -21,8 +21,8 @@ export const Hero = () => {
   const marqueeItems = [...halfTrack, ...halfTrack];
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center bg-white dark:bg-[#0a0a0a] overflow-hidden">
-      <div className="relative z-10 w-full px-4 sm:px-6 pt-20 pb-8">
+    <section className="relative min-h-0 sm:min-h-[85vh] flex items-center justify-center bg-white dark:bg-[#0a0a0a] overflow-hidden">
+      <div className="relative z-10 w-full px-4 sm:px-6 pt-16 sm:pt-24 pb-8">
         {/* Main Content Grid */}
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column - Text Content */}
