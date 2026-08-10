@@ -30,6 +30,7 @@ export const TopNav = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<"login" | "signup">("login");
   const [gksMenuOpen, setGksMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (location.pathname === "/preplitai-chat") {
     return null;
@@ -186,44 +187,44 @@ export const TopNav = () => {
               <span className={!isKo ? 'text-black dark:text-white font-bold' : 'text-gray-400'}>EN</span>
             </button>
 
-            <Sheet>
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Open menu" className="text-black dark:text-white">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-full max-w-[100vw] bg-white dark:bg-gray-950 p-6 overflow-y-auto">
+              <SheetContent side="left" className="w-full max-w-[100vw] bg-white dark:bg-gray-950 p-6 overflow-y-auto z-[90]">
                 <nav className="mt-4 space-y-2">
                   <div className="p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 space-y-1">
-                    <a href="/gks" className="block text-center font-bold text-sm text-black dark:text-white hover:underline py-1">
+                    <a href="/gks" onClick={()=>setMobileMenuOpen(false)} className="block text-center font-bold text-sm text-black dark:text-white hover:underline py-1">
                       GKS2026 Prep
                     </a>
                     <div className="grid grid-cols-1 gap-1 pt-1 border-t border-gray-200 dark:border-gray-800 text-xs">
-                      <a href="/gks/dashboard" className="block px-3 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 text-center font-medium">
+                      <a href="/gks/dashboard" onClick={()=>setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 text-center font-medium">
                         {isKo ? 'AI 워크스페이스' : 'GKS2026 AI Workbench'}
                       </a>
-                      <a href="/gks/scholar-materials" className="block px-3 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 text-center font-medium">
+                      <a href="/gks/scholar-materials" onClick={()=>setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 text-center font-medium">
                         {isKo ? '합격자 샘플 서류 자료실' : 'Scholar Materials Library'}
                       </a>
-                      <a href="/gks/alumni-review" className="block px-3 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 text-center font-medium">
+                      <a href="/gks/alumni-review" onClick={()=>setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 text-center font-medium">
                         {isKo ? '1:1 동문 서류 첨삭 신청' : '1-on-1 Alumni Review'}
                       </a>
                     </div>
                   </div>
 
-                  <a href="/preplitai-chat" className="block px-4 py-3 rounded-xl font-semibold text-white bg-black dark:bg-white dark:text-black hover:bg-gray-800 shadow-sm text-center">
+                  <a href="/preplitai-chat" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-semibold text-white bg-black dark:bg-white dark:text-black hover:bg-gray-800 shadow-sm text-center">
                     {isKo ? 'AI 학습 워크스페이스 시작' : 'Launch Workspace'}
                   </a>
-                  <a href="/features" className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
+                  <a href="/features" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
                     {isKo ? '기능' : 'Features'}
                   </a>
-                  <a href="/pricing" className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
+                  <a href="/pricing" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
                     {isKo ? '요금제' : 'Pricing'}
                   </a>
-                  <a href="/about" className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
+                  <a href="/about" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
                     {isKo ? '소개' : 'About'}
                   </a>
-                  <a href="/blog" className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
+                  <a href="/blog" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
                     {isKo ? '블로그' : 'Blog'}
                   </a>
                 </nav>
@@ -233,7 +234,7 @@ export const TopNav = () => {
                     <div className="space-y-3">
                       <div className="px-2 text-sm text-gray-600 dark:text-gray-400">Signed in as</div>
                       <div className="px-2 font-medium text-black dark:text-white">{user.name}</div>
-                      <Button onClick={logout} className="w-full bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black">
+                      <Button onClick={() => { setMobileMenuOpen(false); logout(); }} className="w-full bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black">
                         <LogOut className="h-4 w-4 mr-2" /> {isKo ? '로그아웃' : 'Logout'}
                       </Button>
                     </div>
@@ -241,13 +242,13 @@ export const TopNav = () => {
                     <div className="grid grid-cols-2 gap-3">
                       <Button
                         variant="outline"
-                        onClick={() => { setAuthTab("login"); setShowAuthModal(true); }}
+                        onClick={() => { setMobileMenuOpen(false); setAuthTab("login"); setShowAuthModal(true); }}
                         className="border-gray-300 dark:border-gray-700"
                       >
                         {isKo ? '로그인' : 'Login'}
                       </Button>
                       <Button
-                        onClick={() => { setAuthTab("signup"); setShowAuthModal(true); }}
+                        onClick={() => { setMobileMenuOpen(false); setAuthTab("signup"); setShowAuthModal(true); }}
                         className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black"
                       >
                         {isKo ? '회원가입' : 'Sign Up'}
@@ -260,7 +261,7 @@ export const TopNav = () => {
           </div>
         </div>
       </header>
-      <div className="h-14" />
+      <div className="h-16" />
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}

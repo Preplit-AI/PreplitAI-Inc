@@ -76,7 +76,7 @@ export function AuthModal({ isOpen, onClose, onSuccess, defaultTab = 'login' }: 
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/25 dark:bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-[100] bg-black/25 dark:bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div className="bg-white dark:bg-[#161616] border border-[#e5e5e5] dark:border-white/[0.08] rounded-2xl w-full max-w-sm shadow-2xl p-6">
