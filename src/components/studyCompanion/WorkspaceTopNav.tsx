@@ -3,7 +3,7 @@ import { Search, X, Menu } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export type WorkspaceNavTab = "spaces" | "chat" | "practice" | "analytics" | "explore3d";
+export type WorkspaceNavTab = "spaces" | "chat" | "practice" | "analytics" | "explore3d" | "lecture-buddy";
 
 interface WorkspaceTopNavProps {
   activeTab: WorkspaceNavTab;
@@ -24,6 +24,7 @@ export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSe
     { id: "spaces",    label: isKo ? "스터디 공간" : "Study Spaces" },
     { id: "chat",      label: isKo ? "AI 채팅" : "Chat" },
     { id: "practice",  label: isKo ? "연습 문제" : "Practice" },
+    { id: "lecture-buddy", label: isKo ? "강의 녹음" : "Lecture Buddy" },
     { id: "analytics", label: isKo ? "학습 분석" : "Analytics" },
     { id: "explore3d", label: isKo ? "3D 탐색" : "Explore 3D" },
   ];

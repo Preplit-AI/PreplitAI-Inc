@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, TrendingUp, MessageSquare, Zap, Sparkles, BookOpen, HelpCircle, Globe, Radio, BarChart2 } from "lucide-react";
+import { Plus, TrendingUp, MessageSquare, Zap, Sparkles, BookOpen, HelpCircle, Globe, Radio, BarChart2, Mic } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -33,6 +33,7 @@ export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSele
     { id: "chat",       icon: Globe,         label: isKo ? "한국어 학업 보조 AI" : "Korean Assistant",        desc: isKo ? "이중 언어 전공 번역 및 교수님 족보 분석" : "Bilingual, tuned to your professor",      flagship: false },
     { id: "podcast",    icon: Radio,         label: isKo ? "AI 팟캐스트 오디오" : "Podcast Mode",            desc: isKo ? "이동 시간 듣는 전공 요약 라디오" : "Study on your commute",                   flagship: false },
     { id: "analytics",  icon: BarChart2,     label: isKo ? "학습 성취도 분석" : "Analytics",               desc: isKo ? "취약 단원 및 복습 우선순위 차트" : "See exactly what to review next",         flagship: false },
+    { id: "lecture-buddy", icon: Mic,          label: isKo ? "AI 강의 녹음" : "AI Lecture Buddy",          desc: isKo ? "강의 녹음 후 AI 노트 자동 생성" : "Record lectures, get AI notes",           flagship: true  },
   ];
 
   const handleToolClick = (tool: { id: string; label: string }) => {

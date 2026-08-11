@@ -9,6 +9,7 @@ const CAPABILITY_INTERNAL_UNITS = {
   'ai.podcast': 10,
   'ai.expected_exam': 10,
   'ai.video': 50,
+  'ai.lecture_buddy': 15,
   'export.pdf': 1
 };
 

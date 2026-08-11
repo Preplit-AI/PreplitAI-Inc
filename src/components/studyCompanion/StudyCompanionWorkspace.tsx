@@ -9,6 +9,7 @@ import { FlashcardView } from "./FlashcardView";
 import { PodcastView } from "./PodcastView";
 import { ExpectedExamView } from "./ExpectedExamView";
 import { SummaryView } from "./SummaryView";
+import { LectureBuddyView } from "./LectureBuddyView";
 import { SettingsModal } from "./SettingsModal";
 import { GlobalSearch } from "./GlobalSearch";
 import { ManageSubscriptionModal } from "../common/ManageSubscriptionModal";
@@ -195,6 +196,7 @@ export function StudyCompanionWorkspace() {
     if (tool==="chat") setNavTab("chat");
     else if (tool==="explore3d") setNavTab("explore3d");
     else if (tool==="analytics") setNavTab("analytics");
+    else if (tool==="lecture-buddy") setNavTab("lecture-buddy");
     else if (["flashcards","quizzes","podcast","summary","expected"].includes(tool)) { setNavTab("practice"); setPracticeTab(tool as any); }
   };
 
@@ -254,9 +256,9 @@ export function StudyCompanionWorkspace() {
         <aside className="hidden md:flex flex-col w-[200px] shrink-0 bg-white border-r border-[#e8e5e0] h-full"><Sidebar /></aside>
         <main className="flex-1 flex flex-col overflow-hidden">
           <div className="flex sm:hidden overflow-x-auto border-b border-[#e8e5e0] bg-white shrink-0">
-            {(["spaces","chat","practice","analytics","explore3d"] as WorkspaceNavTab[]).map(tab => (
+            {(["spaces","chat","practice","lecture-buddy","analytics","explore3d"] as WorkspaceNavTab[]).map(tab => (
               <button key={tab} onClick={()=>setNavTab(tab)} className={`flex-1 min-w-max px-3 py-2.5 text-[12px] font-semibold border-b-2 transition-all whitespace-nowrap ${navTab===tab?"border-[#8B0000] text-[#8B0000]":"border-transparent text-[#888]"}`}>
-                {tab==="spaces"?(isKo?"공간":"Spaces"):tab==="chat"?(isKo?"채팅":"Chat"):tab==="practice"?(isKo?"연습":"Practice"):tab==="analytics"?(isKo?"분석":"Analytics"):"3D"}
+                {tab==="spaces"?(isKo?"공간":"Spaces"):tab==="chat"?(isKo?"채팅":"Chat"):tab==="practice"?(isKo?"연습":"Practice"):tab==="lecture-buddy"?(isKo?"녹음":"Lecture"):tab==="analytics"?(isKo?"분석":"Analytics"):"3D"}
               </button>
             ))}
           </div>
@@ -314,6 +316,7 @@ export function StudyCompanionWorkspace() {
                 </div>
               </div>
             )}
+            {navTab==="lecture-buddy" && <LectureBuddyView spaceId={activeSpaceId} />}
             {navTab==="analytics"  && <AnalyticsView language={language} />}
             {navTab==="explore3d"  && <InteractiveLearningView language={language} />}
           </div>
