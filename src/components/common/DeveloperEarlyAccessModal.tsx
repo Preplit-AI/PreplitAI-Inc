@@ -24,8 +24,8 @@ export function DeveloperEarlyAccessModal({ isOpen, onClose, featureName }: Deve
         onClick={e => e.stopPropagation()}
       >
         {/* Decorative background glow */}
-        <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#8B0000]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-[#8B0000]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#550000]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-[#550000]/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Close Button */}
         <button 
@@ -39,14 +39,14 @@ export function DeveloperEarlyAccessModal({ isOpen, onClose, featureName }: Deve
         <div className="mx-auto w-16 h-16 rounded-full bg-gray-50 dark:bg-white/5 border border-gray-200/80 dark:border-white/10 flex items-center justify-center relative shadow-sm p-3">
           <img src="/logo.png" alt="PreplitAI Logo" className="w-full h-full object-contain" />
           <span className="absolute top-0 right-0 flex h-3.5 w-3.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8B0000] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#8B0000]"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#550000] opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#550000]"></span>
           </span>
         </div>
 
         {/* Content */}
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f0ede8] dark:bg-white/5 border border-[#e0dbd4] dark:border-white/10 text-[11px] font-bold text-[#8B0000] uppercase tracking-widest">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f0ede8] dark:bg-white/5 border border-[#e0dbd4] dark:border-white/10 text-[11px] font-bold text-[#550000] uppercase tracking-widest">
             <Sparkles className="w-3 h-3" />
             {isKo ? '사전 공개 테스트 진행 중' : "You're Early!"}
           </div>
@@ -56,7 +56,7 @@ export function DeveloperEarlyAccessModal({ isOpen, onClose, featureName }: Deve
           </h3>
 
           {featureName && (
-            <p className="text-xs font-semibold text-[#8B0000] dark:text-red-400">
+            <p className="text-xs font-semibold text-[#550000] dark:text-red-400">
               {featureName}
             </p>
           )}
@@ -72,7 +72,7 @@ export function DeveloperEarlyAccessModal({ isOpen, onClose, featureName }: Deve
         <div className="pt-2">
           <button
             onClick={onClose}
-            className="w-full py-3 px-6 bg-[#8B0000] hover:bg-[#6d0000] text-white rounded-2xl font-semibold text-[14px] shadow-lg shadow-[#8B0000]/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
+            className="w-full py-3 px-6 bg-[#550000] hover:bg-[#3b0000] text-white rounded-2xl font-semibold text-[14px] shadow-lg shadow-[#550000]/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
           >
             {isKo ? '확인했습니다' : 'Got it, I will wait'}
           </button>
