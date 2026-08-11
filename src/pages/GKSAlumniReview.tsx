@@ -98,7 +98,7 @@ export default function GKSAlumniReview() {
                       <span className="font-bold text-xs text-gray-900 dark:text-white">{rev.name}</span>
                       <span className="text-[10px] font-semibold text-gray-500">{rev.reviews}</span>
                     </div>
-                    <div className="text-[11px] font-semibold text-[#630000] dark:text-[#c84040]">{rev.role}</div>
+                    <div className="text-[11px] font-semibold text-[#550000] dark:text-[#f08080]">{rev.role}</div>
                     <div className="text-[11px] text-gray-500">{rev.field}</div>
                   </div>
                 ))}

@@ -73,13 +73,13 @@ export default function GKSPlatform() {
               <>
                 <span className="text-black dark:text-white">GKS2026 정부초청장학생 합격을 위한</span>
                 <br />
-                <span className="text-[#630000] dark:text-[#c84040]">맞춤형 AI 서류 평가 & 전략 가이드</span>
+                <span className="text-[#550000] dark:text-[#f08080]">맞춤형 AI 서류 평가 & 전략 가이드</span>
               </>
             ) : (
               <>
                 <span className="text-black dark:text-white">GKS2026 Prep</span>
                 <br />
-                <span className="text-[#630000] dark:text-[#c84040]">AI Dossier Review & Strategic Guidance</span>
+                <span className="text-[#550000] dark:text-[#f08080]">AI Dossier Review & Strategic Guidance</span>
               </>
             )}
           </h1>
