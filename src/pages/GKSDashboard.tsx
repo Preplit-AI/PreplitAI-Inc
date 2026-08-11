@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { GKSAdvisorChatbot } from '@/components/gks/GKSAdvisorChatbot';
 import { useAuth } from '@/contexts/AuthContext';
+import { User, FileText, Zap, BarChart2, BookOpen, GraduationCap } from 'lucide-react';
 
 interface GKSProfile {
   track: string;
@@ -544,22 +545,25 @@ export default function GKSDashboard() {
             <div className="space-y-1">
               <div className="ws-section-label mb-1">Steps</div>
               {[
-                { step: 1, label: '1. Profile & Scores', icon: '👤' },
-                { step: 2, label: '2. Application Documents', icon: '📄' },
-                { step: 3, label: '3. AI Diagnostic Scan', icon: '⚡' },
-                { step: 4, label: '4. Guidance Report', icon: '📊' }
-              ].map(item => (
-                <button
-                  key={item.step}
-                  onClick={() => setCurrentStep(item.step)}
-                  className={`ws-sidebar-item ${currentStep === item.step ? 'active' : ''}`}
-                >
-                  <div className="flex items-center gap-2.5 truncate">
-                    <span className="text-sm">{item.icon}</span>
-                    <span className="truncate text-[13px]">{item.label}</span>
-                  </div>
-                </button>
-              ))}
+                { step: 1, label: '1. Profile & Scores', Icon: User },
+                { step: 2, label: '2. Application Documents', Icon: FileText },
+                { step: 3, label: '3. AI Diagnostic Scan', Icon: Zap },
+                { step: 4, label: '4. Guidance Report', Icon: BarChart2 }
+              ].map(item => {
+                const ItemIcon = item.Icon;
+                return (
+                  <button
+                    key={item.step}
+                    onClick={() => setCurrentStep(item.step)}
+                    className={`ws-sidebar-item ${currentStep === item.step ? 'active' : ''}`}
+                  >
+                    <div className="flex items-center gap-2.5 truncate">
+                      <ItemIcon className={`w-4 h-4 shrink-0 ${currentStep === item.step ? 'text-[#550000]' : 'text-gray-500'}`} />
+                      <span className="truncate text-[13px]">{item.label}</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
             <div className="space-y-1">
@@ -567,7 +571,7 @@ export default function GKSDashboard() {
               <button onClick={() => { if (checkDeveloperAccess('Scholar Materials', isKo)) setShowScholarMaterials(true); }}
                 className="ws-sidebar-item w-full">
                 <div className="flex items-center gap-2.5">
-                  <span>📚</span>
+                  <BookOpen className="w-4 h-4 shrink-0 text-gray-500" />
                   <span className="text-[13px]">Scholar Materials</span>
                 </div>
                 <span className="text-[10px] bg-[#f0ede8] px-1.5 py-0.5 rounded text-[#888] font-bold">48</span>
@@ -575,7 +579,7 @@ export default function GKSDashboard() {
               <button onClick={() => { if (checkDeveloperAccess('1:1 Alumni Review', isKo)) setShowManualReviewModal(true); }}
                 className="ws-sidebar-item w-full">
                 <div className="flex items-center gap-2.5">
-                  <span>🎓</span>
+                  <GraduationCap className="w-4 h-4 shrink-0 text-gray-500" />
                   <span className="text-[13px]">1:1 Alumni Review</span>
                 </div>
               </button>
@@ -586,7 +590,7 @@ export default function GKSDashboard() {
           <div className="pt-3 border-t border-[#e8e5e0]">
             <button
               onClick={() => { if (checkDeveloperAccess('Preplit AI Advisor', isKo)) setShowChatBot(!showChatBot); }}
-              className="w-full py-2 px-3 rounded-xl bg-[#8B0000] hover:bg-[#6d0000] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+              className="w-full py-2 px-3 rounded-xl bg-[#550000] hover:bg-[#3b0000] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>Ask Preplit AI Advisor</span>
@@ -612,7 +616,7 @@ export default function GKSDashboard() {
                   onClick={() => setCurrentStep(st.num)}
                   className={`py-1 text-center text-xs font-bold rounded-lg transition-all ${
                     currentStep === st.num
-                      ? 'bg-[#8B0000] text-white shadow-xs'
+                      ? 'bg-[#550000] text-white shadow-xs'
                       : 'text-[#666] hover:bg-[#f5f4f1]'
                   }`}
                 >
@@ -630,7 +634,7 @@ export default function GKSDashboard() {
             <Button
               onClick={handleRunEvaluation}
               disabled={loading}
-              className="bg-[#8B0000] hover:bg-[#6d0000] text-white font-semibold text-xs rounded-xl h-8 px-4 shrink-0"
+              className="bg-[#550000] hover:bg-[#3b0000] text-white font-semibold text-xs rounded-xl h-8 px-4 shrink-0"
             >
               {loading ? 'Evaluating...' : 'Run AI Scan'}
             </Button>
