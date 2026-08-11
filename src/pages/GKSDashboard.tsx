@@ -586,16 +586,6 @@ export default function GKSDashboard() {
             </div>
 
           </div>
-
-          <div className="pt-3 border-t border-[#e8e5e0]">
-            <button
-              onClick={() => { if (checkDeveloperAccess('Preplit AI Advisor', isKo)) setShowChatBot(!showChatBot); }}
-              className="w-full py-2 px-3 rounded-xl bg-[#550000] hover:bg-[#3b0000] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Ask Preplit AI Advisor</span>
-            </button>
-          </div>
         </aside>
 
         {/* MAIN WORKBENCH CANVAS */}
