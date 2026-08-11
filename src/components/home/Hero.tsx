@@ -29,29 +29,22 @@ export const Hero = () => {
           <div className="text-left">
             {/* Main Headline */}
             {isKo ? (
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.12] mb-5 tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.12] mb-8 tracking-tight">
                 <span className="text-black dark:text-white">AI 교육의 </span>
-                <span className="text-[#630000]">미래를</span>
+                <span className="text-[#550000]">미래를</span>
                 <br />
-                <span className="text-[#630000]">만들어갑니다.</span>
+                <span className="text-[#550000]">만들어갑니다.</span>
               </h1>
             ) : (
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.08] mb-5 tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.08] mb-8 tracking-tight">
                 <span className="text-black dark:text-white">We're building the</span>
                 <br />
                 <span className="text-black dark:text-white">future of </span>
-                <span className="text-[#630000]">AI</span>
+                <span className="text-[#550000]">AI</span>
                 <br />
-                <span className="text-[#630000]">education.</span>
+                <span className="text-[#550000]">education.</span>
               </h1>
             )}
-
-            {/* Subheadline Punchline */}
-            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg leading-relaxed font-normal">
-              {isKo
-                ? "모든 강의 슬라이드와 PDF를 1대1 AI 튜터로 — 출처 인용 챗봇부터 스마트 퀴즈, 플래시카드, 팟캐스트, 출제 예상 문제까지 한곳에서."
-                : "Turn any lecture slide, PDF, or textbook into a bilingual AI tutor — grounded chat, smart quizzes, flashcards, podcasts, and predicted exam questions."}
-            </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">
