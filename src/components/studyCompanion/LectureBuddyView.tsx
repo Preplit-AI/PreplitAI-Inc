@@ -170,8 +170,8 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
       <div className="flex-1 flex flex-col overflow-y-auto bg-[#f5f4f1] px-4 sm:px-6 md:px-8 py-6">
         {/* Hero */}
         <div className="max-w-xl mx-auto text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-[#8B0000]/10 flex items-center justify-center mx-auto mb-4">
-            <Mic className="w-7 h-7 text-[#8B0000]" />
+          <div className="w-14 h-14 rounded-2xl bg-[#550000]/10 flex items-center justify-center mx-auto mb-4">
+            <Mic className="w-7 h-7 text-[#550000]" />
           </div>
           <h1 className="text-[22px] sm:text-[26px] font-bold text-[#111] tracking-tight mb-2">
             {isKo ? "AI 강의 녹음" : "AI Lecture Buddy"}
@@ -183,7 +183,7 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
           </p>
           <button
             onClick={handleStartClick}
-            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6d0000] text-white rounded-2xl text-[14px] font-semibold transition-all hover:shadow-lg hover:-translate-y-0.5"
+            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-[#550000] hover:bg-[#3b0000] text-white rounded-2xl text-[14px] font-semibold transition-all hover:shadow-lg hover:-translate-y-0.5"
           >
             <Mic className="w-4 h-4" />
             {isKo ? "강의 녹음 시작" : "Start Lecture Buddy"}
@@ -204,13 +204,13 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
                   className="ws-card w-full text-left p-4 hover:shadow-md hover:border-[#d0cbc4] transition-all flex items-center gap-4"
                 >
                   <div className="w-9 h-9 rounded-xl bg-[#f7f4f0] border border-[#e8e5e0] flex items-center justify-center shrink-0">
-                    <FileText className="w-4 h-4 text-[#8B0000]" />
+                    <FileText className="w-4 h-4 text-[#550000]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] font-semibold text-[#111] truncate">{rec.title}</p>
                     <p className="text-[11.5px] text-[#888]">{rec.date} · {rec.duration}</p>
                   </div>
-                  <span className="text-[11px] font-medium text-[#8B0000] bg-[#8B0000]/5 px-2.5 py-1 rounded-full shrink-0">
+                  <span className="text-[11px] font-medium text-[#550000] bg-[#550000]/5 px-2.5 py-1 rounded-full shrink-0">
                     {isKo ? "노트 보기" : "View Notes"}
                   </span>
                 </button>
@@ -256,7 +256,7 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
             </button>
             <button
               onClick={handleConsentConfirm}
-              className="flex-1 py-2.5 bg-[#8B0000] hover:bg-[#6d0000] text-white rounded-xl text-[13px] font-semibold transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 py-2.5 bg-[#550000] hover:bg-[#3b0000] text-white rounded-xl text-[13px] font-semibold transition-colors flex items-center justify-center gap-1.5"
             >
               <Mic className="w-3.5 h-3.5" />
               {isKo ? "확인 — 녹음 시작" : "I Confirm — Start Recording"}
@@ -293,7 +293,7 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
             {Array.from({ length: 24 }).map((_, i) => (
               <div
                 key={i}
-                className="w-[3px] rounded-full bg-[#8B0000]"
+                className="w-[3px] rounded-full bg-[#550000]"
                 style={{
                   height: `${12 + Math.random() * 28}px`,
                   animation: `pulse ${0.4 + Math.random() * 0.6}s ease-in-out infinite alternate`,
@@ -324,14 +324,14 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
     return (
       <div className="flex-1 flex items-center justify-center bg-[#f5f4f1] px-4">
         <div className="text-center max-w-sm">
-          <Loader2 className="w-10 h-10 text-[#8B0000] animate-spin mx-auto mb-5" />
+          <Loader2 className="w-10 h-10 text-[#550000] animate-spin mx-auto mb-5" />
           <h2 className="text-[18px] font-bold text-[#111] mb-2">
             {isKo ? "강의를 처리 중입니다" : "Processing your lecture"}
           </h2>
           <p className="text-[13px] text-[#888] mb-6">{processingStage}</p>
           <div className="w-full bg-[#e8e5e0] rounded-full h-2 overflow-hidden">
             <div
-              className="h-full bg-[#8B0000] rounded-full transition-all duration-300 ease-out"
+              className="h-full bg-[#550000] rounded-full transition-all duration-300 ease-out"
               style={{ width: `${processingProgress}%` }}
             />
           </div>
@@ -365,7 +365,7 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
             </div>
             <button
               onClick={resetToIdle}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold text-[#8B0000] bg-[#8B0000]/5 hover:bg-[#8B0000]/10 rounded-lg transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold text-[#550000] bg-[#550000]/5 hover:bg-[#550000]/10 rounded-lg transition-colors"
             >
               {viewingPast ? (isKo ? "목록으로" : "Back") : (isKo ? "새 녹음" : "New Recording")}
             </button>

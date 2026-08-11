@@ -59,7 +59,7 @@ export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSele
             {isKo ? "중간고사 D-6 · 강의 노트를 업로드해 시작해보세요" : "Midterm in 6 days · Upload notes to get started"}
           </p>
         </div>
-        <div className="bg-[#8B0000] text-white rounded-2xl px-4 py-2.5 text-right shrink-0 hidden sm:block shadow-sm">
+        <div className="bg-[#550000] text-white rounded-2xl px-4 py-2.5 text-right shrink-0 hidden sm:block shadow-sm">
           <p className="text-[9px] font-bold uppercase tracking-widest opacity-70 mb-0.5">
             {isKo ? "시험 준비도" : "Exam Readiness"}
           </p>
@@ -102,12 +102,12 @@ export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSele
                 className="ws-card text-left p-3 sm:p-4 hover:shadow-md hover:border-[#d0cbc4] transition-all group relative flex flex-col justify-between min-h-[76px] sm:min-h-[92px] md:min-h-0"
               >
                 {tool.flagship && (
-                  <span className="absolute top-2 right-2 sm:top-2.5 sm:right-2.5 bg-[#8B0000] text-white text-[8px] sm:text-[8.5px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full uppercase tracking-wide">
+                  <span className="absolute top-2 right-2 sm:top-2.5 sm:right-2.5 bg-[#550000] text-white text-[8px] sm:text-[8.5px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full uppercase tracking-wide">
                     {isKo ? "핵심 기능" : "Flagship"}
                   </span>
                 )}
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl border border-[#e8e5e0] bg-[#f7f4f0] flex items-center justify-center mb-1.5 sm:mb-2 group-hover:border-[#8B0000]/30 transition-colors shrink-0">
-                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#8B0000]" strokeWidth={1.8} />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl border border-[#e8e5e0] bg-[#f7f4f0] flex items-center justify-center mb-1.5 sm:mb-2 group-hover:border-[#550000]/30 transition-colors shrink-0">
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#550000]" strokeWidth={1.8} />
                 </div>
                 <div>
                   <p className="text-[12.5px] sm:text-[13px] font-semibold text-[#111] leading-snug">{tool.label}</p>

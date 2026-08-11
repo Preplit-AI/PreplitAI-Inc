@@ -224,7 +224,7 @@ export function StudyCompanionWorkspace() {
         {spaces.length===0 && <p className="text-[12px] text-[#bbb] italic px-3 py-2">{isKo ? "생성된 공간 없음" : "No spaces yet"}</p>}
       </div>
       <div className="px-2 pb-3 pt-2 border-t border-[#e8e5e0]">
-        <button onClick={() => { if (checkDeveloperAccess(isKo ? "새 스터디 공간" : "New Study Space", isKo)) { setIsCreateSpaceOpen(true); setIsMobileSidebarOpen(false); } }} className="ws-sidebar-item w-full text-[#8B0000] hover:bg-[#fdf0f0]">
+        <button onClick={() => { if (checkDeveloperAccess(isKo ? "새 스터디 공간" : "New Study Space", isKo)) { setIsCreateSpaceOpen(true); setIsMobileSidebarOpen(false); } }} className="ws-sidebar-item w-full text-[#550000] hover:bg-[#f8eaea]">
           <Plus className="w-4 h-4 shrink-0" /><span className="text-[13px] font-medium">{isKo ? "새 스터디 공간" : "New Study Space"}</span>
         </button>
       </div>
@@ -257,7 +257,7 @@ export function StudyCompanionWorkspace() {
         <main className="flex-1 flex flex-col overflow-hidden">
           <div className="flex sm:hidden overflow-x-auto border-b border-[#e8e5e0] bg-white shrink-0">
             {(["spaces","chat","practice","lecture-buddy","analytics","explore3d"] as WorkspaceNavTab[]).map(tab => (
-              <button key={tab} onClick={()=>setNavTab(tab)} className={`flex-1 min-w-max px-3 py-2.5 text-[12px] font-semibold border-b-2 transition-all whitespace-nowrap ${navTab===tab?"border-[#8B0000] text-[#8B0000]":"border-transparent text-[#888]"}`}>
+              <button key={tab} onClick={()=>setNavTab(tab)} className={`flex-1 min-w-max px-3 py-2.5 text-[12px] font-semibold border-b-2 transition-all whitespace-nowrap ${navTab===tab?"border-[#550000] text-[#550000]":"border-transparent text-[#888]"}`}>
                 {tab==="spaces"?(isKo?"공간":"Spaces"):tab==="chat"?(isKo?"채팅":"Chat"):tab==="practice"?(isKo?"연습":"Practice"):tab==="lecture-buddy"?(isKo?"녹음":"Lecture"):tab==="analytics"?(isKo?"분석":"Analytics"):"3D"}
               </button>
             ))}
@@ -270,7 +270,7 @@ export function StudyCompanionWorkspace() {
                   <div className="px-6 py-4 border-b border-[#e8e5e0] bg-white shrink-0">
                     <h1 className="text-[20px] font-bold text-[#111]">{isKo ? "AI 학습 챗봇" : "AI Study Chat"}</h1>
                     {activeDocument && <p className="text-[12.5px] text-[#888] mt-0.5">{activeDocument.file_name}</p>}
-                    <span className="inline-flex items-center mt-1.5 px-2.5 py-0.5 rounded-full bg-[#f0ede8] text-[#8B0000] text-[11px] font-semibold">{isKo ? "무제한 교재 출처 인용 챗봇" : "Unlimited grounded chat"}</span>
+                    <span className="inline-flex items-center mt-1.5 px-2.5 py-0.5 rounded-full bg-[#f0ede8] text-[#550000] text-[11px] font-semibold">{isKo ? "무제한 교재 출처 인용 챗봇" : "Unlimited grounded chat"}</span>
                   </div>
                   <div className="flex-1 overflow-hidden"><MessageList messages={messages as any} isGenerating={isGenerating} /></div>
                   <div className="px-4 md:px-6 py-3 border-t border-[#e8e5e0] bg-white shrink-0">
@@ -279,7 +279,7 @@ export function StudyCompanionWorkspace() {
                       <div className="flex items-center gap-1.5 shrink-0">
                         <button type="button" className="p-1 text-[#ccc] hover:text-[#888]"><Paperclip className="w-4 h-4" /></button>
                         <VoiceMode onTranscript={t=>setChatInput(p=>p+(p?" ":"")+t)} />
-                        <button type="submit" disabled={!chatInput.trim()} className="w-7 h-7 rounded-full bg-[#8B0000] hover:bg-[#6d0000] disabled:opacity-30 flex items-center justify-center"><Send className="w-3.5 h-3.5 text-white" /></button>
+                        <button type="submit" disabled={!chatInput.trim()} className="w-7 h-7 rounded-full bg-[#550000] hover:bg-[#3b0000] disabled:opacity-30 flex items-center justify-center"><Send className="w-3.5 h-3.5 text-white" /></button>
                       </div>
                     </form>
                     <p className="text-[10.5px] text-[#bbb] mt-1.5 px-1">{defaultModel}</p>
@@ -334,19 +334,19 @@ export function StudyCompanionWorkspace() {
               {(["file","paste"] as const).map(m=><button key={m} onClick={()=>setUploadMethod(m)} className={`flex-1 py-1.5 rounded-lg text-[12px] font-medium transition-all ${uploadMethod===m?"bg-white text-[#111] shadow-sm":"text-[#888]"}`}>{m==="file"?"Upload file":"Paste text"}</button>)}
             </div>
             <div className="flex gap-2">
-              {(["course_material","past_exam"] as const).map(type=><button key={type} onClick={()=>setUploadDocType(type)} className={`flex-1 py-1.5 px-3 rounded-xl border text-[12px] font-medium transition-all ${uploadDocType===type?"border-[#8B0000] bg-[#8B0000] text-white":"border-[#e8e5e0] text-[#666]"}`}>{type==="course_material"?"Course Material":"Past Exam"}</button>)}
+              {(["course_material","past_exam"] as const).map(type=><button key={type} onClick={()=>setUploadDocType(type)} className={`flex-1 py-1.5 px-3 rounded-xl border text-[12px] font-medium transition-all ${uploadDocType===type?"border-[#550000] bg-[#550000] text-white":"border-[#e8e5e0] text-[#666]"}`}>{type==="course_material"?"Course Material":"Past Exam"}</button>)}
             </div>
             {uploadMethod==="file"?(
-              <div onClick={()=>fileInputRef.current?.click()} className="border border-dashed border-[#ddd] rounded-xl p-8 text-center hover:border-[#8B0000]/40 cursor-pointer">
+              <div onClick={()=>fileInputRef.current?.click()} className="border border-dashed border-[#ddd] rounded-xl p-8 text-center hover:border-[#550000]/40 cursor-pointer">
                 <input ref={fileInputRef} type="file" accept=".pdf,.docx,.txt" onChange={e=>setUploadFile(e.target.files?.[0]||null)} className="hidden" />
                 <Upload className="w-5 h-5 text-[#bbb] mx-auto mb-2" />
                 <p className="text-[12.5px] font-medium text-[#666]">{uploadFile?`✓ ${uploadFile.name}`:"Drop file here or click to browse"}</p>
                 <p className="text-[11px] text-[#bbb] mt-1">PDF, DOCX, TXT · Max 50MB</p>
               </div>
             ):(
-              <textarea value={uploadPasteText} onChange={e=>setUploadPasteText(e.target.value)} placeholder="Paste your notes here..." className="w-full h-32 border border-[#e8e5e0] rounded-xl p-3 text-[13px] resize-none focus:outline-none focus:ring-2 focus:ring-[#8B0000]/20" />
+              <textarea value={uploadPasteText} onChange={e=>setUploadPasteText(e.target.value)} placeholder="Paste your notes here..." className="w-full h-32 border border-[#e8e5e0] rounded-xl p-3 text-[13px] resize-none focus:outline-none focus:ring-2 focus:ring-[#550000]/20" />
             )}
-            <button onClick={handleUpload} disabled={isUploading||(uploadMethod==="file"?!uploadFile:!uploadPasteText.trim())} className="w-full py-2.5 bg-[#8B0000] hover:bg-[#6d0000] disabled:opacity-40 text-white rounded-xl text-[13.5px] font-semibold">{isUploading?"Uploading...":"Upload & Index"}</button>
+            <button onClick={handleUpload} disabled={isUploading||(uploadMethod==="file"?!uploadFile:!uploadPasteText.trim())} className="w-full py-2.5 bg-[#550000] hover:bg-[#3b0000] disabled:opacity-40 text-white rounded-xl text-[13.5px] font-semibold">{isUploading?"Uploading...":"Upload & Index"}</button>
           </div>
         </div>
       )}
@@ -357,10 +357,10 @@ export function StudyCompanionWorkspace() {
             <h3 className="text-[15px] font-semibold text-[#111] mb-1">New Study Space</h3>
             <p className="text-[12.5px] text-[#888] mb-4">Name your course or subject</p>
             <form onSubmit={createSpace}>
-              <input autoFocus type="text" value={newSpaceInput} onChange={e=>setNewSpaceInput(e.target.value)} placeholder='e.g. "Organic Chemistry 301"' className="w-full border border-[#e8e5e0] rounded-xl px-3 py-2.5 text-[13.5px] focus:outline-none focus:ring-2 focus:ring-[#8B0000]/20 focus:border-[#8B0000] mb-3" />
+              <input autoFocus type="text" value={newSpaceInput} onChange={e=>setNewSpaceInput(e.target.value)} placeholder='e.g. "Organic Chemistry 301"' className="w-full border border-[#e8e5e0] rounded-xl px-3 py-2.5 text-[13.5px] focus:outline-none focus:ring-2 focus:ring-[#550000]/20 focus:border-[#550000] mb-3" />
               <div className="flex gap-2">
                 <button type="button" onClick={()=>setIsCreateSpaceOpen(false)} className="flex-1 py-2 border border-[#e8e5e0] rounded-xl text-[13px] font-semibold text-[#666]">Cancel</button>
-                <button type="submit" disabled={!newSpaceInput.trim()} className="flex-1 py-2 bg-[#8B0000] hover:bg-[#6d0000] disabled:opacity-40 text-white rounded-xl text-[13px] font-semibold">Create</button>
+                <button type="submit" disabled={!newSpaceInput.trim()} className="flex-1 py-2 bg-[#550000] hover:bg-[#3b0000] disabled:opacity-40 text-white rounded-xl text-[13px] font-semibold">Create</button>
               </div>
             </form>
           </div>
