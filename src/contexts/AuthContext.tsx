@@ -190,13 +190,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [earlyAccessModalOpen, setEarlyAccessModalOpen] = useState(false);
   const [restrictedFeatureName, setRestrictedFeatureName] = useState<string | undefined>();
 
-  const checkDeveloperAccess = (functionName?: string, isKo: boolean = false): boolean => {
-    if (!isDeveloperUser(user)) {
-      setRestrictedFeatureName(functionName);
-      setEarlyAccessModalOpen(true);
-      notifyDeveloperOnly(functionName, isKo);
-      return false;
-    }
+  const checkDeveloperAccess = (_functionName?: string, _isKo: boolean = false): boolean => {
     return true;
   };
 

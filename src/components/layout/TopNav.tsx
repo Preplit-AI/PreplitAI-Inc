@@ -90,9 +90,8 @@ export const TopNav = () => {
             <a href="/features" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
               {isKo ? '기능' : 'Features'}
             </a>
-            <a href="/preplitai-chat" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center gap-1.5">
-              <span>{isKo ? '강의 녹음' : 'Lecture Buddy'}</span>
-              <span className="px-1.5 py-0.5 text-[9px] font-bold rounded-full bg-[#8B0000] text-white">AI</span>
+            <a href="/preplitai-chat" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+              {isKo ? '강의 녹음' : 'Lecture Buddy'}
             </a>
             <a href="/pricing" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
               {isKo ? '요금제' : 'Pricing'}
@@ -222,9 +221,8 @@ export const TopNav = () => {
                   <a href="/features" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
                     {isKo ? '기능' : 'Features'}
                   </a>
-                  <a href="/preplitai-chat" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium flex items-center justify-between">
-                    <span>{isKo ? 'AI 강의 녹음' : 'AI Lecture Buddy'}</span>
-                    <span className="px-1.5 py-0.5 text-[9px] font-bold rounded-full bg-[#8B0000] text-white">AI</span>
+                  <a href="/preplitai-chat" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
+                    {isKo ? '강의 녹음' : 'Lecture Buddy'}
                   </a>
                   <a href="/pricing" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
                     {isKo ? '요금제' : 'Pricing'}
