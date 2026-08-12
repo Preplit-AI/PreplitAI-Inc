@@ -1,5 +1,4 @@
 import { Hero } from "@/components/home/Hero";
-import Features from "@/components/home/Features";
 import HowItWorks from "@/components/home/HowItWorks";
 import { WorkspaceTeaserSection } from "@/components/home/WorkspaceTeaserSection";
 import { Footer } from "@/components/layout/Footer";
@@ -69,7 +68,6 @@ const Index = () => {
       />
       <Hero />
       <HowItWorks />
-      <Features />
       <WorkspaceTeaserSection />
 
       {/* Bottom CTA Section */}
@@ -78,7 +76,7 @@ const Index = () => {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-6 leading-tight">
             {isKo ? '몇 시간이 아닌 단 몇 분 만에' : 'Start studying smarter'}
             <br />
-            <span className="text-[#c84040]">
+            <span className="text-[#550000]">
               {isKo ? '스마트한 학습을 시작하세요.' : 'in minutes, not hours.'}
             </span>
           </h2>
