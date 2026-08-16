@@ -103,7 +103,7 @@ const Pricing = () => {
     },
   ];
 
-  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";
+  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://preplitai.com";
   const canonical = `${siteUrl}/pricing`;
   
   return (
@@ -118,8 +118,8 @@ const Pricing = () => {
       {/* Hero */}
       <section className="pt-16 sm:pt-32 pb-12 sm:pb-14 px-4 sm:px-6 text-center">
         <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#630000]/8 dark:bg-[#630000]/20 border border-[#630000]/20 dark:border-[#630000]/30 mb-6">
-            <span className="text-[13px] font-medium text-[#630000] dark:text-[#ffaaaa]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#550000]/8 dark:bg-[#550000]/20 border border-[#550000]/20 dark:border-[#550000]/30 mb-6">
+            <span className="text-[13px] font-medium text-[#550000] dark:text-[#ffaaaa]">
               {isKo ? '대학생 맞춤형 요금제' : 'Built for Student Budgets'}
             </span>
           </div>
@@ -153,9 +153,9 @@ const Pricing = () => {
                   : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
               }`}
             >
-              <GraduationCap className="w-3.5 h-3.5 text-[#630000] dark:text-[#ffaaaa]" />
+              <GraduationCap className="w-3.5 h-3.5 text-[#550000] dark:text-[#ffaaaa]" />
               <span>{isKo ? '학기 패스 (4개월 할인)' : 'Semester Pass (4 Months)'}</span>
-              <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-[#630000] text-white rounded-full">
+              <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-[#550000] text-white rounded-full">
                 {isKo ? '25% 할인' : 'Save 25%'}
               </span>
             </button>
@@ -200,12 +200,12 @@ const Pricing = () => {
           {/* Student Pro Tier (Featured) */}
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={2} className="flex flex-col relative">
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20">
-              <span className="px-3.5 py-1 text-[11px] font-bold tracking-wider uppercase bg-[#630000] text-white rounded-full shadow-md flex items-center gap-1">
+              <span className="px-3.5 py-1 text-[11px] font-bold tracking-wider uppercase bg-[#550000] text-white rounded-full shadow-md flex items-center gap-1">
                 <Sparkles className="w-3 h-3" /> {isKo ? '인기 추천' : 'Most Popular'}
               </span>
             </div>
             
-            <div className="flex-1 p-8 rounded-3xl border-2 border-[#630000] dark:border-[#990000] bg-white dark:bg-[#141111] flex flex-col justify-between shadow-xl relative overflow-hidden">
+            <div className="flex-1 p-8 rounded-3xl border-2 border-[#550000] dark:border-[#990000] bg-white dark:bg-[#141111] flex flex-col justify-between shadow-xl relative overflow-hidden">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-black dark:text-white">{isKo ? '학생 프로' : 'Student Pro'}</h3>
@@ -226,14 +226,14 @@ const Pricing = () => {
                     </>
                   )}
                 </div>
-                <Button asChild className="w-full mb-8 h-11 rounded-xl bg-[#630000] hover:bg-[#7a0000] text-white font-semibold shadow-md transition-all hover:scale-[0.98]">
+                <Button asChild className="w-full mb-8 h-11 rounded-xl bg-[#550000] hover:bg-[#6b0000] text-white font-semibold shadow-md transition-all hover:scale-[0.98]">
                   <a href="/preplitai-chat">{isKo ? '학생 프로 시작하기' : 'Get Student Pro'}</a>
                 </Button>
                 <div className="space-y-3.5">
                   <p className="text-[13px] font-semibold text-black dark:text-white">{isKo ? '무료 플랜의 모든 기능 +' : 'Everything in Free, plus:'}</p>
                   {features.studentPro.map((f) => (
                     <div key={f} className="flex gap-3 items-start text-[14px] text-gray-700 dark:text-gray-200">
-                      <Check className="w-4 h-4 text-[#630000] dark:text-[#ffaaaa] shrink-0 mt-0.5" />
+                      <Check className="w-4 h-4 text-[#550000] dark:text-[#ffaaaa] shrink-0 mt-0.5" />
                       <span className="font-medium">{f}</span>
                     </div>
                   ))}

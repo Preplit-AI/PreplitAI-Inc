@@ -149,6 +149,48 @@ const initializeDatabase = async () => {
     `);
 
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS document_chunks (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        document_id UUID REFERENCES documents(id) ON DELETE CASCADE,
+        chunk_text TEXT NOT NULL,
+        embedding_vector JSONB,
+        chunk_index INT NOT NULL DEFAULT 0,
+        page_number INT DEFAULT 1,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS chat_sessions (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        space_id UUID REFERENCES spaces(id) ON DELETE CASCADE,
+        title VARCHAR(255) NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS chat_messages (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        chat_session_id UUID REFERENCES chat_sessions(id) ON DELETE CASCADE,
+        role VARCHAR(20) NOT NULL,
+        content TEXT NOT NULL,
+        cited_chunk_ids JSONB DEFAULT '[]'::jsonb,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS user_uploads (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+        document_id VARCHAR(255) NOT NULL,
+        file_name VARCHAR(255) NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `);
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS generated_outputs (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         space_id UUID REFERENCES spaces(id) ON DELETE CASCADE,

@@ -78,25 +78,28 @@ router.post('/checkout', authMiddleware, async (req, res) => {
   }
 });
 
-// ── POST /api/webhooks/stripe ─────────────────────────────────────────────────
+// ── POST /api/webhooks/stripe (Strict Signature Verification) ─────────────────
 router.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
-  let event;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+  if (!webhookSecret || !sig) {
+    console.error('Webhook rejected: Missing STRIPE_WEBHOOK_SECRET or stripe-signature header.');
+    return res.status(400).json({ error: 'Webhook rejected: Missing signature verification credentials.' });
+  }
+
+  let event;
   try {
-    if (process.env.STRIPE_WEBHOOK_SECRET) {
-      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-    } else {
-      event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    }
+    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
   } catch (err) {
+    console.error('Webhook signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     const userId = session.metadata?.userId;
-    const idempotencyKey = event.id; // Stripe event.id guarantees idempotency
+    const idempotencyKey = event.id;
 
     if (userId) {
       await creditService.addCredits(userId, 200, 'purchase', session.payment_intent, idempotencyKey);

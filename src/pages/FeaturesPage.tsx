@@ -77,7 +77,7 @@ const FeaturesPage = () => {
     },
   ];
 
-  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";
+  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://preplitai.com";
   const canonical = `${siteUrl}/features`;
 
   return (
@@ -95,7 +95,7 @@ const FeaturesPage = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="inline-block text-sm font-semibold tracking-wide uppercase text-[#630000] dark:text-[#ffaaaa] mb-6"
+          className="inline-block text-sm font-semibold tracking-wide uppercase text-[#550000] dark:text-[#ffaaaa] mb-6"
         >
           {isKo ? '기능 소개' : 'Features'}
         </motion.p>
@@ -107,7 +107,7 @@ const FeaturesPage = () => {
           className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-gray-950 dark:text-white leading-[1.1] mb-6"
         >
           {isKo ? '스마트 학업을 위한 ' : 'Powerful features for '}
-          <span className="text-[#630000] dark:text-[#ffaaaa]">
+          <span className="text-[#550000] dark:text-[#ffaaaa]">
             {isKo ? '9가지 AI 전용 도구' : 'modern learning'}
           </span>
         </motion.h1>
@@ -170,7 +170,7 @@ const FeaturesPage = () => {
                 <ul className="space-y-4">
                   {cap.items.map((item) => (
                     <li key={item} className="flex items-start gap-3.5">
-                      <CheckCircle2 className="w-5 h-5 text-[#630000] dark:text-[#ffaaaa] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-5 h-5 text-[#550000] dark:text-[#ffaaaa] shrink-0 mt-0.5" />
                       <span className="text-[#333] dark:text-gray-300 text-base leading-snug font-medium">
                         {item}
                       </span>

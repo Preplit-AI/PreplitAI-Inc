@@ -7,7 +7,7 @@ const APIPage = () => {
   const { language } = useLanguage();
   const isKo = language === 'ko';
 
-  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";
+  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://preplitai.com";
   const canonical = `${siteUrl}/developers`;
   const breadcrumb = {
     "@context": "https://schema.org",
@@ -30,11 +30,11 @@ const APIPage = () => {
       {/* Hero */}
       <section className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-12 sm:pb-16">
         <div className="relative z-10">
-          <p className="text-sm font-semibold text-[#630000] dark:text-[#ff9999] mb-4">
+          <p className="text-sm font-semibold text-[#550000] dark:text-[#ffaaaa] mb-4">
             {isKo ? '개발자 센터' : 'Developers'}
           </p>
           <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white mb-6 leading-tight">
-            PreplitAI <span className="text-[#630000] dark:text-[#ff9999]">API</span>
+            PreplitAI <span className="text-[#550000] dark:text-[#ffaaaa]">API</span>
           </h1>
           <p className="text-lg md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed mb-10">
             {isKo

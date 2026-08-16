@@ -11,14 +11,14 @@ const Status = () => {
       <SEOHead
         title={isKo ? "PreplitAI 서비스 가동 상태" : "PreplitAI System status"}
         description={isKo ? "PreplitAI 모든 서비스 실시간 가동률 및 상태 리포트." : "Realtime overview of uptime and incidents for PreplitAI services."}
-        canonical={`${(import.meta as any).env?.VITE_SITE_URL || 'https://yourdomain.com'}/status`}
+        canonical={`${(import.meta as any).env?.VITE_SITE_URL || 'https://preplitai.com'}/status`}
         robots="noindex,follow"
       />
       <section className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
         <div className="relative z-10">
           <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white mb-6 leading-tight">
             {isKo ? '서비스 ' : 'System '}
-            <span className="text-[#630000] dark:text-[#ff9999]">
+            <span className="text-[#550000] dark:text-[#ffaaaa]">
               {isKo ? '가동 상태' : 'status'}
             </span>
           </h1>

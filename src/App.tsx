@@ -12,7 +12,6 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Pricing from "./pages/Pricing";
 import FeaturesPage from "./pages/FeaturesPage";
-import RequestDemo from "./pages/RequestDemo";
 import StatusPage from "./pages/Status";
 import APIPage from "./pages/APIPage";
 import About from "./pages/About";
@@ -44,7 +43,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/features" element={<FeaturesPage />} />
-            <Route path="/request-demo" element={<RequestDemo />} />
+            <Route path="/request-demo" element={<TalkToSales />} />
             <Route path="/status" element={<StatusPage />} />
             <Route path="/api-docs" element={<APIPage />} />
             <Route path="/gks" element={<GKSPlatform />} />

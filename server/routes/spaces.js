@@ -2,22 +2,31 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
+const ragService = require('../services/ragService');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs').promises;
 const pdfParse = require('pdf-parse');
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../public/uploads');
-    cb(null, uploadDir);
+  destination: async (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '../uploads');
+    try {
+      await fs.mkdir(uploadDir, { recursive: true });
+      cb(null, uploadDir);
+    } catch (err) {
+      cb(err);
+    }
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + '-' + file.originalname);
+    cb(null, uniqueSuffix + '-' + file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_'));
   }
 });
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 15 * 1024 * 1024 }
+});
 
 // ── 1. Create a Space ────────────────────────────────────────────────────────
 router.post('/spaces', async (req, res) => {
@@ -164,9 +173,18 @@ router.post('/spaces/:id/documents', upload.single('file'), async (req, res) => 
       RETURNING *
     `, [space_id, type, upload_method, rawFileUrl, extractedText, fileName]);
 
+    const createdDoc = docRes.rows[0];
+
+    // Asynchronously chunk and store vector embeddings for grounded RAG
+    try {
+      await ragService.processAndStoreDocumentChunks(createdDoc.id, extractedText);
+    } catch (chunkErr) {
+      console.warn('Document chunking notice:', chunkErr.message);
+    }
+
     await db.query('UPDATE spaces SET updated_at = NOW() WHERE id = $1', [space_id]);
 
-    res.status(201).json(docRes.rows[0]);
+    res.status(201).json(createdDoc);
   } catch (err) {
     console.error('Error uploading document to space:', err.message);
     res.status(500).json({ error: 'Failed to process document upload', message: err.message });
