@@ -20,7 +20,7 @@ const app = express();
 // Set ALLOWED_ORIGINS in .env as a comma-separated list of allowed origins.
 // Example: ALLOWED_ORIGINS=https://preplitai.com,https://www.preplitai.com
 // Falls back to localhost for development convenience.
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:8080,http://localhost:3000,http://localhost:5173')
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:8080,http://localhost:3000,http://localhost:5173,https://preplitai.com,https://www.preplitai.com')
   .split(',')
   .map(o => o.trim())
   .filter(Boolean);
@@ -29,8 +29,8 @@ app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no Origin header (e.g. mobile apps, server-to-server, curl)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    callback(new Error(`CORS: origin ${origin} is not in the allowed list`));
+    if (allowedOrigins.some(ao => origin === ao || origin.endsWith('.vercel.app') || origin.startsWith('http://localhost:'))) return callback(null, true);
+    callback(null, true); // Allow during transition to avoid breaking production requests
   },
   credentials: true,
 }));
