@@ -75,8 +75,8 @@ export const WorkspaceTeaserSection = () => {
             className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.03em] text-[#111111] dark:text-white leading-tight"
           >
             Everything you need to
-            <span className="text-[#550000] dark:text-[#f87171] block mt-1">
-              learn, practice, and ace your exams
+            <span className="block mt-1">
+              learn, practice, and ace your exams.
             </span>
           </motion.h2>
 
