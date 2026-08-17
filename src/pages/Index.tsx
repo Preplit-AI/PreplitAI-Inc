@@ -1,72 +1,59 @@
+import { useEffect } from "react";
+import { TopNav } from "@/components/layout/TopNav";
 import { Hero } from "@/components/home/Hero";
-import HowItWorks from "@/components/home/HowItWorks";
+import { HowItWorks } from "@/components/home/HowItWorks";
 import { WorkspaceTeaserSection } from "@/components/home/WorkspaceTeaserSection";
+import { LiveFocusSessions } from "@/components/home/LiveFocusSessions";
+import { UnlockPotentialSection } from "@/components/home/UnlockPotentialSection";
+import { ClosingCtaBanner } from "@/components/home/ClosingCtaBanner";
 import { Footer } from "@/components/layout/Footer";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
   const { language } = useLanguage();
   const isKo = language === "ko";
 
-  const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://preplitai.com";
-  const canonical = `${siteUrl}/`;
-  const schema = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "PreplitAI",
-      url: "https://preplitai.com",
-      logo: "https://preplitai.com/logo.png",
-      founder: {
-        "@type": "Person",
-        name: "Khan Muhammad Ahsan",
-        jobTitle: "Founder & Chief Executive Officer",
-        worksFor: {
-          "@type": "Organization",
-          name: "PreplitAI",
-        },
-      },
-      sameAs: [
-        "https://twitter.com/preplitai",
-        "https://www.linkedin.com/company/preplitai",
-      ],
+  // Force body background
+  useEffect(() => {
+    document.body.classList.remove("bg-slate-900", "bg-slate-950", "bg-[#0b0f17]", "bg-[#0f172a]");
+    document.body.classList.add("bg-white", "text-slate-900");
+  }, []);
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "PreplitAI",
+    applicationCategory: "EducationalApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "PreplitAI",
-      url: "https://preplitai.com",
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      name: "PreplitAI",
-      applicationCategory: "EducationalApplication",
-      operatingSystem: "Web",
-      description:
-        "AI Study Companion workspace & GKS Scholarship prep platform with grounded chat, quizzes, flashcards & application review.",
-      url: "https://preplitai.com",
-    },
-  ];
+    description: isKo
+      ? "강의자료, 논문, 교재를 업로드하여 출처 기반 질의응답, 연습문제 생성, 플래시카드, 팟캐스트 변환 등 완벽한 학습 시스템을 제공하는 대학생 전용 AI 스터디 워크스페이스."
+      : "Turn any course syllabus or lecture slides into a calm, complete learning system: grounded AI chat, flashcards, adaptive quizzes, podcasts, and exam predictions.",
+  };
+
+  const canonical = "https://preplitai.com";
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] overflow-x-hidden text-[#111111] dark:text-[#eeeeee]">
+    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-[#550000] selection:text-white">
       <SEOHead
         title={
           isKo
-            ? "PreplitAI | 대학생을 위한 학습, 실전 연습, 시험 대비 슈퍼 워크스페이스"
-            : "PreplitAI | A student’s super workspace for learning, practice, and review"
+            ? "PreplitAI — 대학생을 위한 AI 학습, 실전 연습, 시험 대비 슈퍼 워크스페이스"
+            : "PreplitAI — A student’s super workspace for learning, practice, and review."
         }
         description={
           isKo
-            ? "강의 슬라이드, 교재, 필기 노트를 나만의 인터랙티브 AI 튜터로 전환하세요. 출처 인용 챗봇, 플래시카드, 퀴즈, 팟캐스트, 출제 예상 족보."
-            : "Upload lecture slides, notes, and textbooks. Master your syllabus with grounded AI chat, spaced flashcards, practice quizzes, audio podcasts, and exam predictions."
+            ? "강의 슬라이드, 교재, 필기 노트를 업로드하여 출처 인용 AI 챗봇, 스마트 플래시카드, 맞춤 퀴즈, 시험 예측 도구로 학업을 마스터하세요."
+            : "Transform lecture slides and course notes into grounded AI chat, smart flashcards, practice quizzes, and exam predictions."
         }
         keywords={[
-          "study timer",
+          "PreplitAI",
+          "study workspace",
           "focus workspace",
           "AI study companion",
           "Korean university students",
@@ -79,61 +66,32 @@ const Index = () => {
         schemaMarkup={schema}
       />
 
+      {/* Floating Top Navigation Bar */}
+      <TopNav />
+
       {/* 1. Hero Section (A student’s super workspace for learning, practice, and review) */}
       <Hero />
 
-      {/* 2. Step Cards Section (Images 2 and 3) */}
+      {/* 2. Numbers / 3-Card Stats Section */}
       <div id="how-it-works">
         <HowItWorks />
       </div>
 
-      {/* 3. Workspace Teaser / Core 6 Tools */}
+      {/* 3. Everything for your work and focus (5-Card Pastel Bento) */}
       <div id="features">
         <WorkspaceTeaserSection />
       </div>
 
-      {/* 4. Bottom Closing Banner (Matching Images 4 & 5) */}
-      <section className="relative bg-[#0a0a0a] dark:bg-[#070707] py-24 sm:py-32 px-6 border-t border-white/[0.06] overflow-hidden">
-        {/* Subtle Background Texture */}
-        <div className="absolute inset-0 bg-[url('/cta.jpeg')] bg-cover bg-center opacity-25 pointer-events-none mix-blend-luminosity" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-[#0a0a0a]/95 pointer-events-none" />
+      {/* 4. Live Focus Sessions Charts with users (Image 1) */}
+      <LiveFocusSessions />
 
-        <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
-          <h2 className="text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold tracking-[-0.03em] text-white mb-4 leading-tight">
-            {isKo ? "지금 바로 스마트하게 학습을 시작하세요." : "Start studying smarter"}
-            <span className="text-[#a82424] dark:text-[#f87171] block mt-1.5 font-bold">
-              {isKo ? "몇 시간이 아닌, 단 몇 분 만에." : "in minutes, not hours."}
-            </span>
-          </h2>
-          <p className="text-slate-400 text-sm sm:text-base max-w-lg mb-10 leading-relaxed font-normal">
-            {isKo
-              ? "수천 명의 학생들이 PreplitAI의 출처 인용 AI로 강의 자료를 더 빠르고 정확하게 마스터하고 있습니다."
-              : "Join thousands of students who use PreplitAI to master their course materials faster with grounded AI."}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3.5">
-            <Button
-              asChild
-              className="text-[14px] px-8 py-3.5 h-12 bg-white hover:bg-slate-100 text-[#111111] rounded-full font-bold transition-all duration-200 active:scale-[0.97] shadow-xl"
-            >
-              <a href="/preplitai-chat" className="flex items-center gap-2">
-                <span>{isKo ? "무료 워크스페이스 시작" : "Launch Workspace Free"}</span>
-                <ArrowRight className="h-4 w-4" />
-              </a>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="text-[14px] px-7 py-3.5 h-12 border-white/20 bg-transparent hover:bg-white/10 text-white rounded-full font-medium transition-all duration-200 active:scale-[0.97]"
-            >
-              <a href="/pricing">
-                {isKo ? "요금제 확인하기" : "View Subscription Plans"}
-              </a>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* 5. Are Ready to unlock your full potential? (Image 2) */}
+      <UnlockPotentialSection />
 
-      {/* 5. Footer */}
+      {/* 6. Closing Sponsor / Workspace Banner (Image 3) */}
+      <ClosingCtaBanner />
+
+      {/* 7. Pure White Footer */}
       <Footer />
     </div>
   );
