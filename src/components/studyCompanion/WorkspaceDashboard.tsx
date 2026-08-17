@@ -6,12 +6,6 @@ import {
   Target,
   BookOpen,
   MoreVertical,
-  HelpCircle,
-  Upload,
-  MessageSquare,
-  Radio,
-  Layers,
-  Box,
   Calendar as CalendarIcon,
   Circle,
   Play,
@@ -21,22 +15,45 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+interface Space {
+  id: string;
+  name: string;
+  dept?: string;
+}
+
 interface WorkspaceDashboardProps {
   onToolSelect: (tool: string) => void;
   onUploadClick: () => void;
   onOpenSearch: () => void;
+  spaces: Space[];
+  activeSpaceId: string;
+  onSelectSpace: (spaceId: string) => void;
+  onCreateSpace: () => void;
 }
 
 export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
   onToolSelect,
   onUploadClick,
   onOpenSearch,
+  spaces,
+  activeSpaceId,
+  onSelectSpace,
+  onCreateSpace,
 }) => {
   const { user } = useAuth();
   const { language } = useLanguage();
   const isKo = language === "ko";
 
-  const userName = (user as any)?.user_metadata?.full_name || (user as any)?.name || user?.email?.split("@")[0] || "Ahsan";
+  const userName =
+    (user as any)?.user_metadata?.full_name ||
+    (user as any)?.name ||
+    user?.email?.split("@")[0] ||
+    "Ahsan";
+
+  const activeSpace = spaces.find((s) => s.id === activeSpaceId) || spaces[0] || {
+    id: "1",
+    name: "Data Structures & Algorithms",
+  };
 
   // Focus Timer state (Pomodoro 25:00)
   const [focusSeconds, setFocusSeconds] = useState(25 * 60);
@@ -124,70 +141,10 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
     },
   ];
 
-  // Quick access tools
-  const quickTools = [
-    {
-      id: "upload",
-      title: isKo ? "자료 업로드" : "Upload Material",
-      desc: "PDF, PPT, Notes...",
-      icon: Upload,
-      color: "bg-rose-50 text-[#550000]",
-      action: onUploadClick,
-    },
-    {
-      id: "chat",
-      title: isKo ? "AI 챗" : "AI Chat",
-      desc: isKo ? "노트 기반 질문" : "Ask anything",
-      icon: MessageSquare,
-      color: "bg-purple-50 text-purple-600",
-      action: () => onToolSelect("chat"),
-    },
-    {
-      id: "lecture-buddy",
-      title: isKo ? "강의 녹음" : "Lecture Buddy",
-      desc: isKo ? "스마트 요약 노트" : "Smart notes",
-      icon: Radio,
-      color: "bg-blue-50 text-blue-600",
-      action: () => onToolSelect("lecture-buddy"),
-    },
-    {
-      id: "expected",
-      title: isKo ? "시험 예측" : "Exam Predictions",
-      desc: isKo ? "기출 족보 AI" : "Past papers AI",
-      icon: Target,
-      color: "bg-amber-50 text-amber-600",
-      action: () => onToolSelect("expected"),
-    },
-    {
-      id: "quizzes",
-      title: isKo ? "스마트 퀴즈" : "Quizzes",
-      desc: isKo ? "실전 문제 풀이" : "Practice now",
-      icon: HelpCircle,
-      color: "bg-orange-50 text-orange-600",
-      action: () => onToolSelect("quizzes"),
-    },
-    {
-      id: "flashcards",
-      title: isKo ? "플래시카드" : "Flashcards",
-      desc: isKo ? "간격 반복 학습" : "Spaced repetition",
-      icon: BookOpen,
-      color: "bg-emerald-50 text-emerald-600",
-      action: () => onToolSelect("flashcards"),
-    },
-    {
-      id: "explore3d",
-      title: isKo ? "3D 인터랙티브" : "3D Learning",
-      desc: isKo ? "개념 입체 시각화" : "Visualize concepts",
-      icon: Box,
-      color: "bg-indigo-50 text-indigo-600",
-      action: () => onToolSelect("explore3d"),
-    },
-  ];
-
   return (
     <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden bg-[#fafafa] dark:bg-[#0a0a0a] text-slate-900 dark:text-white h-full">
-      {/* Main Left/Center Content - Compact & Clean to fit on 1 screen */}
-      <div className="flex-1 p-4 sm:p-5 lg:p-6 space-y-4 max-w-5xl flex flex-col justify-between overflow-y-auto">
+      {/* Main Left/Center Content */}
+      <div className="flex-1 p-4 sm:p-5 lg:p-6 space-y-5 max-w-5xl flex flex-col justify-between overflow-y-auto">
         {/* Top Header / Greeting Bar */}
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -199,14 +156,23 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
             </p>
           </div>
 
-          {/* Add New Action Button in Maroon */}
-          <button
-            onClick={onUploadClick}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-xs shadow-xs transition-all active:scale-95 shrink-0"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>{isKo ? "새 자료 추가" : "Add New"}</span>
-          </button>
+          {/* Action Buttons in Maroon */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onCreateSpace}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-white font-semibold text-xs transition-all active:scale-95 shrink-0"
+            >
+              <Plus className="w-3.5 h-3.5 text-[#550000] dark:text-[#f87171]" />
+              <span>{isKo ? "새 워크스페이스" : "New Space"}</span>
+            </button>
+            <button
+              onClick={onUploadClick}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-xs shadow-xs transition-all active:scale-95 shrink-0"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>{isKo ? "자료 추가" : "Add Material"}</span>
+            </button>
+          </div>
         </div>
 
         {/* 1. Active Course Banner Card */}
@@ -219,10 +185,10 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
                   ACTIVE COURSE
                 </span>
                 <h2 className="text-xl font-bold text-neutral-900 dark:text-white tracking-tight leading-tight">
-                  Data Structures & Algorithms
+                  {activeSpace.name}
                 </h2>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-                  Spring 2024 · Computer Science
+                  {activeSpace.dept || "Computer Science"} • Spring 2024
                 </p>
               </div>
 
@@ -279,7 +245,7 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
               {/* Stat 4 */}
               <div className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50/50 dark:bg-neutral-800/30">
                 <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/50 text-amber-600 flex items-center justify-center shrink-0">
-                  <Layers className="w-4 h-4" />
+                  <BookOpen className="w-4 h-4" />
                 </div>
                 <div>
                   <p className="text-[10px] font-medium text-neutral-400 leading-none">Flashcards</p>
@@ -291,7 +257,86 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
           </div>
         </div>
 
-        {/* 2. Recently Opened Section */}
+        {/* 2. Your Workspaces Section (Above Recently Opened) */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-bold text-neutral-900 dark:text-white">
+                {isKo ? "내 학업 워크스페이스" : "Your Workspaces"}
+              </h3>
+              <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-neutral-800 text-[10.5px] font-bold text-neutral-600 dark:text-neutral-300">
+                {spaces.length}
+              </span>
+            </div>
+            <button
+              onClick={onCreateSpace}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-[#550000] dark:text-[#f87171] hover:underline"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>{isKo ? "새 워크스페이스 만들기" : "Create Workspace"}</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {spaces.map((space) => {
+              const isActive = space.id === activeSpaceId;
+              return (
+                <div
+                  key={space.id}
+                  onClick={() => onSelectSpace(space.id)}
+                  className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                    isActive
+                      ? "bg-rose-50/40 dark:bg-rose-950/20 border-[#550000]/40 dark:border-rose-900/60 shadow-xs ring-1 ring-[#550000]/20"
+                      : "bg-white dark:bg-[#121212] border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 hover:shadow-2xs"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                        isActive
+                          ? "bg-[#550000] text-white"
+                          : "bg-slate-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300"
+                      }`}
+                    >
+                      <BookOpen className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-bold text-neutral-900 dark:text-white truncate">
+                        {space.name}
+                      </h4>
+                      <p className="text-[10px] text-neutral-400 mt-0.5 truncate">
+                        {isActive
+                          ? isKo
+                            ? "현재 활성 공간"
+                            : "Active Workspace"
+                          : isKo
+                          ? "클릭하여 전환"
+                          : "Click to open"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {isActive && (
+                    <span className="w-2 h-2 rounded-full bg-[#550000] dark:bg-rose-400 shrink-0" />
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Create New Workspace Card */}
+            <button
+              onClick={onCreateSpace}
+              className="p-3.5 rounded-2xl border border-dashed border-slate-300 dark:border-neutral-700 hover:border-[#550000]/60 dark:hover:border-rose-500/60 hover:bg-rose-50/20 dark:hover:bg-rose-950/10 transition-all flex items-center justify-center gap-2 text-xs font-bold text-neutral-600 dark:text-neutral-300 hover:text-[#550000] dark:hover:text-[#f87171] group"
+            >
+              <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-neutral-800 group-hover:bg-[#550000] group-hover:text-white flex items-center justify-center transition-colors">
+                <Plus className="w-4 h-4" />
+              </div>
+              <span>{isKo ? "새 워크스페이스 추가" : "Create Workspace"}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 3. Recently Opened Section */}
         <div>
           <div className="flex items-center justify-between mb-2.5">
             <h3 className="text-sm font-bold text-neutral-900 dark:text-white">
@@ -338,40 +383,9 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
             ))}
           </div>
         </div>
-
-        {/* 3. Quick Access Tool Row */}
-        <div>
-          <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-2.5">
-            {isKo ? "빠른 실행 도구" : "Quick Access"}
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5">
-            {quickTools.map((tool) => {
-              const IconComp = tool.icon;
-              return (
-                <button
-                  key={tool.id}
-                  onClick={tool.action}
-                  className="flex flex-col items-center text-center p-2.5 rounded-xl bg-white dark:bg-[#121212] border border-slate-200/80 dark:border-white/10 hover:shadow-xs hover:border-slate-300 dark:hover:border-white/20 transition-all group"
-                >
-                  <div
-                    className={`w-8 h-8 rounded-lg ${tool.color} flex items-center justify-center mb-1.5 shadow-2xs`}
-                  >
-                    <IconComp className="w-4 h-4" />
-                  </div>
-                  <span className="text-[11.5px] font-bold text-neutral-800 dark:text-white truncate w-full group-hover:text-[#550000]">
-                    {tool.title}
-                  </span>
-                  <span className="text-[9px] text-neutral-400 truncate w-full mt-0.5">
-                    {tool.desc}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
       </div>
 
-      {/* Right Sidebar Column - Clean, Compact & Scaled in Maroon */}
+      {/* Right Sidebar Column */}
       <div className="w-full lg:w-[280px] xl:w-[300px] bg-white dark:bg-[#0e0e0e] border-t lg:border-t-0 lg:border-l border-slate-200/80 dark:border-white/10 p-4 sm:p-5 space-y-4 shrink-0 flex flex-col justify-between overflow-y-auto">
         {/* Widget 1: Focus Session (Maroon Timer Gauge) */}
         <div className="rounded-2xl border border-slate-200/80 dark:border-white/10 p-3.5 bg-white dark:bg-[#121212] text-center shadow-xs">

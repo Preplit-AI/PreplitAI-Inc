@@ -169,6 +169,16 @@ export function StudyCompanionWorkspace() {
     else setNavTab("workspace");
   };
 
+  const createSpace = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSpaceInput.trim()) return;
+    const newSpace = { id: Date.now().toString(), name: newSpaceInput.trim() };
+    setSpaces((prev) => [...prev, newSpace]);
+    setActiveSpaceId(newSpace.id);
+    setNewSpaceInput("");
+    setIsCreateSpaceOpen(false);
+  };
+
   const isKo = language === "ko";
 
   return (
@@ -241,6 +251,10 @@ export function StudyCompanionWorkspace() {
               onToolSelect={handleToolSelect}
               onUploadClick={() => setIsUploadOpen(true)}
               onOpenSearch={() => setIsSearchOpen(true)}
+              spaces={spaces}
+              activeSpaceId={activeSpaceId}
+              onSelectSpace={setActiveSpaceId}
+              onCreateSpace={() => setIsCreateSpaceOpen(true)}
             />
           )}
 
@@ -381,6 +395,59 @@ export function StudyCompanionWorkspace() {
             >
               {isUploading ? "Processing & Indexing..." : "Upload & Index"}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* New Study Space Modal */}
+      {isCreateSpaceOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={(e) => e.target === e.currentTarget && setIsCreateSpaceOpen(false)}
+        >
+          <div className="bg-white dark:bg-[#141414] border border-slate-200 dark:border-neutral-800 rounded-2xl w-full max-w-sm shadow-xl p-5">
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <h3 className="text-[15px] font-bold text-[#111] dark:text-white">
+                  {isKo ? "새 스터디 워크스페이스" : "New Study Workspace"}
+                </h3>
+                <p className="text-[12px] text-neutral-400 mt-0.5">
+                  {isKo ? "과목명 또는 강좌명을 입력하세요" : "Name your course or subject"}
+                </p>
+              </div>
+              <button
+                onClick={() => setIsCreateSpaceOpen(false)}
+                className="p-1 text-[#aaa] hover:text-[#666]"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <form onSubmit={createSpace}>
+              <input
+                autoFocus
+                type="text"
+                value={newSpaceInput}
+                onChange={(e) => setNewSpaceInput(e.target.value)}
+                placeholder={isKo ? '예: "알고리즘 및 자료구조"' : 'e.g. "Linear Algebra 201"'}
+                className="w-full border border-slate-200 dark:border-neutral-700 bg-transparent rounded-xl px-3 py-2 text-[13px] text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#550000]/20 mb-3"
+              />
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateSpaceOpen(false)}
+                  className="flex-1 py-2 border border-slate-200 dark:border-neutral-700 rounded-xl text-xs font-semibold text-neutral-600 dark:text-neutral-300"
+                >
+                  {isKo ? "취소" : "Cancel"}
+                </button>
+                <button
+                  type="submit"
+                  disabled={!newSpaceInput.trim()}
+                  className="flex-1 py-2 bg-[#550000] hover:bg-[#3d0000] disabled:opacity-40 text-white rounded-xl text-xs font-semibold transition-all shadow-xs"
+                >
+                  {isKo ? "생성하기" : "Create"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
