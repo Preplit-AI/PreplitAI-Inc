@@ -21,7 +21,6 @@ import AccountSettings from "./pages/AccountSettings";
 import Credits from "./pages/Credits";
 import PreplitAIChat from "./pages/PreplitAIChat";
 import Blog from "./pages/Blog";
-import GKSPlatform from "./pages/GKSPlatform";
 import GKSDashboard from "./pages/GKSDashboard";
 import GKSScholarMaterials from "./pages/GKSScholarMaterials";
 import GKSAlumniReview from "./pages/GKSAlumniReview";
@@ -46,7 +45,7 @@ const App = () => (
             <Route path="/request-demo" element={<TalkToSales />} />
             <Route path="/status" element={<StatusPage />} />
             <Route path="/api-docs" element={<APIPage />} />
-            <Route path="/gks" element={<GKSPlatform />} />
+            <Route path="/gks" element={<GKSDashboard />} />
             <Route path="/gks/dashboard" element={<GKSDashboard />} />
             <Route path="/gks/scholar-materials" element={<GKSScholarMaterials />} />
             <Route path="/gks/alumni-review" element={<GKSAlumniReview />} />

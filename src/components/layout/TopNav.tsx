@@ -66,7 +66,7 @@ export const TopNav = () => {
             <Link to="/pricing" className="hover:text-[#111111] dark:hover:text-white transition-colors">
               {isKo ? "요금제" : "PRICING"}
             </Link>
-            <Link to="/gks" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+            <Link to="/gks/dashboard" className="hover:text-[#111111] dark:hover:text-white transition-colors">
               GKS PREP
             </Link>
           </div>
@@ -154,7 +154,7 @@ export const TopNav = () => {
                     PRICING
                   </Link>
                   <Link
-                    to="/gks"
+                    to="/gks/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
                     className="px-4 py-2.5 rounded-xl text-sm font-medium text-[#555] dark:text-[#aaa] hover:bg-slate-100 dark:hover:bg-white/5"
                   >
