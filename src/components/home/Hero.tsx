@@ -46,18 +46,18 @@ export const Hero = () => {
             </span>
           </motion.div>
 
-          {/* Bold Display Headline with Maroon Serif Italic Pairing */}
+          {/* Display Headline matching Text 2 regular weight typography */}
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, type: "spring" as const, bounce: 0 }}
-            className="mx-auto max-w-[22rem] text-[2.5rem] leading-[1.06] tracking-[-0.02em] text-black font-bold sm:max-w-3xl sm:text-5xl sm:leading-[1.0] sm:tracking-[-0.03em] md:text-6xl lg:text-7xl mb-4"
+            className="mx-auto max-w-[22rem] text-[2.25rem] leading-[1.08] tracking-[-0.01em] text-black/90 font-normal sm:max-w-3xl sm:text-5xl sm:leading-[1.0] sm:tracking-[-0.02em] md:text-6xl lg:text-7xl mb-4"
           >
             {isKo ? (
               <>
                 대학생을 위한
                 <br />
-                <span className="font-editorial font-normal text-[#550000] block mt-1">
+                <span className="font-editorial text-[#550000] block mt-1">
                   학습, 실전 연습, 시험 대비 슈퍼 워크스페이스.
                 </span>
               </>
@@ -65,7 +65,7 @@ export const Hero = () => {
               <>
                 A student’s super workspace for
                 <br />
-                <span className="font-editorial font-normal text-[#550000] block mt-1">
+                <span className="font-editorial text-[#550000] block mt-1">
                   learning, practice, and review.
                 </span>
               </>
