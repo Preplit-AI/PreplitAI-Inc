@@ -64,33 +64,20 @@ export const WorkspaceTeaserSection = () => {
   return (
     <section id="features" className="py-20 sm:py-28 px-4 bg-white dark:bg-[#0a0a0a]">
       <div className="max-w-6xl mx-auto">
-        {/* Section Header with Badge */}
+        {/* Section Header */}
         <div className="flex flex-col justify-center items-center text-center px-4 mb-14 sm:mb-16 gap-3">
-          {/* Top Pill Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/40 text-rose-600 dark:text-rose-300 text-xs font-semibold shadow-2xs mb-1"
-          >
-            <Sparkles className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
-            <span>Built for Students. Backed by AI.</span>
-          </motion.div>
-
           {/* Headline */}
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1, type: "spring" as const, bounce: 0 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-neutral-950 dark:text-white leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.03em] text-[#111111] dark:text-white leading-tight"
           >
-            Everything you need to{" "}
-            <br className="hidden sm:inline" />
-            <span className="text-[#9333ea]">learn</span>,{" "}
-            <span className="text-[#2563eb]">practice</span>, and{" "}
-            <span className="text-[#dc2626]">ace your exams</span>
+            Everything you need to
+            <span className="text-[#550000] dark:text-[#f87171] block mt-1">
+              learn, practice, and ace your exams
+            </span>
           </motion.h2>
 
           {/* Subtitle */}
@@ -99,7 +86,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2, type: "spring" as const, bounce: 0 }}
-            className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 font-normal max-w-2xl"
+            className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 font-normal max-w-2xl mt-1"
           >
             PreplitAI brings your entire course journey into one intelligent workspace.
           </motion.p>
@@ -116,11 +103,6 @@ export const WorkspaceTeaserSection = () => {
             className="lg:col-span-4 bg-[#f4f0ff] dark:bg-[#181126] rounded-[28px] p-7 sm:p-8 border border-[#e2d5ff]/80 dark:border-purple-900/40 flex flex-col justify-between"
           >
             <div>
-              {/* Brain Icon Badge */}
-              <div className="w-12 h-12 rounded-2xl bg-[#e9d5ff] dark:bg-purple-950/70 text-[#7e22ce] dark:text-purple-300 flex items-center justify-center mb-6 shadow-2xs">
-                <Brain className="w-6 h-6" />
-              </div>
-
               {/* Headline */}
               <h3 className="text-2xl font-bold text-[#6b21a8] dark:text-[#c084fc] tracking-tight leading-tight mb-2">
                 Your learning,
