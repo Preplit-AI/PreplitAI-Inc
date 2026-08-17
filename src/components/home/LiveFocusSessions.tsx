@@ -68,10 +68,10 @@ export const LiveFocusSessions = () => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 px-4 bg-[#f8f9fa] dark:bg-[#0c0c0c] border-t border-black/[0.04] dark:border-white/[0.04] overflow-hidden">
+    <section className="py-6 sm:py-10 px-4 bg-[#f8f9fa] dark:bg-[#0c0c0c] border-t border-black/[0.04] dark:border-white/[0.04] overflow-hidden">
       <div className="max-w-5xl mx-auto flex flex-col items-center">
         {/* Section Header */}
-        <div className="flex flex-col justify-center items-center text-center px-4 mb-8 sm:mb-10 gap-3">
+        <div className="flex flex-col justify-center items-center text-center px-4 mb-5 sm:mb-7 gap-2">
           {/* Headline */}
           <motion.h2
             initial={{ opacity: 0, y: 16 }}

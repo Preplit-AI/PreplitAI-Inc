@@ -6,10 +6,10 @@ export const HowItWorks = () => {
   const isKo = language === "ko";
 
   return (
-    <section id="how-it-works" className="bg-[#f8f9fa] dark:bg-[#0c0c0c] py-12 sm:py-16 px-4 border-t border-black/[0.04] dark:border-white/[0.04] overflow-hidden">
+    <section id="how-it-works" className="bg-[#f8f9fa] dark:bg-[#0c0c0c] py-6 sm:py-10 px-4 border-t border-black/[0.04] dark:border-white/[0.04] overflow-hidden">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col justify-center items-center text-center px-4 mb-8 sm:mb-10 gap-3">
+        <div className="flex flex-col justify-center items-center text-center px-4 mb-5 sm:mb-7 gap-2">
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -17,12 +17,12 @@ export const HowItWorks = () => {
             transition={{ duration: 0.5, type: "spring" as const, bounce: 0 }}
             className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.03em] text-[#111111] dark:text-white max-w-2xl leading-tight"
           >
-            {isKo ? "단순한 AI 챗봇 그 이상. 완성형 학업 워크스페이스." : "More than AI chat. A complete study workspace."}
+            {isKo ? "단순한 AI 챗봇 그 이상. 완성형 학업 워크스페이스." : "More than just an AI chat. A complete study workspace."}
           </motion.h2>
         </div>
 
         {/* Exactly 3 Clean White Cards (Grid Cols 1 on mobile, 3 on desktop) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {/* Card 1: Users / Profiles Illustration */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -31,8 +31,8 @@ export const HowItWorks = () => {
             transition={{ duration: 0.5, delay: 0.1, type: "spring" as const, bounce: 0 }}
             className="rounded-2xl bg-white dark:bg-[#141414] p-3 shadow-md shadow-black/[0.03] border border-neutral-200/80 dark:border-white/[0.08] hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
           >
-            {/* Custom High-Fidelity Vector Illustration Container (Matching Image 1 Card 1) */}
-            <div className="w-full rounded-xl bg-[#fafafa] dark:bg-neutral-900 h-[220px] sm:h-[240px] flex items-center justify-center p-4 overflow-hidden relative border border-neutral-100 dark:border-neutral-800">
+            {/* Custom High-Fidelity Vector Illustration Container */}
+            <div className="w-full rounded-xl bg-[#fafafa] dark:bg-neutral-900 h-[160px] sm:h-[190px] md:h-[230px] flex items-center justify-center p-3 sm:p-4 overflow-hidden relative border border-neutral-100 dark:border-neutral-800">
               <svg viewBox="0 0 300 200" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
                 {/* Left Card */}
                 <g opacity="0.85" transform="translate(15, 30)">
@@ -102,8 +102,8 @@ export const HowItWorks = () => {
             transition={{ duration: 0.5, delay: 0.2, type: "spring" as const, bounce: 0 }}
             className="rounded-2xl bg-white dark:bg-[#141414] p-3 shadow-md shadow-black/[0.03] border border-neutral-200/80 dark:border-white/[0.08] hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
           >
-            {/* Custom High-Fidelity Vector Illustration Container (Matching Image 1 Card 2) */}
-            <div className="w-full rounded-xl bg-[#fafafa] dark:bg-neutral-900 h-[220px] sm:h-[240px] flex items-center justify-center p-4 overflow-hidden relative border border-neutral-100 dark:border-neutral-800">
+            {/* Custom High-Fidelity Vector Illustration Container */}
+            <div className="w-full rounded-xl bg-[#fafafa] dark:bg-neutral-900 h-[160px] sm:h-[190px] md:h-[230px] flex items-center justify-center p-3 sm:p-4 overflow-hidden relative border border-neutral-100 dark:border-neutral-800">
               <svg viewBox="0 0 300 200" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
                 {/* Center Phone Device */}
                 <g transform="translate(105, 10)">
@@ -168,8 +168,8 @@ export const HowItWorks = () => {
             transition={{ duration: 0.5, delay: 0.3, type: "spring" as const, bounce: 0 }}
             className="rounded-2xl bg-white dark:bg-[#141414] p-3 shadow-md shadow-black/[0.03] border border-neutral-200/80 dark:border-white/[0.08] hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
           >
-            {/* Custom High-Fidelity Vector Illustration Container (Matching Image 1 Card 3) */}
-            <div className="w-full rounded-xl bg-[#fafafa] dark:bg-neutral-900 h-[220px] sm:h-[240px] flex items-center justify-center p-4 overflow-hidden relative border border-neutral-100 dark:border-neutral-800">
+            {/* Custom High-Fidelity Vector Illustration Container */}
+            <div className="w-full rounded-xl bg-[#fafafa] dark:bg-neutral-900 h-[160px] sm:h-[190px] md:h-[230px] flex items-center justify-center p-3 sm:p-4 overflow-hidden relative border border-neutral-100 dark:border-neutral-800">
               <svg viewBox="0 0 300 200" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
                 {/* Calendar Grid Frame */}
                 <g transform="translate(30, 25)">

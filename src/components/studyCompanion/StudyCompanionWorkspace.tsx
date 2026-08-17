@@ -70,6 +70,7 @@ export function StudyCompanionWorkspace() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authTab, setAuthTab] = useState<"login" | "signup">("login");
   const [isManageSubOpen, setIsManageSubOpen] = useState(false);
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
   const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
@@ -229,6 +230,11 @@ export function StudyCompanionWorkspace() {
                   setIsMobileSidebarOpen(false);
                   setIsSettingsOpen(true);
                 }}
+                onOpenAuth={(tab) => {
+                  setIsMobileSidebarOpen(false);
+                  setAuthTab(tab);
+                  setIsAuthOpen(true);
+                }}
               />
             </div>
           </div>
@@ -241,6 +247,10 @@ export function StudyCompanionWorkspace() {
             onTabChange={setNavTab}
             onOpenManagePlan={() => setIsManageSubOpen(true)}
             onOpenSettings={() => setIsSettingsOpen(true)}
+            onOpenAuth={(tab) => {
+              setAuthTab(tab);
+              setIsAuthOpen(true);
+            }}
           />
         </div>
 
@@ -468,7 +478,7 @@ export function StudyCompanionWorkspace() {
         />
       )}
 
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} defaultTab={authTab} />
       <ManageSubscriptionModal
         isOpen={isManageSubOpen}
         onClose={() => setIsManageSubOpen(false)}

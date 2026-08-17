@@ -160,14 +160,58 @@ export const TopNav = () => {
                   >
                     GKS PREP
                   </Link>
-                  <div className="pt-4 border-t border-slate-100 dark:border-white/10 mt-2">
+                  {/* Mobile Auth & Action Buttons */}
+                  <div className="pt-4 border-t border-slate-100 dark:border-white/10 mt-2 space-y-2">
+                    {user ? (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-neutral-900 rounded-xl">
+                          <User className="w-4 h-4 text-[#550000]" />
+                          <span className="text-xs font-semibold truncate text-neutral-800 dark:text-white">
+                            {user.email}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            logout();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="w-full py-2 rounded-xl text-xs font-semibold text-red-600 border border-red-200 dark:border-red-950 hover:bg-red-50 text-center"
+                        >
+                          {isKo ? "로그아웃" : "Log out"}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => {
+                            setAuthTab("login");
+                            setShowAuthModal(true);
+                            setMobileMenuOpen(false);
+                          }}
+                          className="w-full py-2.5 rounded-full border border-slate-300 dark:border-neutral-700 text-xs font-semibold text-neutral-800 dark:text-white text-center"
+                        >
+                          {isKo ? "로그인" : "Log In"}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setAuthTab("signup");
+                            setShowAuthModal(true);
+                            setMobileMenuOpen(false);
+                          }}
+                          className="w-full py-2.5 rounded-full bg-[#550000] text-white text-xs font-semibold text-center shadow-xs"
+                        >
+                          {isKo ? "가입하기" : "Sign Up"}
+                        </button>
+                      </div>
+                    )}
+
                     <Link
                       to="/preplitai-chat"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center justify-center gap-1 w-full py-2.5 rounded-full bg-[#111] text-white text-sm font-semibold"
+                      className="flex items-center justify-center gap-1 w-full py-2.5 rounded-full bg-[#111] text-white text-xs font-semibold shadow-xs"
                     >
-                      <span>Start</span>
-                      <ArrowUpRight className="w-4 h-4" />
+                      <span>{isKo ? "워크스페이스 시작" : "Start Workspace"}</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                 </div>
