@@ -118,12 +118,6 @@ const Pricing = () => {
       {/* Hero */}
       <section className="pt-16 sm:pt-32 pb-12 sm:pb-14 px-4 sm:px-6 text-center">
         <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#550000]/8 dark:bg-[#550000]/20 border border-[#550000]/20 dark:border-[#550000]/30 mb-6">
-            <span className="text-[13px] font-medium text-[#550000] dark:text-[#ffaaaa]">
-              {isKo ? '대학생 맞춤형 요금제' : 'Built for Student Budgets'}
-            </span>
-          </div>
-          
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-black dark:text-white mb-5">
             {isKo ? '투명하고 부담 없는 학업 요금제.' : 'Simple, student-first pricing.'}
           </h1>

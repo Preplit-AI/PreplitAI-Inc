@@ -58,14 +58,6 @@ export default function GKSPlatform() {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-12 sm:pb-16 text-center sm:text-left">
-        
-        {/* TOP BRAND BADGE */}
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-800 dark:text-gray-200">
-            <span>{isKo ? 'Preplit AI × GKS2026 Prep 지원 & 가이드 플랫폼' : 'Preplit AI × GKS2026 Prep Application Support & Guidance'}</span>
-          </div>
-        </div>
-
         {/* HERO SECTION */}
         <div className="text-center max-w-4xl mx-auto space-y-6">
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.12]">

@@ -17,11 +17,6 @@ export const ClosingCtaBanner = () => {
           <div className="flex min-h-[280px] w-full flex-col justify-between gap-8 md:min-h-[300px] md:flex-row md:items-center">
             {/* Left Content */}
             <div className="max-w-[34rem]">
-              {/* Badge */}
-              <span className="inline-block rounded-full border border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/60 px-3.5 py-1 text-xs font-semibold text-neutral-800 dark:text-white backdrop-blur-sm mb-4">
-                {isKo ? "PreplitAI 후원 및 지원" : "Sponsor PreplitAI"}
-              </span>
-
               {/* Headline */}
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-neutral-950 dark:text-white leading-[1.1] mb-4">
                 {isKo ? (

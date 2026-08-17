@@ -204,54 +204,42 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
               </div>
             </div>
 
-            {/* Right 2x2 Metric Cards */}
+            {/* Right 2x2 Metric Cards (Clean without icon boxes) */}
             <div className="lg:col-span-6 grid grid-cols-2 gap-2.5 border-t lg:border-t-0 lg:border-l border-slate-100 dark:border-neutral-800 pt-3 lg:pt-0 lg:pl-5">
               {/* Stat 1 */}
-              <div className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50/50 dark:bg-neutral-800/30">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-600 flex items-center justify-center shrink-0">
-                  <Clock className="w-4 h-4" />
+              <div className="p-3 rounded-xl bg-slate-50/60 dark:bg-neutral-800/30 flex flex-col justify-between">
+                <p className="text-[10.5px] font-medium text-neutral-400 leading-none">Study Time</p>
+                <div className="my-1">
+                  <p className="text-base font-bold text-neutral-900 dark:text-white leading-tight">28h 34m</p>
                 </div>
-                <div>
-                  <p className="text-[10px] font-medium text-neutral-400 leading-none">Study Time</p>
-                  <p className="text-sm font-bold text-neutral-900 dark:text-white leading-tight mt-0.5">28h 34m</p>
-                  <p className="text-[9.5px] text-neutral-400 leading-none">This Course</p>
-                </div>
+                <p className="text-[9.5px] text-neutral-400 leading-none">This Course</p>
               </div>
 
               {/* Stat 2 */}
-              <div className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50/50 dark:bg-neutral-800/30">
-                <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center shrink-0">
-                  <CheckCircle2 className="w-4 h-4" />
+              <div className="p-3 rounded-xl bg-slate-50/60 dark:bg-neutral-800/30 flex flex-col justify-between">
+                <p className="text-[10.5px] font-medium text-neutral-400 leading-none">Topics Mastered</p>
+                <div className="my-1">
+                  <p className="text-base font-bold text-neutral-900 dark:text-white leading-tight">18 / 24</p>
                 </div>
-                <div>
-                  <p className="text-[10px] font-medium text-neutral-400 leading-none">Topics Mastered</p>
-                  <p className="text-sm font-bold text-neutral-900 dark:text-white leading-tight mt-0.5">18 / 24</p>
-                  <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">+3 this week</p>
-                </div>
+                <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">+3 this week</p>
               </div>
 
               {/* Stat 3 */}
-              <div className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50/50 dark:bg-neutral-800/30">
-                <div className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/50 text-[#550000] flex items-center justify-center shrink-0">
-                  <Target className="w-4 h-4" />
+              <div className="p-3 rounded-xl bg-slate-50/60 dark:bg-neutral-800/30 flex flex-col justify-between">
+                <p className="text-[10.5px] font-medium text-neutral-400 leading-none">Practice Score</p>
+                <div className="my-1">
+                  <p className="text-base font-bold text-neutral-900 dark:text-white leading-tight">87%</p>
                 </div>
-                <div>
-                  <p className="text-[10px] font-medium text-neutral-400 leading-none">Practice Score</p>
-                  <p className="text-sm font-bold text-neutral-900 dark:text-white leading-tight mt-0.5">87%</p>
-                  <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">+10%</p>
-                </div>
+                <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">+10%</p>
               </div>
 
               {/* Stat 4 */}
-              <div className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50/50 dark:bg-neutral-800/30">
-                <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/50 text-amber-600 flex items-center justify-center shrink-0">
-                  <BookOpen className="w-4 h-4" />
+              <div className="p-3 rounded-xl bg-slate-50/60 dark:bg-neutral-800/30 flex flex-col justify-between">
+                <p className="text-[10.5px] font-medium text-neutral-400 leading-none">Flashcards</p>
+                <div className="my-1">
+                  <p className="text-base font-bold text-neutral-900 dark:text-white leading-tight">243</p>
                 </div>
-                <div>
-                  <p className="text-[10px] font-medium text-neutral-400 leading-none">Flashcards</p>
-                  <p className="text-sm font-bold text-neutral-900 dark:text-white leading-tight mt-0.5">243</p>
-                  <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">+32</p>
-                </div>
+                <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">+32</p>
               </div>
             </div>
           </div>
@@ -284,36 +272,25 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
                 <div
                   key={space.id}
                   onClick={() => onSelectSpace(space.id)}
-                  className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                     isActive
                       ? "bg-rose-50/40 dark:bg-rose-950/20 border-[#550000]/40 dark:border-rose-900/60 shadow-xs ring-1 ring-[#550000]/20"
                       : "bg-white dark:bg-[#121212] border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 hover:shadow-2xs"
                   }`}
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                        isActive
-                          ? "bg-[#550000] text-white"
-                          : "bg-slate-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300"
-                      }`}
-                    >
-                      <BookOpen className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="text-xs font-bold text-neutral-900 dark:text-white truncate">
-                        {space.name}
-                      </h4>
-                      <p className="text-[10px] text-neutral-400 mt-0.5 truncate">
-                        {isActive
-                          ? isKo
-                            ? "현재 활성 공간"
-                            : "Active Workspace"
-                          : isKo
-                          ? "클릭하여 전환"
-                          : "Click to open"}
-                      </p>
-                    </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-neutral-900 dark:text-white truncate">
+                      {space.name}
+                    </h4>
+                    <p className="text-[10.5px] text-neutral-400 mt-0.5 truncate">
+                      {isActive
+                        ? isKo
+                          ? "현재 활성 공간"
+                          : "Active Workspace"
+                        : isKo
+                        ? "클릭하여 전환"
+                        : "Click to open"}
+                    </p>
                   </div>
 
                   {isActive && (
@@ -326,11 +303,9 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
             {/* Create New Workspace Card */}
             <button
               onClick={onCreateSpace}
-              className="p-3.5 rounded-2xl border border-dashed border-slate-300 dark:border-neutral-700 hover:border-[#550000]/60 dark:hover:border-rose-500/60 hover:bg-rose-50/20 dark:hover:bg-rose-950/10 transition-all flex items-center justify-center gap-2 text-xs font-bold text-neutral-600 dark:text-neutral-300 hover:text-[#550000] dark:hover:text-[#f87171] group"
+              className="p-4 rounded-2xl border border-dashed border-slate-300 dark:border-neutral-700 hover:border-[#550000]/60 dark:hover:border-rose-500/60 hover:bg-rose-50/20 dark:hover:bg-rose-950/10 transition-all flex items-center justify-center gap-2 text-xs font-bold text-neutral-600 dark:text-neutral-300 hover:text-[#550000] dark:hover:text-[#f87171] group"
             >
-              <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-neutral-800 group-hover:bg-[#550000] group-hover:text-white flex items-center justify-center transition-colors">
-                <Plus className="w-4 h-4" />
-              </div>
+              <Plus className="w-4 h-4 text-neutral-400 group-hover:text-[#550000] dark:group-hover:text-[#f87171] transition-colors" />
               <span>{isKo ? "새 워크스페이스 추가" : "Create Workspace"}</span>
             </button>
           </div>
@@ -385,12 +360,12 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
         </div>
       </div>
 
-      {/* Right Sidebar Column */}
-      <div className="w-full lg:w-[280px] xl:w-[300px] bg-white dark:bg-[#0e0e0e] border-t lg:border-t-0 lg:border-l border-slate-200/80 dark:border-white/10 p-4 sm:p-5 space-y-4 shrink-0 flex flex-col justify-between overflow-y-auto">
-        {/* Widget 1: Focus Session (Maroon Timer Gauge) */}
-        <div className="rounded-2xl border border-slate-200/80 dark:border-white/10 p-3.5 bg-white dark:bg-[#121212] text-center shadow-xs">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
+      {/* Right Sidebar Column (Fixed Unscrollable 100vh fit) */}
+      <div className="w-full lg:w-[250px] xl:w-[260px] bg-white dark:bg-[#0e0e0e] border-t lg:border-t-0 lg:border-l border-slate-200/80 dark:border-white/10 p-3 sm:p-3.5 shrink-0 flex flex-col justify-between overflow-hidden h-full">
+        {/* Widget 1: Focus Session (Compact Maroon Timer Gauge) */}
+        <div className="rounded-xl border border-slate-200/80 dark:border-white/10 p-2.5 bg-white dark:bg-[#121212] text-center shadow-xs">
+          <div className="flex items-center justify-between mb-1">
+            <h4 className="text-[10px] font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
               Focus Session
             </h4>
             <button
@@ -403,40 +378,40 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
           </div>
 
           {/* Circular Progress Gauge */}
-          <div className="relative w-28 h-28 mx-auto flex items-center justify-center my-1">
+          <div className="relative w-18 h-18 mx-auto flex items-center justify-center my-0.5">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
               <circle
                 cx="50"
                 cy="50"
-                r="42"
+                r="40"
                 className="stroke-slate-100 dark:stroke-neutral-800"
-                strokeWidth="6"
+                strokeWidth="7"
                 fill="transparent"
               />
               <circle
                 cx="50"
                 cy="50"
-                r="42"
+                r="40"
                 className="stroke-[#550000]"
-                strokeWidth="6"
-                strokeDasharray={264}
-                strokeDashoffset={264 - (264 * focusSeconds) / (25 * 60)}
+                strokeWidth="7"
+                strokeDasharray={251.2}
+                strokeDashoffset={251.2 - (251.2 * focusSeconds) / (25 * 60)}
                 strokeLinecap="round"
                 fill="transparent"
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xl font-bold font-mono text-neutral-900 dark:text-white">
+              <span className="text-sm font-bold font-mono text-neutral-900 dark:text-white leading-none">
                 {formatTime(focusSeconds)}
               </span>
-              <span className="text-[9.5px] text-neutral-400 font-medium">Deep Focus</span>
+              <span className="text-[8px] text-neutral-400 font-medium mt-0.5">Deep Focus</span>
             </div>
           </div>
 
           {/* Button in Maroon */}
           <button
             onClick={toggleFocus}
-            className={`w-full py-2 rounded-xl font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 mt-2.5 ${
+            className={`w-full py-1.5 rounded-lg font-bold text-[10.5px] shadow-xs transition-all flex items-center justify-center gap-1 mt-1.5 ${
               isFocusActive
                 ? "bg-amber-500 hover:bg-amber-600 text-white"
                 : "bg-[#550000] hover:bg-[#3d0000] text-white"
@@ -445,7 +420,7 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
             {isFocusActive ? (
               <>
                 <Pause className="w-3 h-3" />
-                <span>Pause Session</span>
+                <span>Pause</span>
               </>
             ) : (
               <>
@@ -454,32 +429,32 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
               </>
             )}
           </button>
-          <p className="text-[10px] text-neutral-400 mt-1.5 font-normal">
+          <p className="text-[9px] text-neutral-400 mt-1 font-normal">
             Work with focus. Achieve more.
           </p>
         </div>
 
         {/* Widget 2: Today's Plan */}
-        <div className="space-y-2">
-          <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
+        <div className="space-y-1">
+          <h4 className="text-[10px] font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
             Today's Plan
           </h4>
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             {tasks.map((task) => (
               <div
                 key={task.id}
                 onClick={() => toggleTask(task.id)}
-                className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-800/50 cursor-pointer transition-colors"
+                className="flex items-center gap-2 p-1 rounded-md hover:bg-slate-50 dark:hover:bg-neutral-800/50 cursor-pointer transition-colors"
               >
                 {task.done ? (
                   <div className="w-3.5 h-3.5 rounded-full bg-[#550000] text-white flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-3 h-3 text-white" />
+                    <CheckCircle2 className="w-2.5 h-2.5 text-white" />
                   </div>
                 ) : (
                   <Circle className="w-3.5 h-3.5 text-neutral-300 dark:text-neutral-600 shrink-0" />
                 )}
                 <span
-                  className={`text-[11.5px] truncate ${
+                  className={`text-[11px] truncate ${
                     task.done
                       ? "line-through text-neutral-400"
                       : "text-neutral-800 dark:text-neutral-200 font-medium"
@@ -493,42 +468,34 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
         </div>
 
         {/* Widget 3: Upcoming */}
-        <div className="space-y-2 border-t border-slate-100 dark:border-neutral-800/80 pt-3">
-          <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
+        <div className="space-y-1.5 border-t border-slate-100 dark:border-neutral-800/80 pt-2">
+          <h4 className="text-[10px] font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
             Upcoming
           </h4>
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div className="flex items-start gap-2 text-xs">
-              <CalendarIcon className="w-3.5 h-3.5 text-neutral-400 shrink-0 mt-0.5" />
+              <CalendarIcon className="w-3 h-3 text-neutral-400 shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold text-neutral-900 dark:text-white text-[11.5px] leading-tight">DSA Quiz</p>
-                <p className="text-[10px] text-neutral-400">Tomorrow, 10:00 AM</p>
+                <p className="font-bold text-neutral-900 dark:text-white text-[10.5px] leading-tight">DSA Quiz</p>
+                <p className="text-[9px] text-neutral-400">Tomorrow, 10:00 AM</p>
               </div>
             </div>
             <div className="flex items-start gap-2 text-xs">
-              <CalendarIcon className="w-3.5 h-3.5 text-neutral-400 shrink-0 mt-0.5" />
+              <CalendarIcon className="w-3 h-3 text-neutral-400 shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold text-neutral-900 dark:text-white text-[11.5px] leading-tight">Lecture 13</p>
-                <p className="text-[10px] text-neutral-400">Tomorrow, 2:00 PM</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-2 text-xs">
-              <CalendarIcon className="w-3.5 h-3.5 text-neutral-400 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-bold text-neutral-900 dark:text-white text-[11.5px] leading-tight">Office Hours</p>
-                <p className="text-[10px] text-neutral-400">Fri, 11:00 AM</p>
+                <p className="font-bold text-neutral-900 dark:text-white text-[10.5px] leading-tight">Lecture 13</p>
+                <p className="text-[9px] text-neutral-400">Tomorrow, 2:00 PM</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Widget 4: Motivational Quote Card in Maroon tint */}
-        <div className="rounded-xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 p-3">
-          <span className="text-xl font-serif text-[#550000] dark:text-rose-400 leading-none block mb-0.5">“</span>
-          <p className="text-[11.5px] font-bold text-neutral-900 dark:text-white leading-snug">
-            Consistent today, exceptional tomorrow.
+        <div className="rounded-lg bg-rose-50/50 dark:bg-rose-950/20 border border-rose-100/80 dark:border-rose-900/30 p-2">
+          <p className="text-[10.5px] font-bold text-neutral-900 dark:text-white leading-snug">
+            “Consistent today, exceptional tomorrow.”
           </p>
-          <p className="text-[10.5px] text-[#550000] dark:text-rose-400 font-semibold mt-1.5">
+          <p className="text-[9px] text-[#550000] dark:text-rose-400 font-semibold mt-0.5">
             Keep going.
           </p>
         </div>
