@@ -111,29 +111,29 @@ export const Hero = () => {
           className="w-full max-w-5xl rounded-[32px] bg-neutral-950 text-white border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.35)] overflow-hidden text-left p-2 sm:p-3 mb-16 sm:mb-24"
         >
           {/* Window Chrome Title Bar */}
-          <div className="bg-neutral-900 rounded-2xl px-4 py-3 border border-white/5 flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div className="bg-neutral-900 rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 border border-white/5 flex items-center justify-between gap-3 mb-3 overflow-x-auto no-scrollbar">
             {/* Traffic Light Dots & URL */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
                 <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
                 <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
               </div>
-              <span className="font-mono text-[11.5px] text-neutral-400">preplitai.com/workspace</span>
+              <span className="font-mono text-[11px] sm:text-[11.5px] text-neutral-400">preplitai.com/workspace</span>
             </div>
 
             {/* Top Right Tool Tabs Pill */}
-            <div className="flex items-center gap-1 bg-white/10 p-1 rounded-full text-xs font-semibold">
-              <div className="flex items-center gap-1.5 bg-neutral-800 text-white px-3 py-1 rounded-full shadow-xs">
-                <Clock className="w-3.5 h-3.5 text-[#f87171]" />
+            <div className="flex items-center gap-1 bg-white/10 p-1 rounded-full text-xs font-semibold shrink-0">
+              <div className="flex items-center gap-1.5 bg-neutral-800 text-white px-2.5 sm:px-3 py-1 rounded-full shadow-xs text-[11px] sm:text-xs">
+                <Clock className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-[#f87171]" />
                 <span>Focus Timer</span>
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1 text-neutral-400">
-                <BarChart3 className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 text-neutral-400 text-[11px] sm:text-xs">
+                <BarChart3 className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
                 <span>Analytics</span>
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1 text-neutral-400">
-                <Trophy className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 text-neutral-400 text-[11px] sm:text-xs">
+                <Trophy className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
                 <span>Leaderboard</span>
               </div>
             </div>

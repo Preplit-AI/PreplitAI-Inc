@@ -224,7 +224,7 @@ export const WorkspaceTeaserSection = () => {
             </div>
 
             {/* Interactive Heatmap Widget */}
-            <div className="bg-white/90 dark:bg-[#2b1f14] p-4 rounded-2xl border border-orange-200/50 dark:border-amber-900/40">
+            <div className="bg-white/90 dark:bg-[#2b1f14] p-4 rounded-2xl border border-orange-200/50 dark:border-amber-900/40 overflow-x-auto no-scrollbar">
               <div className="flex gap-2">
                 <div className="flex flex-col justify-between text-[9px] text-neutral-400 font-semibold pr-1">
                   <span>M</span>
