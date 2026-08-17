@@ -238,7 +238,7 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
                 <div>
                   <p className="text-[10px] font-medium text-neutral-400 leading-none">Practice Score</p>
                   <p className="text-sm font-bold text-neutral-900 dark:text-white leading-tight mt-0.5">87%</p>
-                  <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">▲ 10%</p>
+                  <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">+10%</p>
                 </div>
               </div>
 
@@ -250,7 +250,7 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
                 <div>
                   <p className="text-[10px] font-medium text-neutral-400 leading-none">Flashcards</p>
                   <p className="text-sm font-bold text-neutral-900 dark:text-white leading-tight mt-0.5">243</p>
-                  <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">▲ 32</p>
+                  <p className="text-[9.5px] text-emerald-600 font-semibold leading-none">+32</p>
                 </div>
               </div>
             </div>
