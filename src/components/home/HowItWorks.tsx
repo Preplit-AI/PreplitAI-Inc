@@ -94,11 +94,11 @@ export const HowItWorks = () => {
 
             {/* Bottom Content */}
             <div className="px-4 py-3.5">
-              <h3 className="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">
-                620+
+              <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">
+                {isKo ? "협업 모드" : "Collaborative mode."}
               </h3>
-              <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mt-0.5">
-                {isKo ? "가입된 대학생 및 사용자" : "Register User"}
+              <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mt-1">
+                {isKo ? "학우들의 학습 현황을 확인하고 자료를 공유하세요" : "See what your classmates progress & share material"}
               </p>
             </div>
           </motion.div>
