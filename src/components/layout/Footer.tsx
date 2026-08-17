@@ -19,7 +19,7 @@ export const Footer = () => {
               <p className="text-sm text-[#666666] dark:text-[#999999] max-w-sm leading-relaxed mb-6 font-normal">
                 {isKo
                   ? "대학생을 위한 AI 기반 몰입 스터디 워크스페이스. 출처 인용 챗, 퀴즈, 플래시카드, 시험 예측 도구로 학습을 체계화하세요."
-                  : "A complete learning workspace built for focused study, grounded AI chat, spaced flashcards, practice quizzes, and exam predictions."}
+                  : "A complete learning workspace for focused study, practice, & exam prep all in one place."}
               </p>
             </div>
             {/* Social handles */}
