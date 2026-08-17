@@ -1,18 +1,9 @@
-import {
-  User,
-  LogOut,
-  Menu,
-  LayoutDashboard,
-  Settings,
-  Globe,
-  ArrowRight,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { User, LogOut, Menu, LayoutDashboard, ArrowUpRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AuthModal } from "@/components/auth/AuthModal";
-import { CreditBadge } from "@/components/credits/CreditBadge";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,254 +11,173 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useLocation } from "react-router-dom";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 export const TopNav = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
-  const { language, toggleLanguage } = useLanguage();
+  const { language } = useLanguage();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<"login" | "signup">("login");
-  const [gksMenuOpen, setGksMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 15);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   if (location.pathname === "/preplitai-chat") {
     return null;
   }
 
-  const isKo = language === 'ko';
+  const isKo = language === "ko";
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-gray-200/60 dark:border-white/10 transition-all duration-300">
-        <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between">
-          {/* Left: Logo */}
-          <a href="/" className="flex items-center gap-2 group shrink-0">
-            <img src="/logo.png" alt="PreplitAI Logo" className="h-9 w-auto transition-transform group-hover:scale-105 dark:drop-shadow-[0_0_1px_rgba(255,255,255,1)]" />
-            <span className="text-[17px] font-semibold tracking-tight text-black dark:text-white">PreplitAI</span>
-          </a>
+      <header className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+        <nav
+          className={`pointer-events-auto flex items-center justify-between gap-4 px-6 py-2.5 rounded-full border transition-all duration-300 ${
+            scrolled
+              ? "bg-white/95 dark:bg-[#111111]/95 backdrop-blur-xl border-black/[0.08] dark:border-white/[0.08] shadow-[0_10px_30px_rgba(0,0,0,0.06)]"
+              : "bg-white dark:bg-[#121212] border-black/[0.06] dark:border-white/[0.06] shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
+          } max-w-[840px] w-full`}
+        >
+          {/* Brand Logo on Left */}
+          <Link to="/" className="flex items-center gap-2 group shrink-0 py-0.5">
+            <img
+              src="/logo.png"
+              alt="PreplitAI Logo"
+              className="h-8 w-auto object-contain hover:opacity-90 transition-opacity"
+            />
+          </Link>
 
-          {/* Center: Clean Simple Navigation Links (desktop) */}
-          <nav className="hidden md:flex items-center gap-1">
-            <div 
-              className="relative py-2"
-              onMouseEnter={() => setGksMenuOpen(true)}
-              onMouseLeave={() => setGksMenuOpen(false)}
-            >
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setGksMenuOpen(!gksMenuOpen);
-                }}
-                className="text-[14px] font-semibold px-3 py-1.5 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>GKS2026 Prep</span>
-                <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gray-900 dark:bg-white text-white dark:text-black">NEW</span>
-                <span className="text-[10px] text-gray-500 ml-0.5">{gksMenuOpen ? '▲' : '▼'}</span>
-              </button>
+          {/* Center Links (FEATURES, PREVIEW, PROOF / PRICING in clean uppercase) */}
+          <div className="hidden md:flex items-center gap-7 text-[11.5px] font-bold tracking-widest text-[#555555] dark:text-[#888888] uppercase">
+            <Link to="/features" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+              {isKo ? "기능" : "FEATURES"}
+            </Link>
+            <a href="/#how-it-works" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+              {isKo ? "미리보기" : "PREVIEW"}
+            </a>
+            <Link to="/pricing" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+              {isKo ? "요금제" : "PRICING"}
+            </Link>
+            <Link to="/gks" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+              GKS PREP
+            </Link>
+          </div>
 
-              {/* CONTINUOUS HOVER ZONE WRAPPER (NO GAP PIXELS) */}
-              {gksMenuOpen && (
-                <div className="absolute top-full left-0 pt-1 w-64 z-50">
-                  <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-2">
-                    <a href="/gks/dashboard" className="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
-                      <div className="font-bold text-gray-900 dark:text-white">{isKo ? 'GKS2026 AI 워크스페이스' : 'GKS2026 AI Workbench'}</div>
-                      <div className="text-[11px] text-gray-500 dark:text-gray-400 font-normal mt-0.5">{isKo ? '서류 종합 분석 & 준비도 점수' : 'Dossier review & readiness score'}</div>
-                    </a>
-                    <a href="/gks/scholar-materials" className="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors mt-1">
-                      <div className="font-bold text-gray-900 dark:text-white">{isKo ? '합격자 샘플 서류 자료실' : 'Scholar Materials Library'}</div>
-                      <div className="text-[11px] text-gray-500 dark:text-gray-400 font-normal mt-0.5">{isKo ? '역대 장학생 합격 서류 & 가이드' : 'Past scholars sample essays'}</div>
-                    </a>
-                    <a href="/gks/alumni-review" className="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors mt-1">
-                      <div className="font-bold text-gray-900 dark:text-white">{isKo ? '1:1 동문 첨삭 신청' : '1-on-1 Alumni Review'}</div>
-                      <div className="text-[11px] text-gray-500 dark:text-gray-400 font-normal mt-0.5">{isKo ? '장학생 출신 48시간 맞춤 피드백' : '48-hour scholar manual review'}</div>
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
-            <a href="/features" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-              {isKo ? '기능' : 'Features'}
-            </a>
-            <a href="/preplitai-chat" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-              {isKo ? '강의 녹음' : 'Lecture Buddy'}
-            </a>
-            <a href="/pricing" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-              {isKo ? '요금제' : 'Pricing'}
-            </a>
-            <a href="/about" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-              {isKo ? '소개' : 'About'}
-            </a>
-            <a href="/blog" className="text-[14px] font-medium px-3.5 py-2 rounded-lg text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-              {isKo ? '블로그' : 'Blog'}
-            </a>
-          </nav>
-
-          {/* Right: Actions (desktop) */}
-          <div className="hidden md:flex items-center gap-3">
-            {/* KR | EN Language Switcher Toggle */}
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/10 hover:bg-gray-100 dark:hover:bg-white/20 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
-              title="Switch Language (한국어 / English)"
-            >
-              <Globe className="w-3.5 h-3.5 text-black dark:text-white" />
-              <span className={isKo ? 'text-black dark:text-white font-bold' : 'text-gray-400 dark:text-gray-500'}>KR</span>
-              <span className="text-gray-300 dark:text-gray-600">|</span>
-              <span className={!isKo ? 'text-black dark:text-white font-bold' : 'text-gray-400 dark:text-gray-500'}>EN</span>
-            </button>
-
-            {user && <CreditBadge />}
-
+          {/* Right Action Buttons */}
+          <div className="flex items-center gap-2.5">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white">
-                    <User className="h-4 w-4 mr-2" />
-                    <span className="max-w-[120px] truncate">{user.name}</span>
-                  </Button>
+                  <button className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[#111] dark:text-white text-xs font-semibold hover:bg-slate-200">
+                    <User className="w-3.5 h-3.5" />
+                    <span className="max-w-[90px] truncate">{user.email?.split("@")[0]}</span>
+                  </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
-                  <div className="flex items-center justify-start gap-2 p-2">
-                    <div className="flex flex-col space-y-1 leading-none">
-                      <p className="font-medium text-black dark:text-white">{user.name}</p>
-                      <p className="w-[200px] truncate text-sm text-gray-500">{user.email}</p>
-                    </div>
-                  </div>
-                  <DropdownMenuSeparator />
+                <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-[#1a1a1a] rounded-2xl p-1.5 shadow-xl border-black/[0.08]">
                   <DropdownMenuItem asChild>
-                    <a href="/preplitai-chat" className="cursor-pointer text-black dark:text-white">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      <span>{isKo ? 'AI 스터디 워크스페이스' : 'AI Study Workspace'}</span>
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="/settings" className="cursor-pointer text-black dark:text-white">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>{isKo ? '계정 설정' : 'Account Settings'}</span>
-                    </a>
+                    <Link to="/preplitai-chat" className="flex items-center gap-2 text-xs py-2 px-3 rounded-xl cursor-pointer">
+                      <LayoutDashboard className="w-3.5 h-3.5" />
+                      {isKo ? "학습 워크스페이스" : "Workspace"}
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-600 dark:text-red-400">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>{isKo ? '로그아웃' : 'Logout'}</span>
+                  <DropdownMenuItem
+                    onClick={() => logout()}
+                    className="flex items-center gap-2 text-xs py-2 px-3 rounded-xl text-red-600 cursor-pointer"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    {isKo ? "로그아웃" : "Log out"}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  onClick={() => { setAuthTab("login"); setShowAuthModal(true); }}
-                  className="text-sm font-medium text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
-                >
-                  {isKo ? '로그인' : 'Log in'}
-                </Button>
-                <Button
-                  asChild
-                  className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black rounded-full font-medium text-sm px-4 h-9 shadow-sm"
-                >
-                  <a href="/preplitai-chat" className="flex items-center gap-1.5">
-                    <span>{isKo ? '워크스페이스 시작' : 'Launch Workspace'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </a>
-                </Button>
-              </div>
+              <button
+                onClick={() => {
+                  setAuthTab("login");
+                  setShowAuthModal(true);
+                }}
+                className="px-4 py-1.5 rounded-full text-slate-700 dark:text-slate-300 text-[13px] font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              >
+                {isKo ? "로그인" : "Log in"}
+              </button>
             )}
-          </div>
 
-          {/* Mobile menu trigger + KR/EN toggle */}
-          <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/10 text-xs font-semibold"
-              title="언어 변경 (KR / EN)"
+            {/* Solid Black Start Button with Arrow */}
+            <a
+              href="/preplitai-chat"
+              className="inline-flex items-center gap-1 px-5 py-2 rounded-full bg-[#111111] hover:bg-[#000000] text-white text-[13px] font-semibold transition-all duration-150 active:scale-[0.97] shadow-xs"
             >
-              <Globe className="w-3.5 h-3.5 text-black dark:text-white" />
-              <span className={isKo ? 'text-black dark:text-white font-bold' : 'text-gray-400'}>KR</span>
-              <span>|</span>
-              <span className={!isKo ? 'text-black dark:text-white font-bold' : 'text-gray-400'}>EN</span>
-            </button>
+              <span>{isKo ? "시작하기" : "Start"}</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
 
+            {/* Mobile Hamburger */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Open menu" className="text-black dark:text-white">
-                  <Menu className="h-5 w-5" />
-                </Button>
+                <button
+                  className="md:hidden p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-[#111111] dark:text-white transition-colors"
+                  aria-label="Toggle Menu"
+                >
+                  <Menu className="w-4 h-4" />
+                </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-full max-w-[100vw] bg-white dark:bg-gray-950 p-6 overflow-y-auto z-[90]">
-                <nav className="mt-4 space-y-2">
-                  <div className="p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 space-y-1">
-                    <a href="/gks" onClick={()=>setMobileMenuOpen(false)} className="block text-center font-bold text-sm text-black dark:text-white hover:underline py-1">
-                      GKS2026 Prep
-                    </a>
-                    <div className="grid grid-cols-1 gap-1 pt-1 border-t border-gray-200 dark:border-gray-800 text-xs">
-                      <a href="/gks/dashboard" onClick={()=>setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 text-center font-medium">
-                        {isKo ? 'AI 워크스페이스' : 'GKS2026 AI Workbench'}
-                      </a>
-                      <a href="/gks/scholar-materials" onClick={()=>setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 text-center font-medium">
-                        {isKo ? '합격자 샘플 서류 자료실' : 'Scholar Materials Library'}
-                      </a>
-                      <a href="/gks/alumni-review" onClick={()=>setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 text-center font-medium">
-                        {isKo ? '1:1 동문 서류 첨삭 신청' : '1-on-1 Alumni Review'}
-                      </a>
-                    </div>
+              <SheetContent side="right" className="w-[280px] bg-white dark:bg-[#111111] p-6">
+                <SheetTitle className="text-left font-bold text-lg mb-6">PreplitAI</SheetTitle>
+                <div className="flex flex-col gap-2">
+                  <Link
+                    to="/features"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2.5 rounded-xl text-sm font-medium text-[#555] dark:text-[#aaa] hover:bg-slate-100 dark:hover:bg-white/5"
+                  >
+                    FEATURES
+                  </Link>
+                  <a
+                    href="/#how-it-works"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2.5 rounded-xl text-sm font-medium text-[#555] dark:text-[#aaa] hover:bg-slate-100 dark:hover:bg-white/5"
+                  >
+                    PREVIEW
+                  </a>
+                  <Link
+                    to="/pricing"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2.5 rounded-xl text-sm font-medium text-[#555] dark:text-[#aaa] hover:bg-slate-100 dark:hover:bg-white/5"
+                  >
+                    PRICING
+                  </Link>
+                  <Link
+                    to="/gks"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2.5 rounded-xl text-sm font-medium text-[#555] dark:text-[#aaa] hover:bg-slate-100 dark:hover:bg-white/5"
+                  >
+                    GKS PREP
+                  </Link>
+                  <div className="pt-4 border-t border-slate-100 dark:border-white/10 mt-2">
+                    <Link
+                      to="/preplitai-chat"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-center gap-1 w-full py-2.5 rounded-full bg-[#111] text-white text-sm font-semibold"
+                    >
+                      <span>Start</span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
                   </div>
-
-                  <a href="/preplitai-chat" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-semibold text-white bg-black dark:bg-white dark:text-black hover:bg-gray-800 shadow-sm text-center">
-                    {isKo ? 'AI 학습 워크스페이스 시작' : 'Launch Workspace'}
-                  </a>
-                  <a href="/features" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
-                    {isKo ? '기능' : 'Features'}
-                  </a>
-                  <a href="/preplitai-chat" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
-                    {isKo ? '강의 녹음' : 'Lecture Buddy'}
-                  </a>
-                  <a href="/pricing" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
-                    {isKo ? '요금제' : 'Pricing'}
-                  </a>
-                  <a href="/about" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
-                    {isKo ? '소개' : 'About'}
-                  </a>
-                  <a href="/blog" onClick={()=>setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium">
-                    {isKo ? '블로그' : 'Blog'}
-                  </a>
-                </nav>
-
-                <div className="mt-6 border-t border-gray-200 dark:border-gray-800 pt-6">
-                  {user ? (
-                    <div className="space-y-3">
-                      <div className="px-2 text-sm text-gray-600 dark:text-gray-400">Signed in as</div>
-                      <div className="px-2 font-medium text-black dark:text-white">{user.name}</div>
-                      <Button onClick={() => { setMobileMenuOpen(false); logout(); }} className="w-full bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black">
-                        <LogOut className="h-4 w-4 mr-2" /> {isKo ? '로그아웃' : 'Logout'}
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
-                      <Button
-                        variant="outline"
-                        onClick={() => { setMobileMenuOpen(false); setAuthTab("login"); setShowAuthModal(true); }}
-                        className="border-gray-300 dark:border-gray-700"
-                      >
-                        {isKo ? '로그인' : 'Login'}
-                      </Button>
-                      <Button
-                        onClick={() => { setMobileMenuOpen(false); setAuthTab("signup"); setShowAuthModal(true); }}
-                        className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black"
-                      >
-                        {isKo ? '회원가입' : 'Sign Up'}
-                      </Button>
-                    </div>
-                  )}
                 </div>
               </SheetContent>
             </Sheet>
           </div>
-        </div>
+        </nav>
       </header>
-      <div className="h-16" />
+
+      {/* Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
