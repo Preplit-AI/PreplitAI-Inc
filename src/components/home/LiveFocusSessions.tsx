@@ -30,7 +30,7 @@ export const LiveFocusSessions = () => {
       name: "Data Structures & Algorithms",
       dept: "Computer Science",
       icon: Laptop,
-      iconColor: "text-purple-600 bg-purple-50 dark:bg-purple-950/50",
+      iconColor: "text-[#550000] bg-rose-50 dark:bg-rose-950/50",
       progress: 78,
       topics: "18 / 24 topics",
       streak: "12 days",
@@ -101,7 +101,7 @@ export const LiveFocusSessions = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#f4f0ff] dark:bg-purple-950/40 border border-[#e4d9ff] dark:border-purple-900/40 text-[#7e22ce] dark:text-purple-300 text-xs font-semibold shadow-2xs mb-1"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/40 text-[#550000] dark:text-rose-300 text-xs font-semibold shadow-2xs mb-1"
           >
             <GraduationCap className="w-3.5 h-3.5" />
             <span>Course Workspace</span>
@@ -144,7 +144,7 @@ export const LiveFocusSessions = () => {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100 dark:border-neutral-800">
             {/* Left: Active Course Identity */}
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#f4f0ff] dark:bg-purple-950/50 text-[#7e22ce] dark:text-purple-300 flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/50 text-[#550000] dark:text-rose-300 flex items-center justify-center shrink-0 shadow-2xs">
                 <BookOpen className="w-6 h-6" />
               </div>
               <div>
@@ -153,7 +153,7 @@ export const LiveFocusSessions = () => {
                     Data Structures & Algorithms
                   </h3>
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-[10.5px] font-bold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     Active Workspace
                   </span>
                 </div>
@@ -175,7 +175,7 @@ export const LiveFocusSessions = () => {
                     78%
                   </span>
                   <div className="w-36 h-2 bg-slate-100 dark:bg-neutral-800 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-[#7e22ce] to-[#9333ea] rounded-full w-[78%]" />
+                    <div className="h-full bg-[#550000] rounded-full w-[78%]" />
                   </div>
                 </div>
                 <span className="text-[10.5px] text-neutral-400 mt-1 block">
@@ -185,8 +185,8 @@ export const LiveFocusSessions = () => {
 
               {/* Streak Widget */}
               <div className="border-l border-slate-100 dark:border-neutral-800 pl-6 flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-500 flex items-center justify-center shrink-0">
-                  <Flame className="w-5 h-5 fill-amber-500 text-amber-500" />
+                <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-[#550000] dark:text-rose-300 flex items-center justify-center shrink-0">
+                  <Flame className="w-5 h-5 fill-[#550000] text-[#550000] dark:fill-rose-400 dark:text-rose-400" />
                 </div>
                 <div>
                   <p className="text-base font-bold text-neutral-900 dark:text-white leading-tight">
@@ -203,12 +203,12 @@ export const LiveFocusSessions = () => {
             {/* 4 KPI Metrics Grid (Col Span 8) */}
             <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-3.5">
               {/* KPI 1 */}
-              <div className="rounded-2xl bg-[#f4f0ff] dark:bg-[#1a1329] p-4 border border-[#e8ddff]/80 dark:border-purple-900/30 flex flex-col justify-between">
-                <div className="w-8 h-8 rounded-xl bg-white dark:bg-purple-900/50 text-[#7e22ce] dark:text-purple-300 flex items-center justify-center mb-3 shadow-2xs">
+              <div className="rounded-2xl bg-rose-50/50 dark:bg-rose-950/30 p-4 border border-rose-100 dark:border-rose-900/30 flex flex-col justify-between">
+                <div className="w-8 h-8 rounded-xl bg-white dark:bg-rose-900/50 text-[#550000] dark:text-rose-300 flex items-center justify-center mb-3 shadow-2xs">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-[11px] font-medium text-neutral-500 dark:text-purple-300/70">Study Time</p>
+                  <p className="text-[11px] font-medium text-neutral-500 dark:text-rose-300/70">Study Time</p>
                   <p className="text-xl font-bold text-neutral-900 dark:text-white mt-0.5 leading-tight">24h 36m</p>
                   <p className="text-[10px] text-neutral-400 mt-1">This Week</p>
                 </div>
@@ -254,20 +254,20 @@ export const LiveFocusSessions = () => {
               </div>
             </div>
 
-            {/* Weekly Progress Bar Chart (Col Span 4) */}
+            {/* Weekly Progress Bar Chart in Maroon */}
             <div className="lg:col-span-4 rounded-2xl border border-slate-200/80 dark:border-neutral-800 p-4 bg-slate-50/50 dark:bg-neutral-900/40 flex flex-col justify-between">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-bold text-neutral-800 dark:text-white">Weekly Progress</span>
                 <span className="text-[10px] text-neutral-400">Total 24.6 hrs</span>
               </div>
 
-              {/* Vertical Bars */}
+              {/* Vertical Bars in Maroon */}
               <div className="flex items-end justify-between h-28 pt-2 px-1">
                 {weeklyData.map((item, i) => (
                   <div key={i} className="flex flex-col items-center gap-1.5 flex-1 h-full justify-end">
                     <div className="w-5 bg-slate-100 dark:bg-neutral-800 rounded-md h-full flex items-end overflow-hidden p-0.5">
                       <div
-                        className="w-full bg-[#7e22ce] rounded-sm transition-all duration-500"
+                        className="w-full bg-[#550000] dark:bg-rose-600 rounded-sm transition-all duration-500"
                         style={{ height: item.height }}
                       />
                     </div>
@@ -291,7 +291,7 @@ export const LiveFocusSessions = () => {
                   onClick={() => setActiveFilter("all")}
                   className={`pb-1 border-b-2 transition-colors ${
                     activeFilter === "all"
-                      ? "border-[#7e22ce] text-[#7e22ce] font-bold"
+                      ? "border-[#550000] text-[#550000] dark:text-rose-400 font-bold"
                       : "border-transparent text-neutral-400 hover:text-neutral-700"
                   }`}
                 >
@@ -301,7 +301,7 @@ export const LiveFocusSessions = () => {
                   onClick={() => setActiveFilter("progress")}
                   className={`pb-1 border-b-2 transition-colors ${
                     activeFilter === "progress"
-                      ? "border-[#7e22ce] text-[#7e22ce] font-bold"
+                      ? "border-[#550000] text-[#550000] dark:text-rose-400 font-bold"
                       : "border-transparent text-neutral-400 hover:text-neutral-700"
                   }`}
                 >
@@ -311,7 +311,7 @@ export const LiveFocusSessions = () => {
                   onClick={() => setActiveFilter("completed")}
                   className={`pb-1 border-b-2 transition-colors ${
                     activeFilter === "completed"
-                      ? "border-[#7e22ce] text-[#7e22ce] font-bold"
+                      ? "border-[#550000] text-[#550000] dark:text-rose-400 font-bold"
                       : "border-transparent text-neutral-400 hover:text-neutral-700"
                   }`}
                 >
@@ -327,7 +327,7 @@ export const LiveFocusSessions = () => {
                 return (
                   <div
                     key={c.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-neutral-800 hover:border-purple-200 dark:hover:border-purple-900/40 hover:shadow-xs transition-all"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-neutral-800 hover:border-rose-200 dark:hover:border-rose-900/40 hover:shadow-xs transition-all"
                   >
                     {/* Course Identity */}
                     <div className="flex items-center gap-3.5 min-w-[220px]">
@@ -342,11 +342,11 @@ export const LiveFocusSessions = () => {
                       </div>
                     </div>
 
-                    {/* Progress Bar & Topics */}
+                    {/* Progress Bar & Topics in Maroon */}
                     <div className="flex items-center gap-3 flex-1 max-w-xs">
                       <div className="flex-1 h-2 bg-slate-100 dark:bg-neutral-800 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-[#7e22ce] rounded-full"
+                          className="h-full bg-[#550000] dark:bg-rose-600 rounded-full"
                           style={{ width: `${c.progress}%` }}
                         />
                       </div>
@@ -361,7 +361,7 @@ export const LiveFocusSessions = () => {
                     {/* Streak & Chats Metrics */}
                     <div className="flex items-center gap-5 shrink-0 text-xs">
                       <div className="flex items-center gap-1.5">
-                        <Flame className="w-4 h-4 text-amber-500 fill-amber-500" />
+                        <Flame className="w-4 h-4 text-[#550000] fill-[#550000] dark:text-rose-400 dark:fill-rose-400" />
                         <div>
                           <span className="font-bold text-neutral-900 dark:text-white leading-none block">
                             {c.streak}
@@ -371,7 +371,7 @@ export const LiveFocusSessions = () => {
                       </div>
 
                       <div className="flex items-center gap-1.5">
-                        <MessageSquare className="w-4 h-4 text-purple-500" />
+                        <MessageSquare className="w-4 h-4 text-[#550000] dark:text-rose-400" />
                         <div>
                           <span className="font-bold text-neutral-900 dark:text-white leading-none block">
                             {c.chats}
@@ -381,10 +381,10 @@ export const LiveFocusSessions = () => {
                       </div>
                     </div>
 
-                    {/* Open Workspace Action Button */}
+                    {/* Open Workspace Action Button in Maroon */}
                     <a
                       href="/preplitai-chat"
-                      className="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-[#f4f0ff] dark:bg-purple-950/40 hover:bg-[#ede6ff] text-[#7e22ce] dark:text-purple-300 font-bold text-xs shadow-2xs transition-all shrink-0 active:scale-95 text-center justify-center"
+                      className="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-rose-50/80 dark:bg-rose-950/40 hover:bg-rose-100 text-[#550000] dark:text-rose-300 font-bold text-xs shadow-2xs transition-all shrink-0 active:scale-95 text-center justify-center"
                     >
                       <span>Open Workspace</span>
                       <ChevronRight className="w-3.5 h-3.5" />
@@ -396,16 +396,16 @@ export const LiveFocusSessions = () => {
           </div>
 
           {/* Bottom Inside Banner */}
-          <div className="rounded-2xl bg-[#f4f0ff] dark:bg-[#1a1329] p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 border border-[#e8ddff] dark:border-purple-900/40">
+          <div className="rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 border border-rose-100 dark:border-rose-900/30">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-white dark:bg-purple-900/50 text-[#7e22ce] dark:text-purple-300 flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="w-10 h-10 rounded-xl bg-white dark:bg-rose-900/50 text-[#550000] dark:text-rose-300 flex items-center justify-center shrink-0 shadow-2xs">
                 <Trophy className="w-5 h-5" />
               </div>
               <div>
                 <h5 className="text-sm font-bold text-neutral-900 dark:text-white">
                   Study smarter. Not harder.
                 </h5>
-                <p className="text-xs text-neutral-500 dark:text-purple-300/70 mt-0.5">
+                <p className="text-xs text-neutral-500 dark:text-rose-300/70 mt-0.5">
                   Let PreplitAI track your progress and keep you on the right path.
                 </p>
               </div>
