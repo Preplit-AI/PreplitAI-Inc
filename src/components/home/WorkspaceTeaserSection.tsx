@@ -1,145 +1,364 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { MessageSquare, HelpCircle, BookOpen, FileText, Radio, Target, ArrowRight, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Flame, Clock, Zap, Trophy, Globe } from "lucide-react";
 
 export const WorkspaceTeaserSection = () => {
   const { language } = useLanguage();
   const isKo = language === "ko";
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const tools = [
-    { icon: MessageSquare, title: isKo ? "출처 인용 RAG 챗" : "Grounded RAG Chat", sub: isKo ? "페이지 인용 즉시 답변" : "Answers with page citations" },
-    { icon: HelpCircle, title: isKo ? "AI 퀴즈 생성" : "AI Quiz Generator", sub: isKo ? "실전 모의고사 자동 생성" : "Auto-generated practice exams" },
-    { icon: BookOpen, title: isKo ? "스마트 플래시카드" : "Smart Flashcards", sub: isKo ? "간격 반복 암기 카드" : "Spaced repetition decks" },
-    { icon: FileText, title: isKo ? "핵심 요약" : "Dense Summaries", sub: isKo ? "수백 페이지를 핵심만" : "Long readings, distilled" },
-    { icon: Radio, title: isKo ? "오디오 팟캐스트" : "Audio Podcasts", sub: isKo ? "AI 대화형 학습 라디오" : "Two-speaker AI discussions" },
-    { icon: Target, title: isKo ? "출제 예상 문제" : "Exam Predictions", sub: isKo ? "시험 출제 확률 분석" : "Likely questions, ranked" },
-  ];
+  // Interactive Countdown Timer State
+  const [hours, setHours] = useState(0);
+  const [mins, setMins] = useState(0);
+  const [secs, setSecs] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(10);
+  const [isRunning, setIsRunning] = useState(false);
 
-  const faqs = [
-    {
-      q: isKo ? "PreplitAI란 무엇인가요?" : "What is PreplitAI?",
-      a: isKo
-        ? "PreplitAI는 강의 슬라이드, PDF, 교재를 인터랙티브 학습 도구로 변환하는 AI 학업 파트너입니다. 출처 인용 챗, 퀴즈, 플래시카드, 팟캐스트, 시험 예측 기능을 제공합니다."
-        : "PreplitAI is an AI-powered study companion that transforms your lecture slides, PDFs, and textbooks into interactive learning tools including grounded chat, quizzes, flashcards, podcasts, and exam predictions.",
-    },
-    {
-      q: isKo ? "시험 준비에 어떻게 도움이 되나요?" : "How does PreplitAI help me study for exams?",
-      a: isKo
-        ? "강의 자료를 업로드하면 연습 퀴즈, 출제 예상 문제, 간격 반복 플래시카드, 핵심 요약집을 자동 생성합니다."
-        : "Upload your course materials and PreplitAI generates practice quizzes, predicted exam questions, spaced-repetition flashcards, and dense summaries \u2014 all grounded in your actual syllabus.",
-    },
-    {
-      q: isKo ? "어떤 자료를 업로드할 수 있나요?" : "What kinds of materials can I upload?",
-      a: isKo
-        ? "PDF, DOCX, 텍스트 파일을 업로드할 수 있습니다. 강의 슬라이드, 교재, 기출문제, 스캔한 필기 노트 모두 지원합니다."
-        : "You can upload PDFs, DOCX files, and plain text. This includes lecture slides, textbook chapters, past exams, and handwritten notes as scanned PDFs.",
-    },
-    {
-      q: isKo ? "업로드한 자료에 대해 질문할 수 있나요?" : "Can I ask questions about my materials?",
-      a: isKo
-        ? "네. 출처 인용 RAG 챗봇이 업로드한 문서에서 정확한 페이지를 인용하며 답변합니다."
-        : "Yes. The grounded RAG chat gives you precise answers with page-level citations from your uploaded documents \u2014 no hallucination.",
-    },
-    {
-      q: isKo ? "퀴즈와 플래시카드를 생성하나요?" : "Does PreplitAI generate quizzes and flashcards?",
-      a: isKo
-        ? "네. 객관식, 빈칸 채우기, 단답형 퀴즈와 간격 반복 플래시카드를 커리큘럼에 맞춰 자동 생성합니다."
-        : "Yes. PreplitAI auto-generates multiple-choice, fill-in-the-blank, and short-answer quizzes plus spaced-repetition flashcards, all mapped to your curriculum.",
-    },
-    {
-      q: isKo ? "PreplitAI는 무료인가요?" : "Is PreplitAI free to use?",
-      a: isKo
-        ? "무료 체험판으로 시작할 수 있으며, 프리미엄 플랜에서 무제한 업로드와 고급 분석 기능을 이용할 수 있습니다."
-        : "PreplitAI offers a free tier to get started. Premium plans unlock unlimited uploads, advanced analytics, and priority AI processing.",
-    },
-  ];
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRunning && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsRunning(false);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, timeLeft]);
+
+  const handleStart = () => {
+    if (!isRunning && timeLeft === 0) {
+      setTimeLeft(hours * 3600 + mins * 60 + secs);
+    }
+    setIsRunning(!isRunning);
+  };
+
+  const handleReset = () => {
+    setIsRunning(false);
+    setTimeLeft(hours * 3600 + mins * 60 + secs);
+  };
+
+  const formatTimer = (totalSeconds: number) => {
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
 
   return (
-    <section id="workspace-teaser" className="py-20 sm:py-28 px-6 bg-white dark:bg-[#0a0a0a]">
-      <div className="max-w-5xl mx-auto">
-
-        {/* Header */}
-        <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-[40px] font-bold tracking-tight text-gray-900 dark:text-white leading-[1.15]">
-            {isKo ? "하나의 워크스페이스, 모든 학습 도구" : "Your entire study toolkit, in one workspace"}
-          </h2>
-          <p className="mt-4 text-[15px] sm:text-base text-gray-500 dark:text-gray-400">
-            {isKo ? "업로드하면 커리큘럼에 맞춘 AI 도구가 자동으로 열립니다." : "Upload your materials. Everything else is built for you."}
-          </p>
-        </div>
-
-        {/* 6 Tools Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100 dark:bg-white/[0.06] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/[0.06] mb-16">
-          {tools.map((t) => {
-            const Icon = t.icon;
-            return (
-              <div
-                key={t.title}
-                className="bg-white dark:bg-[#0a0a0a] p-6 sm:p-7 flex items-start gap-4 hover:bg-gray-50/70 dark:hover:bg-white/[0.02] transition-colors"
-              >
-                <div className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-white/[0.06] flex items-center justify-center shrink-0 mt-0.5">
-                  <Icon className="w-[17px] h-[17px] text-gray-600 dark:text-gray-400" strokeWidth={1.75} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[15px] font-semibold text-gray-900 dark:text-white leading-tight">{t.title}</p>
-                  <p className="text-[13px] text-gray-500 dark:text-gray-400 mt-1 leading-snug">{t.sub}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* CTA Banner */}
-        <div className="rounded-2xl bg-gray-950 dark:bg-white/[0.04] dark:border dark:border-white/[0.08] px-8 py-10 sm:px-10 sm:py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="space-y-1.5 text-center sm:text-left">
-            <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
-              {isKo ? "지금 바로 시작하세요" : "Ready to study smarter?"}
-            </h3>
-            <p className="text-sm text-white/50">
-              {isKo ? "무료로 AI 워크스페이스를 체험해보세요." : "Open the AI Workspace \u2014 free to start."}
-            </p>
-          </div>
-          <Button
-            asChild
-            className="px-7 py-3 h-11 text-[14px] font-semibold bg-white text-black hover:bg-gray-100 rounded-full transition-all shrink-0"
+    <section id="features" className="py-20 sm:py-28 px-4 bg-white dark:bg-[#0a0a0a]">
+      <div className="max-w-6xl mx-auto">
+        {/* Section Header */}
+        <div className="flex flex-col justify-center items-center text-center px-4 mb-14 sm:mb-16 gap-3">
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, type: "spring" as const, bounce: 0 }}
+            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.03em] text-[#111111] dark:text-white leading-tight"
           >
-            <a href="/preplitai-chat" className="flex items-center gap-2">
-              <span>{isKo ? "워크스페이스 열기" : "Launch Workspace"}</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </Button>
+            {isKo ? "학업과 집중을 위한 모든 도구" : "Everything for your"}
+            <br />
+            {isKo ? "" : "work and focus"}
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1, type: "spring" as const, bounce: 0 }}
+            className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 font-normal max-w-xl"
+          >
+            {isKo ? "대학생의 몰입 학습을 위해 정교하게 설계된 통합 툴킷." : "A beautiful, integrated toolkit designed for deep work."}
+          </motion.p>
         </div>
 
-        {/* FAQ */}
-        <div className="mt-20 sm:mt-28">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center mb-10">
-            {isKo ? "자주 묻는 질문" : "Frequently Asked Questions"}
-          </h2>
-          <div className="max-w-3xl mx-auto rounded-2xl border border-gray-100 dark:border-white/[0.06] overflow-hidden">
-            {faqs.map((faq, i) => {
-              const isOpen = openFaq === i;
-              return (
-                <div key={i} className={i < faqs.length - 1 ? "border-b border-gray-100 dark:border-white/[0.06]" : ""}>
-                  <button
-                    onClick={() => setOpenFaq(isOpen ? null : i)}
-                    className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left hover:bg-gray-50/60 dark:hover:bg-white/[0.02] transition-colors"
-                  >
-                    <span className="text-[15px] font-medium text-gray-900 dark:text-white">{faq.q}</span>
-                    <ChevronDown className={`w-4 h-4 shrink-0 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
-                  </button>
-                  <div className={`overflow-hidden transition-all duration-200 ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
-                    <div className="px-6 pb-5">
-                      <p className="text-[13.5px] text-gray-500 dark:text-gray-400 leading-relaxed">{faq.a}</p>
-                    </div>
+        {/* Row 1: 2 Cards (14 Days Consistency & Timer Clock) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+          {/* Card 1: 14 Days Consistency (Lavender / Soft Purple Tint #f2eeff) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1, type: "spring" as const, bounce: 0 }}
+            className="lg:col-span-4 bg-[#f2eeff] dark:bg-[#1a1429] rounded-[28px] p-8 sm:p-9 border border-[#e4d9ff]/70 dark:border-purple-900/30 flex flex-col justify-between"
+          >
+            {/* Visual 3D Flame Icon */}
+            <div className="h-44 sm:h-48 flex items-center justify-center relative">
+              <div className="w-28 h-28 rounded-full bg-gradient-to-tr from-[#9333ea]/20 to-[#c084fc]/30 flex items-center justify-center relative">
+                <motion.div
+                  animate={{ scale: [1, 1.06, 1], rotate: [0, 2, -2, 0] }}
+                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                  className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#9333ea] to-[#a855f7] flex items-center justify-center shadow-lg shadow-purple-500/30 text-white"
+                >
+                  <Flame className="w-9 h-9 fill-white text-white" />
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Bottom Content */}
+            <div className="mt-6">
+              <div className="text-[1.85rem] font-bold text-[#7e22ce] dark:text-[#c084fc] leading-tight mb-1">
+                14 days
+              </div>
+              <div className="text-[1.85rem] font-bold text-neutral-950 dark:text-white leading-tight mb-3">
+                consistency
+              </div>
+              <p className="text-[13.5px] text-neutral-600 dark:text-purple-200/70 leading-relaxed font-normal">
+                {isKo ? "매일 완성하는 학습 블록으로 꾸준한 연속 학습 기록을 쌓으세요." : "Build daily momentum and see your focus streak grow with every completed session."}
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Card 2: Timer Clock Interactive Countdown (Ice Blue Tint #eff7ff) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2, type: "spring" as const, bounce: 0 }}
+            className="lg:col-span-8 bg-[#eff7ff] dark:bg-[#0c1a29] rounded-[28px] p-8 sm:p-10 border border-[#cfe6ff]/70 dark:border-sky-900/30 flex flex-col md:flex-row items-center justify-between gap-8"
+          >
+            {/* Left Texts */}
+            <div className="flex-1 max-w-sm">
+              <span className="text-sm font-bold text-[#0284c7] dark:text-[#38bdf8] tracking-wide">
+                {isKo ? "타이머 클락" : "Timer Clock"}
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-bold text-neutral-950 dark:text-white tracking-tight mt-1 mb-3">
+                {isKo ? "나만의 카운트다운 설정." : "Build your own countdown."}
+              </h3>
+              <p className="text-sm text-neutral-600 dark:text-sky-200/70 leading-relaxed font-normal">
+                {isKo ? "시간, 분, 초를 선택하고 집중 학습 타이머를 시작하세요." : "Choose hours, minutes, and seconds, then start the timer."}
+              </p>
+            </div>
+
+            {/* Right Wheel Picker Widget */}
+            <div className="flex flex-col items-center bg-white/90 dark:bg-[#132238] rounded-3xl p-6 border border-sky-100 dark:border-sky-900/40 shadow-sm w-full max-w-[320px]">
+              {/* Wheel Columns */}
+              <div className="flex items-center justify-center gap-3 w-full mb-5">
+                {/* Hours Column */}
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-2">HOURS</span>
+                  <div className="bg-[#f8fafc] dark:bg-[#0c1827] rounded-xl px-3 py-2 text-center border border-slate-200/60 dark:border-slate-800">
+                    <span className="text-xs text-slate-400 block">00</span>
+                    <span className="text-lg font-bold text-slate-800 dark:text-white block">
+                      {String(hours).padStart(2, "0")}
+                    </span>
+                    <span className="text-xs text-slate-400 block">01</span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
+
+                <span className="text-slate-400 font-bold mt-5">:</span>
+
+                {/* Mins Column */}
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-2">MIN</span>
+                  <div className="bg-[#f8fafc] dark:bg-[#0c1827] rounded-xl px-3 py-2 text-center border border-slate-200/60 dark:border-slate-800">
+                    <span className="text-xs text-slate-400 block">00</span>
+                    <span className="text-lg font-bold text-slate-800 dark:text-white block">
+                      {String(mins).padStart(2, "0")}
+                    </span>
+                    <span className="text-xs text-slate-400 block">01</span>
+                  </div>
+                </div>
+
+                <span className="text-slate-400 font-bold mt-5">:</span>
+
+                {/* Secs Column */}
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-2">SEC</span>
+                  <div className="bg-[#f8fafc] dark:bg-[#0c1827] rounded-xl px-3 py-2 text-center border border-slate-200/60 dark:border-slate-800">
+                    <span className="text-xs text-slate-400 block">09</span>
+                    <span className="text-lg font-bold text-slate-800 dark:text-white block">
+                      {String(secs).padStart(2, "0")}
+                    </span>
+                    <span className="text-xs text-slate-400 block">11</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2 w-full mb-3">
+                <button
+                  onClick={handleStart}
+                  className={`flex-1 py-2 px-4 rounded-full text-xs font-bold transition-all ${
+                    isRunning
+                      ? "bg-amber-500 hover:bg-amber-600 text-white"
+                      : "bg-[#0284c7] hover:bg-[#0369a1] text-white shadow-sm"
+                  }`}
+                >
+                  {isRunning ? "Pause" : "Start"}
+                </button>
+                <button
+                  onClick={handleReset}
+                  className="py-2 px-4 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors"
+                >
+                  Reset
+                </button>
+              </div>
+
+              {/* Readout */}
+              <div className="text-[11.5px] font-semibold text-slate-500 dark:text-slate-400">
+                {isRunning ? "Focusing: " : "Ready: "}
+                <span className="font-mono text-slate-900 dark:text-white font-bold">{formatTimer(timeLeft)}</span>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
+        {/* Row 2: 3 Cards (Heatmap, Activity Feed, Global Community) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Card 1: Heatmap of your consistency (Warm Peach #fff2df) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1, type: "spring" as const, bounce: 0 }}
+            className="bg-[#fff2df] dark:bg-[#1f160e] rounded-[28px] p-7 sm:p-8 border border-[#f5d9b8]/70 dark:border-amber-900/30 flex flex-col justify-between"
+          >
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-[#ea580c] dark:text-[#fb923c] tracking-tight mb-2">
+                {isKo ? "학습 지속성 히트맵" : "Heatmap of your consistency"}
+              </h3>
+              <p className="text-[13.5px] text-[#7c2d12]/80 dark:text-[#fdba74]/80 leading-relaxed mb-6 font-normal">
+                {isKo ? "깃허브 스타일 기여도 잔디 그래프로 1년간의 학습 몰입도를 한눈에 시각화하세요." : "Visualize your dedication over the entire year with a GitHub-style activity contribution map."}
+              </p>
+            </div>
+
+            {/* Interactive Heatmap Widget */}
+            <div className="bg-white/90 dark:bg-[#2b1f14] p-4 rounded-2xl border border-orange-200/50 dark:border-amber-900/40">
+              <div className="flex gap-2">
+                <div className="flex flex-col justify-between text-[9px] text-neutral-400 font-semibold pr-1">
+                  <span>M</span>
+                  <span>W</span>
+                  <span>F</span>
+                </div>
+                <div className="flex-1 flex gap-1.5 justify-between">
+                  {Array.from({ length: 10 }).map((_, col) => (
+                    <div key={col} className="flex flex-col gap-1.5">
+                      {Array.from({ length: 5 }).map((_, row) => {
+                        const intensities = [
+                          "bg-[#ffedd5] dark:bg-amber-950",
+                          "bg-[#fdba74] dark:bg-amber-700",
+                          "bg-[#fb923c] dark:bg-amber-600",
+                          "bg-[#ea580c] dark:bg-orange-600",
+                          "bg-[#c2410c] dark:bg-orange-500",
+                        ];
+                        const val = (col * 2 + row * 3) % 5;
+                        return (
+                          <div
+                            key={row}
+                            className={`w-3.5 h-3.5 rounded-[4px] ${intensities[val]} transition-transform hover:scale-125 cursor-pointer`}
+                            title={`Activity: ${val * 1.5 + 1}h studied`}
+                          />
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-[10px] text-neutral-400 mt-3 pt-2 border-t border-orange-100 dark:border-amber-950">
+                <span>Less</span>
+                <div className="flex gap-1">
+                  <span className="w-2 h-2 rounded-[2px] bg-[#ffedd5]"></span>
+                  <span className="w-2 h-2 rounded-[2px] bg-[#fb923c]"></span>
+                  <span className="w-2 h-2 rounded-[2px] bg-[#ea580c]"></span>
+                </div>
+                <span>More</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Card 2: Real-time Activity Feed (Mint Green #eeffe8) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2, type: "spring" as const, bounce: 0 }}
+            className="bg-[#eeffe8] dark:bg-[#0d1f14] rounded-[28px] p-7 sm:p-8 border border-[#cfe9c8]/80 dark:border-emerald-900/30 flex flex-col justify-between"
+          >
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-[#16a34a] dark:text-[#4ade80] tracking-tight mb-2">
+                {isKo ? "실시간 학습 활동 피드" : "Real-time activity feed"}
+              </h3>
+              <p className="text-[13.5px] text-[#14532d]/80 dark:text-[#86efac]/80 leading-relaxed mb-6 font-normal">
+                {isKo ? "완료된 세션, 스트릭 달성, 리더보드 순위 상승을 실시간 알림으로 확인하세요." : "Get instant feedback on session completions, streak milestones, and leaderboard progress."}
+              </p>
+            </div>
+
+            {/* Notification Stack Widget */}
+            <div className="space-y-2">
+              <div className="bg-white dark:bg-[#14291c] p-2.5 rounded-2xl border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-3 shadow-xs">
+                <div className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center shrink-0">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-neutral-900 dark:text-white truncate">Timer finished</p>
+                    <span className="text-[10px] text-neutral-400">1h ago</span>
+                  </div>
+                  <p className="text-[10.5px] text-neutral-500 dark:text-neutral-400 truncate">Pomodoro cycle complete</p>
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-[#14291c] p-2.5 rounded-2xl border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-3 shadow-xs">
+                <div className="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center shrink-0">
+                  <Zap className="w-4 h-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-neutral-900 dark:text-white truncate">New personal best</p>
+                    <span className="text-[10px] text-neutral-400">32m ago</span>
+                  </div>
+                  <p className="text-[10.5px] text-neutral-500 dark:text-neutral-400 truncate">Longest focus block today</p>
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-[#14291c] p-2.5 rounded-2xl border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-3 shadow-xs">
+                <div className="w-8 h-8 rounded-full bg-sky-500 text-white flex items-center justify-center shrink-0">
+                  <Trophy className="w-4 h-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-neutral-900 dark:text-white truncate">Leaderboard climb</p>
+                    <span className="text-[10px] text-neutral-400">16m ago</span>
+                  </div>
+                  <p className="text-[10.5px] text-neutral-500 dark:text-neutral-400 truncate">You moved up to #3</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Card 3: Global Focus Community (Soft Purple #f5f3ff) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3, type: "spring" as const, bounce: 0 }}
+            className="bg-[#f5f3ff] dark:bg-[#181126] rounded-[28px] p-7 sm:p-8 border border-[#ddd0ff]/70 dark:border-purple-900/30 flex flex-col justify-between relative overflow-hidden"
+          >
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-[#7e22ce] dark:text-[#c084fc] tracking-tight mb-2">
+                {isKo ? "글로벌 학업 네트워크" : "Global focus community"}
+              </h3>
+              <p className="text-[13.5px] text-[#581c87]/80 dark:text-[#d8b4fe]/80 leading-relaxed mb-6 font-normal">
+                {isKo ? "전 세계 대학생 및 개발자들과 함께 실시간으로 학습 세션을 추적하세요." : "Join students and developers worldwide tracking focus sessions in real time."}
+              </p>
+            </div>
+
+            {/* Dotted Globe Graphic (Matching Image exactly) */}
+            <div className="h-40 flex items-center justify-center relative">
+              <div className="w-36 h-36 rounded-full bg-gradient-to-b from-[#e9d5ff] to-white dark:from-[#3b1f6a] dark:to-[#181126] border border-purple-200 dark:border-purple-800/50 flex items-center justify-center relative shadow-inner overflow-hidden">
+                {/* Dotted lines & pings */}
+                <div className="absolute inset-0 border border-purple-300/40 rounded-full scale-75"></div>
+                <div className="absolute inset-0 border-t border-b border-purple-300/40 my-auto h-12"></div>
+                <span className="absolute top-8 left-10 w-2.5 h-2.5 rounded-full bg-purple-600 animate-ping"></span>
+                <span className="absolute top-8 left-10 w-2.5 h-2.5 rounded-full bg-purple-600 shadow-md"></span>
+                <span className="absolute bottom-10 right-10 w-2 h-2 rounded-full bg-indigo-600 shadow-md"></span>
+                <span className="absolute top-14 right-8 w-2 h-2 rounded-full bg-purple-500 shadow-md"></span>
+                <Globe className="w-12 h-12 text-purple-600/30 dark:text-purple-400/20" strokeWidth={1} />
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
