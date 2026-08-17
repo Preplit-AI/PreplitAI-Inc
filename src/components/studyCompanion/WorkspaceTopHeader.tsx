@@ -22,8 +22,8 @@ export const WorkspaceTopHeader: React.FC<WorkspaceTopHeaderProps> = ({
 
   return (
     <header className="h-16 bg-white dark:bg-[#0e0e0e] border-b border-slate-200/80 dark:border-white/10 px-4 sm:px-6 flex items-center justify-between gap-4 shrink-0 z-20">
-      {/* Left: Mobile Toggle & Brand/Search */}
-      <div className="flex items-center gap-3">
+      {/* Left: Brand Logo & Workspace Identity */}
+      <div className="flex items-center gap-3 shrink-0">
         <button
           onClick={onToggleSidebar}
           className="lg:hidden p-2 rounded-xl text-neutral-600 hover:bg-slate-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
@@ -32,13 +32,25 @@ export const WorkspaceTopHeader: React.FC<WorkspaceTopHeaderProps> = ({
           <Menu className="w-5 h-5" />
         </button>
 
-        <a href="/" className="flex items-center gap-2 lg:hidden">
-          <img src="/logo.png" alt="PreplitAI Logo" className="h-7 w-auto" />
+        <a href="/" className="flex items-center gap-2.5 group">
+          <img
+            src="/logo.png"
+            alt="PreplitAI Logo"
+            className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
+          />
+          <div className="flex flex-col">
+            <span className="font-bold text-[16px] tracking-tight text-neutral-950 dark:text-white leading-none">
+              PreplitAI
+            </span>
+            <span className="text-[10px] font-semibold text-[#550000] dark:text-[#f87171] uppercase tracking-wider mt-0.5">
+              Workspace
+            </span>
+          </div>
         </a>
       </div>
 
       {/* Center: Search Bar */}
-      <div className="flex-1 max-w-xl mx-auto">
+      <div className="flex-1 max-w-xl mx-auto px-2">
         <button
           onClick={onOpenSearch}
           className="w-full flex items-center justify-between px-4 py-2 rounded-xl bg-slate-50 dark:bg-[#181818] border border-slate-200/80 dark:border-white/10 text-xs text-neutral-400 hover:border-slate-300 dark:hover:border-white/20 transition-colors cursor-pointer shadow-2xs"

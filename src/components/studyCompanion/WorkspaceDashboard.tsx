@@ -191,9 +191,8 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
         {/* Top Header / Greeting Bar */}
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2">
-              <span>{isKo ? `좋은 아침입니다, ${userName}` : `Good morning, ${userName}`}</span>
-              <span className="text-xl">👋</span>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
+              {isKo ? `좋은 아침입니다, ${userName}` : `Good morning, ${userName}`}
             </h1>
             <p className="text-xs text-neutral-500 dark:text-neutral-400 font-normal">
               {isKo ? "오늘도 목표를 향해 학업을 이어가 볼까요?" : "Let's continue your learning journey."}
@@ -206,7 +205,7 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-xs shadow-xs transition-all active:scale-95 shrink-0"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>{isKo ? "+ 새 자료 추가" : "+ Add New"}</span>
+            <span>{isKo ? "새 자료 추가" : "Add New"}</span>
           </button>
         </div>
 
@@ -515,9 +514,8 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
           <p className="text-[11.5px] font-bold text-neutral-900 dark:text-white leading-snug">
             Consistent today, exceptional tomorrow.
           </p>
-          <p className="text-[10.5px] text-[#550000] dark:text-rose-400 font-semibold mt-1.5 flex items-center gap-1">
-            <span>Keep going!</span>
-            <span>🔥</span>
+          <p className="text-[10.5px] text-[#550000] dark:text-rose-400 font-semibold mt-1.5">
+            Keep going.
           </p>
         </div>
       </div>
