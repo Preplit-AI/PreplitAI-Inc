@@ -1,4 +1,4 @@
-import { Github, Twitter, Instagram, Mail } from "lucide-react";
+import { Twitter, Instagram, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Footer = () => {
@@ -41,15 +41,6 @@ export const Footer = () => {
                 className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[#555555] hover:text-[#111111] dark:hover:text-white transition-colors"
               >
                 <Twitter className="h-4 w-4" />
-              </a>
-              <a
-                href="https://github.com/ahsann826/PreplitAI-Inc"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[#555555] hover:text-[#111111] dark:hover:text-white transition-colors"
-              >
-                <Github className="h-4 w-4" />
               </a>
               <a
                 href="mailto:contact@preplitai.com"

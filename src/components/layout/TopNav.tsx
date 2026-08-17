@@ -55,14 +55,14 @@ export const TopNav = () => {
             />
           </Link>
 
-          {/* Center Links (FEATURES, PREVIEW, PROOF / PRICING in clean uppercase) */}
+          {/* Center Links (FEATURES, BLOG, PRICING, GKS PREP in clean uppercase) */}
           <div className="hidden md:flex items-center gap-7 text-[11.5px] font-bold tracking-widest text-[#555555] dark:text-[#888888] uppercase">
             <Link to="/features" className="hover:text-[#111111] dark:hover:text-white transition-colors">
               {isKo ? "기능" : "FEATURES"}
             </Link>
-            <a href="/#how-it-works" className="hover:text-[#111111] dark:hover:text-white transition-colors">
-              {isKo ? "미리보기" : "PREVIEW"}
-            </a>
+            <Link to="/blog" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+              {isKo ? "블로그" : "BLOG"}
+            </Link>
             <Link to="/pricing" className="hover:text-[#111111] dark:hover:text-white transition-colors">
               {isKo ? "요금제" : "PRICING"}
             </Link>
@@ -139,13 +139,13 @@ export const TopNav = () => {
                   >
                     FEATURES
                   </Link>
-                  <a
-                    href="/#how-it-works"
+                  <Link
+                    to="/blog"
                     onClick={() => setMobileMenuOpen(false)}
                     className="px-4 py-2.5 rounded-xl text-sm font-medium text-[#555] dark:text-[#aaa] hover:bg-slate-100 dark:hover:bg-white/5"
                   >
-                    PREVIEW
-                  </a>
+                    BLOG
+                  </Link>
                   <Link
                     to="/pricing"
                     onClick={() => setMobileMenuOpen(false)}
