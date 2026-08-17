@@ -7,7 +7,7 @@ export const UnlockPotentialSection = () => {
   const isKo = language === "ko";
 
   return (
-    <section className="py-20 sm:py-28 px-4 bg-white dark:bg-[#0a0a0a] text-center flex flex-col items-center justify-center border-t border-black/[0.04] dark:border-white/[0.04] overflow-hidden">
+    <section className="py-12 sm:py-16 px-4 bg-white dark:bg-[#0a0a0a] text-center flex flex-col items-center justify-center border-t border-black/[0.04] dark:border-white/[0.04] overflow-hidden">
       <div className="max-w-4xl mx-auto flex flex-col items-center">
         {/* 5 Gold Stars Rating */}
         <motion.div

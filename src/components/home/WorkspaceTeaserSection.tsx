@@ -62,10 +62,10 @@ export const WorkspaceTeaserSection = () => {
   const maxSecs = timerMode === "pomodoro" ? 25 * 60 : timerMode === "short" ? 5 * 60 : 15 * 60;
 
   return (
-    <section id="features" className="py-20 sm:py-28 px-4 bg-white dark:bg-[#0a0a0a]">
+    <section id="features" className="py-12 sm:py-16 px-4 bg-white dark:bg-[#0a0a0a]">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col justify-center items-center text-center px-4 mb-14 sm:mb-16 gap-3">
+        <div className="flex flex-col justify-center items-center text-center px-4 mb-8 sm:mb-10 gap-3">
           {/* Headline */}
           <motion.h2
             initial={{ opacity: 0, y: 16 }}

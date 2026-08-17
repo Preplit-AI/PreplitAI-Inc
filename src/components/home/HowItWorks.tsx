@@ -6,10 +6,10 @@ export const HowItWorks = () => {
   const isKo = language === "ko";
 
   return (
-    <section id="how-it-works" className="bg-[#f8f9fa] dark:bg-[#0c0c0c] py-20 sm:py-28 px-4 border-t border-black/[0.04] dark:border-white/[0.04] overflow-hidden">
+    <section id="how-it-works" className="bg-[#f8f9fa] dark:bg-[#0c0c0c] py-12 sm:py-16 px-4 border-t border-black/[0.04] dark:border-white/[0.04] overflow-hidden">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col justify-center items-center text-center px-4 mb-14 sm:mb-16 gap-3">
+        <div className="flex flex-col justify-center items-center text-center px-4 mb-8 sm:mb-10 gap-3">
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}

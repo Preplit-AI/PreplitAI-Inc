@@ -7,7 +7,7 @@ export const ClosingCtaBanner = () => {
   const isKo = language === "ko";
 
   return (
-    <section className="bg-[#fbfbfb] dark:bg-[#070707] px-4 py-16 md:py-24 border-t border-black/[0.04] dark:border-white/[0.04]">
+    <section className="bg-[#fbfbfb] dark:bg-[#070707] px-4 py-10 md:py-14 border-t border-black/[0.04] dark:border-white/[0.04]">
       <div className="mx-auto w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/80 dark:border-white/10 bg-white shadow-[0_12px_40px_rgba(0,0,0,0.06)]">
         <div className="relative isolate min-h-[360px] bg-[url('/cta.jpeg')] bg-cover bg-center px-6 py-8 sm:px-10 sm:py-10 md:min-h-[390px] md:px-12 flex items-center">
           {/* Subtle gradient overlay to make text pop on the scenic sky */}
