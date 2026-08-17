@@ -79,13 +79,13 @@ export const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({
             <button
               key={item.id}
               onClick={() => handleItemClick(item.id)}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all ${
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12.5px] font-semibold transition-all ${
                 isActive
-                  ? "bg-rose-50 dark:bg-rose-950/40 text-[#991b1b] dark:text-[#f87171] shadow-xs"
+                  ? "bg-[#550000]/10 dark:bg-[#550000]/25 text-[#550000] dark:text-[#fca5a5] shadow-2xs font-bold"
                   : "text-neutral-600 dark:text-neutral-400 hover:bg-slate-50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white"
               }`}
             >
-              <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-[#991b1b] dark:text-[#f87171]" : "text-neutral-400"}`} />
+              <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-[#550000] dark:text-[#fca5a5]" : "text-neutral-400"}`} />
               <span className="truncate">{item.label}</span>
             </button>
           );
@@ -93,12 +93,12 @@ export const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({
       </div>
 
       {/* Bottom Storage & Pro Plan Cards */}
-      <div className="p-3.5 space-y-3 border-t border-slate-100 dark:border-neutral-800/80">
+      <div className="p-3 space-y-2.5 border-t border-slate-100 dark:border-neutral-800/80">
         {/* Storage Used Card */}
-        <div className="bg-slate-50 dark:bg-neutral-900 p-3 rounded-xl space-y-2 border border-slate-100 dark:border-neutral-800">
-          <div className="flex justify-between items-center text-xs">
+        <div className="bg-slate-50 dark:bg-neutral-900 p-2.5 rounded-xl space-y-1.5 border border-slate-100 dark:border-neutral-800">
+          <div className="flex justify-between items-center text-[11px]">
             <span className="text-neutral-500 dark:text-neutral-400 font-medium">Storage Used</span>
-            <span className="font-bold text-neutral-800 dark:text-white text-[11.5px]">2.4 GB / 10 GB</span>
+            <span className="font-bold text-neutral-800 dark:text-white text-[10.5px]">2.4 GB / 10 GB</span>
           </div>
           <div className="h-1.5 w-full bg-slate-200 dark:bg-neutral-700 rounded-full overflow-hidden">
             <div className="h-full bg-blue-600 rounded-full w-[24%]" />
@@ -106,14 +106,14 @@ export const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({
         </div>
 
         {/* Pro Plan Card */}
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <div className="text-xs">
-            <p className="font-bold text-neutral-900 dark:text-white">Pro Plan</p>
-            <p className="text-[11px] text-neutral-400">Renews on Aug 24, 2026</p>
+            <p className="font-bold text-neutral-900 dark:text-white text-[11.5px]">Pro Plan</p>
+            <p className="text-[10px] text-neutral-400">Renews on Aug 24, 2026</p>
           </div>
           <button
             onClick={onOpenManagePlan}
-            className="w-full py-2 rounded-xl bg-[#991b1b] hover:bg-[#7f1d1d] text-white font-bold text-xs shadow-xs transition-all active:scale-95"
+            className="w-full py-1.5 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-bold text-xs shadow-xs transition-all active:scale-95"
           >
             Manage Plan
           </button>

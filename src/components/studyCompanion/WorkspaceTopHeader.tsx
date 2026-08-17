@@ -57,9 +57,9 @@ export const WorkspaceTopHeader: React.FC<WorkspaceTopHeaderProps> = ({
 
       {/* Right Tools: Streak, Bell, Avatar */}
       <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
-        {/* Streak Pill */}
-        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200/60 dark:border-rose-900/40 text-[#991b1b] dark:text-rose-300 text-xs font-semibold">
-          <Flame className="w-3.5 h-3.5 fill-[#991b1b] text-[#991b1b]" />
+        {/* Streak Pill in Maroon */}
+        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#550000]/5 dark:bg-[#550000]/20 border border-[#550000]/20 text-[#550000] dark:text-[#fca5a5] text-xs font-semibold">
+          <Flame className="w-3.5 h-3.5 fill-[#550000] text-[#550000] dark:fill-[#fca5a5] dark:text-[#fca5a5]" />
           <span>14 Day Streak</span>
         </div>
 
@@ -69,7 +69,7 @@ export const WorkspaceTopHeader: React.FC<WorkspaceTopHeaderProps> = ({
           aria-label="Notifications"
         >
           <Bell className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-[#991b1b] text-white text-[9px] font-bold flex items-center justify-center border-2 border-white dark:border-[#0e0e0e]">
+          <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-[#550000] text-white text-[9px] font-bold flex items-center justify-center border-2 border-white dark:border-[#0e0e0e]">
             3
           </span>
         </button>
