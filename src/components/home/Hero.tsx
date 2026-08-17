@@ -72,17 +72,6 @@ export const Hero = () => {
             )}
           </motion.h1>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, type: "spring" as const, bounce: 0 }}
-            className="mx-auto mt-4 max-w-[21rem] text-[13.5px] leading-6 text-black/80 sm:mt-5 sm:max-w-xl sm:text-base sm:leading-7 lg:text-lg font-normal"
-          >
-            {isKo
-              ? "PreplitAI는 모든 강의 자료를 완벽한 학습 시스템으로 전환합니다. 출처 인용 챗봇, 스마트 플래시카드, 퀴즈, 팟캐스트, 출제 예상 문제로 매일 편안하게 몰입하세요."
-              : "PreplitAI turns every course syllabus into a complete learning system: grounded AI chat, spaced flashcards, adaptive quizzes, audio podcasts, and exam predictions that feel calm enough to use every day."}
-          </motion.p>
 
           {/* Dual Action Buttons */}
           <motion.div
