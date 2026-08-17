@@ -8,26 +8,17 @@ export const HowItWorks = () => {
   return (
     <section id="how-it-works" className="bg-[#f8f9fa] dark:bg-[#0c0c0c] py-20 sm:py-28 px-4 border-t border-black/[0.04] dark:border-white/[0.04] overflow-hidden">
       <div className="max-w-6xl mx-auto">
-        {/* Section Header (Matching Timmo 'Our Numbers Speak for Themselves') */}
+        {/* Section Header */}
         <div className="flex flex-col justify-center items-center text-center px-4 mb-14 sm:mb-16 gap-3">
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, type: "spring" as const, bounce: 0 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.03em] text-[#111111] dark:text-white max-w-lg leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.03em] text-[#111111] dark:text-white max-w-2xl leading-tight"
           >
-            {isKo ? "숫자로 증명하는 학습 성과" : "Our Numbers Speak for Themselves"}
+            {isKo ? "단순한 AI 챗봇 그 이상. 완성형 학업 워크스페이스." : "More than AI chat. A complete study workspace."}
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1, type: "spring" as const, bounce: 0 }}
-            className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 font-normal"
-          >
-            {isKo ? "국내외 대학생과 장학생들이 매일 함께하고 있습니다." : "Powered by our growing community."}
-          </motion.p>
         </div>
 
         {/* Exactly 3 Clean White Cards (Grid Cols 1 on mobile, 3 on desktop) */}
