@@ -23,13 +23,13 @@ export const Footer = () => {
             </p>
           </div>
 
-          {/* Only Support Link */}
+          {/* Contact Us Link */}
           <div className="flex items-center gap-6 self-start sm:self-auto">
             <a
-              href="mailto:support@preplitai.com"
+              href="mailto:info@preplitai.com"
               className="text-xs font-semibold text-[#666666] dark:text-[#999999] hover:text-[#550000] dark:hover:text-rose-400 transition-colors py-1.5 px-3 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-800 -ml-3 sm:ml-0"
             >
-              {isKo ? "고객 지원 (Support)" : "Support"}
+              {isKo ? "문의하기 (Contact Us)" : "Contact Us"}
             </a>
           </div>
         </div>
