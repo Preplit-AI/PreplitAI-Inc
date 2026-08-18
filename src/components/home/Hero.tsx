@@ -12,13 +12,15 @@ export const Hero = () => {
       id="home"
       className="relative isolate overflow-hidden px-4 pb-14 pt-36 sm:min-h-[110vh] sm:pb-0 sm:pt-36 flex flex-col items-center justify-start text-center"
     >
-      {/* 1. Full-Screen Scenic Landscape Backdrop (Matching Timmo) */}
-      <div className="absolute inset-x-0 top-0 -z-10 h-screen overflow-hidden pointer-events-none">
-        <div className="h-full w-full bg-[url('/trendybg.png')] bg-cover bg-center" />
+      {/* 1. Full-Screen Scenic Night Landscape Backdrop */}
+      <div className="absolute inset-x-0 top-0 -z-10 h-screen sm:min-h-[110vh] overflow-hidden pointer-events-none">
+        <div className="h-full w-full bg-[url('/nightbg.jpg')] bg-cover bg-center" />
+        {/* Soft bottom fade into page background */}
+        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white dark:from-[#0a0a0a] via-white/40 dark:via-[#0a0a0a]/40 to-transparent pointer-events-none" />
       </div>
 
       {/* 2. Soft sky blend at very top for floating navbar legibility */}
-      <div className="absolute inset-x-0 top-0 -z-10 h-64 bg-gradient-to-b from-white via-white/70 to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-black/40 via-black/20 to-transparent pointer-events-none" />
 
       {/* 3. Main Content Area */}
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center text-center relative z-10">
@@ -28,50 +30,49 @@ export const Hero = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, type: "spring" as const, bounce: 0 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-[#141414]/90 backdrop-blur-md border border-black/[0.08] dark:border-white/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.04)] mb-6 sm:mb-8"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 dark:bg-black/60 backdrop-blur-md border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.3)] mb-6 sm:mb-8"
           >
             <div className="flex items-center -space-x-1.5">
-              <div className="w-5 h-5 rounded-full bg-[#111111] text-white flex items-center justify-center text-[9px] font-bold border border-white dark:border-[#141414]">
+              <div className="w-5 h-5 rounded-full bg-[#111111] text-white flex items-center justify-center text-[9px] font-bold border border-white/40">
                 A
               </div>
-              <div className="w-5 h-5 rounded-full bg-[#550000] text-white flex items-center justify-center text-[9px] font-bold border border-white dark:border-[#141414]">
+              <div className="w-5 h-5 rounded-full bg-[#550000] text-white flex items-center justify-center text-[9px] font-bold border border-white/40">
                 M
               </div>
-              <div className="w-5 h-5 rounded-full bg-[#333333] text-white flex items-center justify-center text-[9px] font-bold border border-white dark:border-[#141414]">
+              <div className="w-5 h-5 rounded-full bg-[#333333] text-white flex items-center justify-center text-[9px] font-bold border border-white/40">
                 S
               </div>
             </div>
-            <span className="text-xs font-semibold text-[#333333] dark:text-[#cccccc] tracking-tight">
-              {isKo ? "미래 학생 및 미래 과목 맞춤형" : "Built for Future Students & Future Courses"}
+            <span className="text-xs font-semibold text-white/90 tracking-tight">
+              {isKo ? "학생을 위해, 학생이 만든 AI" : "Built for students, by students."}
             </span>
           </motion.div>
 
-          {/* Display Headline matching Text 2 regular weight typography */}
+          {/* Display Headline in White */}
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, type: "spring" as const, bounce: 0 }}
-            className="mx-auto max-w-[22rem] text-[2.25rem] leading-[1.08] tracking-[-0.01em] text-black/90 font-normal sm:max-w-3xl sm:text-5xl sm:leading-[1.0] sm:tracking-[-0.02em] md:text-6xl lg:text-7xl mb-4"
+            className="mx-auto max-w-[24rem] text-[2.25rem] leading-[1.08] tracking-[-0.01em] text-white font-normal sm:max-w-4xl sm:text-5xl sm:leading-[1.05] sm:tracking-[-0.02em] md:text-6xl lg:text-7xl mb-4 drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]"
           >
             {isKo ? (
               <>
-                대학생을 위한
+                대학생을 위한 슈퍼 워크스페이스.
                 <br />
-                <span className="font-editorial text-[#550000] block mt-1">
-                  학습, 실전 연습, 시험 대비 슈퍼 워크스페이스.
+                <span className="font-editorial text-white block mt-1">
+                  학습, 실전 연습, 복습 & 분석까지.
                 </span>
               </>
             ) : (
               <>
-                A student’s super workspace for
+                A super workspace for students.
                 <br />
-                <span className="font-editorial text-[#550000] block mt-1">
-                  learning, practice, and review.
+                <span className="font-editorial text-white block mt-1">
+                  Learn, practice, review & analyze.
                 </span>
               </>
             )}
           </motion.h1>
-
 
           {/* Dual Action Buttons */}
           <motion.div
@@ -80,10 +81,10 @@ export const Hero = () => {
             transition={{ duration: 0.6, delay: 0.2, type: "spring" as const, bounce: 0 }}
             className="mx-auto mt-7 flex w-full max-w-[23rem] flex-col items-center justify-center gap-3 px-0 sm:mt-9 sm:max-w-none sm:w-auto sm:flex-row mb-12 sm:mb-16"
           >
-            {/* Solid Black Dashboard / Start Pill Button */}
+            {/* Solid White / Start Pill Button */}
             <Button
               asChild
-              className="h-11 w-full rounded-full bg-neutral-950 px-8 text-sm font-semibold text-white hover:bg-neutral-800 sm:h-12 sm:w-auto sm:text-base shadow-md transition-all active:scale-95"
+              className="h-11 w-full rounded-full bg-white hover:bg-neutral-100 text-neutral-950 px-8 text-sm font-semibold sm:h-12 sm:w-auto sm:text-base shadow-lg transition-all active:scale-95"
             >
               <a href="/workspace" className="flex items-center gap-2">
                 <span>{isKo ? "대시보드 시작하기" : "Dashboard"}</span>
@@ -94,7 +95,7 @@ export const Hero = () => {
             {/* Product Demo Pill Button */}
             <Button
               asChild
-              className="h-11 w-full rounded-full border border-lime-500/70 bg-[#bbf451] hover:bg-[#aee645] px-8 text-sm font-semibold text-black sm:h-12 sm:w-auto sm:text-base shadow-sm transition-all active:scale-95"
+              className="h-11 w-full rounded-full border border-white/20 bg-white/10 hover:bg-white/20 backdrop-blur-md px-8 text-sm font-semibold text-white sm:h-12 sm:w-auto sm:text-base shadow-sm transition-all active:scale-95"
             >
               <a href="/workspace">
                 {isKo ? "제품 데모 둘러보기" : "Product Demo"}

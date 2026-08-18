@@ -361,27 +361,6 @@ export const LiveFocusSessions = () => {
             )}
           </div>
 
-          {/* Bottom Inside Banner */}
-          <div className="rounded-xl bg-rose-50/40 dark:bg-rose-950/20 p-2.5 sm:p-3 flex flex-col sm:flex-row items-center justify-between gap-2.5 border border-rose-100 dark:border-rose-900/30">
-            <div>
-              <h5 className="text-xs font-bold text-neutral-900 dark:text-white">
-                {isKo ? "더 스마트하게, 덜 힘들게." : "Study smarter. Not harder."}
-              </h5>
-              <p className="text-[10.5px] text-neutral-500 dark:text-rose-300/70 mt-0.5">
-                {isKo
-                  ? "Preplit AI가 학업 진도를 추적하고 올바른 학습 경로를 안내합니다."
-                  : "Let PreplitAI track your progress and keep you on the right path."}
-              </p>
-            </div>
-
-            <a
-              href="/workspace"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-[11px] shadow-xs transition-all active:scale-95 shrink-0"
-            >
-              <span>{isKo ? "내 워크스페이스로 이동" : "Go to My Workspace"}</span>
-              <ChevronRight className="w-3 h-3" />
-            </a>
-          </div>
         </motion.div>
       </div>
     </section>
