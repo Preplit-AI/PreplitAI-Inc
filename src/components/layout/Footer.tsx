@@ -10,9 +10,8 @@ export const Footer = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           {/* Brand Info (Left Aligned on Mobile & Desktop) */}
           <div className="flex flex-col items-start text-left gap-2">
-            <a href="/" className="inline-flex items-center gap-3">
-              <img src="/logo.png" alt="PreplitAI Logo" className="h-10 sm:h-11 w-auto object-contain" />
-              <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#111111] dark:text-white">
+            <a href="/" className="inline-flex items-center">
+              <span className="text-xl sm:text-2xl font-bold tracking-tight text-[#111111] dark:text-white hover:opacity-80 transition-opacity">
                 PreplitAI
               </span>
             </a>

@@ -135,7 +135,7 @@ export const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({
             </button>
             <button
               onClick={() => (onOpenAuth ? onOpenAuth("signup") : (window.location.href = "/auth"))}
-              className="w-full py-1.5 px-2 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-[11px] flex items-center justify-center gap-1 shadow-2xs transition-all active:scale-95"
+              className="w-full py-1.5 px-2 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 font-semibold text-[11px] flex items-center justify-center gap-1 shadow-2xs transition-all active:scale-95"
             >
               <UserPlus className="w-3 h-3" />
               <span>{isKo ? "가입하기" : "Sign Up"}</span>

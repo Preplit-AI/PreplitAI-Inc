@@ -358,8 +358,8 @@ export const WorkspaceTeaserSection = () => {
 
         </div>
 
-        {/* Mobile Swipe Indicators & Remaining Counter (Row 1) */}
-        <div className="flex md:hidden items-center justify-between px-2 -mt-1 mb-8 text-xs">
+        {/* Mobile Swipe Indicators (Row 1) */}
+        <div className="flex md:hidden items-center justify-center -mt-1 mb-8">
           <div className="flex items-center gap-1.5">
             {[0, 1, 2, 3, 4].map((i) => (
               <button
@@ -374,11 +374,6 @@ export const WorkspaceTeaserSection = () => {
               />
             ))}
           </div>
-          <span className="text-[10.5px] font-semibold text-neutral-400 dark:text-neutral-500">
-            {isKo
-              ? `${row1Index + 1} / 5 (${4 - row1Index > 0 ? `${4 - row1Index}개 남음` : "끝"})`
-              : `${row1Index + 1} of 5 (${4 - row1Index > 0 ? `${4 - row1Index} left` : "end"})`}
-          </span>
         </div>
 
         {/* ─── Section Header 2: Plus more. ─── */}
@@ -648,8 +643,8 @@ export const WorkspaceTeaserSection = () => {
 
         </div>
 
-        {/* Mobile Swipe Indicators & Remaining Counter (Row 2) */}
-        <div className="flex md:hidden items-center justify-between px-2 -mt-1 mb-6 text-xs">
+        {/* Mobile Swipe Indicators (Row 2) */}
+        <div className="flex md:hidden items-center justify-center -mt-1 mb-6">
           <div className="flex items-center gap-1.5">
             {[0, 1, 2, 3, 4].map((i) => (
               <button
@@ -664,11 +659,6 @@ export const WorkspaceTeaserSection = () => {
               />
             ))}
           </div>
-          <span className="text-[10.5px] font-semibold text-neutral-400 dark:text-neutral-500">
-            {isKo
-              ? `${row2Index + 1} / 5 (${4 - row2Index > 0 ? `${4 - row2Index}개 남음` : "끝"})`
-              : `${row2Index + 1} of 5 (${4 - row2Index > 0 ? `${4 - row2Index} left` : "end"})`}
-          </span>
         </div>
 
       </div>

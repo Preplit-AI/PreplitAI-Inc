@@ -198,7 +198,7 @@ export const TopNav = () => {
                             setShowAuthModal(true);
                             setMobileMenuOpen(false);
                           }}
-                          className="w-full py-2.5 rounded-full bg-[#550000] text-white text-xs font-semibold text-center shadow-xs"
+                          className="w-full py-2.5 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 text-xs font-semibold text-center shadow-xs transition-colors"
                         >
                           {isKo ? "가입하기" : "Sign Up"}
                         </button>

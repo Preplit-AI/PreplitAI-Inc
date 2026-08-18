@@ -96,7 +96,7 @@ export const Hero = () => {
               asChild
               className="h-11 w-full rounded-full border border-lime-500/70 bg-[#bbf451] hover:bg-[#aee645] px-8 text-sm font-semibold text-black sm:h-12 sm:w-auto sm:text-base shadow-sm transition-all active:scale-95"
             >
-              <a href="#how-it-works">
+              <a href="/workspace">
                 {isKo ? "제품 데모 둘러보기" : "Product Demo"}
               </a>
             </Button>

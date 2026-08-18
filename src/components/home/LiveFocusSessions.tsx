@@ -340,9 +340,9 @@ export const LiveFocusSessions = () => {
               ))}
             </div>
 
-            {/* Mobile Swipe Indicators & Remaining Counter */}
+            {/* Mobile Swipe Indicators */}
             {filteredCourses.length > 1 && (
-              <div className="flex sm:hidden items-center justify-between px-1 pt-1 text-xs">
+              <div className="flex sm:hidden items-center justify-center pt-2">
                 <div className="flex items-center gap-1.5">
                   {filteredCourses.map((_, i) => (
                     <button
@@ -357,11 +357,6 @@ export const LiveFocusSessions = () => {
                     />
                   ))}
                 </div>
-                <span className="text-[10.5px] font-semibold text-neutral-400 dark:text-neutral-500">
-                  {isKo
-                    ? `${activeCourseIndex + 1} / ${filteredCourses.length} (${filteredCourses.length - 1 - activeCourseIndex > 0 ? `${filteredCourses.length - 1 - activeCourseIndex}개 남음` : "끝"})`
-                    : `${activeCourseIndex + 1} of ${filteredCourses.length} (${filteredCourses.length - 1 - activeCourseIndex > 0 ? `${filteredCourses.length - 1 - activeCourseIndex} left` : "end"})`}
-                </span>
               </div>
             )}
           </div>
