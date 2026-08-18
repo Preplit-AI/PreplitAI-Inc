@@ -331,7 +331,7 @@ const About = () => {
             {isKo ? '강의 슬라이드나 PDF를 업로드하고 나만의 AI 스터디 튜터를 무료로 경험해보세요.' : 'Upload your first document and experience an interactive AI study companion today.'}
           </p>
           <Button asChild size="lg" className="rounded-full bg-white text-black hover:bg-gray-100 font-semibold text-base px-8 h-12">
-            <a href="/preplitai-chat" className="flex items-center gap-2">
+            <a href="/workspace" className="flex items-center gap-2">
               <span>{isKo ? '워크스페이스 시작하기' : 'Launch Workspace'}</span>
               <ArrowRight className="w-4 h-4" />
             </a>

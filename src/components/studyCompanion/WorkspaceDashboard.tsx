@@ -360,8 +360,8 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
         </div>
       </div>
 
-      {/* Right Sidebar Column */}
-      <div className="w-full lg:w-[250px] xl:w-[260px] bg-white dark:bg-[#0e0e0e] border-t lg:border-t-0 lg:border-l border-slate-200/80 dark:border-white/10 p-3.5 sm:p-4 lg:p-3.5 shrink-0 flex flex-col justify-between space-y-3.5 lg:space-y-0 overflow-y-auto lg:overflow-hidden lg:h-full pb-20 lg:pb-3.5">
+      {/* Right Sidebar Column (Desktop Only - Hidden on Mobile to avoid blocking screen) */}
+      <div className="hidden lg:flex lg:w-[250px] xl:w-[260px] bg-white dark:bg-[#0e0e0e] border-l border-slate-200/80 dark:border-white/10 p-3.5 shrink-0 flex-col justify-between overflow-hidden h-full">
         {/* Widget 1: Focus Session (Compact Maroon Timer Gauge) */}
         <div className="rounded-xl border border-slate-200/80 dark:border-white/10 p-2.5 bg-white dark:bg-[#121212] text-center shadow-xs">
           <div className="flex items-center justify-between mb-1">

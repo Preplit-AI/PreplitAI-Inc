@@ -111,7 +111,7 @@ export const UnlockPotentialSection = () => {
           className="flex flex-col sm:flex-row items-center gap-3.5 mt-9"
         >
           <a
-            href="/preplitai-chat"
+            href="/workspace"
             className="h-11 px-8 rounded-full bg-neutral-950 text-white font-semibold text-sm hover:bg-neutral-800 shadow-sm transition-all active:scale-95 flex items-center justify-center"
           >
             {isKo ? "무료로 학습 시작하기" : "Start studying free"}

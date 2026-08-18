@@ -30,7 +30,7 @@ export const TopNav = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (location.pathname === "/preplitai-chat" || location.pathname.startsWith("/gks")) {
+  if (location.pathname === "/workspace" || location.pathname === "/preplitai-chat" || location.pathname.startsWith("/gks")) {
     return null;
   }
 
@@ -83,7 +83,7 @@ export const TopNav = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-[#1a1a1a] rounded-2xl p-1.5 shadow-xl border-black/[0.08]">
                   <DropdownMenuItem asChild>
-                    <Link to="/preplitai-chat" className="flex items-center gap-2 text-xs py-2 px-3 rounded-xl cursor-pointer">
+                    <Link to="/workspace" className="flex items-center gap-2 text-xs py-2 px-3 rounded-xl cursor-pointer">
                       <LayoutDashboard className="w-3.5 h-3.5" />
                       {isKo ? "학습 워크스페이스" : "Workspace"}
                     </Link>
@@ -112,7 +112,7 @@ export const TopNav = () => {
 
             {/* Solid Black Start Button with Arrow */}
             <a
-              href="/preplitai-chat"
+              href="/workspace"
               className="inline-flex items-center gap-1 px-5 py-2 rounded-full bg-[#111111] hover:bg-[#000000] text-white text-[13px] font-semibold transition-all duration-150 active:scale-[0.97] shadow-xs"
             >
               <span>{isKo ? "시작하기" : "Start"}</span>
@@ -206,7 +206,7 @@ export const TopNav = () => {
                     )}
 
                     <Link
-                      to="/preplitai-chat"
+                      to="/workspace"
                       onClick={() => setMobileMenuOpen(false)}
                       className="flex items-center justify-center gap-1 w-full py-2.5 rounded-full bg-[#111] text-white text-xs font-semibold shadow-xs"
                     >

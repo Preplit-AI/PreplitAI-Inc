@@ -106,6 +106,10 @@ export function StudyCompanionWorkspace() {
   const docName = activeDocument?.file_name || "Document";
 
   useEffect(() => {
+    document.title = "Workspace | PreplitAI";
+  }, []);
+
+  useEffect(() => {
     const root = document.documentElement;
     if (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
       root.classList.add("dark");

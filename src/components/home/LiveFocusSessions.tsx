@@ -330,7 +330,7 @@ export const LiveFocusSessions = () => {
 
                   {/* Open Workspace Action Button */}
                   <a
-                    href="/preplitai-chat"
+                    href="/workspace"
                     className="inline-flex items-center justify-center gap-1 px-3 py-1.5 sm:py-1 rounded-lg bg-rose-50/80 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-[#550000] dark:text-rose-300 font-semibold text-[11px] sm:text-[10.5px] transition-all shrink-0 active:scale-95 text-center"
                   >
                     <span>{isKo ? "워크스페이스 열기" : "Open Workspace"}</span>
@@ -380,7 +380,7 @@ export const LiveFocusSessions = () => {
             </div>
 
             <a
-              href="/preplitai-chat"
+              href="/workspace"
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-[11px] shadow-xs transition-all active:scale-95 shrink-0"
             >
               <span>{isKo ? "내 워크스페이스로 이동" : "Go to My Workspace"}</span>

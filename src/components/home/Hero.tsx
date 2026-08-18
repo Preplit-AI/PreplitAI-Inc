@@ -85,7 +85,7 @@ export const Hero = () => {
               asChild
               className="h-11 w-full rounded-full bg-neutral-950 px-8 text-sm font-semibold text-white hover:bg-neutral-800 sm:h-12 sm:w-auto sm:text-base shadow-md transition-all active:scale-95"
             >
-              <a href="/preplitai-chat" className="flex items-center gap-2">
+              <a href="/workspace" className="flex items-center gap-2">
                 <span>{isKo ? "대시보드 시작하기" : "Dashboard"}</span>
                 <ArrowUpRight className="w-4 h-4" />
               </a>
@@ -147,7 +147,7 @@ export const Hero = () => {
 
               <div className="pt-2">
                 <a
-                  href="/preplitai-chat"
+                  href="/workspace"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-semibold text-xs sm:text-sm hover:bg-neutral-200 transition-all shadow-md active:scale-95"
                 >
                   <span>{isKo ? "워크스페이스 시작하기" : "Open Workspace"}</span>

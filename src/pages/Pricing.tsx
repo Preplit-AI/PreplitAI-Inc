@@ -161,7 +161,7 @@ const Pricing = () => {
                   variant="outline"
                   className="w-full mb-6 h-10 rounded-xl border-neutral-200 dark:border-white/10 text-xs font-semibold hover:bg-neutral-50 dark:hover:bg-neutral-800"
                 >
-                  <a href="/preplitai-chat">{isKo ? "무료로 시작하기" : "Start Free"}</a>
+                  <a href="/workspace">{isKo ? "무료로 시작하기" : "Start Free"}</a>
                 </Button>
 
                 {/* Features List */}
@@ -223,7 +223,7 @@ const Pricing = () => {
                   asChild
                   className="w-full mb-6 h-10 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white text-xs font-semibold shadow-xs"
                 >
-                  <a href="/preplitai-chat">{isKo ? "학생 프로 시작하기" : "Get Student Pro"}</a>
+                  <a href="/workspace">{isKo ? "학생 프로 시작하기" : "Get Student Pro"}</a>
                 </Button>
 
                 {/* Features List */}

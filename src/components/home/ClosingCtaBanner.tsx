@@ -45,7 +45,7 @@ export const ClosingCtaBanner = () => {
             <div className="flex flex-col gap-3 w-full sm:w-auto min-w-[220px]">
               {/* Start studying free Button */}
               <a
-                href="/preplitai-chat"
+                href="/workspace"
                 className="h-12 px-6 rounded-full bg-neutral-950 text-white font-semibold text-sm flex items-center justify-between hover:bg-neutral-800 transition-all shadow-md active:scale-95 group"
               >
                 <span>{isKo ? "무료로 학습 시작하기" : "Start studying free"}</span>

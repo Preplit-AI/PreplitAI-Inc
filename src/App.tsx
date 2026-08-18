@@ -54,7 +54,8 @@ const App = () => (
             <Route path="/account" element={<AccountOverview />} />
             <Route path="/settings" element={<AccountSettings />} />
             <Route path="/credits" element={<Credits />} />
-            <Route path="/preplitai-chat" element={<PreplitAIChat />} />
+            <Route path="/workspace" element={<PreplitAIChat />} />
+            <Route path="/preplitai-chat" element={<Navigate to="/workspace" replace />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -91,7 +91,7 @@ export default function Blog() {
                   <span>{post.author}</span> · <span>{post.date}</span>
                 </div>
                 <Button asChild className="rounded-full bg-white text-black hover:bg-gray-100 font-semibold text-xs px-5 h-9">
-                  <a href="/preplitai-chat" className="flex items-center gap-1.5">
+                  <a href="/workspace" className="flex items-center gap-1.5">
                     <span>{isKo ? '가이드 읽고 시작하기' : 'Read & Try Workspace'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </a>
@@ -119,7 +119,7 @@ export default function Blog() {
               </div>
               <div className="pt-6 border-t border-gray-100 dark:border-gray-800/60 mt-6 flex items-center justify-between text-xs text-gray-500">
                 <span>{post.date}</span>
-                <a href="/preplitai-chat" className="font-semibold text-black dark:text-white flex items-center gap-1 group-hover:underline">
+                <a href="/workspace" className="font-semibold text-black dark:text-white flex items-center gap-1 group-hover:underline">
                   <span>{isKo ? '더 보기' : 'Read Article'}</span>
                   <ArrowRight className="w-3 h-3" />
                 </a>
