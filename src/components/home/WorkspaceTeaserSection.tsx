@@ -19,7 +19,7 @@ export const WorkspaceTeaserSection = () => {
   const isKo = language === "ko";
 
   return (
-    <section id="features" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#0a0a0a] text-neutral-900 dark:text-white transition-colors duration-300">
+    <section id="features" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#0a0a0a] text-neutral-900 dark:text-white transition-colors duration-300 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         
         {/* ─── Top Section Header ─── */}
@@ -65,8 +65,8 @@ export const WorkspaceTeaserSection = () => {
           <div className="flex-1 border-t border-neutral-200 dark:border-neutral-800" />
         </div>
 
-        {/* ─── Row 1: The 5 Basic Tool Cards ─── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+        {/* ─── Row 1: The 5 Basic Tool Cards (Swipable on mobile) ─── */}
+        <div className="flex overflow-x-auto pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-10 -mx-4 px-4 sm:mx-0 sm:px-0">
 
           {/* 1. AI Chat */}
           <motion.div
@@ -74,7 +74,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.05 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
@@ -119,7 +119,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
@@ -178,7 +178,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.15 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
@@ -233,7 +233,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.2 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
@@ -273,7 +273,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.25 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
@@ -321,8 +321,8 @@ export const WorkspaceTeaserSection = () => {
           <div className="flex-1 border-t border-neutral-200 dark:border-neutral-800" />
         </div>
 
-        {/* ─── Row 2: The 5 "Plus more." Cards ─── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        {/* ─── Row 2: The 5 "Plus more." Cards (Swipable on mobile) ─── */}
+        <div className="flex overflow-x-auto pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
 
           {/* 6. Exam Predictions */}
           <motion.div
@@ -330,7 +330,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.05 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
@@ -392,7 +392,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
@@ -441,7 +441,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.15 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
@@ -489,7 +489,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.2 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
@@ -535,7 +535,7 @@ export const WorkspaceTeaserSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.25 }}
-            className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="w-[280px] xs:w-[300px] md:w-auto flex-shrink-0 md:flex-shrink snap-start rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
