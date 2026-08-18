@@ -109,7 +109,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, type: "spring" as const, bounce: 0 }}
-          className="w-full max-w-5xl rounded-[28px] sm:rounded-[36px] bg-black text-white border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.65)] overflow-hidden mb-16 sm:mb-24 relative p-6 sm:p-10 md:p-12 text-left"
+          className="w-full max-w-5xl rounded-[28px] sm:rounded-[36px] bg-[#151515] text-white border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.65)] overflow-hidden mb-16 sm:mb-24 relative p-6 sm:p-10 md:p-12 text-left"
         >
           {/* Main Top / Middle Section: Headline on Left, Study Station Scene on Right */}
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -155,9 +155,9 @@ export const Hero = () => {
 
             {/* Right Column: Modern Study Desk Visual Mockup */}
             <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end">
-              <div className="relative w-full max-w-[420px] aspect-[4/3] rounded-2xl bg-neutral-900/90 border border-white/10 p-4 sm:p-5 shadow-2xl flex flex-col justify-between overflow-hidden">
+              <div className="relative w-full max-w-[420px] aspect-[4/3] rounded-2xl bg-black border border-white/10 p-4 sm:p-5 shadow-2xl flex flex-col justify-between overflow-hidden">
                 {/* Top: Laptop Screen Graphic */}
-                <div className="rounded-xl bg-neutral-950 border border-white/10 p-3 shadow-inner space-y-2">
+                <div className="rounded-xl bg-[#0d0d0d] border border-white/10 p-3 shadow-inner space-y-2">
                   <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
                     <div className="flex items-center gap-1.5">
                       <div className="w-2 h-2 rounded-full bg-red-500/80" />

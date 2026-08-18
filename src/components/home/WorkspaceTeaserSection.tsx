@@ -99,7 +99,7 @@ export const WorkspaceTeaserSection = () => {
             transition={{ duration: 0.5 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold tracking-tight leading-[1.15]"
           >
-            <span className="text-[#550000] dark:text-[#f87171] block">
+            <span className="text-neutral-950 dark:text-white block">
               {isKo ? "나만의 올인원" : "Your All-in-One"}
             </span>
             <span className="text-neutral-950 dark:text-white block mt-1">
@@ -121,7 +121,7 @@ export const WorkspaceTeaserSection = () => {
           </motion.p>
 
           {/* Subtle Decorative Line Under Subtitle */}
-          <div className="w-12 h-0.5 bg-[#550000]/40 dark:bg-rose-500/40 rounded-full mt-4" />
+          <div className="w-12 h-0.5 bg-neutral-300 dark:bg-neutral-700 rounded-full mt-4" />
         </div>
 
         {/* ─── Section Header 1: All the basic tools. ─── */}
