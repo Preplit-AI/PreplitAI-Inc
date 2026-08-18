@@ -520,13 +520,19 @@ export default function GKSDashboard() {
             
             {/* WORKSPACE HEADER */}
             <div className="flex items-center justify-between px-1 pt-1 pb-2 border-b border-[#e8e5e0]">
-              <div className="flex items-center gap-2">
+              <a
+                href="/"
+                className="flex items-center gap-2 group cursor-pointer hover:opacity-85 transition-opacity"
+                title="Go to PreplitAI Home"
+              >
                 <img src="/logo.png" alt="PreplitAI" className="h-7 w-auto" />
                 <div>
-                  <div className="font-bold text-[12.5px] text-[#111] tracking-tight">GKS Workbench</div>
+                  <div className="font-bold text-[12.5px] text-[#111] tracking-tight group-hover:text-[#550000] transition-colors">
+                    GKS Workbench
+                  </div>
                   <div className="text-[10px] text-[#888] font-medium">PreplitAI Engine</div>
                 </div>
-              </div>
+              </a>
               <button
                 onClick={() => {
                   setSessionToken('gks_sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9));
@@ -592,7 +598,14 @@ export default function GKSDashboard() {
         <main className="flex-1 min-w-0 bg-[#f5f4f1] p-4 sm:p-6 flex flex-col gap-4 overflow-hidden">
 
           {/* MOBILE ONLY STEP NAVIGATION TABS */}
-          <div className="lg:hidden bg-white p-1 rounded-xl border border-[#e8e5e0] shadow-xs">
+          <div className="lg:hidden bg-white p-2 rounded-xl border border-[#e8e5e0] shadow-xs space-y-2">
+            <div className="flex items-center justify-between px-1">
+              <a href="/" className="flex items-center gap-1.5" title="Go to PreplitAI Home">
+                <img src="/logo.png" alt="PreplitAI" className="h-5 w-auto" />
+                <span className="font-bold text-xs text-[#111]">GKS Workbench</span>
+              </a>
+              <span className="text-[10px] text-[#888] font-medium">PreplitAI Engine</span>
+            </div>
             <div className="grid grid-cols-4 gap-1">
               {[
                 { num: 1, label: 'Profile' },
