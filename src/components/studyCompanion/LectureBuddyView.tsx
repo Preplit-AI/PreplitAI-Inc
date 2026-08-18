@@ -170,9 +170,6 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
       <div className="flex-1 flex flex-col overflow-y-auto bg-[#f5f4f1] px-4 sm:px-6 md:px-8 py-6">
         {/* Hero */}
         <div className="max-w-xl mx-auto text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-[#550000]/10 flex items-center justify-center mx-auto mb-4">
-            <Mic className="w-7 h-7 text-[#550000]" />
-          </div>
           <h1 className="text-[22px] sm:text-[26px] font-bold text-[#111] tracking-tight mb-2">
             {isKo ? "AI 강의 녹음" : "AI Lecture Buddy"}
           </h1>
@@ -227,18 +224,13 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
     return (
       <div className="flex-1 flex items-center justify-center bg-[#f5f4f1] px-4">
         <div className="bg-white border border-[#e8e5e0] rounded-2xl w-full max-w-md shadow-xl p-6">
-          <div className="flex items-start gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
-            </div>
-            <div>
-              <h2 className="text-[15px] font-bold text-[#111]">
-                {isKo ? "녹음 동의 확인" : "Recording Consent Required"}
-              </h2>
-              <p className="text-[12.5px] text-[#888] mt-0.5">
-                {isKo ? "녹음을 시작하기 전에 확인해주세요" : "Please confirm before recording begins"}
-              </p>
-            </div>
+          <div className="mb-4">
+            <h2 className="text-[15px] font-bold text-[#111]">
+              {isKo ? "녹음 동의 확인" : "Recording Consent Required"}
+            </h2>
+            <p className="text-[12.5px] text-[#888] mt-0.5">
+              {isKo ? "녹음을 시작하기 전에 확인해주세요" : "Please confirm before recording begins"}
+            </p>
           </div>
           <div className="bg-[#f7f4f0] border border-[#e8e5e0] rounded-xl p-4 mb-5">
             <p className="text-[13px] text-[#444] leading-relaxed">
@@ -349,18 +341,13 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
         <div className="max-w-2xl mx-auto w-full">
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0 mt-0.5">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div>
-                <h1 className="text-[18px] sm:text-[20px] font-bold text-[#111] tracking-tight">{notesToShow.title}</h1>
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="flex items-center gap-1 text-[11.5px] text-[#888]">
-                    <Clock className="w-3 h-3" /> {notesToShow.duration}
-                  </span>
-                  <span className="text-[11.5px] text-[#888]">{notesToShow.date}</span>
-                </div>
+            <div>
+              <h1 className="text-[18px] sm:text-[20px] font-bold text-[#111] tracking-tight">{notesToShow.title}</h1>
+              <div className="flex items-center gap-3 mt-1">
+                <span className="flex items-center gap-1 text-[11.5px] text-[#888]">
+                  <Clock className="w-3 h-3" /> {notesToShow.duration}
+                </span>
+                <span className="text-[11.5px] text-[#888]">{notesToShow.date}</span>
               </div>
             </div>
             <button

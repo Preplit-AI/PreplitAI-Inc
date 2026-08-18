@@ -24,21 +24,18 @@ export function ExpectedExamView({ examData, onGenerateExam, hasPastExamTagged =
 
   if (questions.length === 0 && hasPastExamTagged) {
     return (
-      <div className="flex flex-col h-full bg-white p-8 items-center justify-center text-center space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-rose-50 text-[#B01232] flex items-center justify-center shadow-2xs">
-          <Target className="w-6 h-6" />
-        </div>
+      <div className="flex flex-col h-full bg-white dark:bg-[#111] p-8 items-center justify-center text-center space-y-4">
         <div className="max-w-xs space-y-1.5">
-          <h3 className="font-semibold text-gray-900 text-sm">No Predicted Exam Generated</h3>
-          <p className="text-xs text-gray-500 leading-relaxed">
+          <h3 className="font-semibold text-gray-900 dark:text-white text-sm">No Predicted Exam Generated</h3>
+          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
             Extract past exam patterns (jokbo 족보) and predict upcoming test questions grounded in current course slides.
           </p>
         </div>
         <Button 
           onClick={onGenerateExam}
-          className="mt-2 bg-[#B01232] hover:bg-[#930f2a] text-white rounded-2xl font-medium text-xs px-6 py-2.5 shadow-sm flex items-center gap-1.5"
+          className="mt-2 bg-[#550000] hover:bg-[#3d0000] text-white rounded-xl font-medium text-xs px-6 py-2.5 shadow-sm"
         >
-          <Sparkles className="w-4 h-4 text-white" /> Predict Exam Questions
+          Predict Exam Questions
         </Button>
       </div>
     );
@@ -46,17 +43,14 @@ export function ExpectedExamView({ examData, onGenerateExam, hasPastExamTagged =
 
   if (!hasPastExamTagged) {
     return (
-      <div className="flex flex-col h-full bg-white p-8 items-center justify-center text-center space-y-4">
-        <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
-          <AlertCircle className="w-6 h-6" />
-        </div>
+      <div className="flex flex-col h-full bg-white dark:bg-[#111] p-8 items-center justify-center text-center space-y-4">
         <div className="max-w-xs space-y-1">
-          <h3 className="font-semibold text-gray-900 text-sm">Past Exam Tag Required</h3>
-          <p className="text-xs text-gray-500 leading-relaxed">
-            Add at least one past exam tagged as <span className="font-semibold text-amber-700">"past_exam"</span> to unlock predicted questions for this course.
+          <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Past Exam Tag Required</h3>
+          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+            Add at least one past exam tagged as <span className="font-semibold text-[#550000] dark:text-rose-400">"past_exam"</span> to unlock predicted questions for this course.
           </p>
         </div>
-        <Button size="sm" className="rounded-xl bg-gray-900 text-white hover:bg-gray-800">
+        <Button size="sm" className="rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white">
           Tag Document as Past Exam
         </Button>
       </div>

@@ -238,7 +238,6 @@ const About = () => {
 
           <div className="grid md:grid-cols-3 gap-6">
             {pillars.map((p, i) => {
-              const Icon = p.icon;
               return (
                 <motion.div
                   key={p.label}
@@ -250,9 +249,6 @@ const About = () => {
                   className="p-6 rounded-2xl bg-white dark:bg-[#141414] border border-gray-200/80 dark:border-white/10 shadow-xs hover:border-[#630000]/40 transition-colors flex flex-col justify-between"
                 >
                   <div>
-                    <div className="w-10 h-10 rounded-xl bg-[#630000]/8 dark:bg-[#630000]/25 text-[#630000] dark:text-[#ffaaaa] flex items-center justify-center mb-4">
-                      <Icon className="w-5 h-5" />
-                    </div>
                     <h3 className="text-lg font-bold text-black dark:text-white mb-2">{p.label}</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{p.desc}</p>
                   </div>

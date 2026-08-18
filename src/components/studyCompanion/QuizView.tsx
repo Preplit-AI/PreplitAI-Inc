@@ -29,9 +29,6 @@ export function QuizView({ quizData, onGenerateNewQuiz }: QuizViewProps) {
   if (questions.length === 0) {
     return (
       <div className="flex flex-col h-full bg-white dark:bg-[#111] p-8 items-center justify-center text-center space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center shadow-2xs">
-          <HelpCircle className="w-6 h-6" />
-        </div>
         <div className="max-w-xs space-y-1.5">
           <h3 className="font-semibold text-gray-900 dark:text-white text-sm">No Quiz Generated Yet</h3>
           <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
@@ -40,9 +37,9 @@ export function QuizView({ quizData, onGenerateNewQuiz }: QuizViewProps) {
         </div>
         <Button 
           onClick={onGenerateNewQuiz}
-          className="mt-2 bg-gray-900 dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-2xl font-medium text-xs px-6 py-2.5 shadow-sm flex items-center gap-1.5"
+          className="mt-2 bg-[#550000] hover:bg-[#3d0000] text-white rounded-xl font-medium text-xs px-6 py-2.5 shadow-sm"
         >
-          <Sparkles className="w-4 h-4" /> Generate Quiz
+          Generate Quiz
         </Button>
       </div>
     );
