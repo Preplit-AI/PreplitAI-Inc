@@ -108,114 +108,14 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, type: "spring" as const, bounce: 0 }}
-          className="w-full max-w-5xl rounded-[28px] sm:rounded-[36px] bg-neutral-950 text-white border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.5)] overflow-hidden text-left mb-16 sm:mb-24 relative group"
+          className="w-full max-w-5xl rounded-[28px] sm:rounded-[36px] bg-neutral-950 text-white border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.5)] overflow-hidden mb-16 sm:mb-24 relative group"
         >
-          {/* Main Visual Banner */}
-          <div className="relative min-h-[400px] sm:min-h-[460px] md:min-h-[500px] bg-[url('/reach-potential.png')] bg-cover bg-center sm:bg-right-top flex flex-col justify-between p-6 sm:p-10 md:p-12 overflow-hidden">
-            {/* Subtle Gradient Overlays for optimal typography readability on all screens */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/30 pointer-events-none" />
-
-            {/* Top Bar inside Banner */}
-            <div className="relative z-10 flex items-center justify-between">
-              <span className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                <span>Preplit AI</span>
-              </span>
-              <a
-                href="/preplitai-chat"
-                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/15 text-xs font-semibold text-white transition-all active:scale-95"
-              >
-                <span>{isKo ? "워크스페이스 열기" : "Open Workspace"}</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
-            </div>
-
-            {/* Middle Main Headline */}
-            <div className="relative z-10 max-w-xl my-auto py-6 sm:py-8">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white tracking-tight leading-[1.12]">
-                {isKo ? (
-                  <>
-                    AI 학습 도구로
-                    <br />
-                    나만의 잠재력을
-                    <br />
-                    실현하세요
-                  </>
-                ) : (
-                  <>
-                    Reach your
-                    <br />
-                    potential with
-                    <br />
-                    AI learning tools
-                  </>
-                )}
-              </h2>
-            </div>
-
-            {/* Bottom 6 Feature Columns */}
-            <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 pt-6 border-t border-white/15">
-              {/* 1. Smart Notes */}
-              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
-                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
-                  {isKo ? "스마트 노트" : "Smart Notes"}
-                </h4>
-                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
-                  {isKo ? "내 자료 기반 자동 생성" : "AI-generated from your materials"}
-                </p>
-              </div>
-
-              {/* 2. AI Lecture Buddy */}
-              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
-                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
-                  {isKo ? "AI 렉처 버디" : "AI Lecture Buddy"}
-                </h4>
-                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
-                  {isKo ? "실시간 강의 캡처 및 구조화 노트" : "Capture lectures in real-time and get structured notes"}
-                </p>
-              </div>
-
-              {/* 3. Practice Quizzes */}
-              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
-                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
-                  {isKo ? "실전 퀴즈" : "Practice Quizzes"}
-                </h4>
-                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
-                  {isKo ? "자체 테스트로 빠른 실력 향상" : "Test yourself and improve faster"}
-                </p>
-              </div>
-
-              {/* 4. Exam Predictions */}
-              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
-                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
-                  {isKo ? "출제 예상 문제" : "Exam Predictions"}
-                </h4>
-                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
-                  {isKo ? "핵심 출제 주제 집중 공략" : "Focus on what matters most"}
-                </p>
-              </div>
-
-              {/* 5. 3D Learning Mode */}
-              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
-                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
-                  {isKo ? "3D 입체 학습" : "3D Learning Mode"}
-                </h4>
-                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
-                  {isKo ? "3D 모델로 시각적 입체 학습" : "Learn visually with interactive 3D models"}
-                </p>
-              </div>
-
-              {/* 6. & more */}
-              <div className="space-y-1">
-                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
-                  {isKo ? "& 그 외 기능" : "& more"}
-                </h4>
-                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
-                  {isKo ? "플래시카드, 협업 모드, 동영상 강의, 팟캐스트" : "Flashcards, Collaborative Mode, AI Video Lectures, Podcast Learning"}
-                </p>
-              </div>
-            </div>
-          </div>
+          <img
+            src="/reach-potential.png"
+            alt="Reach your potential with AI learning tools - Preplit AI"
+            className="w-full h-auto object-cover block select-none"
+            loading="eager"
+          />
         </motion.div>
       </div>
     </section>
