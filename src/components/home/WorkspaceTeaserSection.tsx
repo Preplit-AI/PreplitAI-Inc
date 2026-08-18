@@ -2,16 +2,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
-  MessageSquare,
-  Mic,
-  FileText,
-  Layers,
-  CheckSquare,
-  Target,
-  Box,
-  Video,
-  Headphones,
-  Users,
   ArrowRight,
   RotateCw,
   RotateCcw,
@@ -87,17 +77,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <MessageSquare className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "AI 챗봇" : "AI Chat"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "AI 챗봇" : "AI Chat"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "내 강의 맞춤 AI 튜터." : "Your course. Your AI tutor."}
               </p>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
@@ -139,17 +122,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Mic className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "렉처 버디" : "Lecture Buddy"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "렉처 버디" : "Lecture Buddy"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "실시간 캡처, 구조화, 완벽 복습." : "Capture, structure, never miss."}
               </p>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
@@ -205,17 +181,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <FileText className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "AI 스마트 노트" : "AI Notes"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "AI 스마트 노트" : "AI Notes"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "내 과목 맞춤형 스마트 노트." : "Smart notes, made for your course."}
               </p>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
@@ -267,17 +236,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Layers className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "플래시카드" : "Flashcards"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "플래시카드" : "Flashcards"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "장기 기억 간격 반복 암기." : "Turn content into long-term memory."}
               </p>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
@@ -314,17 +276,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <CheckSquare className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "실전 퀴즈" : "Practice Quizzes"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "실전 퀴즈" : "Practice Quizzes"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "중요 개념 집중 연습." : "Practice what matters."}
               </p>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
@@ -378,17 +333,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Target className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "출제 예상 문제" : "Exam Predictions"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "출제 예상 문제" : "Exam Predictions"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "확신을 주는 시험 대비." : "Study with confidence."}
               </p>
               <p className="text-[11.5px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
@@ -447,17 +395,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Box className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "3D 입체 학습" : "3D Interactive Learning"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "3D 입체 학습" : "3D Interactive Learning"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "보고 만지며 깊이 이해." : "Understand by seeing and doing."}
               </p>
               <p className="text-[11.5px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
@@ -503,17 +444,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Video className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "AI 동영상 강의" : "AI Video Lectures"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "AI 동영상 강의" : "AI Video Lectures"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "슬라이드가 영상으로." : "From slides to smart lectures."}
               </p>
               <p className="text-[11.5px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
@@ -558,17 +492,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Headphones className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "팟캐스트 학습" : "Podcast Learning"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "팟캐스트 학습" : "Podcast Learning"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "이동 중에도 귀로 학습." : "Learn on the go."}
               </p>
               <p className="text-[11.5px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
@@ -611,17 +538,10 @@ export const WorkspaceTeaserSection = () => {
             className="rounded-2xl p-5 bg-white dark:bg-[#121212] border border-neutral-200/80 dark:border-neutral-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#550000] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Users className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight">
-                    {isKo ? "협업 스터디 모드" : "Collaborative Mode"}
-                  </h4>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-neutral-900 dark:text-neutral-200 mb-1">
+              <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-tight mb-1">
+                {isKo ? "협업 스터디 모드" : "Collaborative Mode"}
+              </h4>
+              <p className="text-xs font-bold text-[#550000] dark:text-rose-400 mb-1.5">
                 {isKo ? "함께 배우고 더 큰 성취." : "Learn together. Achieve more."}
               </p>
               <p className="text-[11.5px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
