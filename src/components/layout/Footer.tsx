@@ -1,4 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Instagram, Twitter } from "lucide-react";
 
 export const Footer = () => {
   const { language } = useLanguage();
@@ -22,11 +23,35 @@ export const Footer = () => {
             </p>
           </div>
 
-          {/* Contact Us Link */}
-          <div className="flex items-center gap-6 self-start sm:self-auto">
+          {/* Social Links & Contact Us */}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 self-start sm:self-auto">
+            <a
+              href="https://instagram.com/preplitai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs font-semibold text-[#666666] dark:text-[#999999] hover:text-[#550000] dark:hover:text-rose-400 transition-colors p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-neutral-800"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-4 h-4" />
+              <span className="hidden xs:inline">Instagram</span>
+            </a>
+
+            <a
+              href="https://x.com/preplitai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs font-semibold text-[#666666] dark:text-[#999999] hover:text-[#550000] dark:hover:text-rose-400 transition-colors p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-neutral-800"
+              aria-label="Twitter / X"
+            >
+              <Twitter className="w-4 h-4" />
+              <span className="hidden xs:inline">Twitter</span>
+            </a>
+
+            <div className="h-4 w-[1px] bg-neutral-200 dark:bg-neutral-800 hidden xs:block" />
+
             <a
               href="mailto:info@preplitai.com"
-              className="text-xs font-semibold text-[#666666] dark:text-[#999999] hover:text-[#550000] dark:hover:text-rose-400 transition-colors py-1.5 px-3 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-800 -ml-3 sm:ml-0"
+              className="text-xs font-semibold text-[#666666] dark:text-[#999999] hover:text-[#550000] dark:hover:text-rose-400 transition-colors py-1.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-neutral-800"
             >
               {isKo ? "문의하기 (Contact Us)" : "Contact Us"}
             </a>
