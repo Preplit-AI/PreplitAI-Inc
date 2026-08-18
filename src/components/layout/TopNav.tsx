@@ -57,9 +57,9 @@ export const TopNav = () => {
 
           {/* Center Links (FEATURES, BLOG, PRICING, GKS PREP in clean uppercase) */}
           <div className="hidden md:flex items-center gap-7 text-[11.5px] font-bold tracking-widest text-[#555555] dark:text-[#888888] uppercase">
-            <Link to="/features" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+            <a href="/#features" className="hover:text-[#111111] dark:hover:text-white transition-colors">
               {isKo ? "기능" : "FEATURES"}
-            </Link>
+            </a>
             <Link to="/blog" className="hover:text-[#111111] dark:hover:text-white transition-colors">
               {isKo ? "블로그" : "BLOG"}
             </Link>
@@ -132,13 +132,13 @@ export const TopNav = () => {
               <SheetContent side="right" className="w-[280px] bg-white dark:bg-[#111111] p-6">
                 <SheetTitle className="text-left font-bold text-lg mb-6">PreplitAI</SheetTitle>
                 <div className="flex flex-col gap-2">
-                  <Link
-                    to="/features"
+                  <a
+                    href="/#features"
                     onClick={() => setMobileMenuOpen(false)}
                     className="px-4 py-2.5 rounded-xl text-sm font-medium text-[#555] dark:text-[#aaa] hover:bg-slate-100 dark:hover:bg-white/5"
                   >
                     FEATURES
-                  </Link>
+                  </a>
                   <Link
                     to="/blog"
                     onClick={() => setMobileMenuOpen(false)}

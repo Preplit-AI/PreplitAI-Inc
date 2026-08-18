@@ -118,7 +118,7 @@ export const UnlockPotentialSection = () => {
           </a>
 
           <a
-            href="/features"
+            href="#features"
             className="h-11 px-8 rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 font-semibold text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all active:scale-95 flex items-center justify-center"
           >
             {isKo ? "Preplit 둘러보기" : "Explore Preplit"}
