@@ -42,7 +42,7 @@ export const Hero = () => {
               </div>
             </div>
             <span className="text-xs font-semibold text-[#333333] dark:text-[#cccccc] tracking-tight">
-              {isKo ? "1,000+ 국내외 대학생 사용 중" : "Used by 1,000+ university students"}
+              {isKo ? "미래 학생 및 미래 과목 맞춤형" : "Built for Future Students & Future Courses"}
             </span>
           </motion.div>
 

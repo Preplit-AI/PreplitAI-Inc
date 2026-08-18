@@ -24,7 +24,7 @@ export const UnlockPotentialSection = () => {
 
         {/* Rating Subtitle */}
         <p className="text-xs sm:text-sm font-normal text-neutral-500 dark:text-neutral-400 mb-5 italic">
-          {isKo ? "전 세계 대학생들의 신뢰와 선택" : "Loved by students worldwide"}
+          {isKo ? "차세대 학습자를 위해 설계된 AI 플랫폼" : "Designed for Next-Generation Learners"}
         </p>
 
         {/* Display Headline */}
@@ -59,8 +59,8 @@ export const UnlockPotentialSection = () => {
           className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl mb-10 font-normal leading-relaxed"
         >
           {isKo
-            ? "수천 명의 학생들과 함께 Preplit AI로 더 스마트하게 배우고, 체계적으로 정리하여 모든 시험에서 앞서가세요."
-            : "Join thousands of students using Preplit AI to learn smarter, stay organized, and ace every exam."}
+            ? "미래 학생들과 미래 과목을 위해 설계된 Preplit AI로 더 스마트하게 배우고, 체계적으로 정리하여 모든 시험에서 앞서가세요."
+            : "Designed for future students and future courses to learn smarter, stay organized, and ace every exam."}
         </motion.p>
 
         {/* 3 Column Stats with Top/Bottom Dividers */}
@@ -73,31 +73,31 @@ export const UnlockPotentialSection = () => {
         >
           {/* Stat 1 */}
           <div>
-            <p className="text-3xl sm:text-4xl font-bold text-neutral-950 dark:text-white tracking-tight">
-              850+
+            <p className="text-2xl sm:text-3xl font-bold text-neutral-950 dark:text-white tracking-tight">
+              {isKo ? "미래 학생" : "Future Students"}
             </p>
-            <p className="text-[10px] sm:text-[11px] font-bold text-neutral-400 dark:text-neutral-500 tracking-wider uppercase mt-1">
-              {isKo ? "가입 학생 수" : "STUDENTS JOINED"}
+            <p className="text-[10px] sm:text-[11px] font-semibold text-neutral-400 dark:text-neutral-500 tracking-wider uppercase mt-1">
+              {isKo ? "차세대 학습자 지원" : "Next-Gen Scholars"}
             </p>
           </div>
 
           {/* Stat 2 */}
           <div>
-            <p className="text-3xl sm:text-4xl font-bold text-neutral-950 dark:text-white tracking-tight">
-              2,345+
+            <p className="text-2xl sm:text-3xl font-bold text-neutral-950 dark:text-white tracking-tight">
+              {isKo ? "미래 과목" : "Future Courses"}
             </p>
-            <p className="text-[10px] sm:text-[11px] font-bold text-neutral-400 dark:text-neutral-500 tracking-wider uppercase mt-1">
-              {isKo ? "업로드된 강좌" : "COURSES UPLOADED"}
+            <p className="text-[10px] sm:text-[11px] font-semibold text-neutral-400 dark:text-neutral-500 tracking-wider uppercase mt-1">
+              {isKo ? "전공 무제한 호환" : "Any Curriculum"}
             </p>
           </div>
 
           {/* Stat 3 */}
           <div>
-            <p className="text-3xl sm:text-4xl font-bold text-neutral-950 dark:text-white tracking-tight">
-              98%
+            <p className="text-2xl sm:text-3xl font-bold text-neutral-950 dark:text-white tracking-tight">
+              100%
             </p>
-            <p className="text-[10px] sm:text-[11px] font-bold text-neutral-400 dark:text-neutral-500 tracking-wider uppercase mt-1">
-              {isKo ? "학습 효율 향상 보고" : "STUDY BOOST REPORTED"}
+            <p className="text-[10px] sm:text-[11px] font-semibold text-neutral-400 dark:text-neutral-500 tracking-wider uppercase mt-1">
+              {isKo ? "출처 인용 정확도" : "AI Grounded Accuracy"}
             </p>
           </div>
         </motion.div>

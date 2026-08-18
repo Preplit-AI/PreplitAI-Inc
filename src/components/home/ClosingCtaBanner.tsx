@@ -52,12 +52,12 @@ export const ClosingCtaBanner = () => {
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
 
-              {/* Support Preplit Button */}
+              {/* Contact Us Button */}
               <a
-                href="mailto:support@preplitai.com"
+                href="mailto:info@preplitai.com"
                 className="h-12 px-6 rounded-full border border-white/70 dark:border-white/20 bg-white/90 dark:bg-white/10 backdrop-blur-md text-neutral-900 dark:text-white font-semibold text-sm flex items-center justify-between hover:bg-white dark:hover:bg-white/20 transition-all shadow-xs active:scale-95 group"
               >
-                <span>{isKo ? "Preplit 후원 및 지원" : "Support Preplit"}</span>
+                <span>{isKo ? "문의하기 (Contact Us)" : "Contact Us"}</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
             </div>
