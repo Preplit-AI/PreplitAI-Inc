@@ -466,35 +466,6 @@ export const WorkspaceTeaserSection = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* Bottom Full-Width CTA Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="rounded-2xl bg-white dark:bg-[#121212] border border-slate-200/90 dark:border-white/10 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs"
-        >
-          {/* Left Text */}
-          <div className="flex items-center gap-3 text-center sm:text-left">
-            <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 flex items-center justify-center shrink-0">
-              <GraduationCap className="w-5 h-5" />
-            </div>
-            <p className="text-sm sm:text-base font-semibold text-neutral-800 dark:text-white">
-              From lectures to exams —{" "}
-              <span className="text-[#550000] dark:text-rose-400 font-bold">PreplitAI</span> is your all-in-one AI study partner.
-            </p>
-          </div>
-
-          {/* Right Action Button in Maroon */}
-          <a
-            href="/preplitai-chat"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#550000] hover:bg-[#3d0000] text-white font-bold text-xs sm:text-sm shadow-sm transition-all active:scale-95 shrink-0"
-          >
-            <span>Start Your Journey</span>
-            <ArrowRight className="w-4 h-4" />
-          </a>
-        </motion.div>
       </div>
     </section>
   );
