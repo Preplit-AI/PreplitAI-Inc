@@ -104,17 +104,13 @@ export const Hero = () => {
           </motion.div>
         </div>
 
-        {/* 4. Modern Cinematic Hero Feature Widget (Recreated from Image 1) */}
+        {/* 4. Modern Cinematic Hero Feature Widget */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, type: "spring" as const, bounce: 0 }}
-          className="w-full max-w-5xl rounded-[28px] sm:rounded-[36px] bg-[#0c0c0e] text-white border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.65)] overflow-hidden mb-16 sm:mb-24 relative p-6 sm:p-10 md:p-12 text-left"
+          className="w-full max-w-5xl rounded-[28px] sm:rounded-[36px] bg-black text-white border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.65)] overflow-hidden mb-16 sm:mb-24 relative p-6 sm:p-10 md:p-12 text-left"
         >
-          {/* Warm Directional Spotlight Lighting Effect */}
-          <div className="absolute -top-24 right-0 w-[550px] h-[550px] bg-[radial-gradient(ellipse_at_top_right,rgba(235,170,110,0.18),rgba(85,0,0,0.08),transparent_70%)] pointer-events-none" />
-          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#550000]/15 rounded-full blur-3xl pointer-events-none" />
-
           {/* Main Top / Middle Section: Headline on Left, Study Station Scene on Right */}
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
@@ -140,7 +136,7 @@ export const Hero = () => {
                 )}
               </h3>
 
-              <p className="text-xs sm:text-sm text-neutral-400 max-w-sm leading-relaxed">
+              <p className="text-xs sm:text-sm text-neutral-300 max-w-sm leading-relaxed">
                 {isKo
                   ? "강의 노트, 실시간 렉처 버디, 실전 퀴즈, 시험 예측까지 — 더 스마트한 학업 루틴."
                   : "Lecture notes, real-time audio buddy, practice quizzes, and exam predictions — all in one connected flow."}
@@ -159,10 +155,7 @@ export const Hero = () => {
 
             {/* Right Column: Modern Study Desk Visual Mockup */}
             <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end">
-              <div className="relative w-full max-w-[420px] aspect-[4/3] rounded-2xl bg-gradient-to-br from-neutral-900/90 to-neutral-950/90 border border-white/10 p-4 sm:p-5 shadow-2xl flex flex-col justify-between overflow-hidden">
-                {/* Desk Ambient Warm Glow */}
-                <div className="absolute top-0 right-0 w-44 h-44 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
-
+              <div className="relative w-full max-w-[420px] aspect-[4/3] rounded-2xl bg-neutral-900/90 border border-white/10 p-4 sm:p-5 shadow-2xl flex flex-col justify-between overflow-hidden">
                 {/* Top: Laptop Screen Graphic */}
                 <div className="rounded-xl bg-neutral-950 border border-white/10 p-3 shadow-inner space-y-2">
                   <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
@@ -175,7 +168,7 @@ export const Hero = () => {
                     <span className="text-[9px] text-emerald-400 font-medium">● 98% Predicted</span>
                   </div>
                   <div className="space-y-1 text-[10px] text-neutral-300 font-mono">
-                    <div className="text-[#f87171] font-semibold">Q: Binary Search Tree Balancing</div>
+                    <div className="text-amber-300 font-semibold">Q: Binary Search Tree Balancing</div>
                     <div className="text-neutral-400 text-[9px] truncate">AVL rotation steps & amortized time analysis...</div>
                   </div>
                 </div>
@@ -197,7 +190,7 @@ export const Hero = () => {
                     <div className="w-7 h-7 rounded-full bg-neutral-800 border border-white/15 flex items-center justify-center text-[8px] text-amber-300 shadow-inner">
                       ☕
                     </div>
-                    <div className="w-full h-3.5 rounded-sm bg-[#550000]/60 border border-white/10 text-[7px] text-white/70 flex items-center justify-center font-bold">
+                    <div className="w-full h-3.5 rounded-sm bg-neutral-800 border border-white/10 text-[7px] text-white/90 flex items-center justify-center font-bold">
                       CHEM II
                     </div>
                     <div className="w-full h-3 rounded-sm bg-neutral-800 border border-white/10 text-[7px] text-neutral-400 flex items-center justify-center">
