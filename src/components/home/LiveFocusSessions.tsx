@@ -217,7 +217,7 @@ export const LiveFocusSessions = () => {
             {/* Header & Filter Tabs */}
             <div className="flex items-center justify-between">
               <h4 className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-white">
-                Your Course Workspaces
+                {isKo ? "내 수강 과목 워크스페이스" : "Your Course Workspaces"}
               </h4>
 
               <div className="flex items-center gap-3 text-[11px] font-semibold">
@@ -229,7 +229,7 @@ export const LiveFocusSessions = () => {
                       : "border-transparent text-neutral-400 hover:text-neutral-700"
                   }`}
                 >
-                  All Courses
+                  {isKo ? "전체 과목" : "All Courses"}
                 </button>
                 <button
                   onClick={() => setActiveFilter("progress")}
@@ -239,7 +239,7 @@ export const LiveFocusSessions = () => {
                       : "border-transparent text-neutral-400 hover:text-neutral-700"
                   }`}
                 >
-                  In Progress
+                  {isKo ? "학습 중" : "In Progress"}
                 </button>
                 <button
                   onClick={() => setActiveFilter("completed")}
@@ -249,28 +249,28 @@ export const LiveFocusSessions = () => {
                       : "border-transparent text-neutral-400 hover:text-neutral-700"
                   }`}
                 >
-                  Completed
+                  {isKo ? "완료" : "Completed"}
                 </button>
               </div>
             </div>
 
-            {/* Course Rows */}
-            <div className="space-y-1.5">
+            {/* Course Rows: Horizontally swipable cards on mobile, clean rows on desktop */}
+            <div className="flex overflow-x-auto pb-2.5 pt-0.5 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-3 -mx-2 px-2 sm:mx-0 sm:px-0 sm:flex-col sm:space-y-1.5 sm:overflow-visible sm:pb-0">
               {filteredCourses.map((c) => (
                 <div
                   key={c.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-2.5 rounded-xl bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-neutral-800 hover:border-rose-200 dark:hover:border-rose-900/40 hover:shadow-2xs transition-all"
+                  className="w-[260px] xs:w-[280px] sm:w-auto shrink-0 sm:shrink snap-start flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2.5 p-3.5 sm:p-2.5 rounded-xl bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-neutral-800 hover:border-rose-200 dark:hover:border-rose-900/40 hover:shadow-2xs transition-all shadow-xs sm:shadow-none"
                 >
                   {/* Course Identity */}
-                  <div className="min-w-[180px]">
-                    <p className="text-xs font-bold text-neutral-900 dark:text-white leading-tight">
+                  <div className="min-w-0 sm:min-w-[180px]">
+                    <p className="text-xs font-bold text-neutral-900 dark:text-white leading-tight truncate">
                       {c.name}
                     </p>
                     <p className="text-[10px] text-neutral-400 mt-0.5">{c.dept}</p>
                   </div>
 
                   {/* Progress Bar & Topics */}
-                  <div className="flex items-center gap-2.5 flex-1 max-w-xs">
+                  <div className="flex items-center gap-2.5 sm:flex-1 sm:max-w-xs">
                     <div className="flex-1 h-1.5 bg-slate-100 dark:bg-neutral-800 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-[#550000] dark:bg-rose-600 rounded-full"
@@ -286,28 +286,28 @@ export const LiveFocusSessions = () => {
                   </div>
 
                   {/* Streak & Chats Metrics */}
-                  <div className="flex items-center gap-3.5 shrink-0 text-xs">
+                  <div className="flex items-center justify-between sm:justify-start gap-3.5 shrink-0 text-xs py-1.5 sm:py-0 border-y sm:border-y-0 border-slate-100 dark:border-neutral-800/80">
                     <div>
                       <span className="font-bold text-neutral-900 dark:text-white leading-none block text-[10.5px]">
                         {c.streak}
                       </span>
-                      <span className="text-[9px] text-neutral-400 block">Streak</span>
+                      <span className="text-[9px] text-neutral-400 block">{isKo ? "연속 학습" : "Streak"}</span>
                     </div>
 
                     <div>
                       <span className="font-bold text-neutral-900 dark:text-white leading-none block text-[10.5px]">
                         {c.chats}
                       </span>
-                      <span className="text-[9px] text-neutral-400 block">AI Chats</span>
+                      <span className="text-[9px] text-neutral-400 block">{isKo ? "AI 대화" : "AI Chats"}</span>
                     </div>
                   </div>
 
                   {/* Open Workspace Action Button */}
                   <a
                     href="/preplitai-chat"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50/80 dark:bg-rose-950/40 hover:bg-rose-100 text-[#550000] dark:text-rose-300 font-semibold text-[10.5px] transition-all shrink-0 active:scale-95 text-center justify-center"
+                    className="inline-flex items-center justify-center gap-1 px-3 py-1.5 sm:py-1 rounded-lg bg-rose-50/80 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-[#550000] dark:text-rose-300 font-semibold text-[11px] sm:text-[10.5px] transition-all shrink-0 active:scale-95 text-center"
                   >
-                    <span>Open Workspace</span>
+                    <span>{isKo ? "워크스페이스 열기" : "Open Workspace"}</span>
                     <ChevronRight className="w-3 h-3" />
                   </a>
                 </div>
@@ -319,10 +319,12 @@ export const LiveFocusSessions = () => {
           <div className="rounded-xl bg-rose-50/40 dark:bg-rose-950/20 p-2.5 sm:p-3 flex flex-col sm:flex-row items-center justify-between gap-2.5 border border-rose-100 dark:border-rose-900/30">
             <div>
               <h5 className="text-xs font-bold text-neutral-900 dark:text-white">
-                Study smarter. Not harder.
+                {isKo ? "더 스마트하게, 덜 힘들게." : "Study smarter. Not harder."}
               </h5>
               <p className="text-[10.5px] text-neutral-500 dark:text-rose-300/70 mt-0.5">
-                Let PreplitAI track your progress and keep you on the right path.
+                {isKo
+                  ? "Preplit AI가 학업 진도를 추적하고 올바른 학습 경로를 안내합니다."
+                  : "Let PreplitAI track your progress and keep you on the right path."}
               </p>
             </div>
 
@@ -330,7 +332,7 @@ export const LiveFocusSessions = () => {
               href="/preplitai-chat"
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-[11px] shadow-xs transition-all active:scale-95 shrink-0"
             >
-              <span>Go to My Workspace</span>
+              <span>{isKo ? "내 워크스페이스로 이동" : "Go to My Workspace"}</span>
               <ChevronRight className="w-3 h-3" />
             </a>
           </div>
