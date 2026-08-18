@@ -25,37 +25,63 @@ export const WorkspaceTeaserSection = () => {
 
   const handleRow1Scroll = () => {
     if (!row1Ref.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = row1Ref.current;
-    const maxScroll = scrollWidth - clientWidth;
-    if (maxScroll <= 0) return;
-    const itemWidth = scrollWidth / 5;
-    const idx = Math.min(4, Math.max(0, Math.round(scrollLeft / itemWidth)));
-    setRow1Index(idx);
+    const container = row1Ref.current;
+    const scrollLeft = container.scrollLeft;
+    const cards = Array.from(container.children) as HTMLElement[];
+    if (!cards.length) return;
+    
+    let closestIndex = 0;
+    let minDistance = Infinity;
+    const containerCenter = scrollLeft + container.clientWidth / 2;
+
+    cards.forEach((card, idx) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(containerCenter - cardCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = idx;
+      }
+    });
+    setRow1Index(closestIndex);
   };
 
   const handleRow2Scroll = () => {
     if (!row2Ref.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = row2Ref.current;
-    const maxScroll = scrollWidth - clientWidth;
-    if (maxScroll <= 0) return;
-    const itemWidth = scrollWidth / 5;
-    const idx = Math.min(4, Math.max(0, Math.round(scrollLeft / itemWidth)));
-    setRow2Index(idx);
+    const container = row2Ref.current;
+    const scrollLeft = container.scrollLeft;
+    const cards = Array.from(container.children) as HTMLElement[];
+    if (!cards.length) return;
+    
+    let closestIndex = 0;
+    let minDistance = Infinity;
+    const containerCenter = scrollLeft + container.clientWidth / 2;
+
+    cards.forEach((card, idx) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(containerCenter - cardCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = idx;
+      }
+    });
+    setRow2Index(closestIndex);
   };
 
   const scrollToRow1 = (idx: number) => {
     if (!row1Ref.current) return;
-    const { scrollWidth } = row1Ref.current;
-    const itemWidth = scrollWidth / 5;
-    row1Ref.current.scrollTo({ left: idx * itemWidth, behavior: "smooth" });
+    const cardEl = row1Ref.current.children[idx] as HTMLElement;
+    if (cardEl) {
+      cardEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
     setRow1Index(idx);
   };
 
   const scrollToRow2 = (idx: number) => {
     if (!row2Ref.current) return;
-    const { scrollWidth } = row2Ref.current;
-    const itemWidth = scrollWidth / 5;
-    row2Ref.current.scrollTo({ left: idx * itemWidth, behavior: "smooth" });
+    const cardEl = row2Ref.current.children[idx] as HTMLElement;
+    if (cardEl) {
+      cardEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
     setRow2Index(idx);
   };
 
@@ -110,7 +136,7 @@ export const WorkspaceTeaserSection = () => {
         <div
           ref={row1Ref}
           onScroll={handleRow1Scroll}
-          className="flex overflow-x-auto overflow-y-hidden touch-pan-y overscroll-x-contain pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 md:overflow-visible gap-4 mb-4 md:mb-10 -mx-4 px-4 sm:mx-0 sm:px-0"
+          className="flex overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch] pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 md:overflow-visible gap-4 mb-4 md:mb-10 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth"
         >
 
           {/* 1. AI Chat */}
@@ -388,7 +414,7 @@ export const WorkspaceTeaserSection = () => {
         <div
           ref={row2Ref}
           onScroll={handleRow2Scroll}
-          className="flex overflow-x-auto overflow-y-hidden touch-pan-y overscroll-x-contain pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 md:overflow-visible gap-4 mb-4 md:mb-8 -mx-4 px-4 sm:mx-0 sm:px-0"
+          className="flex overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch] pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 md:overflow-visible gap-4 mb-4 md:mb-8 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth"
         >
 
           {/* 6. Exam Predictions */}

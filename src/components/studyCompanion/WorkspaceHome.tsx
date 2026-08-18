@@ -71,7 +71,7 @@ export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSele
       </div>
 
       {/* Stats Cards - Horizontal Scroll on Mobile, Grid on Desktop */}
-      <div className="flex overflow-x-auto overflow-y-hidden touch-pan-y overscroll-x-contain sm:grid sm:grid-cols-3 gap-2.5 shrink-0 scrollbar-none pb-1 sm:pb-0">
+      <div className="flex overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch] sm:grid sm:grid-cols-3 gap-2.5 shrink-0 scrollbar-none pb-1 sm:pb-0 scroll-smooth">
         {[
           { icon: "🔥", title: isKo ? "12일 연속 학습" : "12-day streak",    sub: isKo ? "꾸준한 습관 달성 중!" : "Keep it up!" },
           { icon: "🃏", title: isKo ? "복습 카드 24개" : "24 cards due",      sub: isKo ? "오늘 복습 대기 중" : "Ready today" },

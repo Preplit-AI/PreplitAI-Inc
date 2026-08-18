@@ -13,21 +13,32 @@ export const LiveFocusSessions = () => {
 
   const handleCoursesScroll = () => {
     if (!coursesScrollRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = coursesScrollRef.current;
-    const maxScroll = scrollWidth - clientWidth;
-    if (maxScroll <= 0) return;
-    const count = filteredCourses.length;
-    const itemWidth = scrollWidth / count;
-    const idx = Math.min(count - 1, Math.max(0, Math.round(scrollLeft / itemWidth)));
-    setActiveCourseIndex(idx);
+    const container = coursesScrollRef.current;
+    const scrollLeft = container.scrollLeft;
+    const cards = Array.from(container.children) as HTMLElement[];
+    if (!cards.length) return;
+
+    let closestIndex = 0;
+    let minDistance = Infinity;
+    const containerCenter = scrollLeft + container.clientWidth / 2;
+
+    cards.forEach((card, idx) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(containerCenter - cardCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = idx;
+      }
+    });
+    setActiveCourseIndex(closestIndex);
   };
 
   const scrollToCourse = (idx: number) => {
     if (!coursesScrollRef.current) return;
-    const { scrollWidth } = coursesScrollRef.current;
-    const count = filteredCourses.length;
-    const itemWidth = scrollWidth / count;
-    coursesScrollRef.current.scrollTo({ left: idx * itemWidth, behavior: "smooth" });
+    const cardEl = coursesScrollRef.current.children[idx] as HTMLElement;
+    if (cardEl) {
+      cardEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
     setActiveCourseIndex(idx);
   };
 
@@ -280,7 +291,7 @@ export const LiveFocusSessions = () => {
             <div
               ref={coursesScrollRef}
               onScroll={handleCoursesScroll}
-              className="flex overflow-x-auto overflow-y-hidden touch-pan-y overscroll-x-contain pb-2.5 pt-0.5 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-3 -mx-2 px-2 sm:mx-0 sm:px-0 sm:flex-col sm:space-y-1.5 sm:overflow-visible sm:pb-0"
+              className="flex overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch] pb-2.5 pt-0.5 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-3 -mx-2 px-2 sm:mx-0 sm:px-0 sm:flex-col sm:space-y-1.5 sm:overflow-visible sm:pb-0 scroll-smooth"
             >
               {filteredCourses.map((c) => (
                 <div
