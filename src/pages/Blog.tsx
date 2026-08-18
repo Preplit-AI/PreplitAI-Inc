@@ -56,7 +56,7 @@ export default function Blog() {
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white flex flex-col">
       {/* Hero Header */}
-      <section className="pt-16 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 border-b border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-[#111]/50">
+      <section className="pt-28 sm:pt-36 md:pt-40 pb-12 sm:pb-16 px-4 sm:px-6 border-b border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-[#111]/50">
         <div className="max-w-5xl mx-auto text-center space-y-4">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight">
             {isKo ? '스마트 학습 & 인지과학 블로그' : 'Blog & Learning Strategy Guides'}
