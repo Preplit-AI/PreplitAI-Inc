@@ -13,7 +13,7 @@ export const Footer = () => {
           <div className="flex flex-col items-start text-left gap-2">
             <a href="/" className="inline-flex items-center">
               <span className="text-xl sm:text-2xl font-bold tracking-tight text-[#111111] dark:text-white hover:opacity-80 transition-opacity">
-                PreplitAI
+                Preplit AI
               </span>
             </a>
             <p className="text-xs text-[#666666] dark:text-[#999999] max-w-md font-normal leading-relaxed text-left">
@@ -62,7 +62,7 @@ export const Footer = () => {
 
         {/* Bottom bar (Left Aligned on Mobile) */}
         <div className="mt-8 pt-6 border-t border-black/[0.06] dark:border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-[11px] text-[#888888] text-left">
-          <p>© {new Date().getFullYear()} PreplitAI Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Preplit AI Inc. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-2 sm:gap-4">
             <span>Built for academic excellence</span>
             <span>•</span>

@@ -55,22 +55,8 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white flex flex-col">
-      {/* Hero Header */}
-      <section className="pt-28 sm:pt-36 md:pt-40 pb-12 sm:pb-16 px-4 sm:px-6 border-b border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-[#111]/50">
-        <div className="max-w-5xl mx-auto text-center space-y-4">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight">
-            {isKo ? '스마트 학습 & 인지과학 블로그' : 'Blog & Learning Strategy Guides'}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
-            {isKo
-              ? '한국 대학생과 외국인 유학생을 위한 최신 AI 학업법, 시험 예측 가이드, 그리고 학습 인지과학 인사이트를 만나보세요.'
-              : 'Explore the latest AI study strategies, exam prediction frameworks, and cognitive learning science research built for university students.'}
-          </p>
-        </div>
-      </section>
-
       {/* Main Blog Post Feed */}
-      <section className="py-16 px-6 max-w-5xl mx-auto flex-1 w-full space-y-12">
+      <section className="pt-28 sm:pt-36 md:pt-40 pb-16 px-6 max-w-5xl mx-auto flex-1 w-full space-y-12">
         {/* Featured Post */}
         {posts.filter(p => p.featured).map(post => (
           <div key={post.id} className="relative rounded-3xl bg-gray-950 text-white p-8 sm:p-10 overflow-hidden shadow-2xl border border-gray-800 group">
