@@ -30,7 +30,7 @@ export const TopNav = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (location.pathname === "/preplitai-chat") {
+  if (location.pathname === "/preplitai-chat" || location.pathname.startsWith("/gks")) {
     return null;
   }
 
