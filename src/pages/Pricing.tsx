@@ -194,8 +194,8 @@ const Pricing = () => {
           {/* Student Pro Tier (Featured) */}
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={2} className="flex flex-col relative">
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20">
-              <span className="px-3.5 py-1 text-[11px] font-bold tracking-wider uppercase bg-[#550000] text-white rounded-full shadow-md flex items-center gap-1">
-                <Sparkles className="w-3 h-3" /> {isKo ? '인기 추천' : 'Most Popular'}
+              <span className="px-3.5 py-1 text-[11px] font-bold tracking-wider uppercase bg-[#550000] text-white rounded-full shadow-md">
+                {isKo ? '인기 추천' : 'Most Popular'}
               </span>
             </div>
             

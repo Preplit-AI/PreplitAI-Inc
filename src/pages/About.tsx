@@ -151,12 +151,6 @@ const About = () => {
         </div>
 
         <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0} className="relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#630000]/8 dark:bg-[#630000]/20 border border-[#630000]/20 dark:border-[#630000]/30 mb-8">
-            <span className="text-[12.5px] font-semibold text-[#630000] dark:text-[#ffaaaa] tracking-wide">
-              {isKo ? '회사 스토리' : 'Our Story'}
-            </span>
-          </div>
-
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-black dark:text-white leading-[1.08] tracking-tight mb-7">
             {isKo ? '세계에서 가장 강력한 ' : "We're building the world's "}
             <br className="hidden sm:block" />
@@ -218,7 +212,7 @@ const About = () => {
                 className={`flex flex-col sm:flex-row gap-6 sm:gap-12 ${i % 2 === 1 ? 'sm:flex-row-reverse text-left sm:text-right' : ''}`}
               >
                 <div className="flex-1">
-                  <div className="inline-block text-[11px] font-bold uppercase tracking-widest text-[#630000] dark:text-[#ff9999] mb-2 px-2.5 py-1 rounded-full bg-[#630000]/8 dark:bg-[#630000]/15">
+                  <div className="text-[12px] font-bold uppercase tracking-wider text-[#630000] dark:text-[#ff9999] mb-1.5">
                     {item.year}
                   </div>
                   <h3 className="text-xl font-bold text-black dark:text-white mb-2">{item.title}</h3>
