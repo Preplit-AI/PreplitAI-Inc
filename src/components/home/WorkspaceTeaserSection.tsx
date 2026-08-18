@@ -576,35 +576,6 @@ export const WorkspaceTeaserSection = () => {
 
         </div>
 
-        {/* ─── Bottom Deep Maroon Callout Banner ─── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="rounded-2xl bg-[#550000] dark:bg-[#400000] text-white p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-lg"
-        >
-          {/* Left Text */}
-          <div>
-            <h4 className="text-lg sm:text-xl font-bold tracking-tight text-white">
-              {isKo ? "모든 과목. 모든 도구. 하나의 공간에서." : "All your courses. All your tools. All in one place."}
-            </h4>
-            <p className="text-xs sm:text-sm text-white/80 mt-1">
-              {isKo
-                ? "더 스마트하고 효율적인 학업을 지원하도록 모든 것이 연결되어 있습니다."
-                : "Everything connected to help you study smarter, not harder."}
-            </p>
-          </div>
-
-          {/* Right Action Button */}
-          <a
-            href="/preplitai-chat"
-            className="px-6 py-2.5 rounded-xl bg-white hover:bg-neutral-100 text-[#550000] font-bold text-xs sm:text-sm shadow-sm transition-all active:scale-95 shrink-0"
-          >
-            <span>{isKo ? "학습 시작하기" : "Start Your Journey"}</span>
-          </a>
-        </motion.div>
-
       </div>
     </section>
   );
