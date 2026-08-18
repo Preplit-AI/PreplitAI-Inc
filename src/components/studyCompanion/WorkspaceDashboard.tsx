@@ -40,7 +40,7 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
   onSelectSpace,
   onCreateSpace,
 }) => {
-  const { user } = useAuth();
+  const { user, checkDeveloperAccess } = useAuth();
   const { language } = useLanguage();
   const isKo = language === "ko";
 
@@ -72,11 +72,13 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
   }, [isFocusActive, focusSeconds]);
 
   const toggleFocus = () => {
+    if (!checkDeveloperAccess("Focus Session Pomodoro Timer", isKo)) return;
     if (focusSeconds === 0) setFocusSeconds(25 * 60);
     setIsFocusActive(!isFocusActive);
   };
 
   const resetFocus = () => {
+    if (!checkDeveloperAccess("Focus Session Pomodoro Timer", isKo)) return;
     setIsFocusActive(false);
     setFocusSeconds(25 * 60);
   };
@@ -96,6 +98,7 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
   ]);
 
   const toggleTask = (id: number) => {
+    if (!checkDeveloperAccess("Study Checklist & Task Management", isKo)) return;
     setTasks((prev) =>
       prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
     );
@@ -110,7 +113,10 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
       size: "12.4 MB",
       time: isKo ? "방금 전 열람" : "Opened just now",
       badgeColor: "bg-red-50 text-[#550000] border-red-200",
-      action: () => onToolSelect("chat"),
+      action: () => {
+        if (!checkDeveloperAccess("Lecture Notes AI Assistant", isKo)) return;
+        onToolSelect("chat");
+      },
     },
     {
       id: "2",
@@ -119,7 +125,10 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
       size: "8.7 MB",
       time: isKo ? "1시간 전 열람" : "Opened 1h ago",
       badgeColor: "bg-red-50 text-[#550000] border-red-200",
-      action: () => onToolSelect("notes"),
+      action: () => {
+        if (!checkDeveloperAccess("AI Notes & Summaries", isKo)) return;
+        onToolSelect("notes");
+      },
     },
     {
       id: "3",
@@ -128,7 +137,10 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
       size: "2.1 MB",
       time: isKo ? "어제 열람" : "Opened yesterday",
       badgeColor: "bg-red-50 text-[#550000] border-red-200",
-      action: () => onToolSelect("expected"),
+      action: () => {
+        if (!checkDeveloperAccess("Exam Predictor", isKo)) return;
+        onToolSelect("expected");
+      },
     },
     {
       id: "4",
@@ -137,7 +149,10 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
       size: "12 Questions",
       time: isKo ? "어제 열람" : "Opened yesterday",
       badgeColor: "bg-amber-50 text-amber-600 border-amber-200",
-      action: () => onToolSelect("quizzes"),
+      action: () => {
+        if (!checkDeveloperAccess("AI Practice Quiz", isKo)) return;
+        onToolSelect("quizzes");
+      },
     },
   ];
 
@@ -159,14 +174,20 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
           {/* Action Buttons in Maroon */}
           <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={onCreateSpace}
+              onClick={() => {
+                if (!checkDeveloperAccess("New Course Workspace", isKo)) return;
+                onCreateSpace();
+              }}
               className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-white font-semibold text-xs transition-all active:scale-95 shrink-0"
             >
               <Plus className="w-3.5 h-3.5 text-[#550000] dark:text-[#f87171]" />
               <span>{isKo ? "새 공간" : "New Space"}</span>
             </button>
             <button
-              onClick={onUploadClick}
+              onClick={() => {
+                if (!checkDeveloperAccess("Study Material Upload", isKo)) return;
+                onUploadClick();
+              }}
               className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 sm:py-2 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-xs shadow-xs transition-all active:scale-95 shrink-0"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -257,7 +278,10 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
               </span>
             </div>
             <button
-              onClick={onCreateSpace}
+              onClick={() => {
+                if (!checkDeveloperAccess("Create Course Workspace", isKo)) return;
+                onCreateSpace();
+              }}
               className="inline-flex items-center gap-1 text-xs font-semibold text-[#550000] dark:text-[#f87171] hover:underline"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -271,7 +295,10 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
               return (
                 <div
                   key={space.id}
-                  onClick={() => onSelectSpace(space.id)}
+                  onClick={() => {
+                    if (!isActive && !checkDeveloperAccess("Switch Active Course Workspace", isKo)) return;
+                    onSelectSpace(space.id);
+                  }}
                   className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                     isActive
                       ? "bg-rose-50/40 dark:bg-rose-950/20 border-[#550000]/40 dark:border-rose-900/60 shadow-xs ring-1 ring-[#550000]/20"
@@ -302,7 +329,10 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
 
             {/* Create New Workspace Card */}
             <button
-              onClick={onCreateSpace}
+              onClick={() => {
+                if (!checkDeveloperAccess("Create Course Workspace", isKo)) return;
+                onCreateSpace();
+              }}
               className="p-4 rounded-2xl border border-dashed border-slate-300 dark:border-neutral-700 hover:border-[#550000]/60 dark:hover:border-rose-500/60 hover:bg-rose-50/20 dark:hover:bg-rose-950/10 transition-all flex items-center justify-center gap-2 text-xs font-bold text-neutral-600 dark:text-neutral-300 hover:text-[#550000] dark:hover:text-[#f87171] group"
             >
               <Plus className="w-4 h-4 text-neutral-400 group-hover:text-[#550000] dark:group-hover:text-[#f87171] transition-colors" />

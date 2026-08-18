@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Footer } from '@/components/layout/Footer';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { API_BASE_URL } from '@/constants/config';
@@ -10,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 export default function GKSAlumniReview() {
   const { language } = useLanguage();
+  const { checkDeveloperAccess } = useAuth();
   const isKo = language === 'ko';
 
   const [form, setForm] = useState({
@@ -24,6 +26,7 @@ export default function GKSAlumniReview() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!checkDeveloperAccess("1-on-1 GKS Alumni Scholar Review", isKo)) return;
     if (!form.name || !form.email) {
       toast.error(isKo ? '이름과 이메일을 입력해주세요.' : 'Please provide your name and email');
       return;

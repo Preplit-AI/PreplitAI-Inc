@@ -286,7 +286,10 @@ export default function GKSDashboard() {
     fetchScholarMaterials();
   }, []);
 
+  const { checkDeveloperAccess } = useAuth();
+
   const handleSaveProfile = async () => {
+    if (!checkDeveloperAccess('GKS Applicant Profile Analysis', isKo)) return;
     setLoading(true);
     try {
       const res = await fetch(`${API_BASE_URL}/gks/profile`, {
@@ -313,6 +316,7 @@ export default function GKSDashboard() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, docType: string) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!checkDeveloperAccess('GKS Document Upload & Processing', isKo)) return;
 
     setLoading(true);
     const formData = new FormData();
@@ -351,6 +355,7 @@ export default function GKSDashboard() {
       toast.error(isKo ? '내용을 입력해주세요.' : 'Please enter document text');
       return;
     }
+    if (!checkDeveloperAccess('GKS Document Editor', isKo)) return;
     setLoading(true);
     try {
       const res = await fetch(`${API_BASE_URL}/gks/document`, {
@@ -404,8 +409,6 @@ export default function GKSDashboard() {
       setLoading(false);
     }
   };
-
-  const { checkDeveloperAccess } = useAuth();
 
   const handleRunEvaluation = async () => {
     if (!checkDeveloperAccess('GKS2026 AI Diagnostic Scan', isKo)) return;

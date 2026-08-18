@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Footer } from '@/components/layout/Footer';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { API_BASE_URL } from '@/constants/config';
@@ -19,6 +20,7 @@ interface ScholarMaterial {
 
 export default function GKSScholarMaterials() {
   const { language } = useLanguage();
+  const { checkDeveloperAccess } = useAuth();
   const isKo = language === 'ko';
 
   const [materials, setMaterials] = useState<ScholarMaterial[]>([]);
@@ -116,7 +118,10 @@ export default function GKSScholarMaterials() {
 
               <div className="pt-2 border-t border-gray-200 dark:border-gray-800 flex justify-end">
                 <Button
-                  onClick={() => setSelectedMaterial(mat)}
+                  onClick={() => {
+                    if (!checkDeveloperAccess("GKS Scholar Sample Library Access", isKo)) return;
+                    setSelectedMaterial(mat);
+                  }}
                   className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black text-xs font-semibold px-4 py-1 rounded-full h-8"
                 >
                   <span>{isKo ? '샘플 서류 읽기' : 'Read Sample Document'}</span>

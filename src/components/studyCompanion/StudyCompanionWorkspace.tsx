@@ -119,6 +119,7 @@ export function StudyCompanionWorkspace() {
   }, [theme]);
 
   const handleUpload = async () => {
+    if (!checkDeveloperAccess("Study Material Upload & Extraction", isKo)) return;
     setIsUploading(true);
     try {
       let text = "",
@@ -143,6 +144,7 @@ export function StudyCompanionWorkspace() {
   };
 
   const sendMessage = async (text: string) => {
+    if (!checkDeveloperAccess("AI Study Companion Chat", isKo)) return;
     setMessages((p) => [...p, { id: Date.now().toString(), role: "user", content: text }]);
     setIsGenerating(true);
     setTimeout(() => {
@@ -157,12 +159,14 @@ export function StudyCompanionWorkspace() {
   const handleChatSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (chatInput.trim()) {
+      if (!checkDeveloperAccess("AI Study Companion Chat", isKo)) return;
       sendMessage(chatInput.trim());
       setChatInput("");
     }
   };
 
   const handleToolSelect = (tool: string) => {
+    if (tool !== "workspace" && !checkDeveloperAccess(`AI Tool: ${tool}`, isKo)) return;
     if (tool === "chat") setNavTab("chat");
     else if (tool === "explore3d") setNavTab("explore3d");
     else if (tool === "analytics") setNavTab("analytics");
@@ -176,6 +180,7 @@ export function StudyCompanionWorkspace() {
 
   const createSpace = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!checkDeveloperAccess("Course Workspace Creation", isKo)) return;
     if (!newSpaceInput.trim()) return;
     const newSpace = { id: Date.now().toString(), name: newSpaceInput.trim() };
     setSpaces((prev) => [...prev, newSpace]);
@@ -195,13 +200,19 @@ export function StudyCompanionWorkspace() {
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         onNavigate={(id, type) => {
-          if (type === "chat") setNavTab("chat");
+          if (type === "chat") {
+            if (!checkDeveloperAccess("Global Search AI Chat", isKo)) return;
+            setNavTab("chat");
+          }
         }}
       />
 
       {/* Top Header */}
       <WorkspaceTopHeader
-        onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenSearch={() => {
+          if (!checkDeveloperAccess("Workspace Global Search", isKo)) return;
+          setIsSearchOpen(true);
+        }}
         onToggleSidebar={() => setIsMobileSidebarOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
@@ -223,6 +234,7 @@ export function StudyCompanionWorkspace() {
               <WorkspaceSidebar
                 activeTab={navTab}
                 onTabChange={(tab) => {
+                  if (tab !== "workspace" && !checkDeveloperAccess(`Workspace: ${tab}`, isKo)) return;
                   setNavTab(tab);
                   setIsMobileSidebarOpen(false);
                 }}
@@ -248,7 +260,10 @@ export function StudyCompanionWorkspace() {
         <div className="hidden lg:flex shrink-0 h-full">
           <WorkspaceSidebar
             activeTab={navTab}
-            onTabChange={setNavTab}
+            onTabChange={(tab) => {
+              if (tab !== "workspace" && !checkDeveloperAccess(`Workspace: ${tab}`, isKo)) return;
+              setNavTab(tab);
+            }}
             onOpenManagePlan={() => setIsManageSubOpen(true)}
             onOpenSettings={() => setIsSettingsOpen(true)}
             onOpenAuth={(tab) => {
@@ -326,19 +341,39 @@ export function StudyCompanionWorkspace() {
           )}
 
           {navTab === "flashcards" && (
-            <FlashcardView flashcardData={flashcardData} onGenerateNew={() => {}} />
+            <FlashcardView
+              flashcardData={flashcardData}
+              onGenerateNew={() => {
+                if (!checkDeveloperAccess("Flashcard Generation", isKo)) return;
+              }}
+            />
           )}
 
           {navTab === "quizzes" && (
-            <QuizView quizData={quizData} onGenerateNewQuiz={() => {}} />
+            <QuizView
+              quizData={quizData}
+              onGenerateNewQuiz={() => {
+                if (!checkDeveloperAccess("AI Practice Quiz Generation", isKo)) return;
+              }}
+            />
           )}
 
           {navTab === "notes" && (
-            <SummaryView summaryData={summaryData} onGenerateSummary={() => {}} />
+            <SummaryView
+              summaryData={summaryData}
+              onGenerateSummary={() => {
+                if (!checkDeveloperAccess("AI Notes & Summary Generation", isKo)) return;
+              }}
+            />
           )}
 
           {navTab === "expected" && (
-            <ExpectedExamView examData={examData} onGenerateExam={() => {}} />
+            <ExpectedExamView
+              examData={examData}
+              onGenerateExam={() => {
+                if (!checkDeveloperAccess("AI Exam Predictor & Past Papers", isKo)) return;
+              }}
+            />
           )}
 
           {navTab === "lecture-buddy" && <LectureBuddyView spaceId={activeSpaceId} />}
@@ -361,7 +396,10 @@ export function StudyCompanionWorkspace() {
           return (
             <button
               key={item.id}
-              onClick={() => setNavTab(item.id)}
+              onClick={() => {
+                if (item.id !== "workspace" && !checkDeveloperAccess(`Workspace: ${item.id}`, isKo)) return;
+                setNavTab(item.id);
+              }}
               className={`flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-xl text-[10px] font-semibold transition-all ${
                 isActive
                   ? "text-[#550000] dark:text-[#f87171] font-bold"

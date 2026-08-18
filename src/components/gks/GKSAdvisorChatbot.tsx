@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { API_BASE_URL } from '@/constants/config';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,7 @@ interface GKSAdvisorChatbotProps {
 
 export function GKSAdvisorChatbot({ isOpen, onClose }: GKSAdvisorChatbotProps) {
   const { language } = useLanguage();
+  const { checkDeveloperAccess } = useAuth();
   const isKo = language === 'ko';
 
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -49,6 +51,7 @@ export function GKSAdvisorChatbot({ isOpen, onClose }: GKSAdvisorChatbotProps) {
   const handleSendMessage = async (textToSend?: string) => {
     const query = (textToSend || inputMessage).trim();
     if (!query || loading) return;
+    if (!checkDeveloperAccess('GKS2026 AI Advisor Chat', isKo)) return;
 
     const userMsg: ChatMessage = {
       id: 'user-' + Date.now(),

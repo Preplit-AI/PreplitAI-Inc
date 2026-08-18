@@ -110,7 +110,7 @@ export const WorkspaceTeaserSection = () => {
         <div
           ref={row1Ref}
           onScroll={handleRow1Scroll}
-          className="flex overflow-x-auto pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4 md:mb-10 -mx-4 px-4 sm:mx-0 sm:px-0"
+          className="flex overflow-x-auto overflow-y-hidden touch-pan-y overscroll-x-contain pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 md:overflow-visible gap-4 mb-4 md:mb-10 -mx-4 px-4 sm:mx-0 sm:px-0"
         >
 
           {/* 1. AI Chat */}
@@ -388,7 +388,7 @@ export const WorkspaceTeaserSection = () => {
         <div
           ref={row2Ref}
           onScroll={handleRow2Scroll}
-          className="flex overflow-x-auto pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4 md:mb-8 -mx-4 px-4 sm:mx-0 sm:px-0"
+          className="flex overflow-x-auto overflow-y-hidden touch-pan-y overscroll-x-contain pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 md:overflow-visible gap-4 mb-4 md:mb-8 -mx-4 px-4 sm:mx-0 sm:px-0"
         >
 
           {/* 6. Exam Predictions */}

@@ -280,7 +280,7 @@ export const LiveFocusSessions = () => {
             <div
               ref={coursesScrollRef}
               onScroll={handleCoursesScroll}
-              className="flex overflow-x-auto pb-2.5 pt-0.5 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-3 -mx-2 px-2 sm:mx-0 sm:px-0 sm:flex-col sm:space-y-1.5 sm:overflow-visible sm:pb-0"
+              className="flex overflow-x-auto overflow-y-hidden touch-pan-y overscroll-x-contain pb-2.5 pt-0.5 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-3 -mx-2 px-2 sm:mx-0 sm:px-0 sm:flex-col sm:space-y-1.5 sm:overflow-visible sm:pb-0"
             >
               {filteredCourses.map((c) => (
                 <div
