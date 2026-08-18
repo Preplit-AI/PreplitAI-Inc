@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { User, LogOut, Menu, LayoutDashboard, ArrowUpRight } from "lucide-react";
+import { User, LogOut, Menu, LayoutDashboard, ArrowUpRight, Globe } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AuthModal } from "@/components/auth/AuthModal";
@@ -16,7 +16,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/s
 export const TopNav = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
-  const { language } = useLanguage();
+  const { language, toggleLanguage, setLanguage } = useLanguage();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<"login" | "signup">("login");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -72,7 +72,18 @@ export const TopNav = () => {
           </div>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
+            {/* Language Switch Button */}
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-neutral-800 dark:text-neutral-200 active:scale-95 shadow-2xs"
+              aria-label="Toggle language"
+              title={isKo ? "Switch to English" : "한국어로 전환"}
+            >
+              <Globe className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" />
+              <span className="font-bold text-[11px]">{isKo ? "KR" : "EN"}</span>
+            </button>
+
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -104,7 +115,7 @@ export const TopNav = () => {
                   setAuthTab("login");
                   setShowAuthModal(true);
                 }}
-                className="px-4 py-1.5 rounded-full text-slate-700 dark:text-slate-300 text-[13px] font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                className="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-300 text-[13px] font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-colors hidden sm:inline-block"
               >
                 {isKo ? "로그인" : "Log in"}
               </button>
@@ -113,7 +124,7 @@ export const TopNav = () => {
             {/* Solid Black Start Button with Arrow */}
             <a
               href="/workspace"
-              className="inline-flex items-center gap-1 px-5 py-2 rounded-full bg-[#111111] hover:bg-[#000000] text-white text-[13px] font-semibold transition-all duration-150 active:scale-[0.97] shadow-xs"
+              className="inline-flex items-center gap-1 px-4 sm:px-5 py-2 rounded-full bg-[#111111] hover:bg-[#000000] text-white text-[12px] sm:text-[13px] font-semibold transition-all duration-150 active:scale-[0.97] shadow-xs"
             >
               <span>{isKo ? "시작하기" : "Start"}</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -160,8 +171,33 @@ export const TopNav = () => {
                   >
                     GKS PREP
                   </Link>
+                  {/* Mobile Language Switcher */}
+                  <div className="flex items-center justify-between p-2.5 bg-neutral-100 dark:bg-white/5 rounded-xl my-1">
+                    <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400">
+                      {isKo ? "언어 설정 (Language)" : "Language"}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => setLanguage("en")}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                          !isKo ? "bg-white dark:bg-neutral-800 text-neutral-950 dark:text-white shadow-xs" : "text-neutral-500 hover:text-neutral-900"
+                        }`}
+                      >
+                        EN
+                      </button>
+                      <button
+                        onClick={() => setLanguage("ko")}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                          isKo ? "bg-white dark:bg-neutral-800 text-neutral-950 dark:text-white shadow-xs" : "text-neutral-500 hover:text-neutral-900"
+                        }`}
+                      >
+                        한국어
+                      </button>
+                    </div>
+                  </div>
+
                   {/* Mobile Auth & Action Buttons */}
-                  <div className="pt-4 border-t border-slate-100 dark:border-white/10 mt-2 space-y-2">
+                  <div className="pt-3 border-t border-slate-100 dark:border-white/10 mt-2 space-y-2">
                     {user ? (
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-neutral-900 rounded-xl">

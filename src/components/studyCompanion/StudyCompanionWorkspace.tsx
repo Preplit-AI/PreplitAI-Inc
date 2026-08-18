@@ -11,6 +11,7 @@ import { PodcastView } from "./PodcastView";
 import { ExpectedExamView } from "./ExpectedExamView";
 import { SummaryView } from "./SummaryView";
 import { LectureBuddyView } from "./LectureBuddyView";
+import { ResourceLibrary } from "./ResourceLibrary";
 import { SettingsModal } from "./SettingsModal";
 import { GlobalSearch } from "./GlobalSearch";
 import { ManageSubscriptionModal } from "../common/ManageSubscriptionModal";
@@ -166,7 +167,6 @@ export function StudyCompanionWorkspace() {
   };
 
   const handleToolSelect = (tool: string) => {
-    if (tool !== "workspace" && !checkDeveloperAccess(`AI Tool: ${tool}`, isKo)) return;
     if (tool === "chat") setNavTab("chat");
     else if (tool === "explore3d") setNavTab("explore3d");
     else if (tool === "analytics") setNavTab("analytics");
@@ -175,6 +175,8 @@ export function StudyCompanionWorkspace() {
     else if (tool === "quizzes") setNavTab("quizzes");
     else if (tool === "notes") setNavTab("notes");
     else if (tool === "expected") setNavTab("expected");
+    else if (tool === "resources") setNavTab("resources");
+    else if (tool === "calendar") setNavTab("calendar");
     else setNavTab("workspace");
   };
 
@@ -201,7 +203,6 @@ export function StudyCompanionWorkspace() {
         onClose={() => setIsSearchOpen(false)}
         onNavigate={(id, type) => {
           if (type === "chat") {
-            if (!checkDeveloperAccess("Global Search AI Chat", isKo)) return;
             setNavTab("chat");
           }
         }}
@@ -210,7 +211,6 @@ export function StudyCompanionWorkspace() {
       {/* Top Header */}
       <WorkspaceTopHeader
         onOpenSearch={() => {
-          if (!checkDeveloperAccess("Workspace Global Search", isKo)) return;
           setIsSearchOpen(true);
         }}
         onToggleSidebar={() => setIsMobileSidebarOpen(true)}
@@ -234,7 +234,6 @@ export function StudyCompanionWorkspace() {
               <WorkspaceSidebar
                 activeTab={navTab}
                 onTabChange={(tab) => {
-                  if (tab !== "workspace" && !checkDeveloperAccess(`Workspace: ${tab}`, isKo)) return;
                   setNavTab(tab);
                   setIsMobileSidebarOpen(false);
                 }}
@@ -261,7 +260,6 @@ export function StudyCompanionWorkspace() {
           <WorkspaceSidebar
             activeTab={navTab}
             onTabChange={(tab) => {
-              if (tab !== "workspace" && !checkDeveloperAccess(`Workspace: ${tab}`, isKo)) return;
               setNavTab(tab);
             }}
             onOpenManagePlan={() => setIsManageSubOpen(true)}
@@ -379,6 +377,54 @@ export function StudyCompanionWorkspace() {
           {navTab === "lecture-buddy" && <LectureBuddyView spaceId={activeSpaceId} />}
           {navTab === "analytics" && <AnalyticsView language={language} />}
           {navTab === "explore3d" && <InteractiveLearningView language={language} />}
+          {navTab === "resources" && (
+            <ResourceLibrary
+              documents={documents as any}
+              onSelectDocument={(doc) => {
+                const found = documents.find((d) => d.id === doc.id) || (doc as any);
+                setActiveDocument(found);
+                setNavTab("chat");
+              }}
+              onUpload={() => setIsUploadOpen(true)}
+            />
+          )}
+          {navTab === "calendar" && (
+            <div className="flex-1 flex flex-col p-6 overflow-y-auto bg-white dark:bg-[#0e0e0e]">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-neutral-800">
+                <div>
+                  <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
+                    {isKo ? "학업 캘린더 & 시험 일정" : "Study Calendar & Exam Schedule"}
+                  </h2>
+                  <p className="text-xs text-neutral-500 mt-0.5">
+                    {isKo ? "과목별 시험일과 복습 세션을 관리하세요." : "Manage exam dates and scheduled spaced review sessions."}
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-neutral-900 border border-slate-200/80 dark:border-neutral-800">
+                  <span className="text-[10.5px] font-bold text-[#550000] uppercase tracking-wider block mb-1">
+                    {isKo ? "다가오는 중간고사" : "Upcoming Midterm"}
+                  </span>
+                  <h4 className="font-bold text-sm text-neutral-900 dark:text-white">Data Structures & Algorithms</h4>
+                  <p className="text-xs text-neutral-500 mt-1">{isKo ? "D-6 · 10월 24일 14:00" : "D-6 · Oct 24, 2:00 PM"}</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-neutral-900 border border-slate-200/80 dark:border-neutral-800">
+                  <span className="text-[10.5px] font-bold text-amber-600 uppercase tracking-wider block mb-1">
+                    {isKo ? "AI 복습 퀴즈 세션" : "Scheduled AI Quiz"}
+                  </span>
+                  <h4 className="font-bold text-sm text-neutral-900 dark:text-white">Organic Chemistry II</h4>
+                  <p className="text-xs text-neutral-500 mt-1">{isKo ? "오늘 20:00 예정" : "Today at 8:00 PM"}</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-neutral-900 border border-slate-200/80 dark:border-neutral-800">
+                  <span className="text-[10.5px] font-bold text-emerald-600 uppercase tracking-wider block mb-1">
+                    {isKo ? "강의 노트 정리" : "Lecture Catch-up"}
+                  </span>
+                  <h4 className="font-bold text-sm text-neutral-900 dark:text-white">Computer Networks</h4>
+                  <p className="text-xs text-neutral-500 mt-1">{isKo ? "내일 11:00 예정" : "Tomorrow at 11:00 AM"}</p>
+                </div>
+              </div>
+            </div>
+          )}
         </main>
       </div>
 
@@ -397,7 +443,6 @@ export function StudyCompanionWorkspace() {
             <button
               key={item.id}
               onClick={() => {
-                if (item.id !== "workspace" && !checkDeveloperAccess(`Workspace: ${item.id}`, isKo)) return;
                 setNavTab(item.id);
               }}
               className={`flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-xl text-[10px] font-semibold transition-all ${

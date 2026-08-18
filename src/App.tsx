@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { TopNav } from "@/components/layout/TopNav";
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { Analytics } from "@/components/seo/Analytics";
 import { RouteChangeTracker } from "@/components/seo/RouteChangeTracker";
 import Index from "./pages/Index";
@@ -35,6 +36,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <RouteChangeTracker />
           <TopNav />
           <Routes>

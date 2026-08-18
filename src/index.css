@@ -62,10 +62,19 @@
     box-sizing: border-box;
   }
 
-  html, body, #root {
+  html {
     max-width: 100%;
     overflow-x: hidden;
-    height: 100%;
+  }
+
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
   }
 
   body {

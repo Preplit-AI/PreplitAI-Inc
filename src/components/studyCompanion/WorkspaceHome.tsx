@@ -37,7 +37,6 @@ export function WorkspaceHome({ onCreateSpace, spaces, activeSpaceId, onToolSele
   ];
 
   const handleToolClick = (tool: { id: string; label: string }) => {
-    if (!checkDeveloperAccess(tool.label, isKo)) return;
     onToolSelect(tool.id);
   };
 

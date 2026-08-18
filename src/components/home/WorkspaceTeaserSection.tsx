@@ -449,8 +449,8 @@ export const WorkspaceTeaserSection = () => {
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#550000] dark:bg-rose-400" />
                     <div>
-                      <span className="text-[9px] text-neutral-400 block leading-none">High Probability</span>
-                      <span className="text-[10.5px] font-medium text-neutral-800 dark:text-neutral-200">Graph Traversal</span>
+                      <span className="text-[9px] text-neutral-400 block leading-none">{isKo ? "높은 출제 확률" : "High Probability"}</span>
+                      <span className="text-[10.5px] font-medium text-neutral-800 dark:text-neutral-200">{isKo ? "그래프 순회" : "Graph Traversal"}</span>
                     </div>
                   </div>
                   <span className="text-[10px] font-bold text-[#550000] dark:text-rose-400">92%</span>
@@ -459,8 +459,8 @@ export const WorkspaceTeaserSection = () => {
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-neutral-700 dark:bg-neutral-400" />
                     <div>
-                      <span className="text-[9px] text-neutral-400 block leading-none">Medium Probability</span>
-                      <span className="text-[10.5px] font-medium text-neutral-800 dark:text-neutral-200">Dynamic Programming</span>
+                      <span className="text-[9px] text-neutral-400 block leading-none">{isKo ? "중간 출제 확률" : "Medium Probability"}</span>
+                      <span className="text-[10.5px] font-medium text-neutral-800 dark:text-neutral-200">{isKo ? "동적 계획법 (DP)" : "Dynamic Programming"}</span>
                     </div>
                   </div>
                   <span className="text-[10px] font-bold text-neutral-700 dark:text-neutral-300">67%</span>
@@ -469,8 +469,8 @@ export const WorkspaceTeaserSection = () => {
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-neutral-400" />
                     <div>
-                      <span className="text-[9px] text-neutral-400 block leading-none">Review Recommended</span>
-                      <span className="text-[10.5px] font-medium text-neutral-800 dark:text-neutral-200">Big-O Analysis</span>
+                      <span className="text-[9px] text-neutral-400 block leading-none">{isKo ? "복습 권장" : "Review Recommended"}</span>
+                      <span className="text-[10.5px] font-medium text-neutral-800 dark:text-neutral-200">{isKo ? "시간 복잡도 분석" : "Big-O Analysis"}</span>
                     </div>
                   </div>
                   <span className="text-[10px] font-bold text-neutral-500">45%</span>
@@ -647,8 +647,8 @@ export const WorkspaceTeaserSection = () => {
             {/* Collab Chat Widget */}
             <div className="rounded-xl bg-neutral-50 dark:bg-neutral-900/80 border border-neutral-200/60 dark:border-neutral-800 p-2 space-y-1.5 text-[9.5px]">
               <div className="flex items-center justify-between border-b border-neutral-200/60 dark:border-neutral-800 pb-1">
-                <span className="font-semibold text-neutral-800 dark:text-white truncate">Organic Chemistry II Study Group</span>
-                <span className="text-[8.5px] text-neutral-400">4 members online</span>
+                <span className="font-semibold text-neutral-800 dark:text-white truncate">{isKo ? "유기화학 II 스터디 그룹" : "Organic Chemistry II Study Group"}</span>
+                <span className="text-[8.5px] text-neutral-400">{isKo ? "4명 접속 중" : "4 members online"}</span>
               </div>
               <div className="space-y-1">
                 <div className="p-1.5 rounded-lg bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 leading-tight">

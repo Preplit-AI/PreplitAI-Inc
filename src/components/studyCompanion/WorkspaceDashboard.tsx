@@ -114,7 +114,6 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
       time: isKo ? "방금 전 열람" : "Opened just now",
       badgeColor: "bg-red-50 text-[#550000] border-red-200",
       action: () => {
-        if (!checkDeveloperAccess("Lecture Notes AI Assistant", isKo)) return;
         onToolSelect("chat");
       },
     },
@@ -126,7 +125,6 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
       time: isKo ? "1시간 전 열람" : "Opened 1h ago",
       badgeColor: "bg-red-50 text-[#550000] border-red-200",
       action: () => {
-        if (!checkDeveloperAccess("AI Notes & Summaries", isKo)) return;
         onToolSelect("notes");
       },
     },
@@ -138,7 +136,6 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
       time: isKo ? "어제 열람" : "Opened yesterday",
       badgeColor: "bg-red-50 text-[#550000] border-red-200",
       action: () => {
-        if (!checkDeveloperAccess("Exam Predictor", isKo)) return;
         onToolSelect("expected");
       },
     },
@@ -150,7 +147,6 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
       time: isKo ? "어제 열람" : "Opened yesterday",
       badgeColor: "bg-amber-50 text-amber-600 border-amber-200",
       action: () => {
-        if (!checkDeveloperAccess("AI Practice Quiz", isKo)) return;
         onToolSelect("quizzes");
       },
     },
