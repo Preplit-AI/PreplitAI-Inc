@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, ChevronRight, Clock, BarChart3, Trophy, Search, Flame } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Hero = () => {
@@ -103,84 +103,116 @@ export const Hero = () => {
           </motion.div>
         </div>
 
-        {/* 4. App Window Container Frame (Sitting right over the green rolling landscape) */}
+        {/* 4. Modern Cinematic Hero Feature Showcase (Image 1) */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, type: "spring" as const, bounce: 0 }}
-          className="w-full max-w-5xl rounded-[32px] bg-neutral-950 text-white border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.35)] overflow-hidden text-left p-2 sm:p-3 mb-16 sm:mb-24"
+          className="w-full max-w-5xl rounded-[28px] sm:rounded-[36px] bg-neutral-950 text-white border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.5)] overflow-hidden text-left mb-16 sm:mb-24 relative group"
         >
-          {/* Window Chrome Title Bar */}
-          <div className="bg-neutral-900 rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 border border-white/5 flex items-center justify-between gap-3 mb-3 overflow-x-auto no-scrollbar">
-            {/* Traffic Light Dots & URL */}
-            <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-              <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-                <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-                <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-              </div>
-              <span className="font-mono text-[11px] sm:text-[11.5px] text-neutral-400">preplitai.com/workspace</span>
+          {/* Main Visual Banner */}
+          <div className="relative min-h-[400px] sm:min-h-[460px] md:min-h-[500px] bg-[url('/reach-potential.png')] bg-cover bg-center sm:bg-right-top flex flex-col justify-between p-6 sm:p-10 md:p-12 overflow-hidden">
+            {/* Subtle Gradient Overlays for optimal typography readability on all screens */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/30 pointer-events-none" />
+
+            {/* Top Bar inside Banner */}
+            <div className="relative z-10 flex items-center justify-between">
+              <span className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                <span>Preplit AI</span>
+              </span>
+              <a
+                href="/preplitai-chat"
+                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/15 text-xs font-semibold text-white transition-all active:scale-95"
+              >
+                <span>{isKo ? "워크스페이스 열기" : "Open Workspace"}</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
             </div>
 
-            {/* Top Right Tool Tabs Pill */}
-            <div className="flex items-center gap-1 bg-white/10 p-1 rounded-full text-xs font-semibold shrink-0">
-              <div className="flex items-center gap-1.5 bg-neutral-800 text-white px-2.5 sm:px-3 py-1 rounded-full shadow-xs text-[11px] sm:text-xs">
-                <Clock className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-[#f87171]" />
-                <span>Focus Timer</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 text-neutral-400 text-[11px] sm:text-xs">
-                <BarChart3 className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
-                <span>Analytics</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 text-neutral-400 text-[11px] sm:text-xs">
-                <Trophy className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
-                <span>Leaderboard</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Workspace Body */}
-          <div className="bg-neutral-900/90 rounded-2xl border border-white/5 p-6 sm:p-8">
-            <div className="flex flex-col md:flex-row items-start justify-between gap-6 mb-6">
-              <div>
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  Active Study Block
-                </span>
-                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                  Organic Chemistry II · Reaction Mechanisms
-                </h3>
-              </div>
-              <div className="flex items-center gap-2 bg-neutral-800/80 px-3.5 py-2 rounded-full border border-white/10">
-                <Flame className="w-4 h-4 text-amber-500 fill-amber-500" />
-                <span className="font-bold text-white text-xs">14 Days Streak</span>
-              </div>
+            {/* Middle Main Headline */}
+            <div className="relative z-10 max-w-xl my-auto py-6 sm:py-8">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white tracking-tight leading-[1.12]">
+                {isKo ? (
+                  <>
+                    AI 학습 도구로
+                    <br />
+                    나만의 잠재력을
+                    <br />
+                    실현하세요
+                  </>
+                ) : (
+                  <>
+                    Reach your
+                    <br />
+                    potential with
+                    <br />
+                    AI learning tools
+                  </>
+                )}
+              </h2>
             </div>
 
-            {/* Grounded Citation Card */}
-            <div className="bg-neutral-800/60 rounded-2xl p-5 border border-white/5 mb-6">
-              <div className="flex items-center justify-between text-[11.5px] font-semibold text-neutral-400 mb-2">
-                <span>AI Grounded Answer · Lecture_Slides_W6.pdf (p. 14)</span>
-                <span className="text-emerald-400">✓ 100% Grounded</span>
+            {/* Bottom 6 Feature Columns */}
+            <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 pt-6 border-t border-white/15">
+              {/* 1. Smart Notes */}
+              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
+                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                  {isKo ? "스마트 노트" : "Smart Notes"}
+                </h4>
+                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
+                  {isKo ? "내 자료 기반 자동 생성" : "AI-generated from your materials"}
+                </p>
               </div>
-              <p className="text-slate-200 text-sm leading-relaxed font-normal">
-                "The \(S_N2\) mechanism occurs via a concerted single-step bimolecular transition state with complete inversion of stereochemical configuration at the chiral center."
-              </p>
-            </div>
 
-            {/* 3 Metric Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-              <div className="bg-neutral-800/50 p-4 rounded-xl border border-white/5">
-                <p className="text-[10.5px] font-bold uppercase text-neutral-400 tracking-wider">Session Time</p>
-                <p className="text-xl font-bold text-white font-mono mt-0.5">00:45:12</p>
+              {/* 2. AI Lecture Buddy */}
+              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
+                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                  {isKo ? "AI 렉처 버디" : "AI Lecture Buddy"}
+                </h4>
+                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
+                  {isKo ? "실시간 강의 캡처 및 구조화 노트" : "Capture lectures in real-time and get structured notes"}
+                </p>
               </div>
-              <div className="bg-neutral-800/50 p-4 rounded-xl border border-white/5">
-                <p className="text-[10.5px] font-bold uppercase text-neutral-400 tracking-wider">Flashcards Mastered</p>
-                <p className="text-xl font-bold text-emerald-400 font-mono mt-0.5">24 / 24</p>
+
+              {/* 3. Practice Quizzes */}
+              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
+                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                  {isKo ? "실전 퀴즈" : "Practice Quizzes"}
+                </h4>
+                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
+                  {isKo ? "자체 테스트로 빠른 실력 향상" : "Test yourself and improve faster"}
+                </p>
               </div>
-              <div className="bg-neutral-800/50 p-4 rounded-xl border border-white/5">
-                <p className="text-[10.5px] font-bold uppercase text-neutral-400 tracking-wider">Exam Readiness</p>
-                <p className="text-xl font-bold text-[#f87171] font-mono mt-0.5">84% (+12%)</p>
+
+              {/* 4. Exam Predictions */}
+              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
+                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                  {isKo ? "출제 예상 문제" : "Exam Predictions"}
+                </h4>
+                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
+                  {isKo ? "핵심 출제 주제 집중 공략" : "Focus on what matters most"}
+                </p>
+              </div>
+
+              {/* 5. 3D Learning Mode */}
+              <div className="space-y-1 lg:border-r border-white/15 lg:pr-3">
+                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                  {isKo ? "3D 입체 학습" : "3D Learning Mode"}
+                </h4>
+                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
+                  {isKo ? "3D 모델로 시각적 입체 학습" : "Learn visually with interactive 3D models"}
+                </p>
+              </div>
+
+              {/* 6. & more */}
+              <div className="space-y-1">
+                <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                  {isKo ? "& 그 외 기능" : "& more"}
+                </h4>
+                <p className="text-[11px] sm:text-[11.5px] text-neutral-300/80 leading-snug">
+                  {isKo ? "플래시카드, 협업 모드, 동영상 강의, 팟캐스트" : "Flashcards, Collaborative Mode, AI Video Lectures, Podcast Learning"}
+                </p>
               </div>
             </div>
           </div>
