@@ -154,7 +154,7 @@ export function InteractiveLearningView({ language: langProp }: { language?: str
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#f5f4f1] px-4 md:px-6 py-7">
+    <div className="flex-1 overflow-y-auto bg-[#f5f4f1] px-3.5 md:px-6 py-5 md:py-7 pb-20 lg:pb-7">
       {/* Header */}
       <div className="mb-2">
         <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#8B0000] text-white text-[10px] font-bold uppercase tracking-widest mb-3">

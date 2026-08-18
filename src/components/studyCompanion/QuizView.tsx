@@ -129,7 +129,7 @@ export function QuizView({ quizData, onGenerateNewQuiz }: QuizViewProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-[#111] p-6 space-y-6 overflow-y-auto">
+    <div className="flex flex-col h-full bg-white dark:bg-[#111] p-3.5 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto pb-20 lg:pb-6">
       {/* Quiz Header & Progress */}
       <div className="space-y-2 shrink-0">
         <div className="flex justify-between items-center text-xs font-semibold text-gray-500 dark:text-gray-400">

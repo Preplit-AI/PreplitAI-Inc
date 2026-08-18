@@ -132,11 +132,11 @@ export function FlashcardView({ flashcardData, onGenerateNew }: FlashcardViewPro
   }
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-[#111] p-6 space-y-6">
+    <div className="flex flex-col h-full bg-white dark:bg-[#111] p-3 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto pb-20 lg:pb-6">
       
       {/* Session Stats Bar */}
-      <div className="flex items-center justify-between bg-gray-50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/[0.06] rounded-xl px-4 py-2.5">
-        <div className="flex items-center gap-4 text-xs font-medium">
+      <div className="flex flex-wrap items-center justify-between gap-2 bg-gray-50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/[0.06] rounded-xl px-3 py-2 text-xs">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs font-medium">
           <span className="text-gray-700 dark:text-gray-300">{remaining} cards remaining</span>
           <div className="w-px h-3 bg-gray-300 dark:bg-gray-700" />
           <span className="text-green-600 dark:text-green-400 flex items-center gap-1">

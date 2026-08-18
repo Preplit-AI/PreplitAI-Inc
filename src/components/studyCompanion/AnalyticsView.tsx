@@ -113,7 +113,7 @@ export function AnalyticsView({ language: langProp }: AnalyticsViewProps) {
   const today = isKo ? daysKo[new Date().getDay()] : daysEn[new Date().getDay()];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#f5f4f1] px-6 md:px-10 py-7">
+    <div className="flex-1 overflow-y-auto bg-[#f5f4f1] px-3.5 sm:px-6 md:px-10 py-5 sm:py-7 pb-20 lg:pb-7">
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>

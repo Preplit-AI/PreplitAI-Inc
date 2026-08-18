@@ -38,8 +38,8 @@ export function SummaryView({ summaryData, onGenerateSummary }: SummaryViewProps
   };
 
   return (
-    <div className="flex flex-col h-full bg-white p-6 space-y-6">
-      <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+    <div className="flex flex-col h-full bg-white dark:bg-[#111] p-3.5 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto pb-20 lg:pb-6">
+      <div className="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-white/10">
         <h3 className="font-semibold text-gray-800 text-sm flex items-center gap-2">
           <FileText className="w-4 h-4 text-emerald-600" /> Chapter Summary
         </h3>

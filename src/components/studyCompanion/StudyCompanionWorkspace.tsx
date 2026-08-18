@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Plus, Trash2, X, Upload, Send, Paperclip } from "lucide-react";
+import { Plus, Trash2, X, Upload, Send, Paperclip, LayoutDashboard, MessageSquare, BookOpen, HelpCircle, Menu, Radio } from "lucide-react";
 import { WorkspaceSidebar, WorkspaceTabId } from "./WorkspaceSidebar";
 import { WorkspaceTopHeader } from "./WorkspaceTopHeader";
 import { WorkspaceDashboard } from "./WorkspaceDashboard";
@@ -342,6 +342,41 @@ export function StudyCompanionWorkspace() {
           {navTab === "explore3d" && <InteractiveLearningView language={language} />}
         </main>
       </div>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <nav className="lg:hidden bg-white/95 dark:bg-[#0e0e0e]/95 backdrop-blur-md border-t border-slate-200/80 dark:border-white/10 px-2 py-1 flex items-center justify-around z-30 shrink-0 shadow-lg">
+        {[
+          { id: "workspace" as WorkspaceTabId, label: isKo ? "대시보드" : "Dashboard", Icon: LayoutDashboard },
+          { id: "chat" as WorkspaceTabId, label: isKo ? "AI 챗" : "AI Chat", Icon: MessageSquare },
+          { id: "flashcards" as WorkspaceTabId, label: isKo ? "플래시카드" : "Cards", Icon: BookOpen },
+          { id: "quizzes" as WorkspaceTabId, label: isKo ? "퀴즈" : "Quiz", Icon: HelpCircle },
+          { id: "lecture-buddy" as WorkspaceTabId, label: isKo ? "강의 녹음" : "Buddy", Icon: Radio },
+        ].map((item) => {
+          const ItemIcon = item.Icon;
+          const isActive = navTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setNavTab(item.id)}
+              className={`flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-xl text-[10px] font-semibold transition-all ${
+                isActive
+                  ? "text-[#550000] dark:text-[#f87171] font-bold"
+                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+              }`}
+            >
+              <ItemIcon className={`w-4 h-4 mb-0.5 ${isActive ? "text-[#550000] dark:text-[#f87171]" : "text-neutral-400"}`} />
+              <span className="truncate leading-none">{item.label}</span>
+            </button>
+          );
+        })}
+        <button
+          onClick={() => setIsMobileSidebarOpen(true)}
+          className="flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-xl text-[10px] font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-all"
+        >
+          <Menu className="w-4 h-4 mb-0.5 text-neutral-400" />
+          <span className="truncate leading-none">{isKo ? "전체 메뉴" : "More"}</span>
+        </button>
+      </nav>
 
       {/* Upload Modal */}
       {isUploadOpen && (

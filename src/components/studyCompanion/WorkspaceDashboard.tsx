@@ -144,30 +144,30 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
   return (
     <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden bg-[#fafafa] dark:bg-[#0a0a0a] text-slate-900 dark:text-white h-full">
       {/* Main Left/Center Content */}
-      <div className="flex-1 p-4 sm:p-5 lg:p-6 space-y-5 max-w-5xl flex flex-col justify-between overflow-y-auto">
+      <div className="flex-1 p-3.5 sm:p-5 lg:p-6 space-y-4 sm:space-y-5 max-w-5xl flex flex-col overflow-y-auto">
         {/* Top Header / Greeting Bar */}
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
-              {isKo ? `좋은 아침입니다, ${userName}` : `Good morning, ${userName}`}
+            <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
+              {isKo ? `좋은 하루입니다, ${userName}` : `Good day, ${userName}`}
             </h1>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 font-normal">
+            <p className="text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 font-normal">
               {isKo ? "오늘도 목표를 향해 학업을 이어가 볼까요?" : "Let's continue your learning journey."}
             </p>
           </div>
 
           {/* Action Buttons in Maroon */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={onCreateSpace}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-white font-semibold text-xs transition-all active:scale-95 shrink-0"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-white font-semibold text-xs transition-all active:scale-95 shrink-0"
             >
               <Plus className="w-3.5 h-3.5 text-[#550000] dark:text-[#f87171]" />
-              <span>{isKo ? "새 워크스페이스" : "New Space"}</span>
+              <span>{isKo ? "새 공간" : "New Space"}</span>
             </button>
             <button
               onClick={onUploadClick}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-xs shadow-xs transition-all active:scale-95 shrink-0"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 sm:py-2 rounded-xl bg-[#550000] hover:bg-[#3d0000] text-white font-semibold text-xs shadow-xs transition-all active:scale-95 shrink-0"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>{isKo ? "자료 추가" : "Add Material"}</span>
@@ -360,8 +360,8 @@ export const WorkspaceDashboard: React.FC<WorkspaceDashboardProps> = ({
         </div>
       </div>
 
-      {/* Right Sidebar Column (Fixed Unscrollable 100vh fit) */}
-      <div className="w-full lg:w-[250px] xl:w-[260px] bg-white dark:bg-[#0e0e0e] border-t lg:border-t-0 lg:border-l border-slate-200/80 dark:border-white/10 p-3 sm:p-3.5 shrink-0 flex flex-col justify-between overflow-hidden h-full">
+      {/* Right Sidebar Column */}
+      <div className="w-full lg:w-[250px] xl:w-[260px] bg-white dark:bg-[#0e0e0e] border-t lg:border-t-0 lg:border-l border-slate-200/80 dark:border-white/10 p-3.5 sm:p-4 lg:p-3.5 shrink-0 flex flex-col justify-between space-y-3.5 lg:space-y-0 overflow-y-auto lg:overflow-hidden lg:h-full pb-20 lg:pb-3.5">
         {/* Widget 1: Focus Session (Compact Maroon Timer Gauge) */}
         <div className="rounded-xl border border-slate-200/80 dark:border-white/10 p-2.5 bg-white dark:bg-[#121212] text-center shadow-xs">
           <div className="flex items-center justify-between mb-1">

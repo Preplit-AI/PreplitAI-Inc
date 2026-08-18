@@ -58,8 +58,8 @@ export function ExpectedExamView({ examData, onGenerateExam, hasPastExamTagged =
   }
 
   return (
-    <div className="flex flex-col h-full bg-white p-6 space-y-6">
-      <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+    <div className="flex flex-col h-full bg-white dark:bg-[#111] p-3.5 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto pb-20 lg:pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-100 dark:border-white/10">
         <div>
           <h3 className="font-semibold text-gray-900 text-sm flex items-center gap-2">
             <Target className="w-4 h-4 text-gray-700" /> Predicted Midterm Exam Paper

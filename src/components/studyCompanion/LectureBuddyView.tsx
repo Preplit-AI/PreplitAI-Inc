@@ -167,7 +167,7 @@ export function LectureBuddyView({ spaceId }: LectureBuddyViewProps) {
   // ── IDLE STATE ──
   if (viewState === "idle" && !viewingPast) {
     return (
-      <div className="flex-1 flex flex-col overflow-y-auto bg-[#f5f4f1] px-4 sm:px-6 md:px-8 py-6">
+      <div className="flex-1 flex flex-col overflow-y-auto bg-[#f5f4f1] px-4 sm:px-6 md:px-8 py-6 pb-20 lg:pb-6">
         {/* Hero */}
         <div className="max-w-xl mx-auto text-center mb-8">
           <h1 className="text-[22px] sm:text-[26px] font-bold text-[#111] tracking-tight mb-2">
