@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ChevronRight } from "lucide-react";
@@ -8,6 +8,28 @@ export const LiveFocusSessions = () => {
   const isKo = language === "ko";
 
   const [activeFilter, setActiveFilter] = useState<"all" | "progress" | "completed">("all");
+  const [activeCourseIndex, setActiveCourseIndex] = useState(0);
+  const coursesScrollRef = useRef<HTMLDivElement>(null);
+
+  const handleCoursesScroll = () => {
+    if (!coursesScrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = coursesScrollRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll <= 0) return;
+    const count = filteredCourses.length;
+    const itemWidth = scrollWidth / count;
+    const idx = Math.min(count - 1, Math.max(0, Math.round(scrollLeft / itemWidth)));
+    setActiveCourseIndex(idx);
+  };
+
+  const scrollToCourse = (idx: number) => {
+    if (!coursesScrollRef.current) return;
+    const { scrollWidth } = coursesScrollRef.current;
+    const count = filteredCourses.length;
+    const itemWidth = scrollWidth / count;
+    coursesScrollRef.current.scrollTo({ left: idx * itemWidth, behavior: "smooth" });
+    setActiveCourseIndex(idx);
+  };
 
   const courses = [
     {
@@ -255,7 +277,11 @@ export const LiveFocusSessions = () => {
             </div>
 
             {/* Course Rows: Horizontally swipable cards on mobile, clean rows on desktop */}
-            <div className="flex overflow-x-auto pb-2.5 pt-0.5 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-3 -mx-2 px-2 sm:mx-0 sm:px-0 sm:flex-col sm:space-y-1.5 sm:overflow-visible sm:pb-0">
+            <div
+              ref={coursesScrollRef}
+              onScroll={handleCoursesScroll}
+              className="flex overflow-x-auto pb-2.5 pt-0.5 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-3 -mx-2 px-2 sm:mx-0 sm:px-0 sm:flex-col sm:space-y-1.5 sm:overflow-visible sm:pb-0"
+            >
               {filteredCourses.map((c) => (
                 <div
                   key={c.id}
@@ -313,6 +339,31 @@ export const LiveFocusSessions = () => {
                 </div>
               ))}
             </div>
+
+            {/* Mobile Swipe Indicators & Remaining Counter */}
+            {filteredCourses.length > 1 && (
+              <div className="flex sm:hidden items-center justify-between px-1 pt-1 text-xs">
+                <div className="flex items-center gap-1.5">
+                  {filteredCourses.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => scrollToCourse(i)}
+                      aria-label={`Go to course ${i + 1}`}
+                      className={`transition-all duration-300 rounded-full ${
+                        activeCourseIndex === i
+                          ? "w-5 h-1.5 bg-[#550000] dark:bg-rose-500"
+                          : "w-1.5 h-1.5 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-[10.5px] font-semibold text-neutral-400 dark:text-neutral-500">
+                  {isKo
+                    ? `${activeCourseIndex + 1} / ${filteredCourses.length} (${filteredCourses.length - 1 - activeCourseIndex > 0 ? `${filteredCourses.length - 1 - activeCourseIndex}개 남음` : "끝"})`
+                    : `${activeCourseIndex + 1} of ${filteredCourses.length} (${filteredCourses.length - 1 - activeCourseIndex > 0 ? `${filteredCourses.length - 1 - activeCourseIndex} left` : "end"})`}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Bottom Inside Banner */}

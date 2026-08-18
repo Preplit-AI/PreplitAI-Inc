@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -17,6 +17,47 @@ import {
 export const WorkspaceTeaserSection = () => {
   const { language } = useLanguage();
   const isKo = language === "ko";
+
+  const [row1Index, setRow1Index] = useState(0);
+  const [row2Index, setRow2Index] = useState(0);
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
+
+  const handleRow1Scroll = () => {
+    if (!row1Ref.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = row1Ref.current;
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll <= 0) return;
+    const itemWidth = scrollWidth / 5;
+    const idx = Math.min(4, Math.max(0, Math.round(scrollLeft / itemWidth)));
+    setRow1Index(idx);
+  };
+
+  const handleRow2Scroll = () => {
+    if (!row2Ref.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = row2Ref.current;
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll <= 0) return;
+    const itemWidth = scrollWidth / 5;
+    const idx = Math.min(4, Math.max(0, Math.round(scrollLeft / itemWidth)));
+    setRow2Index(idx);
+  };
+
+  const scrollToRow1 = (idx: number) => {
+    if (!row1Ref.current) return;
+    const { scrollWidth } = row1Ref.current;
+    const itemWidth = scrollWidth / 5;
+    row1Ref.current.scrollTo({ left: idx * itemWidth, behavior: "smooth" });
+    setRow1Index(idx);
+  };
+
+  const scrollToRow2 = (idx: number) => {
+    if (!row2Ref.current) return;
+    const { scrollWidth } = row2Ref.current;
+    const itemWidth = scrollWidth / 5;
+    row2Ref.current.scrollTo({ left: idx * itemWidth, behavior: "smooth" });
+    setRow2Index(idx);
+  };
 
   return (
     <section id="features" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#0a0a0a] text-neutral-900 dark:text-white transition-colors duration-300 overflow-hidden">
@@ -66,7 +107,11 @@ export const WorkspaceTeaserSection = () => {
         </div>
 
         {/* ─── Row 1: The 5 Basic Tool Cards (Swipable on mobile) ─── */}
-        <div className="flex overflow-x-auto pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-10 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div
+          ref={row1Ref}
+          onScroll={handleRow1Scroll}
+          className="flex overflow-x-auto pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4 md:mb-10 -mx-4 px-4 sm:mx-0 sm:px-0"
+        >
 
           {/* 1. AI Chat */}
           <motion.div
@@ -313,6 +358,29 @@ export const WorkspaceTeaserSection = () => {
 
         </div>
 
+        {/* Mobile Swipe Indicators & Remaining Counter (Row 1) */}
+        <div className="flex md:hidden items-center justify-between px-2 -mt-1 mb-8 text-xs">
+          <div className="flex items-center gap-1.5">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <button
+                key={i}
+                onClick={() => scrollToRow1(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`transition-all duration-300 rounded-full ${
+                  row1Index === i
+                    ? "w-5 h-1.5 bg-[#550000] dark:bg-rose-500"
+                    : "w-1.5 h-1.5 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400"
+                }`}
+              />
+            ))}
+          </div>
+          <span className="text-[10.5px] font-semibold text-neutral-400 dark:text-neutral-500">
+            {isKo
+              ? `${row1Index + 1} / 5 (${4 - row1Index > 0 ? `${4 - row1Index}개 남음` : "끝"})`
+              : `${row1Index + 1} of 5 (${4 - row1Index > 0 ? `${4 - row1Index} left` : "end"})`}
+          </span>
+        </div>
+
         {/* ─── Section Header 2: Plus more. ─── */}
         <div className="flex items-center gap-4 my-6 sm:my-8">
           <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-950 dark:text-white whitespace-nowrap">
@@ -322,7 +390,11 @@ export const WorkspaceTeaserSection = () => {
         </div>
 
         {/* ─── Row 2: The 5 "Plus more." Cards (Swipable on mobile) ─── */}
-        <div className="flex overflow-x-auto pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div
+          ref={row2Ref}
+          onScroll={handleRow2Scroll}
+          className="flex overflow-x-auto pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4 md:mb-8 -mx-4 px-4 sm:mx-0 sm:px-0"
+        >
 
           {/* 6. Exam Predictions */}
           <motion.div
@@ -574,6 +646,29 @@ export const WorkspaceTeaserSection = () => {
             </div>
           </motion.div>
 
+        </div>
+
+        {/* Mobile Swipe Indicators & Remaining Counter (Row 2) */}
+        <div className="flex md:hidden items-center justify-between px-2 -mt-1 mb-6 text-xs">
+          <div className="flex items-center gap-1.5">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <button
+                key={i}
+                onClick={() => scrollToRow2(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`transition-all duration-300 rounded-full ${
+                  row2Index === i
+                    ? "w-5 h-1.5 bg-[#550000] dark:bg-rose-500"
+                    : "w-1.5 h-1.5 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400"
+                }`}
+              />
+            ))}
+          </div>
+          <span className="text-[10.5px] font-semibold text-neutral-400 dark:text-neutral-500">
+            {isKo
+              ? `${row2Index + 1} / 5 (${4 - row2Index > 0 ? `${4 - row2Index}개 남음` : "끝"})`
+              : `${row2Index + 1} of 5 (${4 - row2Index > 0 ? `${4 - row2Index} left` : "end"})`}
+          </span>
         </div>
 
       </div>
