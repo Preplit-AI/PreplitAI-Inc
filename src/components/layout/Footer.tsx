@@ -1,5 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Instagram, Twitter } from "lucide-react";
+import { Instagram } from "lucide-react";
 
 export const Footer = () => {
   const { language } = useLanguage();
@@ -41,10 +41,12 @@ export const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-xs font-semibold text-[#666666] dark:text-[#999999] hover:text-[#550000] dark:hover:text-rose-400 transition-colors p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-neutral-800"
-              aria-label="Twitter / X"
+              aria-label="X (formerly Twitter)"
             >
-              <Twitter className="w-4 h-4" />
-              <span className="hidden xs:inline">Twitter</span>
+              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              <span className="hidden xs:inline">X</span>
             </a>
 
             <div className="h-4 w-[1px] bg-neutral-200 dark:bg-neutral-800 hidden xs:block" />
