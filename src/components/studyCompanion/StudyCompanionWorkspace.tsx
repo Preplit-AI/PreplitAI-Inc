@@ -19,6 +19,7 @@ import { SubscriptionModal } from "../common/SubscriptionModal";
 import { AuthModal } from "../auth/AuthModal";
 import { MessageList } from "../chat/MessageList";
 import { VoiceMode } from "./VoiceMode";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { translations } from "@/i18n/translations";
@@ -107,7 +108,7 @@ export function StudyCompanionWorkspace() {
   const docName = activeDocument?.file_name || "Document";
 
   useEffect(() => {
-    document.title = "Workspace | PreplitAI";
+    document.title = "Workspace | Preplit AI";
   }, []);
 
   useEffect(() => {
@@ -198,6 +199,10 @@ export function StudyCompanionWorkspace() {
       className="flex flex-col h-screen bg-[#fafafa] dark:bg-[#0a0a0a] overflow-hidden"
       style={{ fontFamily: "Inter, sans-serif" }}
     >
+      <SEOHead
+        title="Workspace"
+        robots="noindex,nofollow"
+      />
       <GlobalSearch
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
@@ -226,7 +231,7 @@ export function StudyCompanionWorkspace() {
           >
             <div className="w-64 bg-white dark:bg-[#0e0e0e] h-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-neutral-800">
-                <span className="font-bold text-sm text-[#111] dark:text-white">PreplitAI Workspace</span>
+                <span className="font-bold text-sm text-[#111] dark:text-white">Preplit AI Workspace</span>
                 <button onClick={() => setIsMobileSidebarOpen(false)} className="p-1 text-[#aaa]">
                   <X className="w-4 h-4" />
                 </button>

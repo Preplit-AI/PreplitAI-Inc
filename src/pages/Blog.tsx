@@ -2,6 +2,7 @@ import React from 'react';
 import { BookOpen, ArrowRight, Sparkles, Clock, User, Tag, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Footer } from '@/components/layout/Footer';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Blog() {
@@ -19,7 +20,7 @@ export default function Blog() {
         : '5 battle-tested strategies to master Korean-language lecture slides, technical terminology, and ace midterms with grounded AI tutoring.',
       category: isKo ? '학업 전략' : 'Study Strategy',
       readTime: '6 min read',
-      author: 'PreplitAI Research Team',
+      author: 'Preplit AI Research Team',
       date: 'Aug 2026',
       featured: true,
     },
@@ -47,14 +48,36 @@ export default function Blog() {
         : 'Learn how AI pattern detection maps professor emphasis areas across semesters to build targeted mock exams.',
       category: isKo ? '시험 대비' : 'Exam Preparation',
       readTime: '5 min read',
-      author: 'PreplitAI Academic Lead',
+      author: 'Preplit AI Academic Lead',
       date: 'Jul 2026',
       featured: false,
     },
   ];
 
+  const blogSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: isKo ? "Preplit AI 학업 전략 및 연구 블로그" : "Preplit AI Learning Science & Study Strategy Blog",
+    url: "https://preplitai.com/blog",
+    description: isKo
+      ? "인지과학 기반의 능동적 인출(Active Recall), GKS 유학생 학업 가이드, AI 기반 중간·기말고사 출제 예측 리서치 아티클."
+      : "Research, study guides, active recall frameworks, and exam preparation strategies for university students and GKS scholars.",
+    publisher: {
+      "@type": "Organization",
+      name: "Preplit AI",
+      url: "https://preplitai.com"
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white flex flex-col">
+      <SEOHead
+        title={isKo ? "학업 전략 & 인지과학 리서치 블로그" : "Blog & Learning Science Guides"}
+        description={isKo ? "대학생 및 GKS 장학생을 위한 AI 학습 전략, 족보 기출문제 분석 프레임워크, 능동적 인출(Active Recall) 연구 가이드." : "Explore the latest AI study strategies, exam prediction frameworks, and cognitive learning science research built for university students and GKS scholars."}
+        keywords={["AI study strategies", "GKS study guide", "active recall AI", "exam question prediction", "Korean university exam prep"]}
+        canonical="https://preplitai.com/blog"
+        schemaMarkup={blogSchema}
+      />
       {/* Main Blog Post Feed */}
       <section className="pt-28 sm:pt-36 md:pt-40 pb-16 px-6 max-w-5xl mx-auto flex-1 w-full space-y-12">
         {/* Featured Post */}

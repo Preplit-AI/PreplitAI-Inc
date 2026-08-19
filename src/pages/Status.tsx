@@ -9,8 +9,8 @@ const Status = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       <SEOHead
-        title={isKo ? "PreplitAI 서비스 가동 상태" : "PreplitAI System status"}
-        description={isKo ? "PreplitAI 모든 서비스 실시간 가동률 및 상태 리포트." : "Realtime overview of uptime and incidents for PreplitAI services."}
+        title={isKo ? "Preplit AI 서비스 가동 상태" : "Preplit AI System status"}
+        description={isKo ? "Preplit AI 모든 서비스 실시간 가동률 및 상태 리포트." : "Realtime overview of uptime and incidents for Preplit AI services."}
         canonical={`${(import.meta as any).env?.VITE_SITE_URL || 'https://preplitai.com'}/status`}
         robots="noindex,follow"
       />
@@ -24,8 +24,8 @@ const Status = () => {
           </h1>
           <p className="text-lg md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed">
             {isKo
-              ? 'PreplitAI 학업 워크스페이스 및 AI 엔진 서비스의 실시간 가동 현황입니다.'
-              : 'Realtime overview of uptime and incidents for PreplitAI services.'}
+              ? 'Preplit AI 학업 워크스페이스 및 AI 엔진 서비스의 실시간 가동 현황입니다.'
+              : 'Realtime overview of uptime and incidents for Preplit AI services.'}
           </p>
         </div>
         <div className="mt-10 space-y-4">

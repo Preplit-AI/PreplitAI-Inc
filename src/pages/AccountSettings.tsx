@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const AccountSettings = () => {
   const { user, updateProfile, changePassword } = useAuth();
@@ -27,6 +28,10 @@ const AccountSettings = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
+      <SEOHead
+        title="Account Settings"
+        robots="noindex,nofollow"
+      />
       <div className="max-w-3xl mx-auto px-6 py-12 space-y-8">
         <h1 className="text-3xl font-bold text-black dark:text-white">Account Settings</h1>
 

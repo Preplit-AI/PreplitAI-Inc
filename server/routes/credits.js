@@ -57,7 +57,7 @@ router.post('/checkout', authMiddleware, async (req, res) => {
         line_items: [{
           price_data: {
             currency: 'usd',
-            product_data: { name: `PreplitAI Credits (${packageId})` },
+            product_data: { name: `Preplit AI Credits (${packageId})` },
             unit_amount: 999,
           },
           quantity: 1,

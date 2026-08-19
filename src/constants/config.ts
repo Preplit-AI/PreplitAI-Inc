@@ -12,7 +12,7 @@
 export const API_BASE_URL = '/api';
 
 /** Application display name */
-export const SITE_NAME = 'PreplitAI';
+export const SITE_NAME = 'Preplit AI';
 
 /** Default site URL (overridden by VITE_SITE_URL env var) */
 export const DEFAULT_SITE_URL =

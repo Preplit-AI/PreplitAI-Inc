@@ -35,12 +35,12 @@ export const WorkspaceTopHeader: React.FC<WorkspaceTopHeaderProps> = ({
         <a href="/" className="flex items-center gap-2 group">
           <img
             src="/logo.png"
-            alt="PreplitAI Logo"
+            alt="Preplit AI Logo"
             className="h-6 sm:h-8 w-auto object-contain transition-transform group-hover:scale-105"
           />
           <div className="flex flex-col">
             <span className="font-bold text-[14px] sm:text-[16px] tracking-tight text-neutral-950 dark:text-white leading-none">
-              PreplitAI
+              Preplit AI
             </span>
             <span className="text-[9px] sm:text-[10px] font-semibold text-[#550000] dark:text-[#f87171] uppercase tracking-wider mt-0.5">
               Workspace

@@ -11,6 +11,7 @@ import {
   ArrowDownRight, Clock, RefreshCw, Zap, Shield, Gift,
   ChevronRight, AlertTriangle, CheckCircle2, CreditCard, BarChart3
 } from "lucide-react";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 interface Transaction {
   id: number;
@@ -133,6 +134,10 @@ const Credits = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+      <SEOHead
+        title="Credits & Usage"
+        robots="noindex,nofollow"
+      />
       <div className="max-w-5xl mx-auto px-4 py-10 space-y-8">
 
         {/* ── Header ── */}

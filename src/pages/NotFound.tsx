@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const NotFound = () => {
   const location = useLocation();
@@ -11,6 +12,11 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 flex items-center justify-center px-6">
+      <SEOHead
+        title="Page Not Found"
+        description="The requested page could not be found on Preplit AI."
+        robots="noindex,nofollow"
+      />
       <div className="max-w-xl text-center">
         <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-3">404 · Page not found</p>
         <h1 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">

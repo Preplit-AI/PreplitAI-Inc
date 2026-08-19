@@ -9,17 +9,20 @@
 
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <title>PreplitAI | AI Study Companion & GKS Prep Workspace</title>
+    <title>Preplit AI | AI Study Companion & GKS Prep Workspace</title>
     <meta name="description" content="AI-powered study companion and GKS scholarship preparation platform. Grounded chat, quizzes, flashcards, podcasts, and application evaluation." />
 
     <!-- Open Graph defaults -->
-    <meta property="og:title" content="PreplitAI | AI Study Companion & GKS Prep Workspace" />
+    <meta property="og:title" content="Preplit AI | AI Study Companion & GKS Prep Workspace" />
     <meta property="og:description" content="Transform lecture slides, PDFs, and textbooks into grounded study tools and GKS scholarship preparation." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://preplitai.com/" />
@@ -27,7 +30,7 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="PreplitAI | AI Study Companion & GKS Prep Workspace" />
+    <meta name="twitter:title" content="Preplit AI | AI Study Companion & GKS Prep Workspace" />
     <meta name="twitter:description" content="Transform lecture slides, PDFs, and textbooks into grounded study tools and GKS scholarship preparation." />
     <meta name="twitter:image" content="https://preplitai.com/logo.png" />
 
@@ -38,14 +41,49 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet" />
 
-    <!-- JSON-LD Organization default -->
+    <!-- JSON-LD Organization & WebSite Schemas -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "PreplitAI",
-        "url": "https://preplitai.com",
-        "logo": "https://preplitai.com/logo.png"
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://preplitai.com/#organization",
+            "name": "Preplit AI",
+            "url": "https://preplitai.com",
+            "logo": "https://preplitai.com/logo.png",
+            "foundingDate": "2026-06",
+            "founder": {
+              "@type": "Person",
+              "@id": "https://preplitai.com/#founder",
+              "name": "Khan Muhammad Ahsan",
+              "jobTitle": "Founder & Chief Executive Officer",
+              "affiliation": {
+                "@type": "CollegeOrUniversity",
+                "name": "Ajou University",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Suwon",
+                  "addressCountry": "KR"
+                }
+              }
+            },
+            "sameAs": [
+              "https://instagram.com/preplitai",
+              "https://x.com/preplitai"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://preplitai.com/#website",
+            "url": "https://preplitai.com",
+            "name": "Preplit AI",
+            "publisher": {
+              "@id": "https://preplitai.com/#organization"
+            },
+            "inLanguage": ["en", "ko"]
+          }
+        ]
       }
     </script>
   </head>

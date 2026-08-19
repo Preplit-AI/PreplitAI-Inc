@@ -139,10 +139,10 @@ export function GKSAdvisorChatbot({ isOpen, onClose }: GKSAdvisorChatbotProps) {
       <div className="bg-black text-white px-4 py-3 flex items-center justify-between shrink-0 border-b border-gray-800">
         <div className="flex items-center gap-3">
           <span className="w-8 h-8 rounded-full bg-black border border-white/20 flex items-center justify-center shrink-0 overflow-hidden">
-            <img src="/logo.png" alt="PreplitAI" className="w-6 h-6 object-contain" style={{filter:'brightness(0) invert(1)'}} />
+            <img src="/logo.png" alt="Preplit AI" className="w-6 h-6 object-contain" style={{filter:'brightness(0) invert(1)'}} />
           </span>
           <div>
-            <span className="font-bold text-[13px] tracking-tight text-white block leading-tight">PreplitAI Advisor</span>
+            <span className="font-bold text-[13px] tracking-tight text-white block leading-tight">Preplit AI Advisor</span>
             <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
               GKS 2026 Expert
@@ -215,7 +215,7 @@ export function GKSAdvisorChatbot({ isOpen, onClose }: GKSAdvisorChatbotProps) {
         {loading && (
           <div className="flex items-center gap-2 text-gray-400 text-xs py-1">
             <div className="w-3.5 h-3.5 rounded-full border-2 border-gray-300 border-t-black dark:border-t-white animate-spin" />
-            <span>PreplitAI Advisor is thinking...</span>
+            <span>Preplit AI Advisor is thinking...</span>
           </div>
         )}
 

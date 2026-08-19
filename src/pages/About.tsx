@@ -70,12 +70,12 @@ const About = () => {
     {
       icon: Users,
       title: "글로벌 접근성",
-      body: isKo ? "언어가 학업의 장벽이 되어서는 안 됩니다. 이중언어 학습 지원이 PreplitAI의 핵심입니다." : "Language should never be a barrier to learning. Multilingual support is built into the core of PreplitAI.",
+      body: isKo ? "언어가 학업의 장벽이 되어서는 안 됩니다. 이중언어 학습 지원이 Preplit AI의 핵심입니다." : "Language should never be a barrier to learning. Multilingual support is built into the core of Preplit AI.",
     },
     {
       icon: Sparkles,
       title: "정직한 AI",
-      body: isKo ? "저희 AI 엔진은 출처를 명확히 밝힙니다. 근거가 없으면 솔직하게 한계를 안내합니다." : "Our Grounded RAG engine cites sources. If PreplitAI doesn't know, it says so — no fabrications.",
+      body: isKo ? "저희 AI 엔진은 출처를 명확히 밝힙니다. 근거가 없으면 솔직하게 한계를 안내합니다." : "Our Grounded RAG engine cites sources. If Preplit AI doesn't know, it says so — no fabrications.",
     },
   ];
 
@@ -92,7 +92,7 @@ const About = () => {
     },
     {
       year: isKo ? "플랫폼 개발" : "The Build",
-      title: isKo ? "PreplitAI: 단 하나의 올인원 스터디 워크스페이스." : "PreplitAI: One complete study workspace.",
+      title: isKo ? "Preplit AI: 단 하나의 올인원 스터디 워크스페이스." : "Preplit AI: One complete study workspace.",
       body: isKo ? "출처 인용 챗봇, 퀴즈, 플래시카드, 팟캐스트, 출제 예상 문제를 하나의 통합 워크스페이스로 완성했습니다." : "We combined Grounded RAG chat, adaptive quizzes, smart flashcards, AI-generated podcasts, and predicted exam questions into one platform.",
     },
     {
@@ -109,26 +109,42 @@ const About = () => {
     {
       "@context": "https://schema.org",
       "@type": "Person",
+      "@id": "https://preplitai.com/#founder",
       name: "Khan Muhammad Ahsan",
       jobTitle: "Founder & Chief Executive Officer",
+      affiliation: {
+        "@type": "CollegeOrUniversity",
+        name: "Ajou University",
+        address: {
+          "@type": "PostalAddress",
+          "addressLocality": "Suwon",
+          "addressCountry": "KR"
+        }
+      },
       worksFor: {
         "@type": "Organization",
-        name: "PreplitAI",
-        url: "https://preplitai.com"
+        name: "Preplit AI",
+        url: "https://preplitai.com",
+        foundingDate: "2026-06"
       },
-      description: "Khan Muhammad Ahsan is the Founder and Chief Architect of PreplitAI, building AI study companion tools and GKS application prep solutions."
+      description: "Khan Muhammad Ahsan is an undergraduate scholar at Ajou University in South Korea and the Founder & CEO of Preplit AI (founded June 2026)."
     },
     {
       "@context": "https://schema.org",
       "@type": "AboutPage",
-      name: "About PreplitAI & Founder Khan Muhammad Ahsan",
+      name: "About Preplit AI & Founder Khan Muhammad Ahsan",
       url: canonical,
       mainEntity: {
         "@type": "Organization",
-        name: "PreplitAI",
+        name: "Preplit AI",
+        foundingDate: "2026-06",
         founder: {
           "@type": "Person",
-          name: "Khan Muhammad Ahsan"
+          name: "Khan Muhammad Ahsan",
+          affiliation: {
+            "@type": "CollegeOrUniversity",
+            name: "Ajou University"
+          }
         }
       }
     }
@@ -137,8 +153,8 @@ const About = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] overflow-x-hidden text-black dark:text-white">
       <SEOHead
-        title={isKo ? "PreplitAI 소개 & 설립자 Khan Muhammad Ahsan — AI 학업 파트너" : "About PreplitAI & Founder Khan Muhammad Ahsan — AI Study Companion"}
-        description={isKo ? "설립자 Khan Muhammad Ahsan이 이끄는 PreplitAI의 미션과 GKS2026 AI 준비 플랫폼 스토리를 확인하세요." : "Learn about PreplitAI, founded by Khan Muhammad Ahsan to revolutionize AI study tools and Global Korea Scholarship (GKS) preparation."}
+        title={isKo ? "Preplit AI 소개 & 설립자 Khan Muhammad Ahsan — AI 학업 파트너" : "About Preplit AI & Founder Khan Muhammad Ahsan — AI Study Companion"}
+        description={isKo ? "설립자 Khan Muhammad Ahsan이 이끄는 Preplit AI의 미션과 GKS2026 AI 준비 플랫폼 스토리를 확인하세요." : "Learn about Preplit AI, founded by Khan Muhammad Ahsan to revolutionize AI study tools and Global Korea Scholarship (GKS) preparation."}
         url={canonical}
         canonical={canonical}
         schemaMarkup={founderSchema}
@@ -163,8 +179,8 @@ const About = () => {
 
           <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
             {isKo
-              ? 'PreplitAI는 강의 슬라이드, PDF, 전공 서적, 손글씨 노트, 유튜브 영상을 맞춤형 인터랙티브 학습 경험으로 전환합니다.'
-              : 'PreplitAI transforms any study material — lecture slides, PDFs, textbooks, handwritten notes, YouTube videos — into personalized, interactive learning experiences.'}
+              ? 'Preplit AI는 강의 슬라이드, PDF, 전공 서적, 손글씨 노트, 유튜브 영상을 맞춤형 인터랙티브 학습 경험으로 전환합니다.'
+              : 'Preplit AI transforms any study material — lecture slides, PDFs, textbooks, handwritten notes, YouTube videos — into personalized, interactive learning experiences.'}
           </p>
         </motion.div>
       </section>
@@ -183,14 +199,14 @@ const About = () => {
             ? '"모든 학습 자료를 1대1 인터랙티브 학습 경험으로 변환합니다."'
             : '"Transform Any Study Material into an Interactive Learning Experience."'}
         </p>
-        <p className="text-[#c84040] text-xs mt-3 font-semibold tracking-widest uppercase">PreplitAI Tagline</p>
+        <p className="text-[#c84040] text-xs mt-3 font-semibold tracking-widest uppercase">Preplit AI Tagline</p>
       </motion.section>
 
       {/* ── Story / Timeline ───────────────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-6 py-28">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="mb-16 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight">
-            {isKo ? 'PreplitAI가 걸어온 길' : 'How we got here'}
+            {isKo ? 'Preplit AI가 걸어온 길' : 'How we got here'}
           </h2>
           <p className="text-gray-500 dark:text-gray-400 mt-3 text-[16px] max-w-xl mx-auto">
             {isKo ? '학업에 대한 사소한 답답함에서 완성형 AI 학업 플랫폼으로.' : 'From a simple frustration to a complete AI learning platform.'}
@@ -229,7 +245,7 @@ const About = () => {
         <div className="max-w-6xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white tracking-tight">
-              {isKo ? '9가지 핵심 AI 학습 도구' : 'The 9 Pillars of PreplitAI'}
+              {isKo ? '9가지 핵심 AI 학습 도구' : 'The 9 Pillars of Preplit AI'}
             </h2>
             <p className="text-gray-500 dark:text-gray-400 mt-3 text-[16px] max-w-xl mx-auto">
               {isKo ? '하나의 스터디 워크스페이스에 통합된 맞춤형 학습 도구 모음.' : 'A complete toolkit integrated inside every Study Space.'}
@@ -274,11 +290,11 @@ const About = () => {
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               {isKo
-                ? 'Khan Muhammad Ahsan은 PreplitAI의 설립자이자 총괄 설계자입니다. AI 기술과 학업 워크스페이스를 결합하여 한국 대학생 및 Global Korea Scholarship (GKS) 지원자들을 위한 혁신적인 학습 및 서류 평가 플랫폼을 개발하고 있습니다.'
-                : 'Khan Muhammad Ahsan is the Founder and Chief Executive Officer of PreplitAI. He leads the engineering and vision behind PreplitAI\'s RAG study engine and GKS2026 application review platform.'}
+                ? 'Khan Muhammad Ahsan은 대한민국 아주대학교(Ajou University) 학부 장학생이자 Preplit AI(2026년 6월 설립)의 설립자 겸 총괄 엔지니어입니다. 전공 강의자료 RAG 인용 시스템과 GKS 정부초청장학금 지원자들을 위한 정밀 AI 서류 평가 워크벤치를 설계하고 개발하고 있습니다.'
+                : 'Khan Muhammad Ahsan is an undergraduate scholar at Ajou University in South Korea and the Founder & CEO of Preplit AI (founded in June 2026). He leads the engineering of Preplit AI’s grounded RAG study workspace and the GKS 2026 application evaluation engine.'}
             </p>
             <div className="text-xs text-gray-500 font-medium">
-              Khan Muhammad Ahsan is the founder of PreplitAI.
+              Khan Muhammad Ahsan is the Founder of Preplit AI (Ajou University, June 2026).
             </div>
           </div>
         </div>
@@ -288,7 +304,7 @@ const About = () => {
       <section className="max-w-6xl mx-auto px-6 py-28">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white tracking-tight">
-            {isKo ? 'PreplitAI의 핵심 가치' : 'What we stand for'}
+            {isKo ? 'Preplit AI의 핵심 가치' : 'What we stand for'}
           </h2>
           <p className="text-gray-500 dark:text-gray-400 mt-3 text-[16px] max-w-xl mx-auto">
             {isKo ? '저희가 제품을 빌드할 때 지키는 4가지 원칙.' : 'The principles guiding every product decision we make.'}

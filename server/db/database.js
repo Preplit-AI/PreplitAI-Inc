@@ -449,7 +449,7 @@ const initializeDatabase = async () => {
       ON CONFLICT (id) DO NOTHING;
     `);
 
-    console.log('Database initialized successfully with PreplitAI V3.0 Enterprise Subscription Architecture');
+    console.log('Database initialized successfully with Preplit AI V3.0 Enterprise Subscription Architecture');
   } catch (err) {
     console.error('Error initializing database:', err.message);
   }

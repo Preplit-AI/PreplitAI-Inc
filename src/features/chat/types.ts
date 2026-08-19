@@ -24,7 +24,7 @@ export interface ChatMessage {
 export interface ChatModel {
   id: string;
   name: string;
-  provider: "OpenAI" | "Anthropic" | "Google" | "xAI" | "Moonshot" | "PreplitAI";
+  provider: "OpenAI" | "Anthropic" | "Google" | "xAI" | "Moonshot" | "Preplit AI";
   description: string;
 }
 

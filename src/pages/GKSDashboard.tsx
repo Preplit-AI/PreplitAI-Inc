@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { GKSAdvisorChatbot } from '@/components/gks/GKSAdvisorChatbot';
 import { useAuth } from '@/contexts/AuthContext';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { User, FileText, Zap, BarChart2, BookOpen, GraduationCap } from 'lucide-react';
 
 interface GKSProfile {
@@ -513,7 +514,31 @@ export default function GKSDashboard() {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-[#f5f4f1] text-gray-900 font-sans flex flex-col transition-colors duration-300" style={{fontFamily:'Inter,sans-serif'}}>
-      
+      <SEOHead
+        title={isKo ? "GKS 2026 정부초청장학생 AI 서류 평가 & 준비 워크벤치" : "GKS 2026 Prep Workbench & AI Application Review"}
+        description={isKo ? "GKS(Global Korea Scholarship) 자기소개서, 학업계획서 정밀 AI 진단, 합격자 샘플 서류 데이터베이스 및 1:1 동문 첨삭 워크벤치." : "Complete Global Korea Scholarship (GKS/KGSP) preparation platform: AI document scoring, personal statement diagnostics, verified scholar samples, and advisor chat."}
+        keywords={[
+          "GKS 2026",
+          "Global Korea Scholarship",
+          "KGSP scholarship",
+          "GKS personal statement review",
+          "GKS study plan review",
+          "GKS applicant evaluation",
+          "Korea scholarship AI prep",
+          "GKS embassy track",
+          "GKS university track",
+        ]}
+        canonical="https://preplitai.com/gks/dashboard"
+        schemaMarkup={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Preplit AI GKS 2026 Prep Workbench",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Web",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "description": "AI-powered Global Korea Scholarship (GKS/KGSP) application diagnosis, scoring, and preparation workspace."
+        }}
+      />
       {/* OVERALL APP CONTAINER WITH FLUSH SIDEBAR + MAIN CANVAS */}
       <div className="flex-1 flex h-screen overflow-hidden">
 
@@ -526,14 +551,14 @@ export default function GKSDashboard() {
               <a
                 href="/"
                 className="flex items-center gap-2 group cursor-pointer hover:opacity-85 transition-opacity"
-                title="Go to PreplitAI Home"
+                title="Go to Preplit AI Home"
               >
-                <img src="/logo.png" alt="PreplitAI" className="h-7 w-auto" />
+                <img src="/logo.png" alt="Preplit AI" className="h-7 w-auto" />
                 <div>
                   <div className="font-bold text-[12.5px] text-[#111] tracking-tight group-hover:text-[#550000] transition-colors">
                     GKS Workbench
                   </div>
-                  <div className="text-[10px] text-[#888] font-medium">PreplitAI Engine</div>
+                  <div className="text-[10px] text-[#888] font-medium">Preplit AI Engine</div>
                 </div>
               </a>
               <button
@@ -603,11 +628,11 @@ export default function GKSDashboard() {
           {/* MOBILE ONLY STEP NAVIGATION TABS */}
           <div className="lg:hidden bg-white p-2 rounded-xl border border-[#e8e5e0] shadow-xs space-y-2">
             <div className="flex items-center justify-between px-1">
-              <a href="/" className="flex items-center gap-1.5" title="Go to PreplitAI Home">
-                <img src="/logo.png" alt="PreplitAI" className="h-5 w-auto" />
+              <a href="/" className="flex items-center gap-1.5" title="Go to Preplit AI Home">
+                <img src="/logo.png" alt="Preplit AI" className="h-5 w-auto" />
                 <span className="font-bold text-xs text-[#111]">GKS Workbench</span>
               </a>
-              <span className="text-[10px] text-[#888] font-medium">PreplitAI Engine</span>
+              <span className="text-[10px] text-[#888] font-medium">Preplit AI Engine</span>
             </div>
             <div className="grid grid-cols-4 gap-1">
               {[
@@ -1018,7 +1043,7 @@ export default function GKSDashboard() {
         className="fixed bottom-5 right-5 z-40 flex items-center gap-2.5 bg-black hover:bg-[#1a1a1a] text-white shadow-2xl font-bold text-xs transition-all hover:scale-105 rounded-full pl-1 pr-4 py-1 border border-white/10"
       >
         <span className="w-8 h-8 rounded-full bg-black border-2 border-white/20 flex items-center justify-center shrink-0 overflow-hidden">
-          <img src="/logo.png" alt="PreplitAI" className="w-6 h-6 object-contain" style={{filter:'brightness(0) invert(1)'}} />
+          <img src="/logo.png" alt="Preplit AI" className="w-6 h-6 object-contain" style={{filter:'brightness(0) invert(1)'}} />
         </span>
         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
         <span>Preplit AI GKS Advisor</span>

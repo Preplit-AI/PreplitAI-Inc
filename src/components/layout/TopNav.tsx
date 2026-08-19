@@ -50,7 +50,7 @@ export const TopNav = () => {
           <Link to="/" className="flex items-center gap-2 group shrink-0 py-0.5">
             <img
               src="/logo.png"
-              alt="PreplitAI Logo"
+              alt="Preplit AI Logo"
               className="h-8 w-auto object-contain hover:opacity-90 transition-opacity"
             />
           </Link>
@@ -141,7 +141,7 @@ export const TopNav = () => {
                 </button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] bg-white dark:bg-[#111111] p-6">
-                <SheetTitle className="text-left font-bold text-lg mb-6">PreplitAI</SheetTitle>
+                <SheetTitle className="text-left font-bold text-lg mb-6">Preplit AI</SheetTitle>
                 <div className="flex flex-col gap-2">
                   <a
                     href="/#features"

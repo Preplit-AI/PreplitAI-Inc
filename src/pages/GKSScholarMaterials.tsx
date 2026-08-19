@@ -52,10 +52,16 @@ export default function GKSScholarMaterials() {
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 font-sans pt-16 sm:pt-20 transition-colors duration-300">
       <SEOHead
-        title={isKo ? "GKS 합격자 샘플 서류 자료실 | GKS2026 Prep" : "Previous GKS Scholars Material Library | GKS2026 Prep"}
+        title={isKo ? "GKS 합격자 샘플 서류 자료실 — 자기소개서 & 학업계획서" : "Previous GKS Scholars Material Library — Verified Essays & Study Plans"}
         description={isKo ? "서울대, KAIST, 고려대 등 역대 GKS 장학생들의 합격 자기소개서, 학업계획서, 추천서 실물 데이터베이스." : "Browse verified high-scoring GKS Personal Statements, Study Plans, and Recommendation letters from past scholars."}
-        keywords={["GKS sample essay", "GKS personal statement sample", "GKS study plan sample", "GKS scholar materials"]}
-        url="https://preplitai.com/gks/scholar-materials"
+        keywords={["GKS sample essay", "GKS personal statement sample", "GKS study plan sample", "GKS scholar materials", "GKS 2026 prep"]}
+        canonical="https://preplitai.com/gks/scholar-materials"
+        schemaMarkup={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "GKS Scholar Application Material Library",
+          "description": "Verified sample personal statements and study plans from past GKS scholars."
+        }}
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-2 sm:pt-4 pb-12 space-y-6">

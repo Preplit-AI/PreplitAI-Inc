@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { API_BASE_URL } from "@/constants/config";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 type UserInfo = { id: number; email: string; name: string; created_at?: string };
 interface MeResponse {
@@ -32,6 +33,10 @@ const AccountOverview = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
+      <SEOHead
+        title="Account Overview"
+        robots="noindex,nofollow"
+      />
       <div className="max-w-3xl mx-auto px-6 py-12 space-y-6">
         <h1 className="text-3xl font-bold text-black dark:text-white">Account Overview</h1>
 

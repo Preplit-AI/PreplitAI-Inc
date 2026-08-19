@@ -8,21 +8,21 @@ const APIPage = () => {
   const isKo = language === 'ko';
 
   const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://preplitai.com";
-  const canonical = `${siteUrl}/developers`;
+  const canonical = `${siteUrl}/api-docs`;
   const breadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
-      { "@type": "ListItem", position: 2, name: "Developers", item: canonical },
+      { "@type": "ListItem", position: 2, name: "API Documentation", item: canonical },
     ]
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 text-black dark:text-white">
       <SEOHead
-        title={isKo ? "PreplitAI 개발자 API 문서" : "PreplitAI API"}
-        description={isKo ? "PreplitAI RAG 검색, 오디오 생성 및 문서 분석 API 개발 문서." : "Build AI lecture workflows, generate videos, and search knowledge from your apps."}
+        title={isKo ? "Preplit AI 개발자 API 문서" : "Preplit AI API"}
+        description={isKo ? "Preplit AI RAG 검색, 오디오 생성 및 문서 분석 API 개발 문서." : "Build AI lecture workflows, generate videos, and search knowledge from your apps."}
         url={canonical}
         canonical={canonical}
         schemaMarkup={breadcrumb}
@@ -34,11 +34,11 @@ const APIPage = () => {
             {isKo ? '개발자 센터' : 'Developers'}
           </p>
           <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white mb-6 leading-tight">
-            PreplitAI <span className="text-[#550000] dark:text-[#ffaaaa]">API</span>
+            Preplit AI <span className="text-[#550000] dark:text-[#ffaaaa]">API</span>
           </h1>
           <p className="text-lg md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed mb-10">
             {isKo
-              ? '자체 앱 및 학습 시스템에 PreplitAI RAG 지식 검색 및 오디오 생성 워크플로우를 연동하세요.'
+              ? '자체 앱 및 학습 시스템에 Preplit AI RAG 지식 검색 및 오디오 생성 워크플로우를 연동하세요.'
               : 'Build AI lecture workflows, generate videos, and search knowledge from your apps.'}
           </p>
           <div className="mt-6 flex flex-col sm:flex-row gap-3">

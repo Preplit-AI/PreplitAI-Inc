@@ -193,7 +193,7 @@ export function ManageSubscriptionModal({
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Secure In-App Billing Engine</span>
           </div>
-          <span>PreplitAI Enterprise SaaS</span>
+          <span>Preplit AI Enterprise SaaS</span>
         </div>
       </div>
     </div>

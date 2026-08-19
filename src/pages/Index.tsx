@@ -23,7 +23,7 @@ const Index = () => {
   const schema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "PreplitAI",
+    name: "Preplit AI",
     applicationCategory: "EducationalApplication",
     operatingSystem: "Web",
     offers: {
@@ -43,8 +43,8 @@ const Index = () => {
       <SEOHead
         title={
           isKo
-            ? "PreplitAI — 대학생을 위한 AI 학습, 실전 연습, 시험 대비 슈퍼 워크스페이스"
-            : "PreplitAI — A student’s super workspace for learning, practice, and review."
+            ? "Preplit AI — 대학생을 위한 AI 학습, 실전 연습, 시험 대비 슈퍼 워크스페이스"
+            : "Preplit AI — A student’s super workspace for learning, practice, and review."
         }
         description={
           isKo
@@ -52,7 +52,7 @@ const Index = () => {
             : "Transform lecture slides and course notes into grounded AI chat, smart flashcards, practice quizzes, and exam predictions."
         }
         keywords={[
-          "PreplitAI",
+          "Preplit AI",
           "study workspace",
           "focus workspace",
           "AI study companion",

@@ -87,7 +87,7 @@ export function SubscriptionModal({
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 pt-5 pb-4 border-b border-[#f0f0f0] dark:border-white/[0.06] gap-3 shrink-0">
           <div>
-            <h3 className="text-[15px] font-semibold text-[#111] dark:text-white">PreplitAI Subscriptions</h3>
+            <h3 className="text-[15px] font-semibold text-[#111] dark:text-white">Preplit AI Subscriptions</h3>
             <p className="text-[12px] text-[#888] dark:text-[#666] mt-0.5">
               Current Plan: <span className="font-medium text-[#111] dark:text-white">{currentPlan}</span> ({usagePercentage}% used)
             </p>

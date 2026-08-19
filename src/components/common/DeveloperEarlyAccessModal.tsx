@@ -37,7 +37,7 @@ export function DeveloperEarlyAccessModal({ isOpen, onClose, featureName }: Deve
 
         {/* Icon Emblem */}
         <div className="mx-auto w-16 h-16 rounded-full bg-gray-50 dark:bg-white/5 border border-gray-200/80 dark:border-white/10 flex items-center justify-center relative shadow-sm p-3">
-          <img src="/logo.png" alt="PreplitAI Logo" className="w-full h-full object-contain" />
+          <img src="/logo.png" alt="Preplit AI Logo" className="w-full h-full object-contain" />
           <span className="absolute top-0 right-0 flex h-3.5 w-3.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#550000] opacity-75"></span>
             <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#550000]"></span>
@@ -63,8 +63,8 @@ export function DeveloperEarlyAccessModal({ isOpen, onClose, featureName }: Deve
 
           <p className="text-[13.5px] text-[#666] dark:text-gray-300 leading-relaxed pt-1 px-2">
             {isKo
-              ? '현재 PreplitAI 서비스는 정식 출시 전 개발자 계정에 한해 제한적으로 운영되고 있습니다. 정식 공개 출시를 기다려 주시기 바랍니다.'
-              : "Access to PreplitAI services is currently restricted to authorized developer accounts only. Please wait for our official public release."}
+              ? '현재 Preplit AI 서비스는 정식 출시 전 개발자 계정에 한해 제한적으로 운영되고 있습니다. 정식 공개 출시를 기다려 주시기 바랍니다.'
+              : "Access to Preplit AI services is currently restricted to authorized developer accounts only. Please wait for our official public release."}
           </p>
         </div>
 

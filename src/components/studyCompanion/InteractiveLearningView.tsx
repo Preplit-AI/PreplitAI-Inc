@@ -188,8 +188,8 @@ export function InteractiveLearningView({ language: langProp }: { language?: str
           </div>
           <p className="text-[11.5px] text-[#666] leading-relaxed">
             {isKo
-              ? "PreplitAI가 결합 기하 구조를 재구성하여 회전 및 조작 가능한 3D 모델을 자동 생성합니다."
-              : "PreplitAI reconstructs bond geometry and renders an explorable 3D model automatically."}
+              ? "Preplit AI가 결합 기하 구조를 재구성하여 회전 및 조작 가능한 3D 모델을 자동 생성합니다."
+              : "Preplit AI reconstructs bond geometry and renders an explorable 3D model automatically."}
           </p>
         </div>
 

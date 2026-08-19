@@ -84,10 +84,10 @@ export const Pricing = () => {
 
   const faqs = [
     {
-      question: isKo ? "PreplitAI는 왜 학생들에게 합리적으로 제공되나요?" : "Why is PreplitAI priced so affordably for students?",
+      question: isKo ? "Preplit AI는 왜 학생들에게 합리적으로 제공되나요?" : "Why is Preplit AI priced so affordably for students?",
       answer: isKo
-        ? "PreplitAI는 대학생과 외국인 유학생의 현실적인 학업 환경에 맞춰 설계되었습니다. 비싼 해외 구독료 대신 학생 전용 요금제로 전공 서적 한 권 값보다 저렴하게 전체 AI 스터디 튜터를 이용하실 수 있습니다."
-        : "We built PreplitAI specifically for university students on a student budget. Our plans give you an entire AI study workspace for less than the cost of a single textbook."
+        ? "Preplit AI는 대학생과 외국인 유학생의 현실적인 학업 환경에 맞춰 설계되었습니다. 비싼 해외 구독료 대신 학생 전용 요금제로 전공 서적 한 권 값보다 저렴하게 전체 AI 스터디 튜터를 이용하실 수 있습니다."
+        : "We built Preplit AI specifically for university students on a student budget. Our plans give you an entire AI study workspace for less than the cost of a single textbook."
     },
     {
       question: isKo ? "학기 패스(Semester Pass)는 어떻게 작동하나요?" : "How does the Semester Pass discount work?",
@@ -112,13 +112,45 @@ export const Pricing = () => {
   const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://preplitai.com";
   const canonical = `${siteUrl}/pricing`;
 
+  const pricingSchema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Preplit AI Student Pro",
+      "description": "AI study companion and exam prediction workspace subscription for university students.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Preplit AI"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": isKo ? "KRW" : "USD",
+        "lowPrice": isKo ? "0" : "0",
+        "highPrice": isKo ? "36000" : "29.99",
+        "offerCount": "3"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(f => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": f.answer
+        }
+      }))
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-[#fcfcfb] dark:bg-[#0a0a0c] text-[#111111] dark:text-neutral-100 flex flex-col justify-between relative overflow-hidden transition-colors duration-300">
       <SEOHead
-        title={isKo ? "PreplitAI 요금제 — 학생 맞춤형 플랜" : "PreplitAI Pricing — Free & Student Pro"}
+        title={isKo ? "Preplit AI 요금제 — 학생 맞춤형 플랜" : "Preplit AI Pricing — Free & Student Pro"}
         description={isKo ? "대학생을 위한 투명하고 합리적인 요금제. Free(₩0) 및 Student Pro(학기 패스 할인가)." : "Simple, student-first pricing tailored to your academic needs."}
-        url={canonical}
         canonical={canonical}
+        schemaMarkup={pricingSchema}
       />
 
       {/* Background Decorative Organic Shapes (Aesthetic match to mockup) */}
@@ -363,7 +395,7 @@ export const Pricing = () => {
               {isKo ? "자주 묻는 질문 (FAQ)" : "Frequently Asked Questions"}
             </h2>
             <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1.5">
-              {isKo ? "PreplitAI 요금제 및 서비스 이용에 대해 확인해보세요." : "Everything you need to know about PreplitAI plans and billing."}
+              {isKo ? "Preplit AI 요금제 및 서비스 이용에 대해 확인해보세요." : "Everything you need to know about Preplit AI plans and billing."}
             </p>
           </div>
 

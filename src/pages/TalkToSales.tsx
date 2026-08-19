@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Footer } from "@/components/layout/Footer";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Select,
@@ -18,6 +19,11 @@ const TalkToSales = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white">
+      <SEOHead
+        title={isKo ? "대학 및 기관 영업 문의" : "Talk to Sales & Enterprise Licensing"}
+        description={isKo ? "대학 학과, 연구실, 교육 기관을 위한 Preplit AI 단체 라이선스 및 맞춤형 AI 스터디 솔루션 상담." : "Speak with the Preplit AI team about university department licensing, lab workspaces, custom AI study deployments, and academic SLA agreements."}
+        canonical="https://preplitai.com/sales"
+      />
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-8">
         <h1 className="text-4xl md:text-6xl font-bold text-black dark:text-white">
@@ -26,7 +32,7 @@ const TalkToSales = () => {
         <p className="mt-3 text-lg text-gray-600 dark:text-gray-400 max-w-3xl">
           {isKo
             ? '대학 학과, 연구실 또는 기관 솔루션에 대해 문의해 주세요. 영업 담당자가 1 영업일 이내에 답변해 드립니다.'
-            : 'Tell us about your team and goals. A PreplitAI specialist will reach out within 1 business day.'}
+            : 'Tell us about your team and goals. A Preplit AI specialist will reach out within 1 business day.'}
         </p>
       </section>
 

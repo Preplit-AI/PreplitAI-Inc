@@ -3,8 +3,8 @@ import type { ChatModel } from "./types";
 export const chatModels: ChatModel[] = [
   {
     id: "preplitai-auto",
-    name: "PreplitAI Auto",
-    provider: "PreplitAI",
+    name: "Preplit AI Auto",
+    provider: "Preplit AI",
     description: "Best model automatically selected for tutoring and study workflows.",
   },
   {

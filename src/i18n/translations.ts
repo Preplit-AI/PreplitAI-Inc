@@ -9,7 +9,7 @@ export const translations = {
     documents: 'Documents',
     noDocs: 'No documents uploaded yet',
     myAccount: 'My Account',
-    unlimitedPlan: 'PreplitAI Unlimited Plan',
+    unlimitedPlan: 'Preplit AI Unlimited Plan',
     settings: 'Settings',
 
     // Tabs
@@ -64,7 +64,7 @@ export const translations = {
     loggedUser: 'Logged In User',
     switchAccount: 'Switch Account',
     personalAccount: 'Personal Account',
-    teamAccount: 'PreplitAI Study Group',
+    teamAccount: 'Preplit AI Study Group',
     addAccount: 'Add another account',
     manageSub: 'Manage Subscription',
     logOut: 'Log out',
@@ -109,7 +109,7 @@ export const translations = {
     documents: '문서 목록',
     noDocs: '업로드된 문서가 없습니다',
     myAccount: '내 계정',
-    unlimitedPlan: 'PreplitAI 무제한 플랜',
+    unlimitedPlan: 'Preplit AI 무제한 플랜',
     settings: '설정',
 
     // Tabs
@@ -138,7 +138,7 @@ export const translations = {
     askAnything: '업로드한 강의 자료에 대해 무엇이든 질문하세요',
     citeNotice: '모든 답변은 업로드한 슬라이드의 정확한 페이지와 단락을 인용합니다.',
     inputPlaceholder: '무엇이든 학습해보세요',
-    learnPlus: 'PreplitAI+',
+    learnPlus: 'Preplit AI+',
     welcomeMessage: '안녕하세요! 당신의 AI 학습 도우미입니다. "+ 콘텐츠 추가" 버튼으로 문서를 업로드한 후 오른쪽 탭을 눌러 퀴즈, 플래시카드, 요약, 팟캐스트, 출제 예상 문제를 생성해보세요.',
     noDocUploadFirst: '⚠️ 콘텐츠를 생성하기 전에 먼저 문서를 업로드해주세요.',
 
@@ -164,7 +164,7 @@ export const translations = {
     loggedUser: '로그인 계정',
     switchAccount: '계정 전환',
     personalAccount: '개인 계정',
-    teamAccount: 'PreplitAI 스터디 그룹',
+    teamAccount: 'Preplit AI 스터디 그룹',
     addAccount: '다른 계정 추가',
     manageSub: '구독 관리',
     logOut: '로그아웃',
@@ -209,7 +209,7 @@ export const translations = {
     documents: 'Documentos',
     noDocs: 'No hay documentos subidos',
     myAccount: 'Mi Cuenta',
-    unlimitedPlan: 'Plan Ilimitado PreplitAI',
+    unlimitedPlan: 'Plan Ilimitado Preplit AI',
     settings: 'Configuración',
 
     // Tabs
@@ -264,7 +264,7 @@ export const translations = {
     loggedUser: 'Usuario Actual',
     switchAccount: 'Cambiar Cuenta',
     personalAccount: 'Cuenta Personal',
-    teamAccount: 'Grupo de Estudio PreplitAI',
+    teamAccount: 'Grupo de Estudio Preplit AI',
     addAccount: 'Añadir otra cuenta',
     manageSub: 'Gestionar Suscripción',
     logOut: 'Cerrar sesión',
@@ -309,7 +309,7 @@ export const translations = {
     documents: 'Documents',
     noDocs: 'Aucun document téléversé',
     myAccount: 'Mon Compte',
-    unlimitedPlan: 'Plan Illimité PreplitAI',
+    unlimitedPlan: 'Plan Illimité Preplit AI',
     settings: 'Paramètres',
 
     // Tabs
@@ -364,7 +364,7 @@ export const translations = {
     loggedUser: 'Utilisateur Connecté',
     switchAccount: 'Changer de Compte',
     personalAccount: 'Compte Personnel',
-    teamAccount: 'Groupe d\'Étude PreplitAI',
+    teamAccount: 'Groupe d\'Étude Preplit AI',
     addAccount: 'Ajouter un autre compte',
     manageSub: 'Gérer l\'abonnement',
     logOut: 'Se déconnecter',
@@ -409,7 +409,7 @@ export const translations = {
     documents: 'Dokumente',
     noDocs: 'Noch keine Dokumente hochgeladen',
     myAccount: 'Mein Konto',
-    unlimitedPlan: 'PreplitAI Unbegrenzt-Plan',
+    unlimitedPlan: 'Preplit AI Unbegrenzt-Plan',
     settings: 'Einstellungen',
 
     // Tabs
@@ -464,7 +464,7 @@ export const translations = {
     loggedUser: 'Angemeldeter Benutzer',
     switchAccount: 'Konto Wechseln',
     personalAccount: 'Persönliches Konto',
-    teamAccount: 'PreplitAI Lerngruppe',
+    teamAccount: 'Preplit AI Lerngruppe',
     addAccount: 'Weiteres Konto hinzufügen',
     manageSub: 'Abonnement verwalten',
     logOut: 'Abmelden',

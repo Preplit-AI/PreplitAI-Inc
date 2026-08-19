@@ -57,10 +57,20 @@ export default function GKSAlumniReview() {
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 font-sans pt-16 sm:pt-20 transition-colors duration-300">
       <SEOHead
-        title={isKo ? "GKS 동문 1:1 서류 첨삭 신청 | GKS2026 Prep" : "1-on-1 Alumni Scholar Review | GKS2026 Prep"}
+        title={isKo ? "GKS 동문 1:1 서류 첨삭 신청 — 장학생 합격 피드백" : "1-on-1 Alumni Scholar Review — GKS Application Feedback"}
         description={isKo ? "GKS 장학생 출신 평가진이 직접 진행하는 1:1 서류 첨삭 및 48시간 맞춤 심층 피드백." : "Get direct 1-on-1 human dossier review and detailed line-by-line feedback from former GKS scholars."}
-        keywords={["GKS review", "GKS alumni feedback", "GKS proofreading", "GKS manual review"]}
-        url="https://preplitai.com/gks/alumni-review"
+        keywords={["GKS review", "GKS alumni feedback", "GKS proofreading", "GKS manual review", "GKS 2026 prep"]}
+        canonical="https://preplitai.com/gks/alumni-review"
+        schemaMarkup={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "1-on-1 GKS Alumni Scholar Dossier Review",
+          "provider": {
+            "@type": "Organization",
+            "name": "Preplit AI"
+          },
+          "description": "Comprehensive line-by-line review of GKS personal statements and study plans by former scholars."
+        }}
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-2 sm:pt-4 pb-12 space-y-6">

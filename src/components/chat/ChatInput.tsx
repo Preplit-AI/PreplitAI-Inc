@@ -109,7 +109,7 @@ export function ChatInput({
           </div>
         </div>
       </div>
-      <p className="mt-3 text-center text-xs text-gray-400">PreplitAI can make mistakes. Check important information.</p>
+      <p className="mt-3 text-center text-xs text-gray-400">Preplit AI can make mistakes. Check important information.</p>
     </form>
   );
 }

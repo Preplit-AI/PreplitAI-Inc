@@ -84,7 +84,7 @@ export function AuthModal({ isOpen, onClose, onSuccess, defaultTab = 'login' }: 
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="PreplitAI" className="w-7 h-7 object-contain" />
+            <img src="/logo.png" alt="Preplit AI" className="w-7 h-7 object-contain" />
             <h3 className="text-[14px] font-semibold text-[#111] dark:text-white">
               {mode === 'login' ? (isKo ? '로그인' : 'Sign in') : (isKo ? '계정 만들기' : 'Create account')}
             </h3>

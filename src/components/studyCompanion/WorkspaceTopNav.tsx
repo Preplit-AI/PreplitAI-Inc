@@ -46,8 +46,8 @@ export function WorkspaceTopNav({ activeTab, onTabChange, onOpenSearch, onOpenSe
       )}
 
       <a href="/" className="flex items-center gap-2 shrink-0 group mr-2 sm:mr-6 hover:opacity-80 transition-opacity">
-        <img src="/logo.png" alt="PreplitAI Logo" className="h-7 sm:h-8 w-auto" />
-        <span className="font-semibold text-[14px] sm:text-[15px] text-[#111] tracking-tight">PreplitAI</span>
+        <img src="/logo.png" alt="Preplit AI Logo" className="h-7 sm:h-8 w-auto" />
+        <span className="font-semibold text-[14px] sm:text-[15px] text-[#111] tracking-tight">Preplit AI</span>
       </a>
 
       <nav className="hidden sm:flex items-center gap-0 flex-1">

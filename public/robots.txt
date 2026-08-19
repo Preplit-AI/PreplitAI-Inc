@@ -1,7 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /admin/
-Disallow: /dashboard/
+Disallow: /account
+Disallow: /settings
+Disallow: /credits
+Disallow: /status
 
 Sitemap: https://preplitai.com/sitemap.xml

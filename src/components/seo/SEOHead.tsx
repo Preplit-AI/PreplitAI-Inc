@@ -13,17 +13,20 @@ export type SEOHeadProps = {
   twitterCard?: "summary" | "summary_large_image";
 };
 
-const DEFAULT_IMAGE = `${DEFAULT_SITE_URL}/og-image.png`;
+const DEFAULT_IMAGE = `${DEFAULT_SITE_URL}/logo.png`;
 
 export function SEOHead({
-  title = "AI-Powered Video Lecture Generator",
-  description = "Turn notes into engaging AI video lectures with realistic avatars, TTS, and automatic slides.",
+  title = "AI Study Companion & GKS Prep Workspace",
+  description = "Transform lecture slides, PDFs, and textbooks into grounded study tools, adaptive quizzes, smart flashcards, and GKS scholarship preparation.",
   keywords = [
-    "AI video lecture generator",
-    "notes to video converter",
-    "automated lecture creator",
-    "text to video lecture",
-    "AI educational content creator"
+    "Preplit AI",
+    "AI study companion",
+    "GKS scholarship preparation",
+    "GKS personal statement evaluation",
+    "Korean university study tools",
+    "grounded AI tutor",
+    "active recall quiz generator",
+    "predicted exam questions",
   ],
   image = DEFAULT_IMAGE,
   url,
@@ -33,31 +36,31 @@ export function SEOHead({
   twitterCard = "summary_large_image",
 }: SEOHeadProps) {
   const resolvedUrl = url || (typeof window !== "undefined" ? window.location.href : DEFAULT_SITE_URL);
-  const titleTag = title.length > 60 ? `${title.slice(0, 57)}...` : title;
-  const descriptionTag = description.length > 160 ? `${description.slice(0, 157)}...` : description;
+  const cleanCanonical = canonical || (resolvedUrl ? resolvedUrl.split("?")[0].split("#")[0] : DEFAULT_SITE_URL);
+  const titleTag = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
   const keywordsStr = Array.isArray(keywords) ? keywords.join(", ") : keywords;
   const schemas = Array.isArray(schemaMarkup) ? schemaMarkup : schemaMarkup ? [schemaMarkup] : [];
 
   return (
     <Helmet prioritizeSeoTags>
-      <title>{titleTag} | {SITE_NAME}</title>
-      <meta name="description" content={descriptionTag} />
+      <title>{titleTag}</title>
+      <meta name="description" content={description} />
       {keywordsStr && <meta name="keywords" content={keywordsStr} />}
       <meta name="robots" content={robots} />
-      {canonical && <link rel="canonical" href={canonical} />}
+      <link rel="canonical" href={cleanCanonical} />
 
       {/* Open Graph */}
-      <meta property="og:title" content={`${titleTag} | ${SITE_NAME}`} />
-      <meta property="og:description" content={descriptionTag} />
+      <meta property="og:title" content={titleTag} />
+      <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={resolvedUrl} />
+      <meta property="og:url" content={cleanCanonical} />
       <meta property="og:image" content={image} />
       <meta property="og:site_name" content={SITE_NAME} />
 
       {/* Twitter */}
       <meta name="twitter:card" content={twitterCard} />
-      <meta name="twitter:title" content={`${titleTag} | ${SITE_NAME}`} />
-      <meta name="twitter:description" content={descriptionTag} />
+      <meta name="twitter:title" content={titleTag} />
+      <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
 
       {/* JSON-LD */}
