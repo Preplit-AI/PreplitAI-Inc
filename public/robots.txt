@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /app/
 
 Sitemap: https://preplitai.com/sitemap.xml

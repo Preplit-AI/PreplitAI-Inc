@@ -1,53 +1,56 @@
+'use strict';
 /**
- * Server-wide configuration constants.
- * All secrets MUST be provided via environment variables.
- * This file performs startup validation — missing secrets cause an immediate crash
- * rather than silently running with insecure defaults.
+ * Server-wide configuration.
+ * Secrets come only from the environment. Production refuses to boot without
+ * them rather than running on a guessable default.
  */
+const crypto = require('crypto');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-// ── JWT Secret ────────────────────────────────────────────────────────────────
-// Hard failure in production if not set. In development, allow the insecure
-// default but emit a loud warning so developers don't miss it.
-const INSECURE_DEFAULT = 'your-secret-key-change-in-production';
-
-let JWT_SECRET;
-if (process.env.JWT_SECRET && process.env.JWT_SECRET !== INSECURE_DEFAULT) {
-  // A real secret is set — use it
-  JWT_SECRET = process.env.JWT_SECRET;
-} else if (isProduction && (!process.env.JWT_SECRET || process.env.JWT_SECRET === INSECURE_DEFAULT)) {
-  // In production with no secret or the known-insecure default — hard failure
-  console.error('FATAL: JWT_SECRET must be set to a unique secret in production.');
-  console.error('Go to Vercel Dashboard → Project → Settings → Environment Variables');
-  console.error('Add JWT_SECRET with a strong random value (min 32 chars).');
-  process.exit(1);
-} else {
-  JWT_SECRET = INSECURE_DEFAULT;
-  console.warn(
-    '⚠️  WARNING: JWT_SECRET is using the insecure development default. ' +
-    'Set JWT_SECRET in your .env file before deploying to production.'
-  );
+// ── JWT secret ───────────────────────────────────────────────────────────────
+// Development without a secret gets a random one per process. Access tokens then
+// stop working on restart, which is harmless: sessions are restored from the
+// refresh cookie, which does not depend on this secret.
+let JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  if (isProduction) {
+    console.error('FATAL: JWT_SECRET must be set to a random value of at least 32 characters.');
+    process.exit(1);
+  }
+  JWT_SECRET = crypto.randomBytes(48).toString('hex');
+  console.warn('[config] JWT_SECRET missing or short; using a random per-process secret (development only).');
 }
 
+const int = (value, fallback) => {
+  const n = parseInt(value, 10);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+};
+
 module.exports = {
-  /** JWT signing secret */
+  isProduction,
   JWT_SECRET,
+  PORT: int(process.env.PORT, 5000),
 
-  /** HTTP port the Express server listens on */
-  PORT: process.env.PORT || 5000,
+  /** Short-lived; the client keeps it in memory only. */
+  ACCESS_TOKEN_TTL: '15m',
+  /** Long-lived, httpOnly cookie, rotated on every use. */
+  REFRESH_TOKEN_TTL_MS: 30 * 24 * 60 * 60 * 1000,
 
-  /** Allowed MIME types for document uploads */
-  ALLOWED_MIME_TYPES: [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'text/plain',
-  ],
+  /** If set, sign-up requires this code. Use it to keep the pilot to its cohort. */
+  PILOT_INVITE_CODE: (process.env.PILOT_INVITE_CODE || '').trim(),
 
-  /** Maximum upload file size in bytes (10 MB) */
-  MAX_FILE_SIZE: 10 * 1024 * 1024,
+  /** Lectures one student may process per rolling 30 days. Protects the transcription budget. */
+  MONTHLY_LECTURE_LIMIT: int(process.env.MONTHLY_LECTURE_LIMIT, 40),
+  /** Lectures processed at the same time across the whole server. */
+  PROCESSING_CONCURRENCY: int(process.env.PROCESSING_CONCURRENCY, 2),
 
-  /** JWT token expiry duration */
-  JWT_EXPIRES_IN: '7d',
+  MAX_AUDIO_BYTES: int(process.env.MAX_AUDIO_MB, 200) * 1024 * 1024,
+  MAX_TRANSCRIPT_CHARS: 200000,
+
+  /** Cards offered in one day's review, so a session stays short. */
+  DAILY_REVIEW_LIMIT: int(process.env.DAILY_REVIEW_LIMIT, 20),
+
+  TRANSCRIBE_MODEL: process.env.TRANSCRIBE_MODEL || 'whisper-large-v3-turbo',
+  NOTES_MODEL: process.env.NOTES_MODEL || 'llama-3.3-70b-versatile',
 };

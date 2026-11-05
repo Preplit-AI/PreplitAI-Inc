@@ -46,3 +46,6 @@ server/outputs/
 
 .vercel
 .env*
+
+# Local development database (PGlite)
+server/.data/

@@ -1,71 +1,73 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { lazy, Suspense, useEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import { TopNav } from "@/components/layout/TopNav";
-import { ScrollToTop } from "@/components/layout/ScrollToTop";
-import { Analytics } from "@/components/seo/Analytics";
-import { RouteChangeTracker } from "@/components/seo/RouteChangeTracker";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import Pricing from "./pages/Pricing";
-import StatusPage from "./pages/Status";
-import APIPage from "./pages/APIPage";
-import About from "./pages/About";
-import TalkToSales from "./pages/TalkToSales";
-import AccountOverview from "./pages/AccountOverview";
-import AccountSettings from "./pages/AccountSettings";
-import Credits from "./pages/Credits";
-import PreplitAIChat from "./pages/PreplitAIChat";
-import Blog from "./pages/Blog";
-import GKSDashboard from "./pages/GKSDashboard";
-import GKSScholarMaterials from "./pages/GKSScholarMaterials";
-import GKSAlumniReview from "./pages/GKSAlumniReview";
+import { HelmetProvider } from "react-helmet-async";
+import { AuthProvider } from "@/lib/auth";
+import { LangProvider } from "@/lib/lang";
+import Landing from "@/pages/Landing";
+import { Login, Signup } from "@/pages/Auth";
+import NotFound from "@/pages/NotFound";
+import { AppLayout } from "@/app/AppLayout";
 
-const queryClient = new QueryClient();
+// The app screens and the privacy notice load on demand; the landing page does not wait for them.
+const Privacy = lazy(() => import("@/pages/Privacy"));
+const Learn = lazy(() => import("@/app/Learn"));
+const LectureNote = lazy(() => import("@/app/LectureNote"));
+const Remember = lazy(() => import("@/app/Remember"));
+const Account = lazy(() => import("@/app/Account"));
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <LanguageProvider>
-      <AuthProvider>
-        <TooltipProvider>
-        <Analytics />
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <ScrollToTop />
-          <RouteChangeTracker />
-          <TopNav />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/features" element={<Navigate to="/#features" replace />} />
-            <Route path="/request-demo" element={<TalkToSales />} />
-            <Route path="/status" element={<StatusPage />} />
-            <Route path="/api-docs" element={<APIPage />} />
-            <Route path="/gks" element={<GKSDashboard />} />
-            <Route path="/gks/dashboard" element={<GKSDashboard />} />
-            <Route path="/gks/scholar-materials" element={<GKSScholarMaterials />} />
-            <Route path="/gks/alumni-review" element={<GKSAlumniReview />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/sales" element={<TalkToSales />} />
-            <Route path="/account" element={<AccountOverview />} />
-            <Route path="/settings" element={<AccountSettings />} />
-            <Route path="/credits" element={<Credits />} />
-            <Route path="/workspace" element={<PreplitAIChat />} />
-            <Route path="/preplitai-chat" element={<Navigate to="/workspace" replace />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-   </LanguageProvider>
-  </QueryClientProvider>
-);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      retry: (count, err) => {
+        const status = (err as { status?: number }).status ?? 0;
+        return status >= 500 && count < 2;
+      },
+    },
+  },
+});
 
-export default App;
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      document.getElementById(hash.slice(1))?.scrollIntoView();
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+  return null;
+}
+
+export default function App() {
+  return (
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <LangProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <ScrollToTop />
+              <Suspense fallback={null}>
+                <Routes>
+                  <Route path="/" element={<Landing />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/app" element={<AppLayout />}>
+                    <Route index element={<Navigate to="learn" replace />} />
+                    <Route path="learn" element={<Learn />} />
+                    <Route path="learn/:id" element={<LectureNote />} />
+                    <Route path="remember" element={<Remember />} />
+                    <Route path="account" element={<Account />} />
+                  </Route>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </BrowserRouter>
+          </AuthProvider>
+        </LangProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
+  );
+}

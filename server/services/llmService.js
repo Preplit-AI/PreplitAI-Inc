@@ -1,54 +1,59 @@
 'use strict';
 const Groq = require('groq-sdk');
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'mock_key' });
+let client = null;
 
 /**
- * PreplitAI LLM Model Routing & Generation Service (PART 7.2)
+ * The Groq client, built lazily.
+ *
+ * The key is read at call time, not at module load, so a missing key does not
+ * take the whole API down on boot - but it fails the individual request loudly
+ * instead of producing nothing. There is no offline or mock mode.
  */
-async function callLLM({ systemPrompt, userPrompt, primaryModel = 'llama-3.1-8b-instant', jsonMode = false }) {
-  const fallbackModels = [
-    primaryModel,
-    'llama-3.3-70b-versatile',
-    'llama-3.1-8b-instant',
-    'mixtral-8x7b-32768'
-  ];
+function getClient() {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    const err = new Error('GROQ_API_KEY is not set, so transcription and notes are unavailable.');
+    err.code = 'LLM_NOT_CONFIGURED';
+    throw err;
+  }
+  if (!client) client = new Groq({ apiKey, timeout: 5 * 60 * 1000, maxRetries: 2 });
+  return client;
+}
 
-  // Remove duplicates while preserving order
-  const uniqueModels = [...new Set(fallbackModels)];
+/**
+ * Returns the generated text, or throws. It never returns empty or substitute
+ * content: a student revising from fabricated notes is worse than a student
+ * seeing an error.
+ */
+async function callLLM({ systemPrompt, userPrompt, primaryModel, jsonMode = false, temperature = 0.2 }) {
+  const groq = getClient();
+  const models = [...new Set([primaryModel, 'llama-3.3-70b-versatile', 'openai/gpt-oss-120b'].filter(Boolean))];
 
   let lastError = null;
-
-  for (const model of uniqueModels) {
+  for (const model of models) {
     try {
-      const options = {
+      const completion = await groq.chat.completions.create({
         model,
-        temperature: 0.7,
+        temperature,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ]
-      };
-
-      if (jsonMode && (model.includes('llama-3.3') || model.includes('8b-instant'))) {
-        options.response_format = { type: 'json_object' };
-      }
-
-      const completion = await groq.chat.completions.create(options);
-      const text = completion.choices?.[0]?.message?.content?.trim() || '';
-      return text;
+          { role: 'user', content: userPrompt },
+        ],
+        ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
+      });
+      const text = (completion.choices?.[0]?.message?.content || '').trim();
+      if (text) return text;
+      lastError = new Error('Model ' + model + ' returned an empty completion');
     } catch (err) {
       lastError = err;
-      console.warn(`Groq model ${model} failed, trying fallback:`, err.message);
-      // Continue to next fallback model
+      console.warn('[llm] ' + model + ' failed:', err.message);
     }
   }
 
-  // Fallback mock mode if API key is invalid or Groq calls fail during offline testing
-  console.error('All Groq models failed. Using local fallback generator.');
-  return null;
+  const err = new Error('Text generation failed on every model. Last error: ' + (lastError ? lastError.message : 'unknown'));
+  err.code = 'LLM_UNAVAILABLE';
+  throw err;
 }
 
-module.exports = {
-  callLLM
-};
+module.exports = { getClient, callLLM };

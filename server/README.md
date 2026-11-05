@@ -1,101 +1,29 @@
-# ClassroomAI Backend
+# Junbee API
 
-Backend API for ClassroomAI - transforms educational notes into AI-generated video lectures.
+Express API for the Junbee pilot. See the root `README.md` for setup.
 
-## Setup
+All routes except `/api/health`, `/api/auth/config`, `signup`, `login`, `refresh` and `logout` need `Authorization: Bearer <access token>`.
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+| Method | Path | What it does |
+| --- | --- | --- |
+| GET | `/api/health` | Database reachable or not |
+| GET | `/api/auth/config` | Whether sign-up needs an invite code |
+| POST | `/api/auth/signup` | `{ email, password, name, inviteCode? }` → session |
+| POST | `/api/auth/login` | `{ email, password }` → session |
+| POST | `/api/auth/refresh` | Rotates the refresh cookie → session (204 when signed out) |
+| POST | `/api/auth/logout` | Ends this session |
+| GET | `/api/auth/me` | The signed-in student |
+| PUT | `/api/auth/profile` | `{ name }` |
+| PUT | `/api/auth/password` | `{ currentPassword, newPassword }`; ends other sessions |
+| DELETE | `/api/auth/account` | `{ password }`; deletes everything the account owns |
+| GET/POST | `/api/courses` | List, or create `{ name }` |
+| PATCH/DELETE | `/api/courses/:id` | Rename, or delete with its lectures and cards |
+| POST | `/api/lectures` | multipart: `courseId`, `title?`, and `audio` (file) or `text` → 202, processed in the background |
+| GET | `/api/lectures` | Lectures that are processing or ready |
+| GET/DELETE | `/api/lectures/:id` | Notes, transcript, cards; or delete |
+| GET | `/api/junbee` | The one undismissed message: `ready`, `unclear` or `failed` |
+| POST | `/api/junbee/:lectureId/dismiss` | Dismiss it for good |
+| GET | `/api/review/today?since=ISO` | `{ done, cards }` for today's session |
+| POST | `/api/review/cards/:id` | `{ rating: 1–4 }` (다시, 어려움, 알맞음, 쉬움) |
 
-2. **Configure environment variables:**
-   - Copy `.env.example` to `.env`
-   - Get your free Gemini API key from https://makersuite.google.com/app/apikey
-   - Add your Gemini API key to `.env`
-
-3. **Start the server:**
-   ```bash
-   # Development (with auto-reload)
-   npm run dev
-   
-   # Production
-   npm start
-   ```
-
-## API Endpoints
-
-### Health Check
-```
-GET /api/health
-```
-
-### Upload Document
-```
-POST /api/upload
-Content-Type: multipart/form-data
-
-Body:
-- file: PDF, DOC, DOCX, or TXT file (max 10MB)
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "documentId": "1234567890-filename.pdf",
-  "fileName": "original-name.pdf",
-  "textPreview": "First 200 characters...",
-  "wordCount": 1500,
-  "message": "Document uploaded and processed successfully"
-}
-```
-
-### Generate Lecture
-```
-POST /api/lecture/generate
-Content-Type: application/json
-
-Body:
-{
-  "documentId": "1234567890-filename.pdf",
-  "mode": "summary|detailed|test",
-  "style": "professor|visual"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "lecture": {
-    "documentId": "...",
-    "mode": "summary",
-    "style": "professor",
-    "script": "Full lecture script...",
-    "sceneBreakdown": "Scene-by-scene breakdown...",
-    "wordCount": 500,
-    "estimatedDuration": 4
-  },
-  "message": "Lecture script generated successfully"
-}
-```
-
-## Modes
-
-- **Summary**: Quick overview of key concepts
-- **Detailed**: In-depth explanations with examples
-- **Test**: Practice questions and solutions
-
-## Styles
-
-- **Professor**: AI professor teaching on a board
-- **Visual**: Animated visual explanations
-
-## Next Steps
-
-- [ ] Integrate video generation API (D-ID/HeyGen)
-- [ ] Add voice synthesis (ElevenLabs)
-- [ ] Implement job queue for async video processing
-- [ ] Add database for storing lectures
-- [ ] User authentication
+Tests: `npm test` (Node's test runner, PGlite, AI calls stubbed).

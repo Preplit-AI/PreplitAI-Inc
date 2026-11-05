@@ -1,253 +1,105 @@
-<div align="center">
-   
-# PreplitAI, Inc.
+# Junbee
 
+**준비됐어? Ready when it matters.**
 
-<img width="1561" height="873" alt="image" src="https://github.com/user-attachments/assets/00af0490-8d58-4492-b618-25d151918f02" />
+Junbee (준비, *JOON-bee*) turns a recorded lecture into notes a student can trust, and the notes into five minutes of review a day. Built by PreplitAI, Inc.
 
+This repository is the **pilot**: two of the four movements in the brand book.
 
+| Movement | In the pilot | What it does |
+| --- | --- | --- |
+| **배움 Learn** | Yes | Upload a lecture recording (or paste a transcript). It is transcribed, inaudible stretches are marked `[불명확]` instead of guessed, and notes are written with what the lecturer flagged for the exam. |
+| **기억 Remember** | Yes | Each lecture yields 5–10 cards, scheduled with FSRS. Today's queue is one short session; progress is drawn as the comb. |
+| 정리 Organize | No | Not built and not in the navigation. |
+| 쌓기 Build | No | Not built and not in the navigation. |
 
-![Status](https://img.shields.io/badge/status-pre--launch-8b0000?style=flat-square)
-![License](https://img.shields.io/badge/license-Apache%202.0-8b0000?style=flat-square)
-![Waitlist](https://img.shields.io/badge/join-waitlist-8b0000?style=flat-square)
-![Powered by AI](https://img.shields.io/badge/powered%20by-AI-darkred?style=flat-square)
+## Run it locally
 
-Copyright (c) 2026 Preplit/CTO
+Needs Node 22 or newer. Windows: double-click `start-dev.bat`. Otherwise:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-[Join the Waitlist](https://getlaunchlist.com/pages/preplit-ai) · [Documentation](https://drive.google.com/file/d/1VNm1BA-rR8pn24eK9EVjm6_sHPT2zlky/view?usp=sharing) · [Report a Bug](https://github.com/ahsann826/PreplitAI-Inc/issues) · [Request a Feature](https://github.com/ahsann826/PreplitAI-Inc/issues)
-
-</div>
-
----
-
-# PreplitAI
- 
-PreplitAI is an AI-powered EdTech platform that converts static educational documents — PDFs, Word files, and plain-text notes — into fully produced, narrated video lectures. No recording. No editing. No technical skill required.
- 
-Upload a document, choose a generation mode and style, and the system handles script writing, scene generation, voice synthesis, video rendering, and delivery automatically.
- 
-## About the Project
- 
-There is a massive amount of written educational content in the world — lecture notes, study guides, textbook summaries, course outlines — that never gets converted into the format learners engage with most: video.
- 
-Converting notes to video manually requires recording equipment, editing software, design skills, and hours of effort. Most students and educators simply don't have that.
- 
-PreplitAI removes every one of those barriers. Upload your notes. Get a complete video lecture out.
- 
-## How It Works
- 
-```
-[ Document Upload ]
-        ↓
-[ AI parses content & generates a lecture script ]
-        ↓
-[ Script converted into structured scene JSON ]
-        ↓
-[ Neural voice narration synthesized per scene ]
-        ↓
-[ Scenes rendered in parallel & stitched into final video ]
-        ↓
-[ Video uploaded to cloud storage & delivered ]
-```
- 
-1. **Upload** — Submit a PDF, DOCX, DOC, or TXT file.
-2. **Structure** — The AI parses the document, identifies key concepts, and generates a spoken-word lecture script, then converts it into a structured scene-by-scene JSON breakdown.
-3. **Generate** — Each scene's narration is synthesized into natural voice audio, and each scene is rendered as video in parallel.
-4. **Deliver** — Finished scene clips are stitched into a single video and uploaded for streaming and download.
-## Current Status
- 
-PreplitAI is under active development. The core pipeline — document upload, script generation, and structured scene generation — is fully operational. The video rendering layer is in the process of migrating to a new architecture (see below) and is not yet fully wired into the production pipeline, so generation times and output quality are actively improving.
- 
-This project is pre-launch and not yet recommended for production use with real user data.
- 
-## Key Features
- 
-| Feature | Description |
-|---|---|
-| Document-to-Video Conversion | Converts PDF, DOCX, DOC, or TXT notes into a complete video lecture |
-| AI Script Generation | Generates a structured, spoken-word lecture script from raw document text |
-| Scene-Based Structuring | Breaks the lecture into typed scenes (definitions, flowcharts, timelines, comparisons, diagrams, charts, bullet points) |
-| Neural AI Narration | Natural-sounding voice synthesis, generated per scene |
-| Parallel Video Rendering | Scenes render concurrently for faster turnaround |
-| 100% Web-Based | No installs, no setup — works entirely in the browser |
-| Easy Sharing | Cloud-hosted video with a permanent shareable link |
-| Credit-Based Usage | New accounts start with free credits to evaluate the product |
- 
-## Tech Stack
- 
-| Layer | Technology |
-|---|---|
-| Frontend | React 18, TypeScript, Vite, Tailwind CSS |
-| Backend | Node.js, Express |
-| Database | SQLite (`better-sqlite3`) |
-| LLM / Scripting | Groq API (`llama-3.3-70b-versatile`) for script and scene JSON generation |
-| Voice Synthesis | ElevenLabs API — neural text-to-speech, synthesized in parallel per scene |
-| Video Rendering | Remotion — headless React-based scene renderer, parallel workers |
-| Video Assembly | FFmpeg — stitches rendered scene clips into a final video |
-| Cloud Storage | Cloudinary — permanent, CDN-backed video hosting |
-| Payments | Stripe — credit package purchases |
- 
-The platform is migrating its rendering layer from an earlier Python-based pipeline (`edge-tts` + `moviepy`) to the ElevenLabs + Remotion architecture described above. This migration is in progress; the Python pipeline remains in the codebase as a fallback reference during the transition.
- 
-Stack subject to change as the product evolves.
- 
-## Getting Started
- 
-### Prerequisites
- 
-- Node.js 20.x LTS
-- npm 10.x (bundled with Node)
-- Git
-- FFmpeg (handled automatically via `ffmpeg-static`, no system install required)
-- Python 3.10+ (only required if running the legacy Python rendering pipeline)
-### Installation
- 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/preplit-ai/preplit.git
-cd preplit
- 
-# 2. Install server dependencies
-cd server
 npm install
- 
-# 3. Install frontend dependencies
-cd ../client
-npm install
- 
-# 4. Set up environment variables
-cp server/.env.example server/.env
-cp client/.env.example client/.env
-# Fill in your API keys and config in both .env files
 ```
- 
-### Running Locally
- 
-Run the backend and frontend as separate processes.
- 
-**Terminal 1 — Backend**
+
 ```bash
-cd server
+npm --prefix server install
+```
+
+```bash
+npm --prefix server run dev
+```
+
+```bash
 npm run dev
 ```
-The server starts on `http://localhost:5000`. The SQLite database is created automatically on first run.
- 
-**Terminal 2 — Frontend**
+
+Web: http://localhost:8080 · API: http://localhost:5000 (the web dev server proxies `/api`).
+
+Copy `server/.env.example` to `server/.env` and set `GROQ_API_KEY` (transcription and notes) and `JWT_SECRET`. Without a reachable `DATABASE_URL`, development uses a local PGlite database in `server/.data/pglite`; production requires PostgreSQL and refuses to start without it.
+
+## Tests
+
 ```bash
-cd client
-npm run dev
+npm test
 ```
-The frontend starts on `http://localhost:5173` with hot module replacement, proxying API requests to the backend.
- 
-### Environment Variables
- 
-| Variable | Required | Description |
-|---|---|---|
-| `GROQ_API_KEY` | Yes | Groq Cloud API key for LLM inference |
-| `ELEVENLABS_API_KEY` | Yes | ElevenLabs API key for neural voice synthesis |
-| `CLOUDINARY_URL` | Yes | Cloudinary connection string (or use separate cloud name / key / secret vars) |
-| `STRIPE_SECRET_KEY` | Yes | Stripe secret key |
-| `STRIPE_WEBHOOK_SECRET` | Yes | Stripe webhook signing secret |
-| `JWT_SECRET` | Yes | Random string used to sign authentication tokens |
-| `VITE_API_URL` | Yes (production) | Public API base URL for the deployed frontend |
- 
-See `.env.example` in each directory for the full list.
- 
-## Repository Structure
- 
+
+```bash
+npm run test:api
 ```
-.
-├── server/                # Node.js Express backend
-│   ├── routes/             # API route handlers
-│   ├── services/           # Business logic: queue, credits, script generation, storage
-│   └── db/                 # Database schema and helpers
-├── client/                # React TypeScript frontend
-│   └── src/
-│       ├── pages/           # Top-level page components
-│       ├── components/      # Shared UI components
-│       └── services/        # API client
-├── ml/                     # Legacy Python rendering pipeline (fallback reference)
-└── docs/                   # Architecture & technical documentation
+
+`npm test` checks the brand's rules against the source (no invented numbers, no days-in-a-row counter, navigation is Learn and Remember only, Junbee's three messages, no token in browser storage). `npm run test:api` runs the API end to end against a throwaway Postgres (PGlite) with the AI calls stubbed: sessions and token theft detection, ownership isolation, the lecture pipeline, failure saving nothing, review scheduling, and account deletion.
+
+## How it is put together
+
 ```
- 
-## Roadmap
- 
-- [x] Project conception & branding
-- [x] Core document-to-script-to-scene pipeline (MVP)
-- [x] User authentication & dashboard
-- [x] Credit system & Stripe payment processing
-- [ ] Full ElevenLabs + Remotion pipeline cutover
-- [ ] Frontend checkout flow
-- [ ] Custom voice & scene style selection
-- [ ] Mobile-responsive polish
-- [ ] Public API access for developers
-- [ ] Enterprise / institutional tier
-- [ ] Public launch
-## Target Users
- 
-- **Students** — Turn lecture notes into revision videos instantly
-- **Educators & Teachers** — Create course content without video production skills
-- **Online Course Creators** — Scale content output rapidly and affordably
-- **Corporate Trainers** — Convert SOPs and training docs into onboarding videos
-- **Educational Institutions** — Produce accessible video learning at low cost
-- **EdTech Developers** — Integrate automated lecture generation via API
-## FAQ
- 
-**What kind of documents can I upload?**
-PDF, DOCX, DOC, or TXT files up to 10 MB. The messier the better — the AI handles structuring it.
- 
-**Do I need video editing experience?**
-None. The entire process is automated.
- 
-**Is PreplitAI free?**
-New accounts receive free credits to evaluate the product. Paid credit packages are available via Stripe.
- 
-**How long does video generation take?**
-Generation time depends on which rendering pipeline is active; this is actively improving as the platform migrates to its parallel ElevenLabs + Remotion architecture.
- 
-**What languages are supported?**
-English is supported currently. Additional language support is on the roadmap.
- 
-## Contributing
- 
-Contributions are welcome.
- 
-1. Fork the repository
-2. Create a new branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m 'feat: add your feature'`
-4. Push to the branch: `git push origin feature/your-feature`
-5. Open a Pull Request
-Please follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages.
- 
-### Branch Naming
- 
-| Pattern | Purpose |
-|---|---|
-| `feature/{description}` | New features |
-| `fix/{description}` | Bug fixes |
-| `docs/{description}` | Documentation |
-| `chore/{description}` | Maintenance / tooling |
- 
-## Team
- 
-| Name | Role | GitHub |
-|---|---|---|
-| Khan Ahsan | Founder & Lead Developer | [@ahsann826](https://github.com/ahsann826) |
+src/
+  pages/        public site: landing, privacy, login, sign-up (Korean, with English)
+  site/         site copy (Korean first) and site components
+  app/          the pilot app, Korean only: 배움, 강의 노트, 기억, 계정
+  brand/        Bee (from the brand book's vectors), Comb, JunbeeMessage
+  lib/          API client, auth, formatting
+server/
+  app.js        Express app: CORS, headers, routes, error handling
+  routes/       auth, courses, lectures, review, junbee
+  services/     transcription (ffmpeg + Whisper), notes and cards, FSRS, background jobs
+  db/           schema and migrations
+api/index.js    Vercel function wrapper (no lecture processing there; see below)
+```
 
----
+Brand tokens live in `tailwind.config.ts`: Ink `#15181E`, Bone `#EDEDE7`, Maroon `#8A1328` (one thing per screen), Honey `#A8690F` (marks only), Slate `#626A76`; Bricolage Grotesque for display and UI, Newsreader for reading, IBM Plex Sans KR for all Korean.
 
-## License
+### Junbee, the bot
 
-See [LICENSE](LICENSE) for more information.
+Junbee speaks only when a lecture finishes, one dismissible message at a time, and says exactly one of three things (`src/brand/JunbeeMessage.tsx`):
 
----
+1. `9주차 노트 정리했어요. 카드 8장.`
+2. … `12~14분은 잘 안 들려서 [불명확]으로 두었어요 — 추측해서 채우지 않았습니다.`
+3. `‘9주차’ 녹음은 노트로 만들지 못했어요. 저장된 건 없습니다.`
 
-Copyright 2026 PreplitAI. All rights reserved.
+## Security
 
-</div>
+- Access tokens live in memory only (15 minutes). Sessions are an httpOnly, `SameSite=Strict` refresh cookie scoped to `/api/auth`, rotated on every use; a replayed old cookie ends every session for that account.
+- Passwords: bcrypt, 8–72 bytes; sign-in timing does not reveal which e-mails exist; sign-in and sign-up are rate limited per IP.
+- Optional `PILOT_INVITE_CODE` restricts sign-up to the pilot cohort.
+- Every course, lecture and card query is scoped to the signed-in student; ids are validated before reaching SQL.
+- Uploads: audio types only, random file names in the OS temp directory, deleted right after transcription. 30-day lecture limit and per-account upload limits protect the transcription budget.
+- Strict CORS allowlist (no wildcards), restrictive API headers, and a production CSP and security headers in `vercel.json`. Errors never return internal details.
+- Account deletion removes everything the student owns.
+
+## Deploying the pilot
+
+Lecture processing runs in the background after the upload returns and handles uploads up to 200 MB, so the API must run as a long-lived Node process (a VM or container), not as a Vercel function. On Vercel, `/api/lectures` uploads answer 501. Set `NODE_ENV=production`, `DATABASE_URL`, `JWT_SECRET`, `GROQ_API_KEY`, and `TRUST_PROXY` if it sits behind a proxy.
+
+## What was removed on 2026-11-03
+
+The pre-Junbee product: video lecture generation (Remotion, D-ID, ElevenLabs), podcasts, GKS scholarship tools, Stripe credits and subscriptions, grounded chat, document upload and RAG, the analytics dashboard, the old marketing site and its assets, and the generated `docs/` tree. Old database tables are not dropped automatically; see `server/db/migrations/2026-11-03-drop-legacy.sql`.
+
+Everything as it was before the removal is kept in the git ref `refs/backup/pre-junbee-2026-11-03`. To restore a file:
+
+```bash
+git checkout refs/backup/pre-junbee-2026-11-03 -- path/to/file
+```
+
+## Contact
+
+info@preplitai.com · © 2026 PreplitAI, Inc.
