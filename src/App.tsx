@@ -4,17 +4,29 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/lib/auth";
 import { LangProvider } from "@/lib/lang";
-import Landing from "@/pages/Landing";
 import { Login, Signup } from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import { AppLayout } from "@/app/AppLayout";
+import { EarlyWall } from "@/site/EarlyAccess";
 
-// The app screens and the privacy notice load on demand; the landing page does not wait for them.
+/** "/" is the static landing page, outside this app, so a link to it here needs a full page load. */
+function StaticHome() {
+  useEffect(() => {
+    window.location.replace("/");
+  }, []);
+  return null;
+}
+
+// The app screens and the privacy notice load on demand; the sign-in pages do not wait for them.
 const Privacy = lazy(() => import("@/pages/Privacy"));
 const Learn = lazy(() => import("@/app/Learn"));
 const LectureNote = lazy(() => import("@/app/LectureNote"));
 const Remember = lazy(() => import("@/app/Remember"));
 const Account = lazy(() => import("@/app/Account"));
+const Semester = lazy(() => import("@/workspace/Semester"));
+const CourseSpace = lazy(() => import("@/workspace/CourseSpace"));
+const Organize = lazy(() => import("@/workspace/Organize"));
+const Build = lazy(() => import("@/workspace/Build"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,16 +62,22 @@ export default function App() {
               <ScrollToTop />
               <Suspense fallback={null}>
                 <Routes>
-                  <Route path="/" element={<Landing />} />
+                  <Route path="/" element={<StaticHome />} />
                   <Route path="/privacy" element={<Privacy />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/app" element={<AppLayout />}>
-                    <Route index element={<Navigate to="learn" replace />} />
-                    <Route path="learn" element={<Learn />} />
-                    <Route path="learn/:id" element={<LectureNote />} />
-                    <Route path="remember" element={<Remember />} />
-                    <Route path="account" element={<Account />} />
+                  {/* Not public yet: log-in, sign-up and the app show the early-access note (src/site/EarlyAccess.tsx). */}
+                  <Route path="/login" element={<EarlyWall feature="login" showPage><Login /></EarlyWall>} />
+                  <Route path="/signup" element={<EarlyWall feature="signup" showPage><Signup /></EarlyWall>} />
+                  {/* One shell for every signed-in screen, so a recording in progress survives moving between them. */}
+                  <Route element={<EarlyWall feature="workspace"><AppLayout /></EarlyWall>}>
+                    <Route path="/workspace" element={<Semester />} />
+                    <Route path="/workspace/organize" element={<Organize />} />
+                    <Route path="/workspace/build" element={<Build />} />
+                    <Route path="/workspace/courses/:id" element={<CourseSpace />} />
+                    <Route path="/app" element={<Navigate to="/workspace" replace />} />
+                    <Route path="/app/learn" element={<Learn />} />
+                    <Route path="/app/learn/:id" element={<LectureNote />} />
+                    <Route path="/app/remember" element={<Remember />} />
+                    <Route path="/app/account" element={<Account />} />
                   </Route>
                   <Route path="*" element={<NotFound />} />
                 </Routes>

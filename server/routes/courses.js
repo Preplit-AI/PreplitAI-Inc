@@ -1,7 +1,8 @@
 'use strict';
 const express = require('express');
-const db = require('../db/database');
 const { authMiddleware } = require('../middleware/auth');
+const { listCourses, countCourses, createCourse, updateCourse, deleteCourse } = require('../services/courseStore');
+const { isDate, cleanClassDays } = require('../services/semesterStore');
 const { isUuid, fail } = require('../utils/http');
 
 const router = express.Router();
@@ -10,20 +11,25 @@ router.use(authMiddleware);
 const cleanCourseName = (value) =>
   typeof value === 'string' ? value.replace(/[\u0000-\u001F\u007F]/g, '').trim().slice(0, 80) : '';
 
+/** Reads the schedule fields that were sent. An exam date may be cleared with null. @returns the fields, or null if one is invalid. */
+function scheduleFrom(body) {
+  const out = {};
+  if (body.classDays !== undefined) {
+    out.classDays = cleanClassDays(body.classDays);
+    if (!out.classDays) return null;
+  }
+  for (const field of ['midtermOn', 'finalOn']) {
+    if (body[field] === undefined) continue;
+    if (body[field] !== null && !isDate(body[field])) return null;
+    out[field] = body[field];
+  }
+  return out;
+}
+
 // ── GET /api/courses ─────────────────────────────────────────────────────────
 router.get('/', async (req, res, next) => {
   try {
-    const result = await db.query(
-      `SELECT c.id, c.name, c.created_at,
-              COUNT(l.id) FILTER (WHERE l.status = 'ready')::int AS lecture_count
-         FROM courses c
-         LEFT JOIN lectures l ON l.course_id = c.id
-        WHERE c.user_id = $1
-        GROUP BY c.id
-        ORDER BY c.created_at ASC`,
-      [req.userId]
-    );
-    res.json({ success: true, courses: result.rows.map(toCourse) });
+    res.json({ success: true, courses: await listCourses(req.userId) });
   } catch (err) {
     next(err);
   }
@@ -32,32 +38,33 @@ router.get('/', async (req, res, next) => {
 // ── POST /api/courses ────────────────────────────────────────────────────────
 router.post('/', async (req, res, next) => {
   try {
-    const name = cleanCourseName(req.body && req.body.name);
+    const body = req.body || {};
+    const name = cleanCourseName(body.name);
     if (!name) return fail(res, 400, 'InvalidName', '과목 이름을 입력해 주세요.');
-    const count = await db.query('SELECT COUNT(*)::int AS n FROM courses WHERE user_id = $1', [req.userId]);
-    if (count.rows[0].n >= 20) return fail(res, 400, 'TooManyCourses', '과목은 20개까지 만들 수 있어요.');
-    const result = await db.query(
-      'INSERT INTO courses (user_id, name) VALUES ($1, $2) RETURNING id, name, created_at',
-      [req.userId, name]
-    );
-    res.status(201).json({ success: true, course: toCourse({ ...result.rows[0], lecture_count: 0 }) });
+    const schedule = scheduleFrom(body);
+    if (!schedule) return fail(res, 400, 'InvalidSchedule', '요일이나 날짜를 다시 확인해 주세요.');
+    if ((await countCourses(req.userId)) >= 20) return fail(res, 400, 'TooManyCourses', '과목은 20개까지 만들 수 있어요.');
+    res.status(201).json({ success: true, course: await createCourse(req.userId, name, schedule) });
   } catch (err) {
     next(err);
   }
 });
 
 // ── PATCH /api/courses/:id ───────────────────────────────────────────────────
+// Any of: name, classDays (0 = Sunday to 6 = Saturday), midtermOn, finalOn.
 router.patch('/:id', async (req, res, next) => {
   try {
     if (!isUuid(req.params.id)) return fail(res, 404, 'NotFound', '과목을 찾을 수 없어요.');
-    const name = cleanCourseName(req.body && req.body.name);
-    if (!name) return fail(res, 400, 'InvalidName', '과목 이름을 입력해 주세요.');
-    const result = await db.query(
-      'UPDATE courses SET name = $1 WHERE id = $2 AND user_id = $3 RETURNING id, name, created_at',
-      [name, req.params.id, req.userId]
-    );
-    if (!result.rows[0]) return fail(res, 404, 'NotFound', '과목을 찾을 수 없어요.');
-    res.json({ success: true, course: toCourse({ ...result.rows[0], lecture_count: null }) });
+    const body = req.body || {};
+    const changes = scheduleFrom(body);
+    if (!changes) return fail(res, 400, 'InvalidSchedule', '요일이나 날짜를 다시 확인해 주세요.');
+    if (body.name !== undefined || !Object.keys(changes).length) {
+      changes.name = cleanCourseName(body.name);
+      if (!changes.name) return fail(res, 400, 'InvalidName', '과목 이름을 입력해 주세요.');
+    }
+    const course = await updateCourse(req.userId, req.params.id, changes);
+    if (!course) return fail(res, 404, 'NotFound', '과목을 찾을 수 없어요.');
+    res.json({ success: true, course });
   } catch (err) {
     next(err);
   }
@@ -68,16 +75,11 @@ router.patch('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     if (!isUuid(req.params.id)) return fail(res, 404, 'NotFound', '과목을 찾을 수 없어요.');
-    const result = await db.query('DELETE FROM courses WHERE id = $1 AND user_id = $2', [req.params.id, req.userId]);
-    if (!result.rowCount) return fail(res, 404, 'NotFound', '과목을 찾을 수 없어요.');
+    if (!(await deleteCourse(req.userId, req.params.id))) return fail(res, 404, 'NotFound', '과목을 찾을 수 없어요.');
     res.json({ success: true });
   } catch (err) {
     next(err);
   }
 });
-
-function toCourse(row) {
-  return { id: row.id, name: row.name, lectureCount: row.lecture_count, createdAt: row.created_at };
-}
 
 module.exports = router;

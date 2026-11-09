@@ -51,6 +51,15 @@ module.exports = {
   /** Cards offered in one day's review, so a session stays short. */
   DAILY_REVIEW_LIMIT: int(process.env.DAILY_REVIEW_LIMIT, 20),
 
+  /** Questions one student may ask per rolling 30 days. Protects the model budget. */
+  MONTHLY_CHAT_LIMIT: int(process.env.MONTHLY_CHAT_LIMIT, 600),
+  MAX_CHAT_MESSAGE_CHARS: 4000,
+
   TRANSCRIBE_MODEL: process.env.TRANSCRIBE_MODEL || 'whisper-large-v3-turbo',
-  NOTES_MODEL: process.env.NOTES_MODEL || 'llama-3.3-70b-versatile',
+  NOTES_MODEL: process.env.NOTES_MODEL || 'openai/gpt-oss-120b',
+  CHAT_MODEL: process.env.CHAT_MODEL || 'openai/gpt-oss-120b',
+  /** How much transcript goes into one notes request. About 4,500 tokens, which leaves room for the answer on an 8,000-a-minute plan. */
+  NOTES_PART_CHARS: int(process.env.NOTES_PART_CHARS, 8000),
+  /** Tried, in order, when the chosen model fails. */
+  FALLBACK_MODELS: ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'],
 };

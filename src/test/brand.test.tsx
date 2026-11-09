@@ -1,9 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { render, screen } from "@testing-library/react";
-import { Comb } from "@/brand/Comb";
-import { junbeeText } from "@/brand/JunbeeMessage";
+import { junoText } from "@/brand/JunoMessage";
+import { Tally } from "@/brand/Tally";
 import { formatRanges } from "@/lib/format";
+import { MOVEMENTS, NAV } from "@/workspace/movements";
 
 /*
  * The brand's rules from the pilot plan's definition of done, written as tests
@@ -20,46 +21,50 @@ function sourceFiles(dir: string): string[] {
   });
 }
 
-describe("Junbee says exactly three things", () => {
+describe("Juno says exactly three things about a lecture", () => {
   const base = { lectureId: "x", lectureTitle: "9주차", source: "audio" as const };
 
   it("notes are ready: a fact and a count, no praise", () => {
-    expect(junbeeText({ ...base, kind: "ready", cardCount: 8, unclearRanges: [] })).toBe("9주차 노트 정리했어요. 카드 8장.");
+    expect(junoText({ ...base, kind: "ready", cardCount: 8, unclearRanges: [] })).toBe("9주차 노트 정리했어요. 카드 8장.");
   });
 
   it("part of the audio was unusable: says which minutes, and that it did not guess", () => {
-    const text = junbeeText({ ...base, kind: "unclear", cardCount: 8, unclearRanges: [{ start: 720, end: 840 }] });
+    const text = junoText({ ...base, kind: "unclear", cardCount: 8, unclearRanges: [{ start: 720, end: 840 }] });
     expect(text).toBe("9주차 노트 정리했어요. 카드 8장. 12~14분은 잘 안 들려서 [불명확]으로 두었어요 — 추측해서 채우지 않았습니다.");
   });
 
   it("nothing could be produced: says nothing was saved", () => {
-    expect(junbeeText({ ...base, kind: "failed", cardCount: 0, unclearRanges: [] })).toBe(
+    expect(junoText({ ...base, kind: "failed", cardCount: 0, unclearRanges: [] })).toBe(
       "‘9주차’ 녹음은 노트로 만들지 못했어요. 저장된 건 없습니다.",
     );
   });
 
   it("never celebrates", () => {
     const all = [
-      junbeeText({ ...base, kind: "ready", cardCount: 3, unclearRanges: [] }),
-      junbeeText({ ...base, kind: "unclear", cardCount: 3, unclearRanges: [{ start: 0, end: 60 }] }),
-      junbeeText({ ...base, kind: "failed", cardCount: 0, unclearRanges: [] }),
+      junoText({ ...base, kind: "ready", cardCount: 3, unclearRanges: [] }),
+      junoText({ ...base, kind: "unclear", cardCount: 3, unclearRanges: [{ start: 0, end: 60 }] }),
+      junoText({ ...base, kind: "failed", cardCount: 0, unclearRanges: [] }),
     ].join(" ");
     expect(all).not.toMatch(/[!]|잘했|축하|대단|훌륭/);
   });
 });
 
-describe("the comb", () => {
-  it("draws one cell per card and fills only what was done", () => {
-    const { container } = render(<Comb total={5} filled={3} label="오늘 카드 5장 중 3장 복습함" />);
+describe("the tally", () => {
+  it("draws one segment per card and fills only what was done", () => {
+    const { container } = render(<Tally total={5} filled={3} label="오늘 카드 5장 중 3장 복습함" />);
     expect(screen.getByRole("img", { name: "오늘 카드 5장 중 3장 복습함" })).toBeInTheDocument();
-    const cells = container.querySelectorAll("polygon");
-    expect(cells).toHaveLength(5);
-    expect(container.querySelectorAll("polygon.fill-maroon")).toHaveLength(3);
+    expect(container.querySelectorAll("[data-tally]")).toHaveLength(5);
+    expect(container.querySelectorAll("[data-done]")).toHaveLength(3);
+  });
+
+  it("never fills more than there is", () => {
+    const { container } = render(<Tally total={4} filled={9} label="오늘 카드 4장" />);
+    expect(container.querySelectorAll("[data-done]")).toHaveLength(4);
   });
 
   it("draws nothing when there is nothing to do", () => {
-    const { container } = render(<Comb total={0} filled={0} label="없음" />);
-    expect(container.querySelector("svg")).toBeNull();
+    const { container } = render(<Tally total={0} filled={0} label="없음" />);
+    expect(container.firstChild).toBeNull();
   });
 });
 
@@ -80,17 +85,35 @@ describe("definition of done, checked against the source", () => {
     for (const f of files) expect(text(f), f).not.toMatch(banned);
   });
 
-  it("no app screen hardcodes a percentage", () => {
-    for (const f of files.filter((f) => f.includes(`${path.sep}app${path.sep}`))) {
+  it("no app or workspace screen hardcodes a percentage", () => {
+    const screens = files.filter((f) => f.includes(`${path.sep}app${path.sep}`) || f.includes(`${path.sep}workspace${path.sep}`));
+    expect(screens.some((f) => f.includes(`${path.sep}workspace${path.sep}`))).toBe(true);
+    for (const f of screens) {
       expect(text(f), f).not.toMatch(/\b\d{1,3}(\.\d+)?%/);
     }
   });
 
-  it("the app's navigation is Learn and Remember and nothing else", () => {
-    const layout = text(path.join(SRC, "app", "AppLayout.tsx")).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
-    const tabs = [...layout.matchAll(/<Tab to="([^"]+)">([^<]+)<\/Tab>/g)].map((m) => m[2]);
-    expect(tabs).toEqual(["배움", "기억"]);
-    expect(layout).not.toMatch(/정리|쌓기|Organize|Build/);
+  it("the workspace never puts text from the model into the page as HTML", () => {
+    for (const f of files.filter((f) => f.includes(`${path.sep}workspace${path.sep}`))) {
+      expect(text(f), f).not.toMatch(/dangerouslySetInnerHTML|rehypeRaw|rehype-raw/);
+    }
+  });
+
+  it("the app's navigation is the semester and the four movements, in order, and nothing else", () => {
+    expect(NAV.map((n) => n.label)).toEqual(["이번 학기", "정리", "배움", "기억", "쌓기"]);
+    expect(MOVEMENTS.map((m) => `${m.n} ${m.en}`)).toEqual(["01 Organize", "02 Learn", "03 Remember", "04 Build"]);
+  });
+
+  it("every movement is a real screen: its route exists and nothing says it is coming", () => {
+    const app = text(path.join(SRC, "App.tsx"));
+    for (const { to } of NAV) expect(app, to).toContain(`path="${to}"`);
+    for (const f of files) expect(text(f), f).not.toMatch(/coming soon|준비 중이에요|곧 만나요/i);
+  });
+
+  it("Junbee is gone from what students see: the app is Preplit AI and the companion is Juno", () => {
+    // Storage names and the server's /junbee route stay, so recordings on a phone and old links keep working.
+    const visible = /["'`>][^"'`<]*\bJunbee\b/;
+    for (const f of files) expect(text(f), f).not.toMatch(visible);
   });
 
   it("no access token is ever written to browser storage", () => {

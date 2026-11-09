@@ -2,9 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * The React app and the static landing page (site/landing.css) share one look:
+ * a white page, one ink, hairlines, Schibsted Grotesk with Plex Sans KR for
+ * Hangul, black pill buttons that step on hover and press on click, and soft
+ * fluted-glass grounds under the cards.
+ */
+
 @layer base {
+  :root {
+    --gut: 16px;
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @media (min-width: 640px) {
+    :root {
+      --gut: 32px;
+    }
+  }
+  @media (min-width: 1024px) {
+    :root {
+      --gut: 48px;
+    }
+  }
+
   html {
-    background: theme("colors.bone.DEFAULT");
+    background: #ffffff;
     color: theme("colors.ink.DEFAULT");
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
@@ -12,7 +34,7 @@
   }
 
   body {
-    @apply bg-bone font-sans text-base text-ink;
+    @apply bg-white font-kr text-base text-ink;
     min-height: 100dvh;
   }
 
@@ -24,14 +46,17 @@
   }
 
   ::selection {
-    background: theme("colors.maroon.tint");
+    background: theme("colors.gold.tint");
     color: theme("colors.ink.DEFAULT");
   }
 
   :focus-visible {
     outline: 2px solid theme("colors.ink.DEFAULT");
-    outline-offset: 3px;
-    border-radius: 4px;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  .on-night :focus-visible {
+    outline-color: #ffffff;
   }
 
   button,
@@ -41,7 +66,8 @@
   }
 
   dialog::backdrop {
-    background: rgb(21 24 30 / 0.45);
+    background: rgb(10 10 10 / 0.42);
+    backdrop-filter: blur(2px);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -57,50 +83,374 @@
 }
 
 @layer components {
+  /* One column for the public pages, on the landing page's lines. */
   .page {
-    @apply mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8;
+    width: min(100% - 2 * var(--gut), 80rem);
+    margin-inline: auto;
   }
 
-  /* Display type: the grotesque, tight. Hangul falls through to Plex Sans KR,
-     which must not be tracked in. */
+  /* Display type: the grotesque, tight, at weight 500 as on the landing page.
+     Hangul falls through to Plex Sans KR, which must not be tracked in as hard. */
   .display {
-    @apply font-sans font-semibold tracking-[-0.02em];
+    @apply font-sans font-semibold;
+    letter-spacing: -0.025em;
   }
   :lang(ko) .display {
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+  }
+
+  /* Small tracked label over a heading: "02 배움". */
+  .eyebrow {
+    @apply flex items-center gap-2 text-2xs font-medium uppercase text-slate;
+    letter-spacing: 0.12em;
   }
 
   .btn {
-    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded-full px-4 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50;
+    transition:
+      background-color 140ms var(--ease),
+      border-color 140ms var(--ease),
+      color 140ms var(--ease),
+      box-shadow 140ms var(--ease),
+      transform 140ms var(--ease);
   }
-  .btn-primary {
-    @apply btn bg-maroon text-white hover:bg-maroon-deep;
+  @media (hover: hover) {
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
   }
+  .btn:active:not(:disabled) {
+    transform: translateY(1px) scale(0.985);
+    transition-duration: 90ms;
+  }
+  /* One main button: black. The other names are kept so every screen uses it. */
+  .btn-primary,
   .btn-ink {
-    @apply btn bg-ink text-bone hover:bg-ink-soft;
+    @apply btn bg-ink text-white hover:bg-ink-soft;
   }
   .btn-quiet {
-    @apply btn border border-rule-strong bg-transparent text-ink hover:border-ink;
+    @apply btn border border-rule-strong bg-white text-ink hover:border-ink;
+  }
+  .btn-light {
+    @apply btn bg-white text-ink hover:bg-bone;
+  }
+  .btn-ghost-night {
+    @apply btn border border-night-line bg-transparent text-night-text hover:border-night-muted;
+  }
+  /* The recording light: maroon, only on the button that starts or ends a recording. */
+  .btn-record {
+    @apply btn bg-maroon text-white hover:bg-maroon-deep;
   }
   .btn-text {
-    @apply inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-ink underline decoration-rule-strong underline-offset-4 hover:decoration-ink;
+    @apply inline-flex min-h-[32px] items-center gap-1.5 text-sm font-medium text-ink underline decoration-rule-strong underline-offset-4 hover:decoration-ink;
+    transition: text-decoration-color 140ms var(--ease);
   }
 
   .field-label {
-    @apply mb-1.5 block text-sm font-semibold text-ink;
+    @apply mb-1 block text-sm font-medium text-ink;
   }
   .field {
-    @apply block w-full rounded-xl border border-rule-strong bg-paper px-4 py-3 text-base text-ink placeholder:text-slate-light focus:border-ink focus:outline-none focus-visible:outline-none;
+    @apply block w-full rounded-lg border border-rule-strong bg-white px-3 py-2 text-base text-ink placeholder:text-slate-light focus:border-ink focus:outline-none focus-visible:outline-none;
+    transition:
+      border-color 140ms var(--ease),
+      box-shadow 140ms var(--ease);
   }
   .field:focus {
-    box-shadow: 0 0 0 3px rgb(21 24 30 / 0.12);
+    box-shadow: 0 0 0 3px rgb(10 10 10 / 0.08);
   }
 
   .surface {
-    @apply rounded-card border border-rule bg-paper;
+    @apply rounded-card border border-rule bg-white;
   }
 
   .hairline {
     @apply border-t border-rule;
   }
+
+  /* A card: white, a hairline, lifted a little off the page. */
+  .window {
+    @apply rounded-card border border-rule bg-white;
+  }
+
+  /* A linked card answers the pointer by lifting 2px. */
+  .card-link {
+    transition:
+      transform 180ms var(--ease),
+      box-shadow 180ms var(--ease),
+      border-color 180ms var(--ease);
+  }
+  @media (hover: hover) {
+    .card-link:hover {
+      transform: translateY(-2px);
+      border-color: theme("colors.rule.strong");
+      box-shadow: 0 10px 24px -18px rgb(10 10 10 / 0.35);
+    }
+  }
+
+  /*
+   * Fluted glass, the landing page's card ground, drawn in CSS: a pastel light
+   * seen through vertical flutes. The tone comes from the variant class.
+   */
+  .glass {
+    --g0: theme("colors.sky.DEFAULT");
+    --g1: theme("colors.sky.soft");
+    --g2: theme("colors.sky.deep");
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgb(255 255 255 / 0) 0 9px,
+        rgb(255 255 255 / 0.32) 13px,
+        rgb(255 255 255 / 0.06) 17px,
+        rgb(255 255 255 / 0) 22px
+      ),
+      radial-gradient(85% 90% at 16% 6%, var(--g1) 0%, transparent 68%),
+      radial-gradient(80% 85% at 94% 100%, var(--g2) 0%, transparent 70%),
+      var(--g0);
+  }
+  .glass-sky {
+    --g0: theme("colors.sky.DEFAULT");
+    --g1: theme("colors.sky.soft");
+    --g2: theme("colors.sky.deep");
+  }
+  .glass-blush {
+    --g0: theme("colors.blush.DEFAULT");
+    --g1: theme("colors.blush.soft");
+    --g2: theme("colors.blush.deep");
+  }
+  .glass-sage {
+    --g0: theme("colors.sage.DEFAULT");
+    --g1: theme("colors.sage.soft");
+    --g2: theme("colors.sage.deep");
+  }
+  .glass-peach {
+    --g0: theme("colors.peach.DEFAULT");
+    --g1: theme("colors.peach.soft");
+    --g2: theme("colors.peach.deep");
+  }
+  .glass-gold {
+    --g0: #fff1b8;
+    --g1: #fffbe8;
+    --g2: #f5dc78;
+  }
+  /* The old name for the ground under a card. */
+  .lit {
+    @apply glass glass-sky;
+  }
+
+  /* A row that leads somewhere answers the pointer. */
+  .row-link {
+    transition: background-color 140ms var(--ease);
+  }
+  @media (hover: hover) {
+    .row-link:hover {
+      background: theme("colors.bone.DEFAULT");
+    }
+  }
+
+  /* Audio the lecture lost: a hatch, as on the landing page's waveform. */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgb(10 10 10 / 0.22) 0 1.5px,
+      transparent 1.5px 6px
+    );
+  }
+
+  /* A recording on its way to a note: a light runs along the line. It never says how far along it is. */
+  .flow-line {
+    position: relative;
+    overflow: hidden;
+    background: theme("colors.rule.strong");
+  }
+  .flow-line--live::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 36%;
+    background: linear-gradient(90deg, transparent, theme("colors.gold.deep"));
+    animation: flow-run 2.8s linear infinite;
+  }
+  @keyframes flow-run {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(280%);
+    }
+  }
+
+  /* Juno is speaking or working: one soft ring that breathes. */
+  .juno-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 999px;
+    border: 2px solid theme("colors.gold.DEFAULT");
+    animation: juno-breathe 3s var(--ease) infinite;
+    pointer-events: none;
+  }
+  @keyframes juno-breathe {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(0.96);
+    }
+    50% {
+      opacity: 0.9;
+      transform: scale(1.04);
+    }
+  }
+
+  /* The magpie's tassel swings while Juno works; on the whole figure it always
+     sways a little, sound pulses while recording and the dots take turns. */
+  .juno-sway .juno-tassel {
+    animation: juno-swing 1.4s ease-in-out infinite;
+  }
+  .juno-figure .juno-tassel {
+    animation: juno-swing 3.2s ease-in-out infinite;
+  }
+  .juno-wave {
+    animation: juno-pulse 1.6s ease-in-out infinite;
+  }
+  .juno-wave--2 {
+    animation-delay: 0.25s;
+  }
+  .juno-dot {
+    animation: juno-pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes juno-swing {
+    0%,
+    100% {
+      transform: rotate(-8deg);
+    }
+    50% {
+      transform: rotate(8deg);
+    }
+  }
+  @keyframes juno-pulse {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /*
+   * Layouts that follow the space the screen really has: the content column
+   * narrows when Juno sits beside it, so these ask the container, not the window.
+   */
+  .cq {
+    container-type: inline-size;
+  }
+  .track {
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(var(--half), minmax(0, 1fr));
+  }
+  .split {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .journey {
+    display: grid;
+    gap: 10px;
+  }
+  .cards-2 {
+    display: grid;
+    gap: 12px;
+  }
+  .cards-3 {
+    display: grid;
+    gap: 12px;
+  }
+  .note-grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .note-grid__aside {
+    order: -1;
+  }
+  @container (min-width: 820px) {
+    .note-grid {
+      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    }
+    .note-grid__aside {
+      order: 2;
+    }
+  }
+  @container (min-width: 520px) {
+    .journey {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .cards-3 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @container (min-width: 600px) {
+    .cards-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @container (min-width: 640px) {
+    .track {
+      gap: 8px;
+      grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    }
+  }
+  @container (min-width: 760px) {
+    .split {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+  }
+  @container (min-width: 900px) {
+    .journey {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .cards-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* Thin scrollbars inside panels. */
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.rule.strong") transparent;
+  }
+  .on-night .scroll-thin,
+  .scroll-thin.on-night {
+    scrollbar-color: theme("colors.night.line") transparent;
+  }
+}
+
+/* Early access: Preplit AI isn't public yet (src/site/EarlyAccess.tsx). The same note as the
+   static pages' (site/landing.css), in the app's own stylesheet. */
+.early { width: min(560px, calc(100% - 32px)); max-width: none; max-height: calc(100dvh - 32px); margin: auto; padding: 0; border: 0; border-radius: 26px; background: transparent; color: #111; overflow: visible; }
+.early::backdrop { background: rgb(10 10 10 / 0.45); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.early__card { position: relative; display: flex; flex-direction: column; align-items: center; padding: 40px 36px 32px; border-radius: 26px; text-align: center; background: radial-gradient(90% 60% at 100% 100%, #f7eded 0%, transparent 70%), radial-gradient(70% 50% at 0% 0%, #f3f3f5 0%, transparent 70%), #fff; box-shadow: 0 40px 100px -30px rgb(0 0 0 / 0.45); }
+.early p { margin: 0; }
+.early__x { position: absolute; top: 16px; right: 16px; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: #8e9097; transition: background-color 140ms, color 140ms; }
+.early__x:hover { background: #f2f2f0; color: #0a0a0a; }
+.early__x svg { width: 20px; height: 20px; }
+.early__mark { position: relative; display: grid; place-items: center; width: 100px; height: 100px; border-radius: 50%; background: #f6f6f7; border: 1px solid rgb(10 10 10 / 0.06); }
+.early__mark img { width: 38px; height: auto; }
+.early__dot { position: absolute; top: 0; right: -4px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #ececec; }
+.early__dot::after { content: ""; width: 19px; height: 19px; border-radius: 50%; background: #6b0011; }
+.early .early__badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; padding: 8px 18px; border-radius: 999px; background: #f2ede8; border: 1px solid rgb(10 10 10 / 0.08); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #5a0010; }
+:lang(ko) .early__badge { letter-spacing: 0.02em; }
+.early__badge svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linejoin: round; }
+.early h2 { margin-top: 22px; font: 700 clamp(28px, 4vw, 36px) / 1.15 "Schibsted Grotesk", "IBM Plex Sans KR", system-ui, sans-serif; letter-spacing: -0.02em; color: #111; }
+.early .early__feature { margin-top: 14px; font-size: 18px; font-weight: 600; color: #5a0010; }
+.early .early__body { margin-top: 22px; max-width: 46ch; font-size: 16px; line-height: 1.6; color: #55575c; }
+.early__ok { width: 100%; height: 60px; margin-top: 34px; border-radius: 18px; background: #5c0000; color: #fff; font-size: 17px; font-weight: 600; box-shadow: 0 14px 30px -14px rgb(92 0 0 / 0.7); transition: background-color 140ms, transform 140ms; }
+.early__ok:hover { background: #740000; }
+.early__ok:active { transform: translateY(1px); }
+.early__ok:focus-visible, .early__x:focus-visible { outline: 2px solid rgb(92 0 0 / 0.35); outline-offset: 3px; }
+@media (max-width: 480px) {
+  .early__card { padding: 34px 22px 22px; }
+  .early__mark { width: 84px; height: 84px; }
+  .early__ok { height: 54px; margin-top: 28px; }
 }

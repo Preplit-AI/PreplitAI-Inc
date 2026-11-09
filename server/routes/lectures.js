@@ -5,10 +5,12 @@ const os = require('os');
 const path = require('path');
 const fsp = require('fs/promises');
 const crypto = require('crypto');
-const db = require('../db/database');
 const { authMiddleware } = require('../middleware/auth');
 const { uploadLimit } = require('../middleware/rateLimit');
 const { enqueue } = require('../services/lectureJobs');
+const { getCourse } = require('../services/courseStore');
+const { lectureUsage, createLecture, listLectures, getLecture, deleteLecture } = require('../services/lectureStore');
+const { titleForRecording } = require('../services/semesterStore');
 const { isUuid, fail } = require('../utils/http');
 const { MAX_AUDIO_BYTES, MAX_TRANSCRIPT_CHARS, MONTHLY_LECTURE_LIMIT } = require('../config/constants');
 
@@ -53,9 +55,16 @@ function receiveUpload(req, res, next) {
 const cleanTitle = (value) =>
   typeof value === 'string' ? value.replace(/[\u0000-\u001F\u007F]/g, '').trim().slice(0, 120) : '';
 
-function defaultTitle(date = new Date()) {
-  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-  return `${kst.getUTCMonth() + 1}월 ${kst.getUTCDate()}일 강의`;
+/**
+ * When the class happened, as the in-app recorder reports it, so a recording
+ * uploaded late is still filed under the right week. Anything implausible is
+ * ignored and the upload time is used.
+ */
+function recordedAtFrom(value) {
+  const parsed = typeof value === 'string' ? Date.parse(value) : NaN;
+  const now = Date.now();
+  if (!Number.isFinite(parsed) || parsed > now + 5 * 60 * 1000 || now - parsed > 30 * 24 * 60 * 60 * 1000) return null;
+  return new Date(parsed);
 }
 
 // ── POST /api/lectures ───────────────────────────────────────────────────────
@@ -83,45 +92,42 @@ router.post('/', uploadLimit, receiveUpload, async (req, res, next) => {
     }
     if (text.length > MAX_TRANSCRIPT_CHARS) return fail(res, 413, 'TextTooLong', '녹취록이 너무 길어요.');
 
-    const course = await db.query('SELECT id, name FROM courses WHERE id = $1 AND user_id = $2', [courseId, req.userId]);
-    if (!course.rows[0]) {
+    const course = await getCourse(req.userId, courseId);
+    if (!course) {
       await discard();
       return fail(res, 404, 'NoCourse', '과목을 찾을 수 없어요.');
     }
 
-    const usage = await db.query(
-      `SELECT COUNT(*) FILTER (WHERE status <> 'failed' AND created_at > now() - interval '30 days')::int AS month,
-              COUNT(*) FILTER (WHERE status = 'processing')::int AS running
-         FROM lectures WHERE user_id = $1`,
-      [req.userId]
-    );
-    if (usage.rows[0].running >= 2) {
+    const usage = await lectureUsage(req.userId);
+    if (usage.running >= 2) {
       await discard();
       return fail(res, 409, 'Busy', '지금 처리 중인 강의가 끝나면 올려 주세요.');
     }
-    if (usage.rows[0].month >= MONTHLY_LECTURE_LIMIT) {
+    if (usage.month >= MONTHLY_LECTURE_LIMIT) {
       await discard();
       return fail(res, 429, 'MonthlyLimit', `30일 동안 강의 ${MONTHLY_LECTURE_LIMIT}개까지 처리할 수 있어요.`);
     }
 
-    const title = cleanTitle(req.body.title) || defaultTitle();
-    const created = await db.query(
-      `INSERT INTO lectures (user_id, course_id, title, source) VALUES ($1, $2, $3, $4)
-       RETURNING id, course_id, title, source, status, created_at`,
-      [req.userId, courseId, title, audioPath ? 'audio' : 'text']
-    );
-    const lecture = created.rows[0];
+    const recordedAt = recordedAtFrom(req.body.recordedAt);
+    const title = cleanTitle(req.body.title) || (await titleForRecording(req.userId, courseId, recordedAt || new Date()));
+    const lecture = await createLecture(req.userId, {
+      courseId,
+      courseName: course.name,
+      title,
+      source: audioPath ? 'audio' : 'text',
+      recordedAt,
+    });
 
     enqueue({
       lectureId: lecture.id,
       userId: req.userId,
-      courseName: course.rows[0].name,
+      courseName: course.name,
       title,
       audioPath,
       text: audioPath ? null : text,
     });
 
-    res.status(202).json({ success: true, lecture: toSummary({ ...lecture, course_name: course.rows[0].name }) });
+    res.status(202).json({ success: true, lecture });
   } catch (err) {
     await discard();
     next(err);
@@ -134,16 +140,7 @@ router.get('/', async (req, res, next) => {
   try {
     const { courseId } = req.query;
     if (courseId !== undefined && !isUuid(courseId)) return fail(res, 404, 'NotFound', '과목을 찾을 수 없어요.');
-    const result = await db.query(
-      `SELECT l.id, l.course_id, c.name AS course_name, l.title, l.notes->>'title' AS topic, l.source, l.status,
-              l.duration_seconds, l.card_count, l.created_at, l.finished_at
-         FROM lectures l JOIN courses c ON c.id = l.course_id
-        WHERE l.user_id = $1 AND l.status <> 'failed' AND ($2::uuid IS NULL OR l.course_id = $2::uuid)
-        ORDER BY l.created_at DESC
-        LIMIT 200`,
-      [req.userId, courseId || null]
-    );
-    res.json({ success: true, lectures: result.rows.map(toSummary) });
+    res.json({ success: true, lectures: await listLectures(req.userId, { courseId: courseId || null }) });
   } catch (err) {
     next(err);
   }
@@ -153,29 +150,9 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     if (!isUuid(req.params.id)) return fail(res, 404, 'NotFound', '강의를 찾을 수 없어요.');
-    const result = await db.query(
-      `SELECT l.*, c.name AS course_name
-         FROM lectures l JOIN courses c ON c.id = l.course_id
-        WHERE l.id = $1 AND l.user_id = $2 AND l.status <> 'failed'`,
-      [req.params.id, req.userId]
-    );
-    const row = result.rows[0];
-    if (!row) return fail(res, 404, 'NotFound', '강의를 찾을 수 없어요.');
-    const cards = await db.query(
-      'SELECT id, front, back FROM cards WHERE lecture_id = $1 AND user_id = $2 ORDER BY position',
-      [row.id, req.userId]
-    );
-    res.json({
-      success: true,
-      lecture: {
-        ...toSummary(row),
-        notes: row.notes,
-        transcript: row.transcript,
-        unclearRanges: row.unclear_ranges || [],
-        cards: cards.rows,
-        messageDismissed: row.message_dismissed,
-      },
-    });
+    const lecture = await getLecture(req.userId, req.params.id);
+    if (!lecture) return fail(res, 404, 'NotFound', '강의를 찾을 수 없어요.');
+    res.json({ success: true, lecture });
   } catch (err) {
     next(err);
   }
@@ -185,28 +162,11 @@ router.get('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     if (!isUuid(req.params.id)) return fail(res, 404, 'NotFound', '강의를 찾을 수 없어요.');
-    const result = await db.query('DELETE FROM lectures WHERE id = $1 AND user_id = $2', [req.params.id, req.userId]);
-    if (!result.rowCount) return fail(res, 404, 'NotFound', '강의를 찾을 수 없어요.');
+    if (!(await deleteLecture(req.userId, req.params.id))) return fail(res, 404, 'NotFound', '강의를 찾을 수 없어요.');
     res.json({ success: true });
   } catch (err) {
     next(err);
   }
 });
-
-function toSummary(row) {
-  return {
-    id: row.id,
-    courseId: row.course_id,
-    courseName: row.course_name,
-    title: row.title,
-    topic: row.topic ?? (row.notes && row.notes.title) ?? null,
-    source: row.source,
-    status: row.status,
-    durationSeconds: row.duration_seconds ?? null,
-    cardCount: row.card_count ?? 0,
-    createdAt: row.created_at,
-    finishedAt: row.finished_at ?? null,
-  };
-}
 
 module.exports = router;

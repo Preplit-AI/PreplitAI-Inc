@@ -49,3 +49,6 @@ server/outputs/
 
 # Local development database (PGlite)
 server/.data/
+
+# The design skill's deal history
+.taste-skill/

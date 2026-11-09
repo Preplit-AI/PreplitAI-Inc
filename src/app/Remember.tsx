@@ -1,36 +1,82 @@
-import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { Comb } from "@/brand/Comb";
+import { JunoAvatar } from "@/brand/Juno";
+import { Tally } from "@/brand/Tally";
 import { ApiError, request } from "@/lib/api";
+import { useCopy } from "@/lib/lang";
 import type { ReviewCard } from "@/lib/types";
+import { PageHead } from "@/workspace/kit";
+import { movement } from "@/workspace/movements";
+import { NoteFlow } from "./parts";
 import { keys, useReviewToday } from "./queries";
 import { AppTitle, ErrorLine, LoadingLine } from "./ui";
 
 /*
- * Today's review. Every number on this screen is counted by the server: cards
- * due now and cards already reviewed today. The comb is drawn from exactly
- * those two, and there is no score, percentage or day count anywhere.
+ * 03 Remember: today's review. Every number on this screen is counted by the
+ * server: cards due now and cards already reviewed today. The tally is drawn
+ * from exactly those two, and there is no score, percentage or day count.
  */
 
-const RATINGS = [
-  { value: 1, label: "다시", key: "1" },
-  { value: 2, label: "어려움", key: "2" },
-  { value: 3, label: "알맞음", key: "3" },
-  { value: 4, label: "쉬움", key: "4" },
-] as const;
+const COPY = {
+  ko: {
+    title: "기억",
+    heading: (n: number) => `오늘의 ${n}장`,
+    loadError: "오늘의 카드를 불러오지 못했어요. 새로고침해 주세요.",
+    ratings: ["다시", "어려움", "알맞음", "쉬움"],
+    allDone: (n: number) => `오늘 카드 ${n}장을 모두 봤어요.`,
+    toBuild: "쌓기에서 시험 준비 보기",
+    noneTitle: "오늘 복습할 카드가 없어요.",
+    noneText: "강의를 올리면 노트에서 카드가 만들어지고, 잊을 때쯤 여기에 다시 나와요.",
+    toLearn: "배움으로",
+    tally: (n: number, d: number) => `오늘 카드 ${n}장 중 ${d}장 복습함`,
+    left: (n: number) => `남은 카드 ${n}장`,
+    how: "카드마다 답을 떠올린 뒤 확인하고, 얼마나 쉬웠는지 고르세요.",
+    start: "복습 시작",
+    howEasy: "얼마나 쉬웠나요?",
+    keys: "키보드 1~4로도 고를 수 있어요.",
+    show: "답 보기",
+    saveFailed: "저장하지 못했어요. 다시 눌러 주세요.",
+  },
+  en: {
+    title: "Remember",
+    heading: (n: number) => `Today's ${n} card${n === 1 ? "" : "s"}`,
+    loadError: "Couldn't load today's cards. Please refresh.",
+    ratings: ["Again", "Hard", "Good", "Easy"],
+    allDone: (n: number) => `You've seen all ${n} of today's cards.`,
+    toBuild: "See exam prep in Build",
+    noneTitle: "No cards to review today.",
+    noneText: "Record a lecture and its note becomes cards, which come back here just before you'd forget them.",
+    toLearn: "Go to Learn",
+    tally: (n: number, d: number) => `${d} of today's ${n} cards reviewed`,
+    left: (n: number) => `${n} card${n === 1 ? "" : "s"} left`,
+    how: "Recall the answer for each card, check it, then choose how easy it was.",
+    start: "Start review",
+    howEasy: "How easy was it?",
+    keys: "You can also press 1–4.",
+    show: "Show answer",
+    saveFailed: "Couldn't save. Please press it again.",
+  },
+};
+
+const RATING_KEYS = ["1", "2", "3", "4"] as const;
 
 /** A session works from a snapshot, so a background refetch cannot count a card twice. */
 type Session = { queue: ReviewCard[]; index: number; revealed: boolean; reviewed: number; baseDone: number };
 
 export default function Remember() {
   const client = useQueryClient();
+  const t = useCopy(COPY);
   const today = useReviewToday();
   const [session, setSession] = useState<Session | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const due = today.data?.cards.length ?? 0;
+  // Opened from a course: only that course's cards. Every other number stays the whole day's.
+  const [params] = useSearchParams();
+  const courseId = params.get("course");
+  const cards = useMemo(() => (today.data?.cards ?? []).filter((c) => !courseId || c.courseId === courseId), [today.data?.cards, courseId]);
+  const due = cards.length;
   const total = session ? session.baseDone + session.queue.length : (today.data?.done ?? 0) + due;
   const done = session ? session.baseDone + session.reviewed : today.data?.done ?? 0;
   const card = session ? session.queue[session.index] : undefined;
@@ -48,7 +94,7 @@ export default function Remember() {
       } catch (err) {
         // Already reviewed elsewhere: move on, it is done.
         if (!(err instanceof ApiError && err.code === "AlreadyReviewed")) {
-          setError(err instanceof ApiError ? err.message : "저장하지 못했어요. 다시 눌러 주세요.");
+          setError(err instanceof ApiError ? err.message : t.saveFailed);
           setSaving(false);
           return;
         }
@@ -56,7 +102,7 @@ export default function Remember() {
       setSaving(false);
       setSession((s) => (s ? { ...s, index: s.index + 1, revealed: false, reviewed: s.reviewed + 1 } : s));
     },
-    [session, card, saving],
+    [session, card, saving, t.saveFailed],
   );
 
   // Space or Enter shows the answer; 1 to 4 rate it.
@@ -68,8 +114,8 @@ export default function Remember() {
         e.preventDefault();
         reveal();
       } else if (session.revealed) {
-        const r = RATINGS.find((x) => x.key === e.key);
-        if (r) rate(r.value);
+        const i = RATING_KEYS.indexOf(e.key as (typeof RATING_KEYS)[number]);
+        if (i >= 0) rate(i + 1);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -82,91 +128,82 @@ export default function Remember() {
   }, [finished, client]);
 
   if (today.isLoading) return <LoadingLine />;
-  if (today.error) return <p className="py-10">오늘의 카드를 불러오지 못했어요. 새로고침해 주세요.</p>;
+  if (today.error) return <p className="py-10 text-sm">{t.loadError}</p>;
 
-  const heading = total ? `오늘의 ${total}장` : "기억";
+  const allDone = (
+    <div className="flex items-start gap-3">
+      <JunoAvatar size={36} mood="happy" />
+      <div>
+        <p className="text-xs font-semibold">Juno</p>
+        <p className="mt-0.5 text-base font-medium">{t.allDone(total)}</p>
+        <Link to="/workspace/build" className="btn-text mt-1">{t.toBuild}</Link>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="mx-auto max-w-[36rem]">
-      <AppTitle>기억</AppTitle>
-      <h1 className="display text-4xl">{heading}</h1>
+    <div>
+      <AppTitle>{t.title}</AppTitle>
+      <PageHead movement={movement("remember")} title={total ? t.heading(total) : undefined} />
 
       {total === 0 ? (
-        <div className="mt-6 border-t border-rule pt-8">
-          <p className="text-lg font-semibold">오늘 복습할 카드가 없어요.</p>
-          <p className="mt-2 leading-relaxed text-slate">강의를 올리면 노트에서 카드가 만들어지고, 잊을 때쯤 여기에 다시 나와요.</p>
-          <Link to="/app/learn" className="btn-ink mt-6">배움으로</Link>
+        <div className="window mt-5 max-w-[44rem] px-5 py-6">
+          <p className="text-base font-semibold">{t.noneTitle}</p>
+          <p className="mt-1 text-sm leading-relaxed text-slate">{t.noneText}</p>
+          <NoteFlow className="mt-5 max-w-sm" />
+          <Link to="/app/learn" className="btn-ink mt-5">{t.toLearn}</Link>
         </div>
       ) : (
-        <>
-          <Comb
-            total={total}
-            filled={Math.min(done, total)}
-            cell={40}
-            perRow={Math.max(3, Math.ceil(Math.sqrt(total * 1.5)))}
-            label={`오늘 카드 ${total}장 중 ${Math.min(done, total)}장 복습함`}
-            className="mt-6"
-          />
+        <div className="mt-5 max-w-[44rem]">
+          <div className="flex items-center gap-3">
+            <Tally total={total} filled={done} label={t.tally(total, Math.min(done, total))} className="min-w-0 flex-1" />
+            <span className="shrink-0 text-xs tabular-nums text-slate">{Math.min(done, total)} / {total}</span>
+          </div>
 
-          {!session ? (
-            <div className="mt-8 border-t border-rule pt-8">
-              {due ? (
+          <div className="window mt-4 min-h-[18rem] px-5 py-6 sm:px-7">
+            {!session ? (
+              due ? (
                 <>
-                  <p className="leading-relaxed text-slate">남은 카드 {due}장. 카드마다 답을 떠올린 뒤 확인하고, 얼마나 쉬웠는지 고르세요.</p>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setSession({ queue: today.data!.cards, index: 0, revealed: false, reviewed: 0, baseDone: today.data!.done })
-                    }
-                    className="btn-primary mt-6 min-h-[52px] px-8 text-base"
-                  >
-                    복습 시작
+                  <p className="text-base font-semibold">{t.left(due)}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate">{t.how}</p>
+                  <button type="button" onClick={() => setSession({ queue: cards, index: 0, revealed: false, reviewed: 0, baseDone: today.data!.done })} className="btn-ink mt-5 px-6">
+                    {t.start}
                   </button>
                 </>
               ) : (
-                <p className="text-lg">오늘 카드 {total}장을 모두 봤어요.</p>
-              )}
-            </div>
-          ) : card ? (
-            <div className="mt-8 border-t border-rule pt-8" aria-live="polite">
-              <p className="text-sm text-slate">
-                {card.courseName} <span aria-hidden="true">/</span> {card.lectureTitle}
-              </p>
-              <p className="mt-3 text-[1.45rem] font-semibold leading-snug">{card.front}</p>
+                allDone
+              )
+            ) : card ? (
+              <div aria-live="polite">
+                <p className="text-xs text-slate">
+                  <Link to={`/workspace/courses/${card.courseId}`} className="hover:text-ink hover:underline hover:underline-offset-4">{card.courseName}</Link>{" "}
+                  <span aria-hidden="true">/</span>{" "}
+                  <Link to={`/app/learn/${card.lectureId}`} className="hover:text-ink hover:underline hover:underline-offset-4">{card.lectureTitle}</Link>
+                </p>
+                <p className="display mt-3 text-2xl leading-snug">{card.front}</p>
 
-              {session.revealed ? (
-                <>
-                  <p className="mt-5 border-t border-dashed border-rule-strong pt-5 text-lg leading-relaxed text-ink/85">{card.back}</p>
-                  <div className="mt-8 grid grid-cols-4 gap-2" role="group" aria-label="얼마나 쉬웠나요?">
-                    {RATINGS.map((r) => (
-                      <button
-                        key={r.value}
-                        type="button"
-                        disabled={saving}
-                        onClick={() => rate(r.value)}
-                        className="btn-quiet min-h-[52px] px-1 text-sm"
-                        aria-keyshortcuts={r.key}
-                      >
-                        {r.label}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="mt-3 hidden text-xs text-slate sm:block">키보드 1~4로도 고를 수 있어요.</p>
-                </>
-              ) : (
-                <button type="button" onClick={reveal} className="btn-ink mt-8 min-h-[52px] w-full sm:w-auto sm:px-10" aria-keyshortcuts="Space">
-                  답 보기
-                </button>
-              )}
-              <div className="mt-4"><ErrorLine>{error}</ErrorLine></div>
-            </div>
-          ) : (
-            <div className="mt-8 border-t border-rule pt-8">
-              <p className="text-lg">오늘 카드 {total}장을 모두 봤어요.</p>
-              <Link to="/app/learn" className="btn-text mt-3">배움으로</Link>
-            </div>
-          )}
-        </>
+                {session.revealed ? (
+                  <>
+                    <p className="mt-4 border-t border-dashed border-rule-strong pt-4 text-base leading-relaxed text-ink/85">{card.back}</p>
+                    <div className="mt-6 grid grid-cols-4 gap-2" role="group" aria-label={t.howEasy}>
+                      {t.ratings.map((label, i) => (
+                        <button key={label} type="button" disabled={saving} onClick={() => rate(i + 1)} className="btn-quiet px-1 text-xs" aria-keyshortcuts={RATING_KEYS[i]}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-2 hidden text-2xs text-slate sm:block">{t.keys}</p>
+                  </>
+                ) : (
+                  <button type="button" onClick={reveal} className="btn-ink mt-6 w-full sm:w-auto sm:px-8" aria-keyshortcuts="Space">{t.show}</button>
+                )}
+                <div className="mt-3"><ErrorLine>{error}</ErrorLine></div>
+              </div>
+            ) : (
+              allDone
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

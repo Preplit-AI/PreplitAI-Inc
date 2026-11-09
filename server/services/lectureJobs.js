@@ -4,6 +4,8 @@ const db = require('../db/database');
 const { transcribeFile } = require('./transcription');
 const { buildNotes } = require('./lectureService');
 const { newCard } = require('./scheduler');
+const { saveChunks } = require('./lectureChunks');
+const { notifyLectureFinished } = require('./reminders');
 const { PROCESSING_CONCURRENCY } = require('../config/constants');
 
 /**
@@ -88,8 +90,10 @@ async function processLecture({ lectureId, userId, courseName, title, audioPath,
           [userId, lectureId, i, notes.cards[i].front, notes.cards[i].back, JSON.stringify(state), state.due]
         );
       }
+      await saveChunks(tx, { userId, lectureId, transcript, notes });
       await supersedeMessages(tx, userId, lectureId);
     });
+    await notifyLectureFinished({ userId, lectureId, title, status: 'ready', cardCount: notes.cards.length });
   } catch (err) {
     console.warn('[lecture] ' + lectureId + ' failed (' + failureReason + '):', err.message);
     await db.transaction(async (tx) => {
@@ -102,6 +106,7 @@ async function processLecture({ lectureId, userId, courseName, title, audioPath,
       );
       if (updated.rowCount) await supersedeMessages(tx, userId, lectureId);
     }).catch((dbErr) => console.error('[lecture] could not record failure:', dbErr.message));
+    await notifyLectureFinished({ userId, lectureId, title, status: 'failed', cardCount: 0 });
   } finally {
     if (audioPath) await fsp.rm(audioPath, { force: true }).catch(() => {});
   }

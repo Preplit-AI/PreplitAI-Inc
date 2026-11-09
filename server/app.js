@@ -11,6 +11,9 @@ const courseRoutes = require('./routes/courses');
 const lectureRoutes = require('./routes/lectures');
 const reviewRoutes = require('./routes/review');
 const junbeeRoutes = require('./routes/junbee');
+const chatRoutes = require('./routes/chat');
+const semesterRoutes = require('./routes/semester');
+const pushRoutes = require('./routes/push');
 
 /**
  * The Junbee API. Shared by the long-running server (index.js) and the Vercel
@@ -59,7 +62,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(compression());
+// Compression buffers its output, which would hold a streamed answer back until
+// the end. Decided by content type, so any future stream is covered too.
+app.use(compression({
+  filter: (req, res) =>
+    !String(res.getHeader('Content-Type') || '').includes('text/event-stream') && compression.filter(req, res),
+}));
 app.use(express.json({ limit: '1mb' }));
 
 // ── Routes ───────────────────────────────────────────────────────────────────
@@ -77,6 +85,9 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/lectures', lectureRoutes);
 app.use('/api/review', reviewRoutes);
 app.use('/api/junbee', junbeeRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/semester', semesterRoutes);
+app.use('/api/push', pushRoutes);
 
 app.use('/api', (req, res) => {
   res.status(404).json({ success: false, error: 'NotFound', message: '없는 주소예요.' });

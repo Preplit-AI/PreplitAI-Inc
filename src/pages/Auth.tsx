@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ApiError, request } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { useLang, type Lang } from "@/lib/lang";
+import { AuthVisual } from "@/site/AuthVisual";
 import { SitePage } from "@/site/SitePage";
 
 const text = {
@@ -13,7 +14,7 @@ const text = {
     noAccount: "아직 계정이 없나요?",
     join: "파일럿 참여하기",
     signupTitle: "파일럿 참여하기",
-    signupIntro: "이번 학기, 한 과목의 학생들과 Junbee를 먼저 써 보는 파일럿이에요.",
+    signupIntro: "이번 학기, 한 과목의 학생들과 Preplit AI와 Juno를 먼저 써 보는 파일럿이에요.",
     signupButton: "계정 만들기",
     haveAccount: "이미 계정이 있나요?",
     login: "로그인",
@@ -23,7 +24,7 @@ const text = {
     passwordHint: "8자 이상",
     invite: "초대 코드",
     inviteHint: "파일럿 안내에서 받은 코드",
-    consent: "개인정보 처리방침을 읽었고, 강의를 처리하기 위해 녹음과 녹취록이 미국의 Groq, Inc.로 전송되는 것에 동의해요.",
+    consent: "개인정보 처리방침을 읽었고, 강의를 처리하고 질문에 답하기 위해 수업 녹음, 녹취록, 질문이 미국의 Groq, Inc.로 전송되는 것에 동의해요.",
     consentLink: "개인정보 처리방침",
     working: "잠시만요",
   },
@@ -33,7 +34,7 @@ const text = {
     noAccount: "No account yet?",
     join: "Join the pilot",
     signupTitle: "Join the pilot",
-    signupIntro: "This semester's pilot: the students of one course trying Junbee first.",
+    signupIntro: "This semester's pilot: the students of one course trying Preplit AI and Juno first.",
     signupButton: "Create account",
     haveAccount: "Already have an account?",
     login: "Log in",
@@ -43,7 +44,7 @@ const text = {
     passwordHint: "At least 8 characters",
     invite: "Invite code",
     inviteHint: "From your pilot invitation",
-    consent: "I have read the privacy notice and agree that recordings and transcripts are sent to Groq, Inc. in the United States so lectures can be processed.",
+    consent: "I have read the privacy notice and agree that recordings, transcripts and questions are sent to Groq, Inc. in the United States so lectures can be processed and questions answered.",
     consentLink: "privacy notice",
     working: "One moment",
   },
@@ -81,18 +82,20 @@ function messageFor(err: unknown, lang: Lang) {
 
 /** Only in-app paths, so a crafted ?next= cannot send someone to another site. */
 function safeNext(value: string | null) {
-  return value && /^\/app\/[\w\-/]*$/.test(value) ? value : "/app/learn";
+  return value && /^\/(app|workspace)(\/[\w\-/]*)?$/.test(value) ? value : "/workspace";
 }
 
 function Frame({ title, intro, children, footer }: { title: string; intro?: string; children: ReactNode; footer: ReactNode }) {
+  const { lang } = useLang();
   return (
-    <section className="page flex justify-center py-14 sm:py-20">
-      <div className="w-full max-w-[26rem]">
-        <h1 className="display text-4xl">{title}</h1>
-        {intro ? <p className="mt-3 leading-relaxed text-ink/75">{intro}</p> : null}
+    <section className="page grid gap-10 py-12 sm:py-16 lg:grid-cols-12 lg:gap-x-6">
+      <div className="w-full max-w-[28rem] lg:col-span-5">
+        <h1 className="display text-[2.75rem] leading-[1.1]">{title}</h1>
+        {intro ? <p className="mt-4 text-lg leading-relaxed text-ink">{intro}</p> : null}
         <div className="mt-8">{children}</div>
-        <p className="mt-8 border-t border-rule pt-6 text-sm text-slate">{footer}</p>
+        <p className="mt-8 border-t border-rule pt-6 text-[0.9375rem] text-slate">{footer}</p>
       </div>
+      <AuthVisual lang={lang} className="hidden lg:col-span-6 lg:col-start-7 lg:flex" />
     </section>
   );
 }
@@ -135,7 +138,7 @@ export function Login() {
   };
 
   return (
-    <SitePage title={`${t.loginTitle} · Junbee`} path="/login" noindex>
+    <SitePage title={`${t.loginTitle} · Preplit AI`} path="/login" noindex>
       <Frame
         title={t.loginTitle}
         footer={<>{t.noAccount} <Link to="/signup" className="font-semibold text-ink underline underline-offset-4">{t.join}</Link></>}
@@ -166,7 +169,7 @@ export function Signup() {
     staleTime: Infinity,
   });
 
-  if (status === "signed-in") return <Navigate to="/app/learn" replace />;
+  if (status === "signed-in") return <Navigate to="/workspace" replace />;
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -180,7 +183,7 @@ export function Signup() {
         password: String(form.get("password") ?? ""),
         inviteCode: form.get("inviteCode") ? String(form.get("inviteCode")) : undefined,
       });
-      navigate("/app/learn", { replace: true });
+      navigate("/workspace", { replace: true });
     } catch (err) {
       setError(messageFor(err, lang));
     } finally {
@@ -189,7 +192,7 @@ export function Signup() {
   };
 
   return (
-    <SitePage title={`${t.signupTitle} · Junbee`} path="/signup" noindex>
+    <SitePage title={`${t.signupTitle} · Preplit AI`} path="/signup" noindex>
       <Frame
         title={t.signupTitle}
         intro={t.signupIntro}
@@ -203,7 +206,7 @@ export function Signup() {
             <Field label={t.invite} hint={t.inviteHint} name="inviteCode" autoComplete="off" required />
           ) : null}
           <label className="flex items-start gap-3 text-sm leading-relaxed text-ink/85">
-            <input type="checkbox" name="consent" required className="mt-1 h-4 w-4 shrink-0 accent-[#15181E]" />
+            <input type="checkbox" name="consent" required className="mt-1 h-4 w-4 shrink-0 accent-[#0A0A0A]" />
             <span>
               {t.consent}{" "}
               <Link to="/privacy" target="_blank" className="font-semibold underline underline-offset-4">
@@ -212,7 +215,7 @@ export function Signup() {
             </span>
           </label>
           {error ? <p role="alert" className="text-sm font-semibold text-maroon">{error}</p> : null}
-          <button type="submit" disabled={busy} className="btn-primary mt-1 min-h-[50px]">
+          <button type="submit" disabled={busy} className="btn-ink mt-1 min-h-[50px]">
             {busy ? t.working : t.signupButton}
           </button>
         </form>

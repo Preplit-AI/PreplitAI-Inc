@@ -2,19 +2,19 @@
 const express = require('express');
 const db = require('../db/database');
 const { authMiddleware } = require('../middleware/auth');
+const { currentJunbeeMessage } = require('../services/lectureStore');
 const { isUuid, fail } = require('../utils/http');
 
 /**
- * Junbee, the bot. It says one of exactly three things, only after a lecture
- * finishes processing, one message at a time:
+ * What Junbee says about a lecture that just finished, one message at a time:
  *
  *   ready    notes are ready, with the card count
  *   unclear  notes are ready, and these minutes were left as [불명확]
  *   failed   nothing could be made, and nothing was saved
  *
- * The wording lives in the client; this route only reports which of the three
- * applies and the measured facts that fill it in. There is no other trigger,
- * so there is no fourth message.
+ * The wording lives in the client; this route only reports which applies and
+ * the measured facts that fill it in. Everything else the bee says about the
+ * semester comes from semesterStore's chooseMessage.
  */
 const router = express.Router();
 router.use(authMiddleware);
@@ -22,30 +22,7 @@ router.use(authMiddleware);
 // ── GET /api/junbee ──────────────────────────────────────────────────────────
 router.get('/', async (req, res, next) => {
   try {
-    const result = await db.query(
-      `SELECT id, title, source, status, card_count, unclear_ranges
-         FROM lectures
-        WHERE user_id = $1 AND message_dismissed = false AND status IN ('ready', 'failed')
-        ORDER BY finished_at DESC NULLS LAST
-        LIMIT 1`,
-      [req.userId]
-    );
-    const row = result.rows[0];
-    if (!row) return res.json({ success: true, message: null });
-
-    const unclearRanges = row.unclear_ranges || [];
-    const kind = row.status === 'failed' ? 'failed' : unclearRanges.length ? 'unclear' : 'ready';
-    res.json({
-      success: true,
-      message: {
-        lectureId: row.id,
-        kind,
-        lectureTitle: row.title,
-        source: row.source,
-        cardCount: row.status === 'ready' ? row.card_count : 0,
-        unclearRanges: kind === 'unclear' ? unclearRanges : [],
-      },
-    });
+    res.json({ success: true, message: await currentJunbeeMessage(req.userId) });
   } catch (err) {
     next(err);
   }

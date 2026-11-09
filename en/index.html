@@ -1,96 +1,69 @@
 <!doctype html>
-<html lang="en" data-type="software" data-radius="soft" data-ground="sage" data-buttons="arrow" data-motion>
+<html lang="en" data-type="software" data-radius="round" data-buttons="pill" data-ground="sky" data-motion>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Junbee: lecture notes and review cards for students</title>
-<meta name="description" content="Upload a lecture recording and notes arrive a few minutes later. Exam hints are gathered in one place, and the notes become five minutes of review a day.">
+<title>Preplit AI: Juno, the student companion for your whole semester</title>
+<meta name="description" content="Set Juno up once. It sits in every lecture, files your notes, texts you before deadlines, trains you with a daily game and turns your courses into a career plan.">
 <meta name="site-kind" content="software">
 <meta name="page-type" content="software">
-<meta name="theme-color" content="#EDEDE7">
+<meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="https://preplitai.com/en/">
 <link rel="alternate" hreflang="ko" href="https://preplitai.com/">
 <link rel="alternate" hreflang="en" href="https://preplitai.com/en/">
 <link rel="alternate" hreflang="x-default" href="https://preplitai.com/">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico?v=3" sizes="48x48">
+<link rel="icon" href="/favicon-32.png?v=3" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
 <link rel="manifest" href="/site.webmanifest">
-<meta property="og:title" content="Junbee: lecture notes and review cards for students">
-<meta property="og:description" content="Upload a lecture recording and notes arrive a few minutes later. Exam hints are gathered in one place, and the notes become five minutes of review a day.">
+<meta property="og:title" content="Preplit AI: Juno, the student companion for your whole semester">
+<meta property="og:description" content="Set Juno up once. It sits in every lecture, files your notes, texts you before deadlines, trains you with a daily game and turns your courses into a career plan.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://preplitai.com/en/">
+<meta property="og:image" content="https://preplitai.com/icon-512.png">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ko_KR">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..600&family=IBM+Plex+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/kit/system.css">
 <link rel="stylesheet" href="/kit/ui/cards.css">
 <link rel="stylesheet" href="/kit/motion/motion.css">
 <link rel="stylesheet" href="/kit/backgrounds/backgrounds.css">
 <link rel="stylesheet" href="/kit/layout/layout.css">
-<link rel="stylesheet" href="/kit/icons/icon.css">
-<link rel="stylesheet" href="/kit/ui/base.css">
-<link rel="stylesheet" href="/kit/ui/window/fragment.css">
-<link rel="stylesheet" href="/kit/ui/doc/fragment.css">
-<link rel="stylesheet" href="/kit/ui/notify/fragment.css">
-<link rel="stylesheet" href="/kit/ui/checklist/fragment.css">
-<link rel="stylesheet" href="/kit/diagrams/diagram.css">
 <link rel="stylesheet" href="/site/landing.css">
 <script src="/kit/backgrounds/backgrounds.js"></script>
-<script src="/js/moments-guard.js"></script>
-<link rel="modulepreload" href="/kit/moments/moments.js">
-<link rel="modulepreload" href="/kit/moments/lib.js">
-<link rel="modulepreload" href="/kit/moments/marquee-row/moment.js">
+<script src="/js/lang.js"></script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://preplitai.com/#organization","name":"PreplitAI, Inc.","url":"https://preplitai.com","email":"info@preplitai.com"},{"@type":"WebSite","@id":"https://preplitai.com/#website","url":"https://preplitai.com","name":"Junbee","alternateName":"준비","publisher":{"@id":"https://preplitai.com/#organization"},"inLanguage":["ko","en"]},{"@type":"SoftwareApplication","name":"Junbee","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":"Upload a lecture recording and notes arrive a few minutes later. Exam hints are gathered in one place, and the notes become five minutes of review a day.","inLanguage":"en","publisher":{"@id":"https://preplitai.com/#organization"}}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://preplitai.com/#organization","name":"Preplit AI, Inc.","url":"https://preplitai.com","logo":"https://preplitai.com/icon-512.png","email":"info@preplitai.com"},{"@type":"WebSite","@id":"https://preplitai.com/#website","url":"https://preplitai.com","name":"Preplit AI","publisher":{"@id":"https://preplitai.com/#organization"},"inLanguage":["ko","en"]},{"@type":"SoftwareApplication","name":"Preplit AI","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":"Set Juno up once. It sits in every lecture, files your notes, texts you before deadlines, trains you with a daily game and turns your courses into a career plan.","inLanguage":"en","publisher":{"@id":"https://preplitai.com/#organization"}}]}
 </script>
 </head>
 <body>
 <!-- Generated by site/render.mjs from site/copy.mjs: edit those, then run npm run site.
      type: software (page-type software, site-kind software)
-     deal: hero split; palette the client's own (bone #EDEDE7, paper #F8F8F4, ink #15181E, muted #626A76,
-           accent maroon #8A1328) via start.mjs brand; type bricolage pairing with the brand's IBM Plex Sans KR
-           as the text face (Hangul); nav nav-cards re-dealt to nav-centre (no photographs); footer
-           footer-statement; close close-type; rhythm dark-band; buttons arrow; mark the client's bee;
-           lit ground sage; grounds: how bg-band, faq bg-mist; effect grain-gradient (held still) in the
-           hero frame; card-group grounds: none fit, panels take the lit ground; moment marquee-row in
-           #pipeline; scene none.
-     screens at 1440x900: hero 1 · app 1 · how 1 · pipeline 1 · remember 2 · junbee 1 · faq 1 · closing 1 -->
-<header class="nav nav--centre">
-  <div class="wrap nav__bar">
-    <a class="skip" href="#app">Skip to the content</a>
-    <a class="nav__logo" href="#top"><img class="nav__bee" src="/brand/bee.svg" alt="" width="26" height="25">Junbee</a>
+     look: the client's reference (a white page, near-black grotesk, black pill buttons, phones in dark UI
+           with white floating cards), in Preplit AI's own colours (black, maroon #A00020, gold #F8D000).
+           The header is a white bar floating over the page. The hero stands on the client's autumn campus sky.
+           Black grounds carry the white logo. Every phone and window is shown whole.
+     story: the student companion that lowers cognitive load (site/copy.mjs): the six stages, Juno, a day with
+           Juno, his text messages, the workspace he keeps, and the career his courses lead to.
+     screens at 1440x900: hero 1 · stages 2 · juno 1 · how 1 · nudge 1 · workspace 1 · career 1 · safe 1 · course 1 · faq 1 · get 1;
+     the footer runs to its own height -->
+<header class="nav pv-nav">
+  <div class="nav__bar">
+    <a class="skip" href="#top">Skip to the content</a>
+    <a class="nav__logo" href="#top" aria-label="Preplit AI"><img class="nav__mark" src="/brand/preplit-mark-256.png" alt="" width="26" height="36"></a>
     <nav class="nav__links" aria-label="Main">
-      <div class="nav__item">
-        <a class="nav__link" href="#app">Notes <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <div class="nav__menu">
-          <div class="wrap grid">
-            <div class="menu-col span-3">
-              <p class="t-label">Learn</p>
-              <a href="#how">Upload a recording<span>Straight from your phone</span></a>
-              <a href="#app">Read the notes<span>Summary, key ideas, exam hints</span></a>
-              <a href="#pipeline">How audio is handled<span>Deleted after transcription</span></a>
-            </div>
-            <div class="menu-col span-3">
-              <p class="t-label">Remember</p>
-              <a href="#remember">Daily review<span>Five minutes, 20 cards at most</span></a>
-              <a href="#remember">Cards by course<span>5 to 10 per lecture</span></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="nav__item"><a class="nav__link" href="#how">Steps</a></div>
-      <div class="nav__item"><a class="nav__link" href="#remember">Review</a></div>
-      <div class="nav__item"><a class="nav__link" href="#junbee">Junbee</a></div>
-      <div class="nav__item"><a class="nav__link" href="#faq">Questions</a></div>
+      <div class="nav__item"><a class="nav__link" href="#features">Features</a></div>
+      <div class="nav__item"><a class="nav__link" href="#juno">Meet Juno</a></div>
+      <div class="nav__item"><a class="nav__link" href="/en/pricing/">Pricing</a></div>
+      <div class="nav__item"><a class="nav__link" href="#faq">FAQ</a></div>
     </nav>
     <div class="nav__actions">
-      <a class="nav__link" href="/" hreflang="ko" lang="ko" aria-label="이 페이지를 한국어로 보기">한국어</a>
-      <a class="nav__link" href="/login">Log in</a>
-      <a class="btn btn--primary" href="/signup">Join the pilot<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+      <a class="pv-lang" href="/" hreflang="ko" lang="ko" aria-label="이 페이지를 한국어로 보기"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c1.7 1.7 2.5 3.7 2.5 6S9.7 12.3 8 14C6.3 12.3 5.5 10.3 5.5 8S6.3 3.7 8 2z"/></svg><span>KO</span></a>
+      <a class="nav__link pv-login" href="/login">Log in</a>
+      <a class="btn btn--primary pv-start" href="/signup">Start<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
     </div>
     <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menu">
       <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -99,358 +72,447 @@
 </header>
 
 <main id="top">
-  <section class="hero hero--split" aria-labelledby="hero-h">
+  <section class="hero hero--split pv-hero pv-hero--sky" aria-labelledby="hero-h">
     <div class="wrap"><div class="hero-text grid hero__grid">
       <div class="hero__text span-6">
-        <p class="hero__kicker">Pilot open: one course, 20 students</p>
-        <h1 id="hero-h">Lecture notes and review cards for students</h1>
-        <p class="hero__lead">Upload a lecture recording and notes arrive a few minutes later. Exam hints are gathered in one place, and the notes become five minutes of review a day.</p>
-        <div class="btn-row"><a class="btn btn--primary" href="/signup">Join the pilot<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="#app">See a lecture note</a></div>
-        <dl class="hero-facts">
-          <div><dt>Cards per lecture</dt><dd>5 to 10</dd></div>
-          <div><dt>Daily review</dt><dd>Up to 20 cards</dd></div>
-          <div><dt>Recordings</dt><dd>Deleted after transcription</dd></div>
-        </dl>
+        <h1 id="hero-h">Your student life on autopilot.</h1>
+        <p class="hero__lead">Juno is the companion that keeps your semester for you: it sits in every lecture, files the notes, texts you before anything is due and turns your courses into a career plan.</p>
+        <div class="btn-row"><a class="btn btn--primary" href="/signup">Join the pilot</a><a class="btn btn--secondary" href="#how">See a day with Juno</a></div>
+        <div class="rec-card" aria-hidden="true">
+          <span class="rec-card__dot"></span>
+          <span class="rec-card__text"><b>Lecture Buddy</b><span>Operating Systems · Week 10</span></span>
+          <span class="rec-card__timer">00:42:10</span>
+          <span class="rec-card__stop">End class</span>
+        </div>
       </div>
-      <div class="hero__media span-6 start-7" data-visual data-m-loop data-fx="grain-gradient" data-fx-seed="11" data-fx-palette='{"bg":"#cdd6c6","surface":"#dce3d6","ink":"#262d24","accent":"#6c8e63"}' data-fx-params='{"speed":0,"drift":0,"grainMotion":0}' role="img" aria-label="Today's review in the Junbee app: working through the Operating Systems week 9 cards">
-        <div class="device ui" aria-hidden="true">
-          <div class="device__screen">
-            <div class="rv__bar"><span class="rv__title">Today's review</span><span class="rv__count"><span class="rv__n3">3 / 8</span><span class="rv__n4">4 / 8</span></span></div>
-            <svg class="comb rv__comb" viewBox="0 0 244.0 38.6" role="img" aria-label="4 of today's 8 cards reviewed"><polygon class="cell cell--on" points="17.0,3.6 30.6,11.5 30.6,27.2 17.0,35.0 3.4,27.2 3.4,11.5"/><polygon class="cell cell--on" points="47.0,3.6 60.6,11.5 60.6,27.2 47.0,35.0 33.4,27.2 33.4,11.5"/><polygon class="cell cell--on" points="77.0,3.6 90.6,11.5 90.6,27.2 77.0,35.0 63.4,27.2 63.4,11.5"/><polygon class="cell cell--live" points="107.0,3.6 120.6,11.5 120.6,27.2 107.0,35.0 93.4,27.2 93.4,11.5"/><polygon class="cell cell--off" points="137.0,3.6 150.6,11.5 150.6,27.2 137.0,35.0 123.4,27.2 123.4,11.5"/><polygon class="cell cell--off" points="167.0,3.6 180.6,11.5 180.6,27.2 167.0,35.0 153.4,27.2 153.4,11.5"/><polygon class="cell cell--off" points="197.0,3.6 210.6,11.5 210.6,27.2 197.0,35.0 183.4,27.2 183.4,11.5"/><polygon class="cell cell--off" points="227.0,3.6 240.6,11.5 240.6,27.2 227.0,35.0 213.4,27.2 213.4,11.5"/></svg>
-            <div class="rv__card">
-              <p class="rv__course">Operating Systems · Week 9</p>
-              <p class="rv__q">What are the four conditions for deadlock?</p>
-              <div class="rv__answer"><p>Mutual exclusion, hold and wait, no preemption, circular wait.</p></div>
-              <p class="rv__src"><span class="rv__flag" aria-hidden="true"></span><span>Exam hint · 31:05</span></p>
-              <span class="rv__reveal">Show answer</span>
-            </div>
-            <div class="rv__rates"><span class="rv__rate">Again</span><span class="rv__rate">Hard</span><span class="rv__rate rv__rate--pick">Good</span><span class="rv__rate">Easy</span></div>
+      <div class="pv-hero__stage span-6 start-7" role="img" aria-label="Juno's morning message in the Preplit AI app: today's lecture with the slides ready, an assignment step for tonight and today's game, then moving the step to tomorrow">
+        <div class="phone " aria-hidden="true"><div class="phone__screen">
+          <div class="phone__status"><span>9:41</span><span class="phone__sig"><i></i><i></i><i></i><b>82</b></span></div>
+          <div class="phone__top"><span class="pbtn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6h10M3 10h7"/></svg></span><b>Juno</b><span class="pbtn pbtn--pair"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5l3 3L6 13H3v-3z"/></svg><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="8" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="12" cy="8" r="1"/></svg></span></div>
+          <div class="chat">
+            <p class="chat__who"><span class="juno juno--xs" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span>Juno<em>08:30</em></p>
+            <p class="chat__bot">Operating Systems at 10:30. I added two questions on last week's open topic.</p>
+            <div class="day">
+            <p class="day__label">Today</p>
+            <p class="day__row"><em>10:30</em><span><b>Operating Systems</b><small>Slides ready · Lecture Buddy on</small></span><i class="day__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg></i></p><p class="day__row"><em>Tonight</em><span><b>Assignment 2, step 1</b><small>Data Structures · 30 min</small></span><i class="day__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="m5.3 8.2 1.8 1.8 3.6-3.8"/></svg></i></p><p class="day__row"><em>Any time</em><span><b>Today's game</b><small>5 questions · 3 min</small></span><i class="day__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="5" width="9" height="8.5" rx="1.5"/><path d="M5 3h7.5a1 1 0 0 1 1 1v7"/></svg></i></p>
+          </div>
+            <p class="chat__me">Can step 1 wait until tomorrow?</p>
+            <p class="chat__bot">Moved to tomorrow, 7 pm. Still a day early.</p>
+          </div>
+          <div class="composer"><span class="composer__ph">Reply to Juno</span><span class="composer__row"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg><span class="composer__who"><span class="juno juno--xs" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span>Juno</span><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="2" width="4" height="8" rx="2"/><path d="M3.5 8a4.5 4.5 0 0 0 9 0M8 12.5V14"/></svg><span class="composer__send"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6v4M5.5 4v8M8 6.5v3M10.5 3.5v9M13 6v4"/></svg></span></span></div>
+        </div></div>
+        <div class="pv-hero__mini" aria-hidden="true">
+          <p class="chat__who"><span class="juno juno--xs" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span>Juno<em>08:30</em></p>
+          <p class="chat__bot">Operating Systems at 10:30. I added two questions on last week's open topic.</p>
+          <div class="day">
+            <p class="day__label">Today</p>
+            <p class="day__row"><em>10:30</em><span><b>Operating Systems</b><small>Slides ready · Lecture Buddy on</small></span><i class="day__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg></i></p><p class="day__row"><em>Tonight</em><span><b>Assignment 2, step 1</b><small>Data Structures · 30 min</small></span><i class="day__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="m5.3 8.2 1.8 1.8 3.6-3.8"/></svg></i></p><p class="day__row"><em>Any time</em><span><b>Today's game</b><small>5 questions · 3 min</small></span><i class="day__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="5" width="9" height="8.5" rx="1.5"/><path d="M5 3h7.5a1 1 0 0 1 1 1v7"/></svg></i></p>
           </div>
         </div>
-        <div class="ly-float jb-float">
-          <div class="ly-float__row"><span class="jb-float__who"><img class="jb-float__bee" src="/brand/bee.svg" alt="" width="20" height="19">Junbee</span><span>just now</span></div>
-          <div class="ly-float__title">Week 9 notes are ready. 8 cards.</div>
-        </div>
+        <div class="float float--review" aria-hidden="true"><span class="juno juno--md" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span><span><b>Today's game</b><span>5 questions · 3 min</span></span></div>
+        <div class="float float--sem" aria-hidden="true"><span class="float__label"><img class="" src="/brand/preplit-mark-256.png" alt="" width="12" height="16" loading="lazy">This semester</span><b>Week 9<small> of 16</small></b></div>
       </div>
     </div></div>
   </section>
 
-  <section class="section" id="app" aria-labelledby="app-h">
+  <section class="section pv-stages" id="features" aria-labelledby="features-h">
+    <div class="wrap">
+      <div class="section-head pv-head"><p class="pv-eyebrow">How it works</p><h2 id="features-h">One companion for the whole semester</h2><p>Set Juno up once. From then on it carries your semester, from the first class to the career it leads to.</p></div>
+      <ol class="st-cards">
+        <li class="st-card st-card--0">
+          <p class="st-card__k"><b>01</b><span>Setup</span></p>
+          <h3>Tell Juno once. It remembers.</h3>
+          <p class="st-card__text">Your major, your courses and timetable, your slides, PDFs and notes, your key dates and the career you want. No LMS to connect.</p>
+          <div class="st-card__vis" aria-hidden="true"><div class="sv sv-setup">
+            <p class="sv-bubble"><span class="juno juno--xs" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M86 52 Q95 54 104 58 Q95 61 86 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(10 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="63" cy="56.37" r="3.1" fill="#0A0A0A"></circle><circle cx="64.12" cy="55.25" r="1.05" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="77" cy="56.37" r="3.1" fill="#0A0A0A"></circle><circle cx="78.12" cy="55.25" r="1.05" fill="#FFFFFF"></circle></g></svg></span><span>What are you studying, and where do you want it to take you?</span></p>
+            <p class="sv-chips"><span><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="m5.3 8.2 1.8 1.8 3.6-3.8"/></svg>Computer Science, 3rd year</span><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg>Backend engineer</span></p>
+            <ul class="sv-files"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg><span>OS_slides_weeks1-9.pdf</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg><span>DS_syllabus.pdf</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg><span>Notes_week8.docx</span></li></ul>
+            <ul class="sv-times"><li><b>Mon</b><em>10:30</em><span>Operating Systems</span></li><li><b>Wed</b><em>13:00</em><span>Data Structures</span></li></ul>
+          </div></div>
+        </li>
+        <li class="st-card st-card--1">
+          <p class="st-card__k"><b>02</b><span>Before class</span></p>
+          <h3>Ready before you sit down</h3>
+          <p class="st-card__text">Juno knows today's course, gets the material ready, recaps last week's open topics and suggests questions to ask.</p>
+          <div class="st-card__vis" aria-hidden="true"><div class="sv sv-before">
+            <p class="sv-head"><span class="sv-code">OS</span><span><b>Operating Systems</b><small>Today · 10:30</small></span></p>
+            <p class="sv-row"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg><small>Ready</small><span>Week 10 slides</span></p><p class="sv-row"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg><small>Still open</small><span>Deadlock avoidance</span></p><p class="sv-row"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><small>Ask</small><span>When is a state safe?</span></p>
+          </div></div>
+        </li>
+        <li class="st-card st-card--2">
+          <p class="st-card__k"><b>03</b><span>During class</span></p>
+          <h3>The Lecture Buddy listens</h3>
+          <p class="st-card__text">It sits with you through the lecture. When class ends, full notes are waiting in that course's workspace.</p>
+          <div class="st-card__vis" aria-hidden="true"><div class="sv sv-during">
+            <p class="sv-live"><i></i><span>Lecture Buddy is listening</span><em>00:42:10</em></p>
+            <div class="rec__wave"><i style="--k: 0.20"></i><i style="--k: 0.81"></i><i style="--k: 0.42"></i><i style="--k: 0.31"></i><i style="--k: 0.34"></i><i style="--k: 0.29"></i><i style="--k: 0.83"></i><i style="--k: 0.42"></i><i style="--k: 0.72"></i><i style="--k: 0.53"></i><i style="--k: 0.26"></i><i style="--k: 0.36"></i><i style="--k: 0.25"></i><i style="--k: 0.79"></i><i style="--k: 0.62"></i><i style="--k: 0.58"></i><i style="--k: 0.60"></i><i style="--k: 0.22"></i><i style="--k: 0.37"></i><i style="--k: 0.39"></i><i style="--k: 0.69"></i><i style="--k: 0.78"></i></div>
+            <p class="sv-to"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg><span>Notes go to Operating Systems › Week 10</span></p>
+          </div></div>
+        </li>
+        <li class="st-card st-card--3">
+          <p class="st-card__k"><b>04</b><span>After class</span></p>
+          <h3>Filed, linked and followed up</h3>
+          <p class="st-card__text">Notes, summary, explanations, key terms and review questions, filed by course, date and topic and linked to the slide. Then a text before each deadline, a plan for each assignment and a short game every day.</p>
+          <div class="st-card__vis" aria-hidden="true"><div class="sv sv-after">
+            <p class="sv-path"><span>Operating Systems</span><i>›</i><span>Nov 9</span><i>›</i><span>Deadlock</span></p>
+            <p class="sv-terms"><span>Mutual exclusion</span><span>Circular wait</span><span>Safe state</span></p>
+            <p class="sv-links"><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg>Slide 14</span><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6.5v3h2.5L9 12.5v-9L5.5 6.5z"/><path d="M11.5 5.5a3.5 3.5 0 0 1 0 5"/></svg>31:05</span><span class="sv-q"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="5" width="9" height="8.5" rx="1.5"/><path d="M5 3h7.5a1 1 0 0 1 1 1v7"/></svg>3 review questions</span></p>
+          </div></div>
+        </li>
+        <li class="st-card st-card--4">
+          <p class="st-card__k"><b>05</b><span>Study time</span></p>
+          <h3>Your week, already planned</h3>
+          <p class="st-card__text">Open the workspace and it's sorted: tasks from your dates, reminders that respect quiet hours, and the topics you're stuck on brought back.</p>
+          <div class="st-card__vis" aria-hidden="true"><div class="sv sv-study">
+            <p class="sv-plan sv-plan--weak"><b>Mon</b><span>Review semaphores</span><em>20 min</em></p><p class="sv-plan"><b>Wed</b><span>Assignment 2, step 2</span><em>40 min</em></p><p class="sv-plan sv-plan--due"><b>Fri</b><span>Assignment 2 due</span><em>23:59</em></p>
+            <p class="sv-quiet"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14h3"/></svg><span>Quiet hours 22:00–08:00</span></p>
+          </div></div>
+        </li>
+        <li class="st-card st-card--5">
+          <p class="st-card__k"><b>06</b><span>Across semesters</span></p>
+          <h3>From courses to a career</h3>
+          <p class="st-card__text">The skills each course builds, a real project that uses them and the internships they lead to.</p>
+          <div class="st-card__vis" aria-hidden="true"><div class="sv sv-career">
+            <p class="sv-terms"><span>Concurrency</span><span>Memory management</span><span>C</span></p>
+            <p class="sv-proj"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="m5.3 8.2 1.8 1.8 3.6-3.8"/></svg><span>Build a mini shell with job control</span></p>
+            <p class="sv-proj sv-proj--path"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg><span>Systems software intern</span></p>
+          </div></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section pv-juno" id="juno" aria-labelledby="juno-h">
+    <div class="wrap grid pv-juno__grid">
+      <div class="pv-juno__text span-6">
+        <p class="pv-eyebrow">Meet Juno</p>
+        <h2 id="juno-h">Meet Juno, the magpie who brings good news.</h2>
+        <p class="pv-juno__lead">Juno is the companion who carries your semester so your head doesn't have to. Tell Juno your major, your courses and where you want to go, once. From then on Juno remembers your timetable, sits in every lecture, texts you before anything is due and brings back what you're stuck on. In Korea, a magpie calling means good news is on its way.</p>
+        <ul class="pv-traits">
+          <li><span class="pv-traits__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg></span><b>Remembers everything</b><span>Courses, timetable, deadlines and goals, from one setup.</span></li>
+          <li><span class="pv-traits__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14h3"/></svg></span><b>Reaches out first</b><span>A text before class, before deadlines and before exams. Never between 10 pm and 8 am.</span></li>
+          <li><span class="pv-traits__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg></span><b>Answers from your material</b><span>Every answer points to the slide or the lecture minute.</span></li>
+          <li><span class="pv-traits__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.5a2.5 2.5 0 0 1 5 0V7"/></svg></span><b>Keeps your notes to you</b><span>Nothing is shared, and nothing is used to train AI.</span></li>
+        </ul>
+      </div>
+      <div class="pv-juno__stage span-6 start-7" role="img" aria-label="Juno, a magpie in a graduation cap, with the short messages he sends">
+        <div class="pv-juno__sky">
+          <svg class="juno-fig pv-juno__bird" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M86 52 Q95 54 104 58 Q95 61 86 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(10 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="63" cy="56.37" r="3.1" fill="#0A0A0A"></circle><circle cx="64.12" cy="55.25" r="1.05" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="77" cy="56.37" r="3.1" fill="#0A0A0A"></circle><circle cx="78.12" cy="55.25" r="1.05" fill="#FFFFFF"></circle></g></svg>
+          <p class="say say--0"><span class="juno juno--xs" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M87 52 L103 53 L88 58 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 60 L100 66 L87 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 58 L99 62 L88 60 Z" fill="#A00020"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(26 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="63" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="64.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="77" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="78.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g></svg></span><span><b>Assignment 2 is due Friday.</b><small>I split it into 3 steps</small></span></p>
+          <p class="say say--1"><span class="juno juno--xs" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M86 52 Q95 54 104 58 Q95 61 86 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(10 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="63" cy="56.37" r="3.1" fill="#0A0A0A"></circle><circle cx="64.12" cy="55.25" r="1.05" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="77" cy="56.37" r="3.1" fill="#0A0A0A"></circle><circle cx="78.12" cy="55.25" r="1.05" fill="#FFFFFF"></circle></g></svg></span><span><b>Today's game is ready.</b><small>5 questions · 3 minutes</small></span></p>
+          <p class="say say--2"><span class="say__flag"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg></span><span><b>“This will be on the midterm.”</b><small>Week 9 · 31:05</small></span></p>
+          <ul class="moods"><li><span class="juno juno--mood" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M86 52 Q95 54 104 58 Q95 61 86 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(10 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><path d="M59.13 57.24 Q63 52.28 66.88 57.24" fill="none" stroke="#FFFFFF" stroke-width="1.86" stroke-linecap="round"></path><path d="M73.13 57.24 Q77 52.28 80.88 57.24" fill="none" stroke="#FFFFFF" stroke-width="1.86" stroke-linecap="round"></path></svg></span><span>Listening</span></li><li><span class="juno juno--mood" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M86 52 Q95 54 104 58 Q95 61 86 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(10 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="64.19" cy="55.18" r="3.1" fill="#0A0A0A"></circle><circle cx="65.31" cy="54.06" r="1.05" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="78.19" cy="55.18" r="3.1" fill="#0A0A0A"></circle><circle cx="79.31" cy="54.06" r="1.05" fill="#FFFFFF"></circle></g></svg></span><span>Writing</span></li><li><span class="juno juno--mood" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M87 52 L103 53 L88 58 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 60 L100 66 L87 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 58 L99 62 L88 60 Z" fill="#A00020"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(26 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="63" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="64.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="77" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="78.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g></svg></span><span>Found it</span></li><li><span class="juno juno--mood" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M86 52 Q95 54 104 58 Q95 61 86 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(10 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><path d="M59.28 56 Q63 59.1 66.72 56" fill="none" stroke="#FFFFFF" stroke-width="1.86" stroke-linecap="round"></path><path d="M73.28 56 Q77 59.1 80.72 56" fill="none" stroke="#FFFFFF" stroke-width="1.86" stroke-linecap="round"></path></svg></span><span>Resting</span></li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pv-how" id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="section-head pv-head"><p class="pv-eyebrow">A day with Juno</p><h2 id="how-h">A day with Juno.</h2><p>From the first class to the last question at night, Juno does the remembering. Here is an ordinary Monday.</p></div>
+      <ol class="pv-steps">
+        <li class="pv-step"><p class="pv-step__k"><b>01</b><span>08:30 · Before class</span></p><p class="pv-step__t">Material ready, questions to ask</p><div class="pv-step__phone"><div class="phone phone--light" aria-hidden="true"><div class="phone__screen">
+          <div class="phone__status"><span>9:41</span><span class="phone__sig"><i></i><i></i><i></i><b>82</b></span></div>
+          <div class="ph-brief">
+            <div class="phone__top"><span class="pbtn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6h10M3 10h7"/></svg></span><b>Today</b><span class="pbtn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14h3"/></svg></span></div>
+            <p class="ph-brief__course"><span class="sv-code">OS</span><span><b>Operating Systems</b><small>10:30 – 11:45</small></span></p>
+            <p class="ph-brief__file"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg><span><b>Week 10 slides</b><small>38 pages · ready</small></span><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="m5.2 8.2 1.9 1.9 3.8-4"/></svg></p>
+            <div class="ph-brief__box"><p class="ph-brief__k">Still open from last week</p><p class="ph-brief__v">Deadlock avoidance</p></div>
+            <div class="ph-brief__box"><p class="ph-brief__k">Questions to ask</p><p class="ph-brief__q"><b>1</b><span>When is a state safe?</span></p><p class="ph-brief__q"><b>2</b><span>How does the banker's algorithm decide?</span></p></div>
+            <p class="ph-brief__foot"><span class="juno juno--xs" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M86 52 Q95 54 104 58 Q95 61 86 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(10 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="63" cy="56.37" r="3.1" fill="#0A0A0A"></circle><circle cx="64.12" cy="55.25" r="1.05" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="4.81" fill="#FFFFFF"></circle><circle cx="77" cy="56.37" r="3.1" fill="#0A0A0A"></circle><circle cx="78.12" cy="55.25" r="1.05" fill="#FFFFFF"></circle></g></svg></span><span>Tap record when class starts.</span></p>
+          </div>
+        </div></div></div></li>
+        <li class="pv-step"><p class="pv-step__k"><b>02</b><span>10:30 · In class</span></p><p class="pv-step__t">The Lecture Buddy listens</p><div class="pv-step__phone"><div class="phone " aria-hidden="true"><div class="phone__screen">
+          <div class="phone__status"><span>9:41</span><span class="phone__sig"><i></i><i></i><i></i><b>82</b></span></div>
+          <div class="ph-rec">
+            <div class="phone__top"><span class="pbtn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg></span><b>Operating Systems</b><span class="ph-live"><i></i>REC</span></div>
+            <div class="ph-rec__bird"><svg class="juno-fig " viewBox="0 0 120 120" aria-hidden="true" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M86 52 Q95 54 104 58 Q95 61 86 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(10 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><path d="M59.13 57.24 Q63 52.28 66.88 57.24" fill="none" stroke="#FFFFFF" stroke-width="1.86" stroke-linecap="round"></path><path d="M73.13 57.24 Q77 52.28 80.88 57.24" fill="none" stroke="#FFFFFF" stroke-width="1.86" stroke-linecap="round"></path><path class="juno-wave" d="M40 47 Q35.25 52 40 57" fill="none" stroke="#A00020" stroke-width="2.4" stroke-linecap="round" opacity="1"></path><path class="juno-wave juno-wave--2" d="M35 42.5 Q25.98 52 35 61.5" fill="none" stroke="#A00020" stroke-width="2.4" stroke-linecap="round" opacity="0.5"></path><path class="juno-wave" d="M108 35 Q112.75 40 108 45" fill="none" stroke="#A00020" stroke-width="2.4" stroke-linecap="round" opacity="1"></path><path class="juno-wave juno-wave--2" d="M113 30.5 Q122.03 40 113 49.5" fill="none" stroke="#A00020" stroke-width="2.4" stroke-linecap="round" opacity="0.5"></path></svg></div>
+            <p class="ph-rec__status">Lecture Buddy is listening</p>
+            <p class="ph-rec__timer">00:42:10</p>
+            <p class="ph-rec__course">Operating Systems · Week 10</p>
+            <div class="rec__wave"><i style="--k: 0.20"></i><i style="--k: 0.81"></i><i style="--k: 0.42"></i><i style="--k: 0.31"></i><i style="--k: 0.34"></i><i style="--k: 0.29"></i><i style="--k: 0.83"></i><i style="--k: 0.42"></i><i style="--k: 0.72"></i><i style="--k: 0.53"></i><i style="--k: 0.26"></i><i style="--k: 0.36"></i><i style="--k: 0.25"></i><i style="--k: 0.79"></i><i style="--k: 0.62"></i><i style="--k: 0.58"></i><i style="--k: 0.60"></i><i style="--k: 0.22"></i><i style="--k: 0.37"></i><i style="--k: 0.39"></i><i style="--k: 0.69"></i><i style="--k: 0.78"></i><i style="--k: 0.40"></i><i style="--k: 0.62"></i><i style="--k: 0.23"></i><i style="--k: 0.36"></i></div>
+            <p class="ph-rec__line"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg><span>Juno writes the note when class ends.</span></p>
+            <p class="ph-rec__line"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4.8V8l2.2 1.6"/></svg><span>Up to 4 hours in one recording</span></p>
+            <span class="rec__stop">End class</span>
+          </div>
+        </div></div></div></li>
+        <li class="pv-step"><p class="pv-step__k"><b>03</b><span>12:10 · After class</span></p><p class="pv-step__t">Notes filed and linked to the slides</p><div class="pv-step__phone"><div class="phone phone--light" aria-hidden="true"><div class="phone__screen">
+          <div class="phone__status"><span>9:41</span><span class="phone__sig"><i></i><i></i><i></i><b>82</b></span></div>
+          <div class="ph-note">
+            <div class="phone__top"><span class="pbtn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg></span><b>Operating Systems</b><span class="pbtn"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="8" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="12" cy="8" r="1"/></svg></span></div>
+            <p class="ph-note__ready"><span class="juno juno--xs" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M87 52 L103 53 L88 58 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 60 L100 66 L87 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 58 L99 62 L88 60 Z" fill="#A00020"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(26 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="63" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="64.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="77" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="78.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g></svg></span>Juno wrote the note</p>
+            <p class="ph-note__meta">Mon, Nov 9 › Deadlock</p>
+            <p class="ph-note__title">Deadlock</p>
+            <p class="ph-note__sum">Processes wait on each other's resources and none of them can go on. It only happens when four conditions hold at once.</p>
+            <p class="ph-note__terms"><span>Mutual exclusion</span><span>Circular wait</span><span>Safe state</span></p>
+            <div class="ph-note__hint"><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg>Exam hint · 31:05</span>“The four conditions will be on the midterm.”</div>
+            <p class="ph-note__links"><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg>Slide 14</span><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6.5v3h2.5L9 12.5v-9L5.5 6.5z"/><path d="M11.5 5.5a3.5 3.5 0 0 1 0 5"/></svg>31:05</span></p>
+            <p class="ph-note__foot"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="5" width="9" height="8.5" rx="1.5"/><path d="M5 3h7.5a1 1 0 0 1 1 1v7"/></svg><span>3 review questions added</span></p>
+          </div>
+        </div></div></div></li>
+        <li class="pv-step"><p class="pv-step__k"><b>04</b><span>21:00 · Evening</span></p><p class="pv-step__t">A three-minute game</p><div class="pv-step__phone"><div class="phone phone--light" aria-hidden="true"><div class="phone__screen">
+          <div class="phone__status"><span>9:41</span><span class="phone__sig"><i></i><i></i><i></i><b>82</b></span></div>
+          <div class="ph-game">
+            <div class="phone__top"><span class="pbtn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></span><b>Today's game</b><span class="ph-count">3 / 5</span></div>
+            <span class="ph-rev__bar" style="--v: .6"><i></i></span>
+            <p class="ph-game__meta"><span>Operating Systems · week 9</span><em><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4.8V8l2.2 1.6"/></svg>2:10</em></p>
+            <p class="ph-game__q">Which of these is one of the four conditions for deadlock?</p>
+            <ul class="ph-game__opts"><li><b>A</b><span>Starvation</span></li><li class="is-right"><b>B</b><span>Circular wait</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg></li><li><b>C</b><span>Paging</span></li><li><b>D</b><span>Context switching</span></li></ul>
+            <p class="ph-game__foot"><span class="juno juno--xs" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M86 52 Q95 54 104 58 Q95 61 86 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(10 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><path d="M59.13 57.24 Q63 52.28 66.88 57.24" fill="none" stroke="#FFFFFF" stroke-width="1.86" stroke-linecap="round"></path><path d="M73.13 57.24 Q77 52.28 80.88 57.24" fill="none" stroke="#FFFFFF" stroke-width="1.86" stroke-linecap="round"></path></svg></span><span>Right. It came up in week 9 at 31:05.</span></p>
+          </div>
+        </div></div></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section pv-nudge" id="nudge" aria-labelledby="nudge-h">
+    <div class="wrap grid pv-split">
+      <div class="pv-nudge__stage span-5" aria-hidden="true">
+        <div class="phone phone--lock" aria-hidden="true"><div class="phone__screen">
+          <div class="phone__status"><span>9:41</span><span class="phone__sig"><i></i><i></i><i></i><b>82</b></span></div>
+          <div class="lock">
+            <p class="lock__date">Monday, November 9</p>
+            <p class="lock__time">9:41</p>
+            <div class="lock__notes"><div class="lock__note"><span class="lock__app lock__app--msg"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="fill" d="M8 2.6c3.3 0 6 2.1 6 4.7S11.3 12 8 12c-.6 0-1.2-.1-1.8-.2L3.2 13.6l.8-2.5C2.8 10.2 2 8.8 2 7.3 2 4.7 4.7 2.6 8 2.6z"/></svg></span><div class="lock__txt"><p class="lock__head"><b>Messages</b><em>now</em></p><p class="lock__title">Juno</p><p class="lock__body">Assignment 2 is due Friday. I split it into 3 steps; step 1 takes 30 minutes tonight.</p></div></div><div class="lock__note"><span class="lock__app lock__app--msg"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="fill" d="M8 2.6c3.3 0 6 2.1 6 4.7S11.3 12 8 12c-.6 0-1.2-.1-1.8-.2L3.2 13.6l.8-2.5C2.8 10.2 2 8.8 2 7.3 2 4.7 4.7 2.6 8 2.6z"/></svg></span><div class="lock__txt"><p class="lock__head"><b>Messages</b><em>1h ago</em></p><p class="lock__title">Juno</p><p class="lock__body">Operating Systems at 10:30. The week 10 slides are ready, with 2 questions to ask.</p></div></div><div class="lock__note"><span class="lock__app lock__app--msg"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="fill" d="M8 2.6c3.3 0 6 2.1 6 4.7S11.3 12 8 12c-.6 0-1.2-.1-1.8-.2L3.2 13.6l.8-2.5C2.8 10.2 2 8.8 2 7.3 2 4.7 4.7 2.6 8 2.6z"/></svg></span><div class="lock__txt"><p class="lock__head"><b>Messages</b><em>8:00 AM</em></p><p class="lock__title">Juno</p><p class="lock__body">Today's game is ready: 5 questions from this week's lectures, 3 minutes.</p></div></div></div>
+            <span class="lock__home"></span>
+          </div>
+        </div></div>
+        <svg class="juno-fig pv-nudge__bird" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M87 52 L103 53 L88 58 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 60 L100 66 L87 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 58 L99 62 L88 60 Z" fill="#A00020"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(26 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="63" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="64.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="77" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="78.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g><path class="juno-spark" d="M108 22 Q109.6 28.4 116 30 Q109.6 31.6 108 38 Q106.4 31.6 100 30 Q106.4 28.4 108 22 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.9" stroke-linejoin="round"></path><path class="juno-spark" d="M99 37.6 Q99.88 41.12 103.4 42 Q99.88 42.88 99 46.4 Q98.12 42.88 94.6 42 Q98.12 41.12 99 37.6 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.9" stroke-linejoin="round"></path></svg>
+      </div>
+      <div class="pv-nudge__text span-6 start-7">
+        <p class="pv-eyebrow">Text messages</p>
+        <h2 id="nudge-h">Juno texts you, so you don't have to remember.</h2>
+        <p class="pv-nudge__lead">Deadlines, classes and today's game arrive as a text. Juno never writes between 10 pm and 8 am.</p>
+        <ul class="pv-list">
+          <li><span class="pv-list__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="3.5" width="11" height="10" rx="2"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"/></svg></span><span><b>Before every deadline</b><span>With the steps to finish it and when to do them.</span></span></li>
+          <li><span class="pv-list__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg></span><span><b>Before class</b><span>Which slides are ready and what to ask.</span></span></li>
+          <li><span class="pv-list__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg></span><span><b>Every day</b><span>A short game from this week's lectures.</span></span></li>
+        </ul>
+        <p class="pv-nudge__app">It runs in your phone's browser today and can be added to your home screen. iOS and Android apps are on the way.</p>
+        <div class="btn-row"><a class="btn btn--primary" href="/signup">Start with Juno</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pv-sem pv-ws" id="workspace" aria-labelledby="ws-h">
+    <div class="wrap">
+      <div class="pv-rowhead">
+        <div><p class="pv-eyebrow">Workspace</p><h2 id="ws-h">Open it, and it's already sorted.</h2><p>Every course has a workspace that Juno keeps: notes by date and topic, a week planned around your deadlines and the topics you're stuck on brought back.</p></div>
+        <a class="btn btn--primary" href="/signup">Join the pilot</a>
+      </div>
+      <div class="pv-sem__stage fill">
+        <div class="appwin" role="img" aria-label="The Preplit AI workspace: Juno's plan for the week, the topics the student is stuck on and the material ready for the next class.">
+          <div class="appwin__bar"><span class="browser__dots"><i></i><i></i><i></i></span><span class="browser__url"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.5a2.5 2.5 0 0 1 5 0V7"/></svg>preplitai.com/workspace</span></div>
+          <div class="appwin__body">
+            <div class="aw-side">
+              <p class="aw-logo"><img class="" src="/brand/preplit-mark-256.png" alt="" width="16" height="22" loading="lazy"><b>Preplit AI</b></p>
+              <p class="aw-rec"><i></i>Record a class</p>
+              <ul class="aw-navs"><li class="aw-nav is-on"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="3.5" width="11" height="10" rx="2"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"/></svg><span>This semester</span></li><li class="aw-nav"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg><span>Organize</span><em>01</em></li><li class="aw-nav"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg><span>Learn</span><em>02</em></li><li class="aw-nav"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="5" width="9" height="8.5" rx="1.5"/><path d="M5 3h7.5a1 1 0 0 1 1 1v7"/></svg><span>Remember</span><em>03</em></li><li class="aw-nav"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="m5.3 8.2 1.8 1.8 3.6-3.8"/></svg><span>Build</span><em>04</em></li></ul>
+              <p class="aw-label">Courses</p>
+              <ul class="aw-courses"><li><i style="background:#7fa3d6"></i>Operating Systems</li><li><i style="background:#e2b100"></i>Data Structures</li><li><i style="background:#86b38c"></i>Linear Algebra</li><li><i style="background:#e7a86e"></i>Economics</li></ul>
+            </div>
+            <div class="aw-main">
+              <p class="aw-eyebrow"><b>This week</b><i></i>Nov 9 – 15</p>
+              <div class="aw-head"><p class="aw-title">Week 10</p></div>
+              <p class="aw-juno"><span class="juno juno--sm" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span><span><b>I planned your week around Assignment 2 and the Data Structures midterm.</b><small>Three things today, about 1 hour 10 minutes.</small></span></p>
+              <div class="ws-cols">
+                <div class="ws-box ws-plan">
+                  <p class="ws-label">This week</p>
+                  <p class="ws-task ws-task--done"><b>Mon</b><span class="ws-check"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg></span><span><strong>Review semaphores</strong><small>Operating Systems · weak topic</small></span><em>20 min</em></p><p class="ws-task ws-task--now"><b>Mon</b><span class="ws-check"></span><span><strong>Assignment 2, step 1</strong><small>Data Structures</small></span><em>30 min</em></p><p class="ws-task ws-task--later"><b>Tue</b><span class="ws-check"></span><span><strong>Today's game</strong><small>All courses</small></span><em>3 min</em></p><p class="ws-task ws-task--later"><b>Wed</b><span class="ws-check"></span><span><strong>Assignment 2, step 2</strong><small>Data Structures</small></span><em>40 min</em></p><p class="ws-task ws-task--due"><b>Fri</b><span class="ws-check"></span><span><strong>Assignment 2 due</strong><small>Data Structures · 23:59</small></span><em></em></p>
+                </div>
+                <div class="ws-side">
+                  <div class="ws-box">
+                    <p class="ws-label">Stuck on</p>
+                    <p class="ws-topic"><span><strong>Semaphores</strong><small>Operating Systems · Missed 3 of 4 this week</small></span><span class="ws-lvl ws-lvl--3"><i></i><i></i><i></i></span></p><p class="ws-topic"><span><strong>Round-robin timing</strong><small>Operating Systems · Missed 2 of 5</small></span><span class="ws-lvl ws-lvl--2"><i></i><i></i><i></i></span></p><p class="ws-topic"><span><strong>AVL rotations</strong><small>Data Structures · Missed 1 of 4</small></span><span class="ws-lvl ws-lvl--1"><i></i><i></i><i></i></span></p>
+                  </div>
+                  <div class="ws-box">
+                    <p class="ws-label">Ready for Wednesday</p>
+                    <p class="ws-file"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg><span><strong>DS_week10_slides.pdf</strong><small>Data Structures · 42 pages</small></span></p><p class="ws-file"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg><span><strong>Lecture note · Trees</strong><small>Linked to slides 3–18</small></span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ground-inverse pv-black pv-career" id="career" aria-labelledby="career-h">
+    <div class="wrap grid pv-pair">
+      <div class="pv-pair__text span-5">
+        <p class="pv-eyebrow">Career</p>
+        <h2 id="career-h">Your courses, turned into a career.</h2>
+        <p class="pv-pair__lead">While a course runs, Juno lists the skills you're building, suggests a real project that uses them and shows the internships they lead to. Your portfolio grows with your semester.</p>
+        <ul class="cr-items">
+          <li><span class="cr-items__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="5" width="9" height="8.5" rx="1.5"/><path d="M5 3h7.5a1 1 0 0 1 1 1v7"/></svg></span><span><b>Skills from every course</b><span>Named from what you actually covered, week by week.</span></span></li>
+          <li><span class="cr-items__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="m5.3 8.2 1.8 1.8 3.6-3.8"/></svg></span><span><b>A project worth building</b><span>Picked for your skills, with the reasons and the weeks it draws on.</span></span></li>
+          <li><span class="cr-items__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg></span><span><b>Internship paths</b><span>Roles that fit what you can already do, and what to learn next.</span></span></li>
+        </ul>
+      </div>
+      <div class="cr-stage span-6 start-7" aria-hidden="true">
+        <div class="cr-card cr-skills"><div class="cr-course"><p class="cr-course__name">Operating Systems</p><p class="cr-chips"><span>Concurrency</span><span>Memory management</span><span>C</span></p></div><div class="cr-course"><p class="cr-course__name">Data Structures</p><p class="cr-chips"><span>Trees and graphs</span><span>Complexity</span><span>Python</span></p></div></div>
+        <div class="cr-card cr-project">
+          <p class="cr-k"><span class="juno juno--xs" aria-hidden="true"><svg viewBox="31 12 78 78" focusable="false"><path d="M50 85 L12 106 Q8 110 14 111.5 L58 97 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="3" stroke-linejoin="round"></path><path d="M45 92 L19 106" stroke="#2C5D6C" stroke-width="2.4" stroke-linecap="round"></path><path d="M61 99 L59 111 M55 111 L63 111 M73 98 L74 111 M70 111 L78 111" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"></path><ellipse cx="64" cy="81" rx="27" ry="21" transform="rotate(-16 64 81)" fill="#0A0A0A"></ellipse><circle cx="71" cy="56" r="20" fill="#0A0A0A"></circle><ellipse cx="74" cy="88" rx="15" ry="9.5" transform="rotate(-18 74 88)" fill="#FFFFFF"></ellipse><path d="M39 81 Q50 70 66 78 Q63 93 47 96 Q39 92 39 81 Z" fill="#1F4250"></path><path d="M47 90 L58 87 M45 94 L55 92" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" opacity="0.55"></path><path d="M37 80 Q48 66 65 75 Q50 75.5 40 86 Q36 84 37 80 Z" fill="#FFFFFF"></path><path d="M87 52 L103 53 L88 58 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 60 L100 66 L87 64 Z" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2" stroke-linejoin="round"></path><path d="M88 58 L99 62 L88 60 Z" fill="#A00020"></path><g transform="rotate(-10 69 29)"><path d="M55.2 31.3 L56.58 44.18 Q69 48.78 81.42 44.18 L82.8 31.3 Z" fill="#7E0019"></path><path d="M46 29 L69 40.96 L92 29 L92 31.53 L69 43.49 L46 31.53 Z" fill="#7E0019"></path><path d="M46 29 L69 17.04 L92 29 L69 40.96 Z" fill="#A00020"></path><circle cx="69" cy="29" r="2.07" fill="#7E0019"></circle><path d="M69 29 L88.78 30.61" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><g transform="rotate(26 88.78 30.61)"><g class="juno-tassel" style="transform-origin:88.78px 30.61px"><path d="M88.78 30.61 L88.78 44.41" stroke="#F8D000" stroke-width="1.66" stroke-linecap="round"></path><path d="M86.48 44.41 L91.08 44.41 L91.89 52.23 L85.68 52.23 Z" fill="#F8D000" stroke="#D9B500" stroke-width="0.64" stroke-linejoin="round"></path><circle cx="88.78" cy="44.41" r="1.93" fill="#D9B500"></circle></g></g></g><g><circle cx="63" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="63" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="64.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g><g><circle cx="77" cy="56" r="5.53" fill="#FFFFFF"></circle><circle cx="77" cy="56.43" r="3.57" fill="#0A0A0A"></circle><circle cx="78.28" cy="55.15" r="1.21" fill="#FFFFFF"></circle></g></svg></span>Suggested project</p>
+          <p class="cr-title">Build a mini shell with job control</p>
+          <p class="cr-why">Uses the processes and signals from weeks 3–8 of Operating Systems.</p>
+          <p class="cr-meta">About two weekends · goes in your portfolio</p>
+        </div>
+        <div class="cr-card cr-paths">
+          <p class="cr-k">Where it leads</p>
+          <p class="cr-path"><span><b>Systems software intern</b><small>Fits 4 of your skills</small></span><svg class="i-right" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg></p><p class="cr-path"><span><b>Backend engineer intern</b><small>Fits 3</small></span><svg class="i-right" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg></p><p class="cr-path"><span><b>Cloud infrastructure intern</b><small>Fits 3</small></span><svg class="i-right" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg></p>
+        </div>
+        <p class="cr-port"><img class="" src="/brand/preplit-mark-white-256.png" alt="" width="12" height="16" loading="lazy"><span>Portfolio · 2 projects · 9 skills</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pv-safe" id="safe" aria-labelledby="safe-h">
+    <div class="wrap">
+      <div class="grid grid--top pv-split">
+        <div class="pv-safe__visual span-5" aria-hidden="true">
+          <div class="perm-panel">
+            <div class="perm-panel__head"><span><b>Juno's permissions</b><small>What Juno can do with your material</small></span><span class="perm-panel__badge"><i></i>1 of 3 allowed</span></div>
+            <p class="perm-panel__group">Sources</p>
+            <div class="perm-panel__box">
+              <p class="prow"><span class="juno juno--sm" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span><span><b>Your lectures</b><small>Answers from transcripts and notes</small></span><span class="sw on"></span></p>
+            </div>
+            <p class="perm-panel__group">Rules</p>
+            <div class="perm-panel__box">
+              <p class="prow"><span class="prow__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 13 3.6v4c0 3.2-2.2 5.5-5 6.6-2.8-1.1-5-3.4-5-6.6v-4z"/><path d="M8 5.5v3.5M8 11v.01"/></svg></span><span><b>Share with other students</b><small>Never</small></span><span class="sw"></span></p><p class="prow"><span class="prow__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 13 3.6v4c0 3.2-2.2 5.5-5 6.6-2.8-1.1-5-3.4-5-6.6v-4z"/><path d="M8 5.5v3.5M8 11v.01"/></svg></span><span><b>Keep audio files</b><small>Deleted after transcription</small></span><span class="sw"></span></p><p class="prow"><span class="prow__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.5a2.5 2.5 0 0 1 5 0V7"/></svg></span><span><b>Change these rules</b><small>Only you can</small></span><span class="prow__lock"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.5a2.5 2.5 0 0 1 5 0V7"/></svg></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="pv-safe__text span-6 start-7">
+          <h2 id="safe-h">Private at every step</h2>
+          <p class="pv-safe__lead">Your lectures stay in an account only you can open. Here's how we keep them yours.</p>
+          <ul class="pv-list">
+            <li><span class="pv-list__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.7 9h5.6l.7-9"/></svg></span><span><b>Recordings deleted</b><span>Audio is deleted from our server as soon as it has been transcribed. Only the transcript, notes and cards remain.</span></span></li>
+            <li><span class="pv-list__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></svg></span><span><b>Only you can read it</b><span>Your notes, cards and conversations with Juno are never shared with anyone.</span></span></li>
+            <li><span class="pv-list__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 13 3.6v4c0 3.2-2.2 5.5-5 6.6-2.8-1.1-5-3.4-5-6.6v-4z"/><path d="M8 5.5v3.5M8 11v.01"/></svg></span><span><b>Never used for training</b><span>Your lectures are never used to train AI models.</span></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pv-course" id="course" aria-labelledby="course-h">
+    <div class="wrap">
+      <div class="pv-rowhead">
+        <div><h2 id="course-h">Bring Preplit AI to your course</h2><p>For professors and teaching assistants: a four-week pilot that runs only with your permission, for one course and twenty students.</p></div>
+        <a class="btn btn--primary" href="mailto:info@preplitai.com?subject=Course%20pilot">Request a course pilot</a>
+      </div>
+      <div class="grid fill pv-course__cards">
+        <article class="ccard span-4">
+          <p class="ccard__k"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg>What students get</p>
+          <p class="ccard__lead">A few minutes after class, each student's note looks like this.</p>
+          <div class="ccard__note" aria-hidden="true">
+            <p class="ccard__meta">Operating Systems · Week 9 · 50 min</p>
+            <p class="ccard__title">Deadlock</p>
+            <p class="ccard__text">Processes each wait for a resource another one holds, so none of them can proceed. It only happens when four conditions hold at once.</p>
+            <p class="ccard__hint"><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg>Exam hint · 31:05</span>“The four conditions will be on the midterm.”</p>
+            <p class="ccard__foot"><span class="juno juno--xs" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span>8 cards added to review</p>
+          </div>
+          <ul class="ccard__list"><li><span class="ccard__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg></span><b>Notes</b><span>A summary and exam hints for every lecture</span></li><li><span class="ccard__ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="5" width="9" height="8.5" rx="1.5"/><path d="M5 3h7.5a1 1 0 0 1 1 1v7"/></svg></span><b>Review</b><span>Five minutes a day, just before forgetting</span></li><li><span class="ccard__ico"><span class="juno juno--xs" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span></span><b>Juno</b><span>Answers grounded in their own lectures</span></li></ul>
+        </article>
+        <article class="ccard span-4">
+          <p class="ccard__k"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="3.5" width="11" height="10" rx="2"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"/></svg>The 4-week pilot</p>
+          <p class="ccard__lead">One course you allow, on a fixed schedule.</p>
+          <ol class="ccard__steps"><li><em>Week 1</em><b>Setup and recording consent</b><span>It starts only in a course you allow, and every student agrees to the recording.</span></li><li><em>Weeks 2–3</em><b>Record, review, ask Juno</b><span>Students only record. Juno writes the notes and cards, and audio is deleted after transcription.</span></li><li><em>Week 4</em><b>Interviews and results</b><span>We go through the results against the targets set in advance, with you.</span></li></ol>
+          <p class="ccard__facts"><span>One course</span><span>20 students</span><span>4 weeks</span><span>Notes stay with the student</span></p>
+        </article>
+        <article class="ccard span-4">
+          <p class="ccard__k"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg>Targets set in advance</p>
+          <p class="ccard__lead">Set before the pilot and compared as they are in week 4.</p>
+          <ul class="ccard__targets"><li><b>60%</b><span>Students who stop taking notes by hand by week 3</span><i class="ccard__bar" style="--v:60" aria-hidden="true"><i></i></i></li><li><b>40%</b><span>Students who finish their review on day 14</span><i class="ccard__bar" style="--v:40" aria-hidden="true"><i></i></i></li><li><b>2</b><span>Lectures recorded per student each week</span><i class="ccard__pips" aria-hidden="true"><i></i><i></i></i></li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pv-faq" id="faq" aria-labelledby="faq-h">
     <div class="wrap">
       <div class="grid grid--top">
-        <h2 id="app-h" class="span-6">One note per lecture, filed by course</h2>
-        <div class="span-6 start-7 stack-4">
-          <p class="app__lede">Open a lecture to see its summary, key ideas and exam hints. Anything that was hard to hear is marked <span class="unc">unclear</span>, never guessed.</p>
-          <a class="link" href="#pipeline">How a note is made</a>
+        <div class="span-4 pv-faq__head">
+          <h2 id="faq-h">Frequently asked questions</h2>
+          <p>Anything else? <a class="link" href="mailto:info@preplitai.com">Email us</a></p>
         </div>
-      </div>
-      <div class="ui app fill" role="img" aria-label="The lecture list for Operating Systems, with the week 9 note on deadlock open" data-ui-pause-host>
-        <div class="app__pane app__pane--list">
-          <div class="ui ui-panel ui-win" data-open="Notes ready" data-work="Writing" data-done="Notes ready">
-            <div class="ui-win__bar">
-              <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-              <span class="ui-win__crumb"><img class="ui-brand" src="/brand/bee.svg" alt="" width="16" height="15">Operating Systems <i>/</i> <b>Lectures</b></span>
-              <span class="ui-spacer"></span>
-              <span class="ui-win__search" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span class="ui-win__ph">Search</span><span class="ui-kbd">/</span></span>
-            </div>
-            <div class="ui-win__body">
-              <nav class="ui-win__side" aria-hidden="true">
-                <span class="ui-win__nav is-on"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M3 3.5h10v9H3z"/><path d="M5.5 6.5h5M5.5 9h3"/></svg>Lectures<em>12</em></span>
-                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M3 4.5h7.5v8H3z"/><path d="M5.5 2.5H13v8"/></svg>Review<em>20</em></span>
-                <span class="ui-win__label">Courses</span>
-                <span class="ui-win__nav is-on"><span class="ui-win__hash">#</span>Operating Systems</span>
-                <span class="ui-win__nav"><span class="ui-win__hash">#</span>Data Structures</span>
-                <span class="ui-win__nav"><span class="ui-win__hash">#</span>Linear Algebra</span>
-              </nav>
-              <div class="ui-win__main">
-                <div class="ui-win__cols" aria-hidden="true"><span>Week</span><span>Topic</span><span>Status</span><span>Date</span></div>
-                <ul class="ui-win__rows">
-              <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">10</span><span class="ui-win__who">Week 10</span><span class="ui-win__sub">Memory management · 51 min</span><span class="ui-win__st is-you" data-st>Writing</span><span class="ui-win__age">Today</span></li>
-              <li class="ui-win__row is-sel" data-row><span class="ui-avatar" data-tone="2">9</span><span class="ui-win__who">Week 9</span><span class="ui-win__sub">Deadlock · 8 cards</span><span class="ui-win__st is-done" data-st>Notes ready</span><span class="ui-win__age">3 Nov</span></li>
-              <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">8</span><span class="ui-win__who">Week 8</span><span class="ui-win__sub">Synchronisation · 7 cards</span><span class="ui-win__st is-done" data-st>Notes ready</span><span class="ui-win__age">27 Oct</span></li>
-              <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">7</span><span class="ui-win__who">Week 7</span><span class="ui-win__sub">CPU scheduling · 9 cards</span><span class="ui-win__st is-done" data-st>Notes ready</span><span class="ui-win__age">20 Oct</span></li>
-              <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">6</span><span class="ui-win__who">Week 6</span><span class="ui-win__sub">Threads · 6 cards</span><span class="ui-win__st is-done" data-st>Notes ready</span><span class="ui-win__age">13 Oct</span></li>
-              <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">5</span><span class="ui-win__who">Week 5</span><span class="ui-win__sub">Inter-process communication · 7 cards</span><span class="ui-win__st is-done" data-st>Notes ready</span><span class="ui-win__age">6 Oct</span></li>
-              <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">4</span><span class="ui-win__who">Week 4</span><span class="ui-win__sub">Process states · 8 cards</span><span class="ui-win__st is-done" data-st>Notes ready</span><span class="ui-win__age">29 Sep</span></li>
-              <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">3</span><span class="ui-win__who">Week 3</span><span class="ui-win__sub">System calls · 5 cards</span><span class="ui-win__st is-done" data-st>Notes ready</span><span class="ui-win__age">22 Sep</span></li>
-              <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">2</span><span class="ui-win__who">Week 2</span><span class="ui-win__sub">OS structure · 6 cards</span><span class="ui-win__st is-done" data-st>Notes ready</span><span class="ui-win__age">15 Sep</span></li>
-              <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">1</span><span class="ui-win__who">Week 1</span><span class="ui-win__sub">Introduction · 5 cards</span><span class="ui-win__st is-done" data-st>Notes ready</span><span class="ui-win__age">8 Sep</span></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="app__pane app__pane--open" data-ui-loop>
-          <div class="ui ui-doc" data-ui="doc">
-            <article class="ui-doc__page">
-              <div class="ui-doc__label">Operating Systems · Week 9 · 50-minute recording · 8 cards</div>
-              <div class="ui-doc__title">Deadlock</div>
-              <div class="ui-doc__text">Processes each wait for a resource another one holds, so none of them can proceed. It only happens when <mark class="ui-doc__mark is-on">four conditions</mark> hold at once.</div>
-              <div class="ui-doc__h">Key ideas</div>
-              <ul class="ui-doc__list"><li class="ui-doc__text">Mutual exclusion: one process uses a resource at a time.</li><li class="ui-doc__text">Hold and wait: a process holds one resource while it waits for another.</li><li class="ui-doc__text">No preemption: a held resource cannot be taken away.</li><li class="ui-doc__text">Circular wait: the waiting forms a circle.</li></ul>
-              <div class="ui-doc__h">Dealing with it</div>
-              <div class="ui-doc__text">Prevention: number the resources and request them only in that order, and circular wait disappears.</div>
-              <div class="ui-doc__text">Avoidance: the banker's algorithm grants a resource only in a safe state. The steps of the lecturer's worked example were <mark class="ui-doc__mark" data-kind="Unclear" data-msg="Minutes 12 to 14 were hard to hear, so they were left out." data-where="Recording 12:10–14:02"><span class="unc">unclear</span></mark>.</div>
-              <div class="ui-doc__text">Detection and recovery: find a cycle in the resource-allocation graph, then end a process to break it.</div>
-            </article>
-            <aside class="ui-doc__note ui-panel is-on" aria-live="polite">
-              <div class="ui-doc__kind"><span class="ui-doc__dot"></span><span data-doc-kind>Exam hint</span></div>
-              <div class="ui-doc__msg" data-doc-msg>“The four conditions will be on the midterm.”</div>
-              <div class="ui-doc__where" data-doc-where>Recording 31:05</div>
-            </aside>
-          </div>
+        <div class="span-7 start-6 pv-faq__list">
+          <details open><summary><span>What is Preplit AI?</span><i aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></i></summary><p>A student companion. You set it up once; then Juno keeps your semester: it sits in your lectures, files the notes, texts you before deadlines, gives you a short game every day from your own courses and turns what you learn into a career plan.</p></details>
+          <details><summary><span>Who is Juno?</span><i aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></i></summary><p>Your companion inside Preplit AI. Juno remembers your courses, timetable and goals, reaches out when something needs you and answers from your own material. When there is no source, Juno says so.</p></details>
+          <details><summary><span>Do I need to connect my school's LMS?</span><i aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></i></summary><p>No. You add your courses, timetable, slides and key dates once, and Juno takes it from there.</p></details>
+          <details><summary><span>Am I allowed to record my lectures?</span><i aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></i></summary><p>Ask your professor before you record. Preplit AI is made for recordings you have permission for.</p></details>
+          <details><summary><span>What happens to my recordings?</span><i aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></i></summary><p>They are deleted from our server as soon as they have been transcribed. Only the transcript, notes and cards remain.</p></details>
+          <details><summary><span>Can anyone else see my notes?</span><i aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></i></summary><p>No. Your notes, cards and conversations are not shared and are never used to train AI models.</p></details>
+          <details><summary><span>How much can I record?</span><i aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></i></summary><p>During the pilot, up to 40 lectures a month and up to 4 hours in one recording.</p></details>
+          <details><summary><span>When can I use it?</span><i aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></i></summary><p>The pilot opens with 20 students on one course. Join the pilot and we'll tell you when your course is next.</p></details>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section bg-band" id="how" aria-labelledby="how-h">
-    <div class="wrap">
-      <div class="section-head"><h2 id="how-h">Three steps after every lecture</h2><p>In class, you only have to listen.</p></div>
-      <div class="grid">
-        <article class="card card--row card--open span-4 m-nolift">
-          <span class="step-num">1</span>
-          <h3>Upload the recording</h3>
-          <p>Record with your phone's voice recorder and upload the file after class. Up to 200 MB.</p>
-          <div class="panel">
-            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max: 340px; --ax: max(24px, 50% - 170px); --ay: 40px; --ay-sm: 32px">
-              <div class="ui ui-panel up" data-m-loop>
-                <div class="up__head"><span class="ui-title">Upload</span><span class="ui-spacer"></span><span class="ui-meta">2</span></div>
-                <div class="up__file">
-                  <span class="up__icon"><img data-icon="file:file-type-audio" src="/kit/icons/audio.svg" alt="" width="22" height="22"></span>
-                  <span class="up__text"><span class="up__name">OS week 9.m4a</span><span class="up__size">46 MB · 50 min</span></span>
-                  <span class="up__state"><span class="up__busy">Uploading</span><span class="up__done"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg>Uploaded</span></span>
-                  <span class="up__bar"><i></i></span>
-                </div>
-                <div class="up__file up__file--next">
-                  <span class="up__icon"><img data-icon="file:file-type-audio" src="/kit/icons/audio.svg" alt="" width="22" height="22"></span>
-                  <span class="up__text"><span class="up__name">Data structures week 6.m4a</span><span class="up__size">38 MB · 44 min</span></span>
-                  <span class="up__state"><span class="up__wait">Waiting</span></span>
-                </div>
-              </div>
-            </div></div>
-          </div>
-        </article>
-        <article class="card card--row card--open span-4 m-nolift">
-          <span class="step-num">2</span>
-          <h3>Notes arrive</h3>
-          <p>Junbee tells you when the notes are ready, and never hides a recording it could not use.</p>
-          <div class="panel">
-            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max: 380px; --ax: max(24px, 50% - 190px); --ay: calc(100% - 196px); --ay-sm: calc(100% - 196px)">
-              <div class="ui ui-notify" data-ui="notify" data-ui-still>
-                <ul class="ui-notify__list" data-notify-list>
-                  <li class="ui-note"><span class="ui-note__av jb-av"><img class="" src="/brand/bee.svg" alt="" width="18" height="17"></span><span class="ui-note__text"><span class="ui-note__title"><span class="ui-note__t">Week 9 notes are ready. 8 cards.</span><time>now</time></span><span class="ui-note__body">Operating Systems · Deadlock</span></span></li>
-                  <li class="ui-note"><span class="ui-note__av jb-av"><img class="" src="/brand/bee.svg" alt="" width="18" height="17"></span><span class="ui-note__text"><span class="ui-note__title"><span class="ui-note__t">Minutes 12–14 are marked <span class="unc">unclear</span>.</span><time>now</time></span><span class="ui-note__body">Operating Systems · Week 9</span></span></li>
-                  <li class="ui-note"><span class="ui-note__av jb-av"><img class="" src="/brand/bee.svg" alt="" width="18" height="17"></span><span class="ui-note__text"><span class="ui-note__title"><span class="ui-note__t">Week 6 notes are ready. 7 cards.</span><time>1d</time></span><span class="ui-note__body">Data Structures · Trees</span></span></li>
-                </ul>
-              </div>
-            </div></div>
-          </div>
-        </article>
-        <article class="card card--row card--open span-4 m-nolift">
-          <span class="step-num">3</span>
-          <h3>Review for five minutes</h3>
-          <p>You only see the cards due today. When they are done, so are you.</p>
-          <div class="panel">
-            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max: 340px; --ax: max(24px, 50% - 170px); --ay: 40px; --ay-sm: 32px">
-              <div class="ui ui-panel ui-checks" data-ui="checklist" data-ui-still>
-                <div class="ui-checks__head"><div class="ui-title">Today's cards</div><span class="ui-spacer"></span><div class="ui-meta" data-checks-count>3 of 5</div></div>
-                <div class="ui-checks__bar"><i data-checks-bar style="--k: 0.6"></i></div>
-                <ul class="ui-checks__list">
-                  <li class="ui-check is-done"><span class="ui-check__box"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">What is a deadlock?</span></li>
-                  <li class="ui-check is-done"><span class="ui-check__box"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">The four conditions</span></li>
-                  <li class="ui-check is-done"><span class="ui-check__box"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">Preventing circular wait</span></li>
-                  <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">The two semaphore operations</span></li>
-                  <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">Critical section rules</span></li>
-                </ul>
-              </div>
-            </div></div>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="pipeline" aria-labelledby="pipeline-h">
-    <div class="wrap">
-      <div class="grid grid--top">
-        <div class="span-6 split__text">
-          <h2 id="pipeline-h">One recording, three things back</h2>
-          <p class="t-lead">Your recording is transcribed, then turned into a note and review cards. The audio is deleted as soon as it has been transcribed.</p>
-          <dl class="split__facts">
-            <div><dt>Transcript</dt><dd>The whole lecture, with times</dd></div>
-            <div><dt>Note</dt><dd>Summary, key ideas, exam hints</dd></div>
-            <div><dt>Cards</dt><dd>5 to 10 per lecture</dd></div>
-          </dl>
-          <a class="link" href="/privacy">Read the privacy notice</a>
+  <section class="section ground-inverse pv-black pv-get g2m" id="get" aria-labelledby="get-h">
+    <div class="wrap grid pv-pair">
+        <div class="pv-pair__text span-6">
+          <img class="pv-get__mark" src="/brand/preplit-mark-white-256.png" alt="" width="56" height="77" loading="lazy">
+          <h2 id="get-h">Get Preplit AI.</h2>
+          <p class="pv-pair__lead">Set Juno up once this week, and let it carry the rest of your semester.</p>
+          <div class="btn-row"><a class="btn btn--primary" href="/signup">Join the pilot</a><a class="btn btn--secondary" href="/login">Log in</a></div>
+          <ul class="pv-get__facts"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg>Set up once, no LMS needed</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg>Audio deleted after transcription</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg>Your notes are yours alone</li></ul>
         </div>
-        <div class="frame frame--split frame--diagram span-6 start-7">
-          <div class="dg" data-dg-still data-diagram><script type="application/json">{"layout":"lanes","alt":"A 50-minute lecture recording goes through Junbee and comes back as a transcript, a note and 8 cards.","input":{"label":"Recording","icon":"file:file-type-audio","sub":"50 min"},"core":{"label":"Junbee","icon":"/favicon.svg"},"lanes":[{"label":"Transcript","icon":"ui:file-text","done":true,"sub":"50 min, with times"},{"label":"Note","icon":"ui:notebook-pen","done":true,"sub":"2 exam hints"},{"label":"8 cards","icon":"ui:layers","done":true,"sub":"Due from tomorrow"}],"ground":"dots"}</script></div>
+        <div class="pv-pair__stage span-5 start-8" aria-hidden="true">
+          <div class="phone " aria-hidden="true"><div class="phone__screen">
+          <div class="phone__status"><span>9:41</span><span class="phone__sig"><i></i><i></i><i></i><b>82</b></span></div>
+          <div class="home">
+          <div class="home__top"><img class="" src="/brand/preplit-mark-white-256.png" alt="" width="18" height="25" loading="lazy"><span class="pbtn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14h3"/></svg></span></div>
+          <p class="home__label">This semester</p>
+          <p class="home__big">Week 9 <small>of 16</small></p>
+          <div class="home__row"><span class="juno juno--sm" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span><span><b>Today's game</b><small>5 questions · 3 min</small></span><svg class="i-right" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg></div>
+          <p class="home__sub"><span>Up next</span><small>See all</small></p>
+          <div class="home__row home__row--lec"><span class="home__course">OS</span><span><b>Operating Systems</b><small>Today 10:30 · slides ready</small></span><em>Ask 2</em></div><div class="home__row home__row--lec"><span class="home__course">DS</span><span><b>Data Structures</b><small>Assignment 2 · due Fri</small></span><em>Step 1</em></div>
         </div>
-      </div>
-      <div class="subjects" data-moment="marquee-row" data-moment-opts='{"speed": 36}' aria-label="Any course you can record">
-        <ul class="mo-mq__track"><li>Operating Systems</li><li>Calculus</li><li>General Chemistry</li><li>Management</li><li>Data Structures</li><li>Circuit Theory</li><li>Macroeconomics</li><li>Cell Biology</li><li>Linear Algebra</li><li>Korean History</li></ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="section g2" id="remember" aria-labelledby="remember-h">
-    <div class="wrap">
-      <div class="group">
-        <div class="section-head"><h2 id="remember-h">Five minutes a day, and it stays. <span class="muted">Each card returns just before you would forget it.</span></h2><a class="link" href="#faq">Read the questions</a></div>
-        <div class="grid">
-          <article class="card card--row card--open span-6 m-nolift">
-            <h3>Brings cards back before you forget</h3>
-            <p>Every time you review a card, the wait until its next review grows.</p>
-            <div class="panel">
-              <div class="stage stage--fade-b"><div class="at-rise fit to-edge" style="--fit-max: 452px; --ax: max(24px, 50% - 226px); --ay: 40px; --ay-sm: 32px">
-                <div class="ui ui-panel cv">
-                  <div class="cv__head"><span class="ui-title">How much you remember</span><span class="ui-spacer"></span><span class="ui-meta">Review 4</span></div>
-                  <svg class="curve" viewBox="0 0 400 188" role="img" aria-label="A graph of memory fading over time and rising again at each review, then fading more slowly">
-                <line class="base" x1="14" x2="386" y1="150" y2="150"/>
-                <path class="line" d="M14.0 18.0 L14.5 24.0 L15.0 29.7 L15.6 35.1 L16.1 40.3 L16.6 45.3 L17.1 50.0 L17.6 54.5 L18.1 58.9 L18.6 63.0 L19.2 66.9 L19.7 70.7 L20.2 74.3 L20.7 77.7 L21.2 81.0 L21.8 84.1 L22.3 87.1 L22.8 89.9 L23.3 92.6 L23.8 95.2 L24.3 97.7 L24.9 100.1 L25.4 102.3 L25.9 104.5 L26.4 106.5 L26.4 18.0 L26.4 18.0 L27.9 24.2 L29.5 30.1 L31.0 35.7 L32.6 41.1 L34.2 46.2 L35.7 51.1 L37.3 55.7 L38.8 60.1 L40.3 64.4 L41.9 68.4 L43.5 72.2 L45.0 75.9 L46.5 79.3 L48.1 82.7 L49.7 85.8 L51.2 88.8 L52.8 91.7 L54.3 94.4 L55.9 97.1 L57.4 99.5 L59.0 101.9 L60.5 104.2 L62.1 106.3 L63.6 108.4 L63.6 18.0 L63.6 18.0 L67.2 24.1 L70.8 29.9 L74.5 35.4 L78.1 40.6 L81.7 45.7 L85.3 50.5 L88.9 55.0 L92.5 59.4 L96.1 63.6 L99.8 67.5 L103.4 71.3 L107.0 74.9 L110.6 78.4 L114.2 81.7 L117.9 84.8 L121.5 87.8 L125.1 90.7 L128.7 93.4 L132.3 96.0 L135.9 98.5 L139.6 100.8 L143.2 103.1 L146.8 105.3 L150.4 107.3 L150.4 18.0 L150.4 18.0 L157.6 23.8 L164.9 29.3 L172.1 34.6 L179.3 39.7 L186.6 44.5 L193.8 49.2 L201.0 53.6 L208.3 57.8 L215.5 61.9 L222.7 65.7 L230.0 69.4 L237.2 73.0 L244.4 76.3 L251.7 79.6 L258.9 82.7 L266.1 85.6 L273.4 88.4 L280.6 91.1 L287.8 93.7 L295.1 96.2 L302.3 98.6 L309.5 100.8 L316.8 103.0 L324.0 105.0 L324.0 18.0 L324.0 18.0 L326.6 18.8 L329.2 19.6 L331.8 20.4 L334.3 21.2 L336.9 22.0 L339.5 22.8 L342.1 23.5 L344.7 24.3 L347.3 25.1 L349.8 25.8 L352.4 26.6 L355.0 27.4 L357.6 28.1 L360.2 28.9 L362.8 29.6 L365.3 30.3 L367.9 31.1 L370.5 31.8 L373.1 32.5 L375.7 33.2 L378.3 33.9 L380.8 34.6 L383.4 35.4 L386.0 36.1"/><circle class="dot" cx="26.4" cy="18.0" r="4"/><circle class="dot" cx="63.6" cy="18.0" r="4"/><circle class="dot" cx="150.4" cy="18.0" r="4"/><circle class="dot dot--now" cx="324.0" cy="18.0" r="4"/><text x="26.4" y="176" text-anchor="middle">Day 1</text><text x="63.6" y="176" text-anchor="middle">Day 4</text><text x="150.4" y="176" text-anchor="middle">Day 11</text><text x="324.0" y="176" text-anchor="middle">Day 25</text>
-              </svg>
-                </div>
-              </div></div>
-            </div>
-          </article>
-          <article class="card card--row card--open span-6 m-nolift">
-            <h3>Stops at 20 cards a day</h3>
-            <p>However many cards are waiting, a day never asks for more than 20.</p>
-            <div class="panel">
-              <div class="stage stage--fade-b"><div class="at-rise fit to-edge" style="--fit-max: 452px; --ax: max(24px, 50% - 226px); --ay: 40px; --ay-sm: 32px">
-                <div class="ui ui-panel cb">
-                  <div class="cb__head"><span class="ui-title">Today's review</span><span class="ui-spacer"></span><span class="ui-meta">20 / 20</span></div>
-                  <svg class="comb cb__comb" viewBox="0 0 361.0 72.7" role="img" aria-label="20 of today's 20 cards reviewed"><polygon class="cell cell--on" points="19.0,3.6 34.6,12.6 34.6,30.6 19.0,39.7 3.4,30.6 3.4,12.6"/><polygon class="cell cell--on" points="53.0,3.6 68.6,12.6 68.6,30.6 53.0,39.7 37.4,30.6 37.4,12.6"/><polygon class="cell cell--on" points="87.0,3.6 102.6,12.6 102.6,30.6 87.0,39.7 71.4,30.6 71.4,12.6"/><polygon class="cell cell--on" points="121.0,3.6 136.6,12.6 136.6,30.6 121.0,39.7 105.4,30.6 105.4,12.6"/><polygon class="cell cell--on" points="155.0,3.6 170.6,12.6 170.6,30.6 155.0,39.7 139.4,30.6 139.4,12.6"/><polygon class="cell cell--on" points="189.0,3.6 204.6,12.6 204.6,30.6 189.0,39.7 173.4,30.6 173.4,12.6"/><polygon class="cell cell--on" points="223.0,3.6 238.6,12.6 238.6,30.6 223.0,39.7 207.4,30.6 207.4,12.6"/><polygon class="cell cell--on" points="257.0,3.6 272.6,12.6 272.6,30.6 257.0,39.7 241.4,30.6 241.4,12.6"/><polygon class="cell cell--on" points="291.0,3.6 306.6,12.6 306.6,30.6 291.0,39.7 275.4,30.6 275.4,12.6"/><polygon class="cell cell--on" points="325.0,3.6 340.6,12.6 340.6,30.6 325.0,39.7 309.4,30.6 309.4,12.6"/><polygon class="cell cell--on" points="36.0,33.0 51.6,42.1 51.6,60.1 36.0,69.1 20.4,60.1 20.4,42.1"/><polygon class="cell cell--on" points="70.0,33.0 85.6,42.1 85.6,60.1 70.0,69.1 54.4,60.1 54.4,42.1"/><polygon class="cell cell--on" points="104.0,33.0 119.6,42.1 119.6,60.1 104.0,69.1 88.4,60.1 88.4,42.1"/><polygon class="cell cell--on" points="138.0,33.0 153.6,42.1 153.6,60.1 138.0,69.1 122.4,60.1 122.4,42.1"/><polygon class="cell cell--on" points="172.0,33.0 187.6,42.1 187.6,60.1 172.0,69.1 156.4,60.1 156.4,42.1"/><polygon class="cell cell--on" points="206.0,33.0 221.6,42.1 221.6,60.1 206.0,69.1 190.4,60.1 190.4,42.1"/><polygon class="cell cell--on" points="240.0,33.0 255.6,42.1 255.6,60.1 240.0,69.1 224.4,60.1 224.4,42.1"/><polygon class="cell cell--on" points="274.0,33.0 289.6,42.1 289.6,60.1 274.0,69.1 258.4,60.1 258.4,42.1"/><polygon class="cell cell--on" points="308.0,33.0 323.6,42.1 323.6,60.1 308.0,69.1 292.4,60.1 292.4,42.1"/><polygon class="cell cell--on" points="342.0,33.0 357.6,42.1 357.6,60.1 342.0,69.1 326.4,60.1 326.4,42.1"/></svg>
-                  <div class="cb__done"><img class="cb__bee" src="/brand/bee.svg" alt="" width="22" height="21"><span><b>You have seen all 20 of today's cards.</b><span>The rest will be here tomorrow.</span></span></div>
-                  <ul class="cb__rows"><li><span>What is a deadlock?</span><span class="cb__rate">Good</span></li><li><span>The two semaphore operations</span><span class="cb__rate">Easy</span></li><li><span>Round-robin time slice</span><span class="cb__rate">Again</span></li><li><span>What goes in a PCB</span><span class="cb__rate">Good</span></li><li><span>System call steps</span><span class="cb__rate">Hard</span></li></ul>
-                </div>
-              </div></div>
-            </div>
-          </article>
+        </div></div>
         </div>
-      </div>
-      <div class="grid">
-        <article class="card card--row card--open span-6 m-nolift">
-          <h3>Lists the exam hints from lectures</h3>
-          <p>Whatever the lecturer said would be on the exam is kept in one list, with its time.</p>
-          <div class="panel">
-            <div class="stage stage--fade-b"><div class="at-rise fit to-edge" style="--fit-max: 452px; --ax: max(24px, 50% - 226px); --ay: 40px; --ay-sm: 32px">
-              <div class="ui ui-panel ht">
-                <div class="ht__head"><span class="ui-title">Exam hints</span><span class="ui-spacer"></span><span class="ui-meta">Operating Systems · 12</span></div>
-                <ul class="ht__rows">
-                  <li class="ht__row is-on"><span class="ht__flag" aria-hidden="true"></span><span class="ht__q">“The four conditions will be on the midterm.”</span><span class="ht__at">Week 9 · 31:05</span></li>
-                  <li class="ht__row"><span class="ht__flag" aria-hidden="true"></span><span class="ht__q">“Learn the two semaphore operations.”</span><span class="ht__at">Week 8 · 22:40</span></li>
-                  <li class="ht__row"><span class="ht__flag" aria-hidden="true"></span><span class="ht__q">“There will be one round-robin question.”</span><span class="ht__at">Week 7 · 41:12</span></li>
-                  <li class="ht__row"><span class="ht__flag" aria-hidden="true"></span><span class="ht__q">“What goes in a PCB will be on the exam.”</span><span class="ht__at">Week 4 · 18:03</span></li>
-                  <li class="ht__row"><span class="ht__flag" aria-hidden="true"></span><span class="ht__q">“You will write the system call steps in order.”</span><span class="ht__at">Week 3 · 09:47</span></li>
-                  <li class="ht__row"><span class="ht__flag" aria-hidden="true"></span><span class="ht__q">“Keep a table of threads versus processes.”</span><span class="ht__at">Week 6 · 27:30</span></li>
-                  <li class="ht__row"><span class="ht__flag" aria-hidden="true"></span><span class="ht__q">“The two IPC models will be an essay question.”</span><span class="ht__at">Week 5 · 35:12</span></li>
-                </ul>
-              </div>
-            </div></div>
-          </div>
-        </article>
-        <article class="card card--row card--open span-6 m-nolift">
-          <h3>Connects lectures, notes and cards</h3>
-          <p>Lectures, notes, cards and exam hints sit together, course by course.</p>
-          <div class="panel panel--diagram">
-            <div class="dg" data-diagram><script type="application/json">{"layout":"hub","alt":"The Operating Systems course connects 9 lectures, 9 notes, 64 cards, 12 exam hints and today's 20 reviews.","center":{"label":"Operating Systems","icon":"ui:book-open"},"spokes":[{"label":"9 lectures","icon":"ui:mic"},{"label":"9 notes","icon":"ui:notebook-pen"},{"label":"64 cards","icon":"ui:layers"},{"label":"12 exam hints","icon":"ui:flag"},{"label":"20 due today","icon":"ui:calendar-check"}]}</script></div>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section ground-inverse" id="junbee" aria-labelledby="junbee-h">
-    <div class="wrap">
-      <div class="section-head"><h2 id="junbee-h">Junbee says three things, and only these</h2><p>It speaks only when a lecture's notes are finished. It never nags, and it never hides what it could not do.</p></div>
-      <figure class="wave ui" role="img" aria-label="The loudness of a 50-minute lecture. From 12:10 to 14:02 it was too quiet and is marked [unclear]; at 31:05 an exam hint is marked.">
-          <div class="wave__plot">
-            <svg viewBox="0 0 1280 168" preserveAspectRatio="none" aria-hidden="true">
-              <defs><pattern id="wave-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2" height="8" class="hatch"/></pattern></defs>
-              <rect class="wave__gap" x="311.5" y="0" width="47.8" height="168" fill="url(#wave-hatch)"/>
-              <rect class="b" x="1.8" y="56.9" width="4.5" height="54.1" rx="1.6"/><rect class="b" x="9.8" y="29.4" width="4.5" height="109.2" rx="1.6"/><rect class="b" x="17.8" y="20.9" width="4.5" height="126.2" rx="1.6"/><rect class="b" x="25.8" y="19.9" width="4.5" height="128.2" rx="1.6"/><rect class="b" x="33.8" y="19.3" width="4.5" height="129.5" rx="1.6"/><rect class="b" x="41.8" y="23.2" width="4.5" height="121.6" rx="1.6"/><rect class="b" x="49.8" y="15.1" width="4.5" height="137.8" rx="1.6"/><rect class="b" x="57.8" y="12.0" width="4.5" height="144.0" rx="1.6"/><rect class="b" x="65.8" y="12.0" width="4.5" height="144.0" rx="1.6"/><rect class="b" x="73.8" y="24.4" width="4.5" height="119.2" rx="1.6"/><rect class="b" x="81.8" y="13.5" width="4.5" height="141.0" rx="1.6"/><rect class="b" x="89.8" y="19.5" width="4.5" height="128.9" rx="1.6"/><rect class="b" x="97.8" y="29.5" width="4.5" height="108.9" rx="1.6"/><rect class="b" x="105.8" y="26.4" width="4.5" height="115.1" rx="1.6"/><rect class="b" x="113.8" y="37.0" width="4.5" height="94.0" rx="1.6"/><rect class="b" x="121.8" y="29.0" width="4.5" height="110.1" rx="1.6"/><rect class="b" x="129.8" y="49.1" width="4.5" height="69.7" rx="1.6"/><rect class="b" x="137.8" y="50.1" width="4.5" height="67.9" rx="1.6"/><rect class="b" x="145.8" y="54.1" width="4.5" height="59.9" rx="1.6"/><rect class="b" x="153.8" y="42.3" width="4.5" height="83.4" rx="1.6"/><rect class="b" x="161.8" y="55.9" width="4.5" height="56.1" rx="1.6"/><rect class="b" x="169.8" y="47.8" width="4.5" height="72.5" rx="1.6"/><rect class="b" x="177.8" y="61.7" width="4.5" height="44.6" rx="1.6"/><rect class="b" x="185.8" y="72.4" width="4.5" height="23.2" rx="1.6"/><rect class="b" x="193.8" y="45.1" width="4.5" height="77.8" rx="1.6"/><rect class="b" x="201.8" y="48.7" width="4.5" height="70.6" rx="1.6"/><rect class="b" x="209.8" y="42.9" width="4.5" height="82.2" rx="1.6"/><rect class="b" x="217.8" y="52.1" width="4.5" height="63.7" rx="1.6"/><rect class="b" x="225.8" y="48.1" width="4.5" height="71.9" rx="1.6"/><rect class="b" x="233.8" y="43.0" width="4.5" height="82.0" rx="1.6"/><rect class="b" x="241.8" y="41.5" width="4.5" height="85.0" rx="1.6"/><rect class="b" x="249.8" y="37.7" width="4.5" height="92.6" rx="1.6"/><rect class="b" x="257.8" y="26.6" width="4.5" height="114.8" rx="1.6"/><rect class="b" x="265.8" y="32.3" width="4.5" height="103.3" rx="1.6"/><rect class="b" x="273.8" y="33.7" width="4.5" height="100.5" rx="1.6"/><rect class="b" x="281.8" y="26.0" width="4.5" height="116.0" rx="1.6"/><rect class="b" x="289.8" y="42.7" width="4.5" height="82.5" rx="1.6"/><rect class="b" x="297.8" y="26.5" width="4.5" height="114.9" rx="1.6"/><rect class="b" x="305.8" y="31.5" width="4.5" height="104.9" rx="1.6"/><rect class="u" x="313.8" y="76.4" width="4.5" height="15.2" rx="1.6"/><rect class="u" x="321.8" y="77.2" width="4.5" height="13.5" rx="1.6"/><rect class="u" x="329.8" y="76.6" width="4.5" height="14.9" rx="1.6"/><rect class="u" x="337.8" y="79.8" width="4.5" height="8.4" rx="1.6"/><rect class="u" x="345.8" y="78.5" width="4.5" height="11.0" rx="1.6"/><rect class="u" x="353.8" y="78.3" width="4.5" height="11.5" rx="1.6"/><rect class="b" x="361.8" y="60.9" width="4.5" height="46.2" rx="1.6"/><rect class="b" x="369.8" y="73.9" width="4.5" height="20.2" rx="1.6"/><rect class="b" x="377.8" y="73.2" width="4.5" height="21.6" rx="1.6"/><rect class="b" x="385.8" y="57.1" width="4.5" height="53.8" rx="1.6"/><rect class="b" x="393.8" y="64.4" width="4.5" height="39.2" rx="1.6"/><rect class="b" x="401.8" y="66.8" width="4.5" height="34.5" rx="1.6"/><rect class="b" x="409.8" y="72.0" width="4.5" height="24.1" rx="1.6"/><rect class="b" x="417.8" y="69.1" width="4.5" height="29.9" rx="1.6"/><rect class="b" x="425.8" y="68.5" width="4.5" height="31.1" rx="1.6"/><rect class="b" x="433.8" y="57.3" width="4.5" height="53.4" rx="1.6"/><rect class="b" x="441.8" y="60.4" width="4.5" height="47.3" rx="1.6"/><rect class="b" x="449.8" y="44.7" width="4.5" height="78.6" rx="1.6"/><rect class="b" x="457.8" y="38.3" width="4.5" height="91.4" rx="1.6"/><rect class="b" x="465.8" y="52.3" width="4.5" height="63.4" rx="1.6"/><rect class="b" x="473.8" y="33.7" width="4.5" height="100.5" rx="1.6"/><rect class="b" x="481.8" y="37.0" width="4.5" height="94.1" rx="1.6"/><rect class="b" x="489.8" y="48.5" width="4.5" height="71.1" rx="1.6"/><rect class="b" x="497.8" y="39.4" width="4.5" height="89.3" rx="1.6"/><rect class="b" x="505.8" y="45.1" width="4.5" height="77.7" rx="1.6"/><rect class="b" x="513.8" y="41.2" width="4.5" height="85.5" rx="1.6"/><rect class="b" x="521.8" y="49.5" width="4.5" height="69.1" rx="1.6"/><rect class="b" x="529.8" y="47.1" width="4.5" height="73.8" rx="1.6"/><rect class="b" x="537.8" y="49.8" width="4.5" height="68.3" rx="1.6"/><rect class="b" x="545.8" y="48.5" width="4.5" height="71.1" rx="1.6"/><rect class="b" x="553.8" y="73.8" width="4.5" height="20.4" rx="1.6"/><rect class="b" x="561.8" y="54.3" width="4.5" height="59.4" rx="1.6"/><rect class="b" x="569.8" y="57.9" width="4.5" height="52.1" rx="1.6"/><rect class="b" x="577.8" y="67.4" width="4.5" height="33.2" rx="1.6"/><rect class="b" x="585.8" y="68.4" width="4.5" height="31.2" rx="1.6"/><rect class="b" x="593.8" y="57.6" width="4.5" height="52.8" rx="1.6"/><rect class="b" x="601.8" y="52.5" width="4.5" height="63.0" rx="1.6"/><rect class="b" x="609.8" y="54.9" width="4.5" height="58.1" rx="1.6"/><rect class="b" x="617.8" y="66.3" width="4.5" height="35.4" rx="1.6"/><rect class="b" x="625.8" y="58.1" width="4.5" height="51.7" rx="1.6"/><rect class="b" x="633.8" y="49.2" width="4.5" height="69.6" rx="1.6"/><rect class="b" x="641.8" y="49.3" width="4.5" height="69.4" rx="1.6"/><rect class="b" x="649.8" y="54.7" width="4.5" height="58.7" rx="1.6"/><rect class="b" x="657.8" y="42.4" width="4.5" height="83.3" rx="1.6"/><rect class="b" x="665.8" y="40.0" width="4.5" height="88.0" rx="1.6"/><rect class="b" x="673.8" y="39.8" width="4.5" height="88.4" rx="1.6"/><rect class="b" x="681.8" y="36.0" width="4.5" height="96.0" rx="1.6"/><rect class="b" x="689.8" y="30.2" width="4.5" height="107.5" rx="1.6"/><rect class="b" x="697.8" y="35.3" width="4.5" height="97.3" rx="1.6"/><rect class="b" x="705.8" y="34.5" width="4.5" height="99.1" rx="1.6"/><rect class="b" x="713.8" y="13.3" width="4.5" height="141.3" rx="1.6"/><rect class="b" x="721.8" y="24.9" width="4.5" height="118.3" rx="1.6"/><rect class="b" x="729.8" y="33.3" width="4.5" height="101.4" rx="1.6"/><rect class="b" x="737.8" y="57.1" width="4.5" height="53.9" rx="1.6"/><rect class="b" x="745.8" y="24.6" width="4.5" height="118.7" rx="1.6"/><rect class="b" x="753.8" y="22.3" width="4.5" height="123.4" rx="1.6"/><rect class="b" x="761.8" y="41.5" width="4.5" height="85.1" rx="1.6"/><rect class="b" x="769.8" y="41.5" width="4.5" height="85.0" rx="1.6"/><rect class="b" x="777.8" y="27.6" width="4.5" height="112.9" rx="1.6"/><rect class="b" x="785.8" y="38.6" width="4.5" height="90.7" rx="1.6"/><rect class="b" x="793.8" y="35.0" width="4.5" height="98.0" rx="1.6"/><rect class="b" x="801.8" y="34.2" width="4.5" height="99.6" rx="1.6"/><rect class="b" x="809.8" y="41.0" width="4.5" height="86.0" rx="1.6"/><rect class="b" x="817.8" y="38.3" width="4.5" height="91.4" rx="1.6"/><rect class="b" x="825.8" y="47.9" width="4.5" height="72.2" rx="1.6"/><rect class="b" x="833.8" y="49.8" width="4.5" height="68.4" rx="1.6"/><rect class="b" x="841.8" y="33.5" width="4.5" height="101.0" rx="1.6"/><rect class="b" x="849.8" y="46.4" width="4.5" height="75.2" rx="1.6"/><rect class="b" x="857.8" y="42.5" width="4.5" height="83.0" rx="1.6"/><rect class="b" x="865.8" y="46.2" width="4.5" height="75.6" rx="1.6"/><rect class="b" x="873.8" y="31.4" width="4.5" height="105.2" rx="1.6"/><rect class="b" x="881.8" y="29.6" width="4.5" height="108.8" rx="1.6"/><rect class="b" x="889.8" y="19.3" width="4.5" height="129.3" rx="1.6"/><rect class="b" x="897.8" y="28.8" width="4.5" height="110.3" rx="1.6"/><rect class="b" x="905.8" y="12.0" width="4.5" height="144.0" rx="1.6"/><rect class="b" x="913.8" y="12.5" width="4.5" height="143.0" rx="1.6"/><rect class="b" x="921.8" y="55.2" width="4.5" height="57.6" rx="1.6"/><rect class="b" x="929.8" y="12.0" width="4.5" height="144.0" rx="1.6"/><rect class="b" x="937.8" y="23.2" width="4.5" height="121.7" rx="1.6"/><rect class="b" x="945.8" y="12.2" width="4.5" height="143.6" rx="1.6"/><rect class="b" x="953.8" y="31.1" width="4.5" height="105.9" rx="1.6"/><rect class="b" x="961.8" y="15.9" width="4.5" height="136.3" rx="1.6"/><rect class="b" x="969.8" y="24.6" width="4.5" height="118.7" rx="1.6"/><rect class="b" x="977.8" y="40.8" width="4.5" height="86.4" rx="1.6"/><rect class="b" x="985.8" y="46.3" width="4.5" height="75.4" rx="1.6"/><rect class="b" x="993.8" y="30.7" width="4.5" height="106.7" rx="1.6"/><rect class="b" x="1001.8" y="35.3" width="4.5" height="97.5" rx="1.6"/><rect class="b" x="1009.8" y="52.1" width="4.5" height="63.8" rx="1.6"/><rect class="b" x="1017.8" y="53.8" width="4.5" height="60.5" rx="1.6"/><rect class="b" x="1025.8" y="43.5" width="4.5" height="80.9" rx="1.6"/><rect class="b" x="1033.8" y="56.8" width="4.5" height="54.3" rx="1.6"/><rect class="b" x="1041.8" y="44.5" width="4.5" height="79.0" rx="1.6"/><rect class="b" x="1049.8" y="53.6" width="4.5" height="60.8" rx="1.6"/><rect class="b" x="1057.8" y="45.6" width="4.5" height="76.8" rx="1.6"/><rect class="b" x="1065.8" y="48.9" width="4.5" height="70.3" rx="1.6"/><rect class="b" x="1073.8" y="46.0" width="4.5" height="75.9" rx="1.6"/><rect class="b" x="1081.8" y="43.7" width="4.5" height="80.7" rx="1.6"/><rect class="b" x="1089.8" y="36.1" width="4.5" height="95.8" rx="1.6"/><rect class="b" x="1097.8" y="51.0" width="4.5" height="65.9" rx="1.6"/><rect class="b" x="1105.8" y="65.6" width="4.5" height="36.7" rx="1.6"/><rect class="b" x="1113.8" y="49.3" width="4.5" height="69.4" rx="1.6"/><rect class="b" x="1121.8" y="46.0" width="4.5" height="76.1" rx="1.6"/><rect class="b" x="1129.8" y="43.2" width="4.5" height="81.6" rx="1.6"/><rect class="b" x="1137.8" y="30.8" width="4.5" height="106.5" rx="1.6"/><rect class="b" x="1145.8" y="42.3" width="4.5" height="83.3" rx="1.6"/><rect class="b" x="1153.8" y="28.7" width="4.5" height="110.6" rx="1.6"/><rect class="b" x="1161.8" y="41.6" width="4.5" height="84.8" rx="1.6"/><rect class="b" x="1169.8" y="31.8" width="4.5" height="104.5" rx="1.6"/><rect class="b" x="1177.8" y="42.7" width="4.5" height="82.6" rx="1.6"/><rect class="b" x="1185.8" y="48.6" width="4.5" height="70.9" rx="1.6"/><rect class="b" x="1193.8" y="42.0" width="4.5" height="84.0" rx="1.6"/><rect class="b" x="1201.8" y="53.8" width="4.5" height="60.4" rx="1.6"/><rect class="b" x="1209.8" y="65.6" width="4.5" height="36.9" rx="1.6"/><rect class="b" x="1217.8" y="67.6" width="4.5" height="32.8" rx="1.6"/><rect class="b" x="1225.8" y="63.7" width="4.5" height="40.6" rx="1.6"/><rect class="b" x="1233.8" y="65.4" width="4.5" height="37.2" rx="1.6"/><rect class="b" x="1241.8" y="64.9" width="4.5" height="38.2" rx="1.6"/><rect class="b" x="1249.8" y="72.7" width="4.5" height="22.6" rx="1.6"/><rect class="b" x="1257.8" y="62.3" width="4.5" height="43.5" rx="1.6"/><rect class="b" x="1265.8" y="73.9" width="4.5" height="20.2" rx="1.6"/><rect class="b" x="1273.8" y="58.3" width="4.5" height="51.5" rx="1.6"/>
-              <rect class="wave__flag" x="794.7" y="0" width="2" height="168"/>
-            </svg>
-            <span class="wave__chip wave__chip--gap" style="--x: 26.20%"><span class="unc">unclear</span> 12:10–14:02</span>
-            <span class="wave__chip wave__chip--flag" style="--x: 62.17%">Exam hint · 31:05</span>
-            <div class="wave__axis" aria-hidden="true"><span>0 min</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50 min</span></div>
-          </div>
-        </figure>
-      <div class="grid says">
-        <div class="span-4 say">
-          <p class="t-label say__when">When notes are ready</p>
-          <p class="say__msg ui"><img class="say__bee" src="/brand/bee.svg" alt="" width="24" height="23"><span>Week 9 notes are ready. 8 cards.</span></p>
-        </div>
-        <div class="span-4 say">
-          <p class="t-label say__when">When part was hard to hear</p>
-          <p class="say__msg ui"><img class="say__bee" src="/brand/bee.svg" alt="" width="24" height="23"><span>Minutes 12–14 were hard to hear, so I marked them <span class="unc">unclear</span> instead of guessing.</span></p>
-        </div>
-        <div class="span-4 say">
-          <p class="t-label say__when">When nothing could be made</p>
-          <p class="say__msg ui"><img class="say__bee" src="/brand/bee.svg" alt="" width="24" height="23"><span>I couldn't turn this recording into notes. Nothing was saved.</span></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="faq" aria-labelledby="faq-h">
-    <div class="wrap">
-      <div class="section-head"><h2 id="faq-h">Questions about recordings and privacy</h2></div>
-      <div class="ui keep" role="img" aria-label="The recording is deleted right after transcription; the transcript, notes and cards stay in your account only.">
-        <div class="keep__item keep__item--gone"><span class="keep__icon"><img src="/kit/icons/audio.svg" alt="" width="22" height="22"></span><span class="keep__text"><b>Recording</b><span>Deleted after transcription</span></span></div>
-        <div class="keep__item"><span class="keep__icon"><img src="/kit/icons/ui-file-text.svg" alt="" width="20" height="20"></span><span class="keep__text"><b>Transcript</b><span>Your account only</span></span></div>
-        <div class="keep__item"><span class="keep__icon"><img src="/kit/icons/ui-notebook-pen.svg" alt="" width="20" height="20"></span><span class="keep__text"><b>Notes</b><span>Your account only</span></span></div>
-        <div class="keep__item"><span class="keep__icon"><img src="/kit/icons/ui-layers.svg" alt="" width="20" height="20"></span><span class="keep__text"><b>Cards</b><span>Your account only</span></span></div>
-      </div>
-      <div class="grid grid--top">
-        <div class="faq span-6">
-          <div class="faq__item"><h3>What happens to my recording?</h3><p>It is deleted from our server as soon as it has been transcribed. Only the transcript, notes and cards remain.</p></div>
-          <div class="faq__item"><h3>Can anyone else see my notes?</h3><p>No. Your notes and cards are not shared, and they are not used as training data.</p></div>
-          <div class="faq__item"><h3>Am I allowed to record lectures?</h3><p>Ask your lecturer before you record. Junbee is made for recordings you have permission for.</p></div>
-        </div>
-        <div class="faq span-6 start-7">
-          <div class="faq__item"><h3>Which files can I upload?</h3><p>Audio from your phone's voice recorder, up to 200 MB. You can also paste the lecture as text.</p></div>
-          <div class="faq__item"><h3>How many lectures a month?</h3><p>Up to 40 lectures a month during the pilot.</p></div>
-          <div class="faq__item"><h3>Are my notes deleted with my account?</h3><p>Yes. Your notes, cards and transcripts are all deleted with it.</p></div>
-        </div>
-      </div>
     </div>
   </section>
 </main>
 
-<footer class="footer closing footer--statement" id="contact" aria-labelledby="close-h">
+<footer class="pv-footer" id="contact" aria-label="Preplit AI">
   <div class="wrap">
-    <div class="closing__cta close--type">
-      <div class="section-head">
-        <h2 id="close-h">Join the Junbee pilot</h2>
-        <p>We start with one course and 20 students. Record this week's lectures and see the notes.</p>
+    <div class="pv-footer__top">
+      <div class="pv-footer__brand">
+        <a href="#top" class="pv-footer__logo"><img class="" src="/brand/preplit-mark-white-256.png" alt="" width="26" height="36" loading="lazy"><span>Preplit AI</span></a>
+        <p>Your student life on autopilot.</p>
       </div>
-      <a class="btn btn--primary btn--xl btn--wide" href="/signup">Join the pilot<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+      <div class="pv-footer__cols">
+        <div><h4>Product</h4><ul><li><a href="#features">How it works</a></li><li><a href="#juno">Meet Juno</a></li><li><a href="#workspace">Workspace</a></li><li><a href="#career">Career</a></li><li><a href="/en/pricing/">Pricing</a></li><li><a href="/signup">Join the pilot</a></li></ul></div>
+        <div><h4>Resources</h4><ul><li><a href="#faq">Questions</a></li><li><a href="#course">Course pilot</a></li><li><a href="mailto:info@preplitai.com">Email us</a></li></ul></div>
+        <div><h4>Legal</h4><ul><li><a href="/privacy">Privacy notice</a></li><li><a href="#safe">Juno's permissions</a></li></ul></div>
+        <div><h4>Account</h4><ul><li><a href="/login">Log in</a></li><li><a href="/signup">Sign up</a></li></ul></div>
+      </div>
     </div>
-    <div class="closing__links">
-      <div class="grid">
-        <div class="span-4 stack-4">
-          <a class="nav__logo" href="#top"><img class="nav__bee" src="/brand/bee.svg" alt="" width="26" height="25">Junbee</a>
-          <p class="footer__lede">A study app that turns lectures into notes and review</p>
-        </div>
-        <div class="span-2 footer__col"><h4>Learn</h4><ul><li><a href="#app">Notes</a></li><li><a href="#how">Steps</a></li><li><a href="#pipeline">Audio</a></li></ul></div>
-        <div class="span-2 footer__col"><h4>Remember</h4><ul><li><a href="#remember">Review</a></li><li><a href="#junbee">Junbee</a></li></ul></div>
-        <div class="span-2 footer__col"><h4>Company</h4><ul><li><a href="/privacy">Privacy notice</a></li><li><a href="mailto:info@preplitai.com">Email us</a></li></ul></div>
-        <div class="span-2 footer__col"><h4>Account</h4><ul><li><a href="/login">Log in</a></li><li><a href="/signup">Sign up</a></li></ul></div>
-      </div>
-      <div class="footer__legal">
-        <span>© 2026 PreplitAI, Inc. &nbsp; <a href="/privacy">Privacy notice</a></span>
-        <a href="/" hreflang="ko" lang="ko">한국어</a>
-      </div>
+    <div class="pv-footer__legal"><p>Preplit AI is a study tool. Notes and answers are made from your recordings and can contain mistakes; anything that could not be heard is marked <span class="unc">unclear</span> rather than guessed.</p><p>Record a class only with your professor's permission. Audio is deleted as soon as it has been transcribed, and transcripts and notes are deleted with your account.</p></div>
+    <div class="pv-footer__bottom">
+      <span>© 2026 Preplit AI, Inc.<a href="/privacy">Privacy notice</a></span>
+      <a href="/" hreflang="ko" lang="ko">한국어</a>
     </div>
   </div>
 </footer>
 
+<dialog class="early" id="early" aria-labelledby="early-h" aria-describedby="early-p">
+  <div class="early__card">
+    <button class="early__x" type="button" data-early-close aria-label="Close"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>
+    <span class="early__mark" aria-hidden="true"><img class="" src="/brand/preplit-mark-256.png" alt="" width="40" height="55"><i class="early__dot"></i></span>
+    <p class="early__badge"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8c.4 3.2 1.4 4.6 4.2 5.2-2.8.6-3.8 2-4.2 5.2-.4-3.2-1.4-4.6-4.2-5.2 2.8-.6 3.8-2 4.2-5.2zM12.6 10.6c.2 1.3.6 1.9 1.7 2.1-1.1.2-1.5.8-1.7 2.1-.2-1.3-.6-1.9-1.7-2.1 1.1-.2 1.5-.8 1.7-2.1z"/></svg><span>You're early!</span></p>
+    <h2 id="early-h">Developer Access Only</h2>
+    <p class="early__feature" data-early-feature></p>
+    <p class="early__body" id="early-p">Access to Preplit AI services is currently restricted to authorized developer accounts only. Please wait for our official public release.</p>
+    <button class="early__ok" type="button" data-early-close autofocus>Got it, I will wait</button>
+  </div>
+</dialog>
+<script src="/js/early.js"></script>
 <script type="module" src="/kit/system.js"></script>
 <script type="module" src="/kit/motion/motion.js"></script>
 <script type="module" src="/kit/layout/layout.js"></script>
-<script type="module" src="/kit/diagrams/mount.js"></script>
 </body>
 </html>

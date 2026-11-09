@@ -95,6 +95,96 @@ const SCHEMA = [
     reviewed_at TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS review_logs_user_idx ON review_logs (user_id, reviewed_at DESC)`,
+
+  // A searchable piece of a lecture: its transcript, or a part of its notes.
+  // These are what Junbee cites in the workspace, and they go with the lecture.
+  `CREATE TABLE IF NOT EXISTS lecture_chunks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    lecture_id UUID NOT NULL REFERENCES lectures(id) ON DELETE CASCADE,
+    kind VARCHAR(12) NOT NULL CHECK (kind IN ('transcript', 'summary', 'section', 'flagged')),
+    position INT NOT NULL,
+    content TEXT NOT NULL,
+    start_seconds INT,
+    UNIQUE (lecture_id, kind, position)
+  )`,
+  `CREATE INDEX IF NOT EXISTS lecture_chunks_user_idx ON lecture_chunks (user_id, lecture_id)`,
+
+  // A workspace conversation. It may be limited to one course; if that course
+  // is deleted the conversation stays and covers everything.
+  `CREATE TABLE IF NOT EXISTS conversations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    course_id UUID REFERENCES courses(id) ON DELETE SET NULL,
+    title VARCHAR(80) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS conversations_user_idx ON conversations (user_id, updated_at DESC)`,
+
+  // A question and its answer are written together, so `seq` orders them where
+  // the transaction's single timestamp cannot. Citations hold only chunk ids:
+  // a deleted lecture's text does not live on inside them.
+  `CREATE TABLE IF NOT EXISTS messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    seq BIGINT GENERATED ALWAYS AS IDENTITY,
+    conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role VARCHAR(10) NOT NULL CHECK (role IN ('user', 'assistant')),
+    content TEXT NOT NULL,
+    citations JSONB NOT NULL DEFAULT '[]'::jsonb,
+    grounding VARCHAR(10) CHECK (grounding IN ('cited', 'account', 'general')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS messages_conversation_idx ON messages (conversation_id, seq)`,
+
+  // One row per question. Separate from messages so that deleting a
+  // conversation does not hand back the month's allowance.
+  `CREATE TABLE IF NOT EXISTS chat_usage (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    tokens INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS chat_usage_user_idx ON chat_usage (user_id, created_at DESC)`,
+
+  // The semester the bee follows. The dates come from the student and are never
+  // guessed. The latest one is the current one.
+  `CREATE TABLE IF NOT EXISTS semesters (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(40) NOT NULL,
+    starts_on DATE NOT NULL,
+    weeks SMALLINT NOT NULL DEFAULT 16 CHECK (weeks BETWEEN 8 AND 24),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS semesters_user_idx ON semesters (user_id, starts_on DESC)`,
+
+  // When a course meets and when its exams are, as the student entered them.
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS class_days JSONB NOT NULL DEFAULT '[]'::jsonb`,
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS midterm_on DATE`,
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS final_on DATE`,
+
+  // When the class happened, which is what files a lecture under its week.
+  `ALTER TABLE lectures ADD COLUMN IF NOT EXISTS recorded_at TIMESTAMPTZ`,
+
+  // Phone notifications. A browser's push subscription, and a record of what was
+  // sent, so that a reminder reaches a student only once.
+  `CREATE TABLE IF NOT EXISTS push_subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    endpoint TEXT UNIQUE NOT NULL,
+    p256dh TEXT NOT NULL,
+    auth TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS push_subscriptions_user_idx ON push_subscriptions (user_id)`,
+  `CREATE TABLE IF NOT EXISTS notification_log (
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    key VARCHAR(160) NOT NULL,
+    sent_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (user_id, key)
+  )`,
 ];
 
 let driver = null; // { kind, query(text, params), transaction(fn), close() }

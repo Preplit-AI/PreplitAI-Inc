@@ -3,19 +3,23 @@
  * index.html (Korean, the source) and en/index.html (the translation).
  * Run `npm run site` after changing this file or site/copy.mjs.
  *
- * The page is built on the taste-skill kit in public/kit (system.css, the
- * motion layer, the UI fragments, the diagrams). Page CSS lives in
- * site/landing.css and only styles what sits inside a visual.
+ * Built on the taste-skill kit in public/kit (system.css, the motion layer, the
+ * effect grounds). Page CSS lives in site/landing.css.
  */
 import { copy } from "./copy.mjs";
+import ART from "./juno-art.json" with { type: "json" };
+
+/* Juno, the magpie, as the app draws him (src/brand/Juno.tsx), in every mood. Written by
+   src/test/juno.test.tsx; inlined here so the page needs no extra requests. */
+const junoFig = (mood = "idle", cls = "") =>
+  `<svg class="juno-fig ${cls}" viewBox="${ART.figureViewBox}" aria-hidden="true" focusable="false">${ART.figure[mood]}</svg>`;
+const junoFace = (mood = "idle", cls = "") =>
+  `<span class="juno ${cls}" aria-hidden="true"><svg viewBox="${ART.avatarViewBox}" focusable="false">${ART.avatar[mood]}</svg></span>`;
 
 const esc = (s) =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-/*
- * The product marks audio it could not hear as [불명확] / [unclear]. In visible text the
- * brackets are drawn by CSS (.unc) around the word, so the token reads exactly as it does
- * in the app while the kit's placeholder check (which looks for [bracketed] text) stays useful.
- */
+
+/* [불명확] / [unclear] is the product's own token: in visible text its brackets are drawn by CSS (.unc). */
 const UNCLEAR = /\[(불명확|unclear)\]/g;
 const withUnclearTokens = (html) =>
   html
@@ -23,572 +27,585 @@ const withUnclearTokens = (html) =>
     .map((part) => (part.startsWith("<") ? part : part.replace(UNCLEAR, '<span class="unc">$1</span>')))
     .join("");
 
-const ARROW =
-  '<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>';
-const CHEV =
-  '<svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const CHECK =
-  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg>';
-const BEE = (cls = "", size = 20) =>
-  `<img class="${cls}" src="/brand/bee.svg" alt="" width="${size}" height="${Math.round(size * 0.946)}">`;
+const I = {
+  chev: '<svg class="i-chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg>',
+  right: '<svg class="i-right" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg>',
+  expand: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.5 3.5h3v3M12.5 3.5 9 7M6.5 12.5h-3v-3M3.5 12.5 7 9"/></svg>',
+  menu: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6h10M3 10h7"/></svg>',
+  edit: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5l3 3L6 13H3v-3z"/></svg>',
+  dots: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="8" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="12" cy="8" r="1"/></svg>',
+  search: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>',
+  check: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="m5.2 8.2 1.9 1.9 3.8-4"/></svg>',
+  tick: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg>',
+  copy: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8" height="8" rx="1.5"/><path d="M3 10.5V3h7.5"/></svg>',
+  thumb: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 7v6H3V7zM5 7l3-4.5c1 0 1.5.7 1.3 1.7L9 6.5h3.5c.8 0 1.4.8 1.2 1.6l-1 4c-.2.6-.7.9-1.3.9H5"/></svg>',
+  share: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10V2.5M5 5.5l3-3 3 3M3.5 9v4h9V9"/></svg>',
+  plus: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>',
+  mic: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="2" width="4" height="8" rx="2"/><path d="M3.5 8a4.5 4.5 0 0 0 9 0M8 12.5V14"/></svg>',
+  wave: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6v4M5.5 4v8M8 6.5v3M10.5 3.5v9M13 6v4"/></svg>',
+  bell: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14h3"/></svg>',
+  cal: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="3.5" width="11" height="10" rx="2"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"/></svg>',
+  lock: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.5a2.5 2.5 0 0 1 5 0V7"/></svg>',
+  trash: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.7 9h5.6l.7-9"/></svg>',
+  eye: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></svg>',
+  shield: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 13 3.6v4c0 3.2-2.2 5.5-5 6.6-2.8-1.1-5-3.4-5-6.6v-4z"/><path d="M8 5.5v3.5M8 11v.01"/></svg>',
+  file: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 7.5h4M6 10h4"/></svg>',
+  note: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h7l2 2v9h-9z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg>',
+  cards: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="5" width="9" height="8.5" rx="1.5"/><path d="M5 3h7.5a1 1 0 0 1 1 1v7"/></svg>',
+  flag: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5l-1.5 2.5L11.5 8H4"/></svg>',
+  audio: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6.5v3h2.5L9 12.5v-9L5.5 6.5z"/><path d="M11.5 5.5a3.5 3.5 0 0 1 0 5"/></svg>',
+  task: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="m5.3 8.2 1.8 1.8 3.6-3.8"/></svg>',
+  globe: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c1.7 1.7 2.5 3.7 2.5 6S9.7 12.3 8 14C6.3 12.3 5.5 10.3 5.5 8S6.3 3.7 8 2z"/></svg>',
+  arrow: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg>',
+  down: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4"/></svg>',
+  back: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg>',
+  close: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg>',
+  clock: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4.8V8l2.2 1.6"/></svg>',
+  sparkle: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8c.4 3.2 1.4 4.6 4.2 5.2-2.8.6-3.8 2-4.2 5.2-.4-3.2-1.4-4.6-4.2-5.2 2.8-.6 3.8-2 4.2-5.2zM12.6 10.6c.2 1.3.6 1.9 1.7 2.1-1.1.2-1.5.8-1.7 2.1-.2-1.3-.6-1.9-1.7-2.1 1.1-.2 1.5-.8 1.7-2.1z"/></svg>',
+  msg: '<svg viewBox="0 0 16 16" aria-hidden="true"><path class="fill" d="M8 2.6c3.3 0 6 2.1 6 4.7S11.3 12 8 12c-.6 0-1.2-.1-1.8-.2L3.2 13.6l.8-2.5C2.8 10.2 2 8.8 2 7.3 2 4.7 4.7 2.6 8 2.6z"/></svg>',
+};
 
-/* A pointy-top hexagon, the comb's one cell. */
-function hex(cx, cy, r) {
-  return Array.from({ length: 6 }, (_, i) => {
-    const a = (Math.PI / 180) * (60 * i - 90);
-    return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`;
-  }).join(" ");
+const MARK = (cls = "", size = 24, white = false, lazy = true) =>
+  `<img class="${cls}" src="/brand/${white ? "preplit-mark-white-256" : "preplit-mark-256"}.png" alt="" width="${size}" height="${Math.round(size * 1.37)}"${lazy ? ' loading="lazy"' : ""}>`;
+/* Juno, the magpie: the app's avatar drawing (src/brand/Juno.tsx), saved as public/brand/juno.svg. */
+const JUNO = (cls = "") => `<span class="juno ${cls}" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span>`;
+
+function phone(inner, cls = "") {
+  return `<div class="phone ${cls}" aria-hidden="true"><div class="phone__screen">
+          <div class="phone__status"><span>9:41</span><span class="phone__sig"><i></i><i></i><i></i><b>82</b></span></div>
+          ${inner}
+        </div></div>`;
+}
+function chatTop(title, actions = true) {
+  return `<div class="phone__top"><span class="pbtn">${I.menu}</span><b>${esc(title)}</b>${actions ? `<span class="pbtn pbtn--pair">${I.edit}${I.dots}</span>` : `<span class="pbtn">${I.dots}</span>`}</div>`;
 }
 
-/* The comb: one cell per card, filled when that card was reviewed. */
-function comb({ total, filled, perRow, cell, label, cls = "", liveCell = -1 }) {
-  const r = cell / Math.sqrt(3);
-  const rows = Math.ceil(total / perRow);
-  const w = perRow * cell + (rows > 1 ? cell / 2 : 0) + 4;
-  const h = r * 2 + (rows - 1) * r * 1.5 + 4;
-  let cells = "";
-  for (let i = 0; i < total; i++) {
-    const row = Math.floor(i / perRow);
-    const col = i % perRow;
-    const cx = 2 + cell / 2 + col * cell + (row % 2 ? cell / 2 : 0);
-    const cy = 2 + r + row * r * 1.5;
-    const state = i === liveCell ? "live" : i < filled ? "on" : "off";
-    cells += `<polygon class="cell cell--${state}" points="${hex(cx, cy, r - 1.6)}"/>`;
-  }
-  return `<svg class="comb ${cls}" viewBox="0 0 ${w.toFixed(1)} ${h.toFixed(1)}" role="img" aria-label="${esc(label)}">${cells}</svg>`;
-}
-
-/* A 50-minute lecture's loudness, drawn from a seeded series so the page never changes between builds. */
-function waveform(t) {
-  const N = 160;
-  const W = 1280;
-  const H = 168;
-  const mid = H / 2;
-  let seed = 917;
-  const rnd = () => {
-    seed = (seed * 1664525 + 1013904223) % 4294967296;
-    return seed / 4294967296;
-  };
-  const bw = W / N;
-  const u0 = 12 + 10 / 60;
-  const u1 = 14 + 2 / 60;
-  const flag = 31 + 5 / 60;
-  let bars = "";
-  for (let i = 0; i < N; i++) {
-    const min = (i / N) * 50;
-    let a = 0.42 + 0.2 * Math.sin(i * 0.23) + 0.16 * Math.sin(i * 0.061 + 1.3) + 0.3 * rnd();
-    if (i % 23 === 0) a *= 0.5;
-    a = Math.max(0.14, Math.min(1, a));
-    const unclear = min >= u0 && min <= u1;
-    if (unclear) a = 0.05 + 0.06 * rnd();
-    const h = a * (H - 24);
-    bars += `<rect class="${unclear ? "u" : "b"}" x="${(i * bw + bw * 0.22).toFixed(1)}" y="${(mid - h / 2).toFixed(1)}" width="${(bw * 0.56).toFixed(1)}" height="${h.toFixed(1)}" rx="1.6"/>`;
-  }
-  const x0 = (u0 / 50) * W;
-  const x1 = (u1 / 50) * W;
-  const xf = (flag / 50) * W;
-  const pct = (x) => ((x / W) * 100).toFixed(2);
-  return `<figure class="wave ui" role="img" aria-label="${esc(t.junbee.waveAlt)}">
-          <div class="wave__plot">
-            <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
-              <defs><pattern id="wave-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2" height="8" class="hatch"/></pattern></defs>
-              <rect class="wave__gap" x="${x0.toFixed(1)}" y="0" width="${(x1 - x0).toFixed(1)}" height="${H}" fill="url(#wave-hatch)"/>
-              ${bars}
-              <rect class="wave__flag" x="${(xf - 1).toFixed(1)}" y="0" width="2" height="${H}"/>
-            </svg>
-            <span class="wave__chip wave__chip--gap" style="--x: ${pct((x0 + x1) / 2)}%">${esc(t.junbee.unclear)}</span>
-            <span class="wave__chip wave__chip--flag" style="--x: ${pct(xf)}%">${esc(t.junbee.flag)}</span>
-            <div class="wave__axis" aria-hidden="true">${t.junbee.minutes.map((m) => `<span>${esc(m)}</span>`).join("")}</div>
-          </div>
-        </figure>`;
-}
-
-/* Memory over time: it fades, a review lifts it, and each lift fades more slowly. */
-function curve(t) {
-  const W = 400;
-  const H = 188;
-  const top = 18;
-  const base = 150;
-  const xOf = (d) => 14 + (d / 30) * (W - 28);
-  const yOf = (r) => base - r * (base - top);
-  const reviews = [1, 4, 11, 25];
-  const spans = [0.9, 2.6, 6.2, 13, 34];
-  let d = "";
-  let start = 0;
-  for (let s = 0; s <= reviews.length; s++) {
-    const end = s < reviews.length ? reviews[s] : 30;
-    for (let k = 0; k <= 24; k++) {
-      const day = start + ((end - start) * k) / 24;
-      const r = Math.exp(-(day - start) / spans[s]);
-      d += `${s === 0 && k === 0 ? "M" : "L"}${xOf(day).toFixed(1)} ${yOf(r).toFixed(1)} `;
-    }
-    if (s < reviews.length) d += `L${xOf(end).toFixed(1)} ${yOf(1).toFixed(1)} `;
-    start = end;
-  }
-  const dots = reviews
-    .map((day, i) => `<circle class="${i === reviews.length - 1 ? "dot dot--now" : "dot"}" cx="${xOf(day).toFixed(1)}" cy="${yOf(1).toFixed(1)}" r="4"/>`)
-    .join("");
-  const ticks = reviews
-    .map((day, i) => `<text x="${xOf(day).toFixed(1)}" y="${base + 26}" text-anchor="middle">${esc(t.remember.curve.days[i])}</text>`)
-    .join("");
-  return `<svg class="curve" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t.remember.curve.alt)}">
-                <line class="base" x1="14" x2="${W - 14}" y1="${base}" y2="${base}"/>
-                <path class="line" d="${d.trim()}"/>${dots}${ticks}
-              </svg>`;
-}
-
-function diagram(spec) {
-  return `<div class="dg" data-diagram><script type="application/json">${JSON.stringify(spec)}</script></div>`;
-}
-
-export function render(lang) {
-  const t = copy[lang];
-  const other = lang === "ko" ? copy.en : copy.ko;
-  const p = t.hero.phone;
-
-  const head = `<!doctype html>
-<html lang="${t.lang}" data-type="software" data-radius="soft" data-ground="sage" data-buttons="arrow" data-motion>
+/* The document head, shared by the landing page and the pricing page. */
+function pageHead(t, other, { title, description, path, koPath, enPath }) {
+  return `<!doctype html>
+<html lang="${t.lang}" data-type="software" data-radius="round" data-buttons="pill" data-ground="sky" data-motion>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>${esc(t.title)}</title>
-<meta name="description" content="${esc(t.description)}">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(description)}">
 <meta name="site-kind" content="software">
 <meta name="page-type" content="software">
-<meta name="theme-color" content="#EDEDE7">
-<link rel="canonical" href="https://preplitai.com${t.path}">
-<link rel="alternate" hreflang="ko" href="https://preplitai.com/">
-<link rel="alternate" hreflang="en" href="https://preplitai.com/en/">
-<link rel="alternate" hreflang="x-default" href="https://preplitai.com/">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff">
+<link rel="canonical" href="https://preplitai.com${path}">
+<link rel="alternate" hreflang="ko" href="https://preplitai.com${koPath}">
+<link rel="alternate" hreflang="en" href="https://preplitai.com${enPath}">
+<link rel="alternate" hreflang="x-default" href="https://preplitai.com${koPath}">
+<link rel="icon" href="/favicon.ico?v=3" sizes="48x48">
+<link rel="icon" href="/favicon-32.png?v=3" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
 <link rel="manifest" href="/site.webmanifest">
-<meta property="og:title" content="${esc(t.title)}">
-<meta property="og:description" content="${esc(t.description)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://preplitai.com${t.path}">
+<meta property="og:url" content="https://preplitai.com${path}">
+<meta property="og:image" content="https://preplitai.com/icon-512.png">
 <meta property="og:locale" content="${t.ogLocale}">
 <meta property="og:locale:alternate" content="${other.ogLocale}">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..600&family=IBM+Plex+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/kit/system.css">
 <link rel="stylesheet" href="/kit/ui/cards.css">
 <link rel="stylesheet" href="/kit/motion/motion.css">
 <link rel="stylesheet" href="/kit/backgrounds/backgrounds.css">
 <link rel="stylesheet" href="/kit/layout/layout.css">
-<link rel="stylesheet" href="/kit/icons/icon.css">
-<link rel="stylesheet" href="/kit/ui/base.css">
-<link rel="stylesheet" href="/kit/ui/window/fragment.css">
-<link rel="stylesheet" href="/kit/ui/doc/fragment.css">
-<link rel="stylesheet" href="/kit/ui/notify/fragment.css">
-<link rel="stylesheet" href="/kit/ui/checklist/fragment.css">
-<link rel="stylesheet" href="/kit/diagrams/diagram.css">
 <link rel="stylesheet" href="/site/landing.css">
 <script src="/kit/backgrounds/backgrounds.js"></script>
-<script src="/js/moments-guard.js"></script>
-<link rel="modulepreload" href="/kit/moments/moments.js">
-<link rel="modulepreload" href="/kit/moments/lib.js">
-<link rel="modulepreload" href="/kit/moments/marquee-row/moment.js">
+<script src="/js/lang.js"></script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://preplitai.com/#organization","name":"PreplitAI, Inc.","url":"https://preplitai.com","email":"info@preplitai.com"},{"@type":"WebSite","@id":"https://preplitai.com/#website","url":"https://preplitai.com","name":"Junbee","alternateName":"준비","publisher":{"@id":"https://preplitai.com/#organization"},"inLanguage":["ko","en"]},{"@type":"SoftwareApplication","name":"Junbee","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":${JSON.stringify(t.description)},"inLanguage":"${t.lang}","publisher":{"@id":"https://preplitai.com/#organization"}}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://preplitai.com/#organization","name":"Preplit AI, Inc.","url":"https://preplitai.com","logo":"https://preplitai.com/icon-512.png","email":"info@preplitai.com"},{"@type":"WebSite","@id":"https://preplitai.com/#website","url":"https://preplitai.com","name":"Preplit AI","publisher":{"@id":"https://preplitai.com/#organization"},"inLanguage":["ko","en"]},{"@type":"SoftwareApplication","name":"Preplit AI","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":${JSON.stringify(t.description)},"inLanguage":"${t.lang}","publisher":{"@id":"https://preplitai.com/#organization"}}]}
 </script>
 </head>`;
+}
 
-  const plan = `<!-- Generated by site/render.mjs from site/copy.mjs: edit those, then run npm run site.
-     type: software (page-type software, site-kind software)
-     deal: hero split; palette the client's own (bone #EDEDE7, paper #F8F8F4, ink #15181E, muted #626A76,
-           accent maroon #8A1328) via start.mjs brand; type bricolage pairing with the brand's IBM Plex Sans KR
-           as the text face (Hangul); nav nav-cards re-dealt to nav-centre (no photographs); footer
-           footer-statement; close close-type; rhythm dark-band; buttons arrow; mark the client's bee;
-           lit ground sage; grounds: how bg-band, faq bg-mist; effect grain-gradient (held still) in the
-           hero frame; card-group grounds: none fit, panels take the lit ground; moment marquee-row in
-           #pipeline; scene none.
-     screens at 1440x900: hero 1 · app 1 · how 1 · pipeline 1 · remember 2 · junbee 1 · faq 1 · closing 1 -->`;
-
-  const navGroups = t.nav.groups
-    .map(
-      (g) => `<div class="menu-col span-3">
-              <p class="t-label">${esc(g.title)}</p>
-              ${g.links.map(([href, name, line]) => `<a href="${href}">${esc(name)}<span>${esc(line)}</span></a>`).join("\n              ")}
-            </div>`,
-    )
-    .join("\n            ");
-
-  const header = `<header class="nav nav--centre">
-  <div class="wrap nav__bar">
-    <a class="skip" href="#app">${esc(t.skip)}</a>
-    <a class="nav__logo" href="#top">${BEE("nav__bee", 26)}Junbee</a>
-    <nav class="nav__links" aria-label="${lang === "ko" ? "주 메뉴" : "Main"}">
-      <div class="nav__item">
-        <a class="nav__link" href="#app">${esc(t.nav.notes)} ${CHEV}</a>
-        <div class="nav__menu">
-          <div class="wrap grid">
-            ${navGroups}
-          </div>
-        </div>
-      </div>
-      <div class="nav__item"><a class="nav__link" href="#how">${esc(t.nav.steps)}</a></div>
-      <div class="nav__item"><a class="nav__link" href="#remember">${esc(t.nav.review)}</a></div>
-      <div class="nav__item"><a class="nav__link" href="#junbee">${esc(t.nav.junbee)}</a></div>
-      <div class="nav__item"><a class="nav__link" href="#faq">${esc(t.nav.faq)}</a></div>
+/* The header: one white bar floating over the page, the mark on the left, four words in capitals,
+   the language, log in and the black Start button. On the pricing page the words lead back home. */
+function siteHeader(t, other, page) {
+  const home = page === "home";
+  const base = home ? "" : t.path;
+  const links = [
+    [`${base}#features`, t.nav.product, false],
+    [`${base}#juno`, t.nav.juno, false],
+    [t.pricing.path, t.nav.pricing, !home],
+    [`${base}#faq`, t.nav.faq, false],
+  ];
+  return `<header class="nav pv-nav">
+  <div class="nav__bar">
+    <a class="skip" href="#top">${esc(t.skip)}</a>
+    <a class="nav__logo" href="${home ? "#top" : t.path}" aria-label="Preplit AI">${MARK("nav__mark", 26, false, false)}</a>
+    <nav class="nav__links" aria-label="${t.lang === "ko" ? "주 메뉴" : "Main"}">
+      ${links.map(([href, label, current]) => `<div class="nav__item"><a class="nav__link" href="${href}"${current ? ' aria-current="page"' : ""}>${esc(label)}</a></div>`).join("\n      ")}
     </nav>
     <div class="nav__actions">
-      <a class="nav__link" href="${other.path}" hreflang="${other.lang}" lang="${other.lang}" aria-label="${esc(t.nav.switchLabel)}">${esc(t.nav.switchText)}</a>
-      <a class="nav__link" href="/login">${esc(t.nav.login)}</a>
-      <a class="btn btn--primary" href="/signup">${esc(t.cta)}${ARROW}</a>
+      <a class="pv-lang" href="${home ? other.path : other.pricing.path}" hreflang="${other.lang}" lang="${other.lang}" aria-label="${esc(t.nav.switchLabel)}">${I.globe}<span>${esc(t.nav.switchText)}</span></a>
+      <a class="nav__link pv-login" href="/login">${esc(t.nav.login)}</a>
+      <a class="btn btn--primary pv-start" href="/signup">${esc(t.nav.start)}${I.arrow}</a>
     </div>
     <button class="nav__toggle" type="button" aria-expanded="false" aria-label="${esc(t.nav.menu)}">
       <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
   </div>
 </header>`;
+}
 
-  const hero = `<section class="hero hero--split" aria-labelledby="hero-h">
+/* The black footer, shared too; its in-page links lead back to the landing page from elsewhere. */
+function siteFooter(t, other, page) {
+  const home = page === "home";
+  const ft = t.footer;
+  const fix = (href) => (href.startsWith("#") && !home ? `${t.path}${href}` : href);
+  return `<footer class="pv-footer" id="contact" aria-label="Preplit AI">
+  <div class="wrap">
+    <div class="pv-footer__top">
+      <div class="pv-footer__brand">
+        <a href="${home ? "#top" : t.path}" class="pv-footer__logo">${MARK("", 26, true)}<span>Preplit AI</span></a>
+        <p>${esc(t.hero.h1)}</p>
+      </div>
+      <div class="pv-footer__cols">
+        ${ft.cols.map(([title, links]) => `<div><h4>${esc(title)}</h4><ul>${links.map(([href, label]) => `<li><a href="${fix(href)}">${esc(label)}</a></li>`).join("")}</ul></div>`).join("\n        ")}
+      </div>
+    </div>
+    <div class="pv-footer__legal">${ft.legal.map((p) => `<p>${esc(p)}</p>`).join("")}</div>
+    <div class="pv-footer__bottom">
+      <span>${esc(ft.company)}<a href="/privacy">${esc(ft.privacy)}</a></span>
+      <a href="${home ? other.path : other.pricing.path}" hreflang="${other.lang}" lang="${other.lang}">${t.lang === "ko" ? "English" : "한국어"}</a>
+    </div>
+  </div>
+</footer>`;
+}
+
+/* Preplit AI isn't public yet: sign-up, log-in and the app open this note instead (public/js/early.js).
+   The backend is unchanged; a developer passes once with ?dev=1 on any page. */
+function earlyDialog(t) {
+  const e = t.early;
+  return `<dialog class="early" id="early" aria-labelledby="early-h" aria-describedby="early-p">
+  <div class="early__card">
+    <button class="early__x" type="button" data-early-close aria-label="${esc(e.close)}">${I.close}</button>
+    <span class="early__mark" aria-hidden="true">${MARK("", 40, false, false)}<i class="early__dot"></i></span>
+    <p class="early__badge">${I.sparkle}<span>${esc(e.badge)}</span></p>
+    <h2 id="early-h">${esc(e.title)}</h2>
+    <p class="early__feature" data-early-feature></p>
+    <p class="early__body" id="early-p">${esc(e.body)}</p>
+    <button class="early__ok" type="button" data-early-close autofocus>${esc(e.button)}</button>
+  </div>
+</dialog>
+<script src="/js/early.js"></script>`;
+}
+
+const SCRIPTS = `<script type="module" src="/kit/system.js"></script>
+<script type="module" src="/kit/motion/motion.js"></script>
+<script type="module" src="/kit/layout/layout.js"></script>`;
+
+export function render(lang) {
+  const t = copy[lang];
+  const other = lang === "ko" ? copy.en : copy.ko;
+  const h = t.hero;
+
+  const head = pageHead(t, other, { title: t.title, description: t.description, path: t.path, koPath: "/", enPath: "/en/" });
+
+  const plan = `<!-- Generated by site/render.mjs from site/copy.mjs: edit those, then run npm run site.
+     type: software (page-type software, site-kind software)
+     look: the client's reference (a white page, near-black grotesk, black pill buttons, phones in dark UI
+           with white floating cards), in Preplit AI's own colours (black, maroon #A00020, gold #F8D000).
+           The header is a white bar floating over the page. The hero stands on the client's autumn campus sky.
+           Black grounds carry the white logo. Every phone and window is shown whole.
+     story: the student companion that lowers cognitive load (site/copy.mjs): the six stages, Juno, a day with
+           Juno, his text messages, the workspace he keeps, and the career his courses lead to.
+     screens at 1440x900: hero 1 · stages 2 · juno 1 · how 1 · nudge 1 · workspace 1 · career 1 · safe 1 · course 1 · faq 1 · get 1;
+     the footer runs to its own height -->`;
+
+  const header = siteHeader(t, other, "home");
+
+  /* the hero phone: Juno writing first, the morning of a class day */
+  const hp = h.phone;
+  const today = `<div class="day">
+            <p class="day__label">${esc(hp.today)}</p>
+            ${hp.rows.map(([when, what, meta], i) => `<p class="day__row"><em>${esc(when)}</em><span><b>${esc(what)}</b><small>${esc(meta)}</small></span><i class="day__ico">${[I.note, I.task, I.cards][i]}</i></p>`).join("")}
+          </div>`;
+  const hero = `<section class="hero hero--split pv-hero pv-hero--sky" aria-labelledby="hero-h">
     <div class="wrap"><div class="hero-text grid hero__grid">
       <div class="hero__text span-6">
-        <p class="hero__kicker">${esc(t.hero.notice)}</p>
-        <h1 id="hero-h">${esc(t.hero.h1)}</h1>
-        <p class="hero__lead">${esc(t.hero.lead)}</p>
-        <div class="btn-row"><a class="btn btn--primary" href="/signup">${esc(t.cta)}${ARROW}</a><a class="btn btn--secondary" href="#app">${esc(t.hero.second)}</a></div>
-        <dl class="hero-facts">
-          ${t.hero.facts.map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join("\n          ")}
-        </dl>
+        <h1 id="hero-h">${esc(h.h1)}</h1>
+        <p class="hero__lead">${esc(h.lead)}</p>
+        <div class="btn-row"><a class="btn btn--primary" href="/signup">${esc(t.cta)}</a><a class="btn btn--secondary" href="#how">${esc(h.second)}</a></div>
+        <div class="rec-card" aria-hidden="true">
+          <span class="rec-card__dot"></span>
+          <span class="rec-card__text"><b>${esc(h.rec.label)}</b><span>${esc(h.rec.course)}</span></span>
+          <span class="rec-card__timer">${esc(h.rec.timer)}</span>
+          <span class="rec-card__stop">${esc(h.rec.stop)}</span>
+        </div>
       </div>
-      <div class="hero__media span-6 start-7" data-visual data-m-loop data-fx="grain-gradient" data-fx-seed="11" data-fx-palette='{"bg":"#cdd6c6","surface":"#dce3d6","ink":"#262d24","accent":"#6c8e63"}' data-fx-params='{"speed":0,"drift":0,"grainMotion":0}' role="img" aria-label="${esc(t.hero.alt)}">
-        <div class="device ui" aria-hidden="true">
-          <div class="device__screen">
-            <div class="rv__bar"><span class="rv__title">${esc(p.title)}</span><span class="rv__count"><span class="rv__n3">3 / 8</span><span class="rv__n4">${esc(p.count)}</span></span></div>
-            ${comb({ total: 8, filled: 3, perRow: 8, cell: 30, label: p.comb, cls: "rv__comb", liveCell: 3 })}
-            <div class="rv__card">
-              <p class="rv__course">${esc(p.course)}</p>
-              <p class="rv__q">${esc(p.q)}</p>
-              <div class="rv__answer"><p>${esc(p.a)}</p></div>
-              <p class="rv__src"><span class="rv__flag" aria-hidden="true"></span><span>${esc(p.src)}</span></p>
-              <span class="rv__reveal">${esc(p.reveal)}</span>
-            </div>
-            <div class="rv__rates">${p.ratings.map((r, i) => `<span class="rv__rate${i === 2 ? " rv__rate--pick" : ""}">${esc(r)}</span>`).join("")}</div>
+      <div class="pv-hero__stage span-6 start-7" role="img" aria-label="${esc(h.alt)}">
+        ${phone(`${chatTop(hp.title)}
+          <div class="chat">
+            <p class="chat__who">${JUNO("juno--xs")}Juno<em>${esc(hp.time)}</em></p>
+            <p class="chat__bot">${esc(hp.brief)}</p>
+            ${today}
+            <p class="chat__me">${esc(hp.ask)}</p>
+            <p class="chat__bot">${esc(hp.answer)}</p>
           </div>
+          <div class="composer"><span class="composer__ph">${esc(hp.composer)}</span><span class="composer__row">${I.plus}<span class="composer__who">${JUNO("juno--xs")}Juno</span>${I.mic}<span class="composer__send">${I.wave}</span></span></div>`)}
+        <div class="pv-hero__mini" aria-hidden="true">
+          <p class="chat__who">${JUNO("juno--xs")}Juno<em>${esc(hp.time)}</em></p>
+          <p class="chat__bot">${esc(hp.brief)}</p>
+          ${today}
         </div>
-        <div class="ly-float jb-float">
-          <div class="ly-float__row"><span class="jb-float__who">${BEE("jb-float__bee", 20)}${esc(t.hero.float.who)}</span><span>${esc(t.hero.float.when)}</span></div>
-          <div class="ly-float__title">${esc(t.hero.float.text)}</div>
-        </div>
+        <div class="float float--review" aria-hidden="true">${JUNO("juno--md")}<span><b>${esc(h.floatGame.title)}</b><span>${esc(h.floatGame.body)}</span></span></div>
+        <div class="float float--sem" aria-hidden="true"><span class="float__label">${MARK("", 12)}${esc(h.floatSemester.label)}</span><b>${esc(h.floatSemester.value)}<small> ${esc(h.floatSemester.of)}</small></b></div>
       </div>
     </div></div>
   </section>`;
 
-  const a = t.app;
-  const rows = a.rows
-    .map(
-      ([n, who, sub, st, label, date], i) =>
-        `<li class="ui-win__row${i === 1 ? " is-sel" : ""}" data-row><span class="ui-avatar" data-tone="${(i % 5) + 1}">${esc(n)}</span><span class="ui-win__who">${esc(who)}</span><span class="ui-win__sub">${esc(sub)}</span><span class="ui-win__st${st === "done" ? " is-done" : " is-you"}" data-st>${esc(label)}</span><span class="ui-win__age">${esc(date)}</span></li>`,
-    )
-    .join("\n              ");
-  const d = a.doc;
-  const app = `<section class="section" id="app" aria-labelledby="app-h">
+  /* ---- the six stages, each with a piece of the product ---- */
+  const f = t.features;
+  const wave = (n) => Array.from({ length: n }, (_, i) => `<i style="--k: ${(0.2 + 0.7 * Math.abs(Math.sin(i * 1.3) * Math.cos(i * 0.45))).toFixed(2)}"></i>`).join("");
+  const visuals = [
+    `<div class="sv sv-setup">
+            <p class="sv-bubble">${junoFace("idle", "juno--xs")}<span>${esc(f.setup.ask)}</span></p>
+            <p class="sv-chips"><span>${I.task}${esc(f.setup.major)}</span><span>${I.flag}${esc(f.setup.goal)}</span></p>
+            <ul class="sv-files">${f.setup.files.map((x) => `<li>${I.file}<span>${esc(x)}</span></li>`).join("")}</ul>
+            <ul class="sv-times">${f.setup.times.map(([d, tm, c]) => `<li><b>${esc(d)}</b><em>${esc(tm)}</em><span>${esc(c)}</span></li>`).join("")}</ul>
+          </div>`,
+    `<div class="sv sv-before">
+            <p class="sv-head"><span class="sv-code">OS</span><span><b>${esc(f.before.course)}</b><small>${esc(f.before.time)}</small></span></p>
+            ${f.before.rows.map(([k, v], i) => `<p class="sv-row">${[I.file, I.flag, I.search][i]}<small>${esc(k)}</small><span>${esc(v)}</span></p>`).join("")}
+          </div>`,
+    `<div class="sv sv-during">
+            <p class="sv-live"><i></i><span>${esc(f.during.status)}</span><em>${esc(f.during.timer)}</em></p>
+            <div class="rec__wave">${wave(22)}</div>
+            <p class="sv-to">${I.note}<span>${esc(f.during.to)}</span></p>
+          </div>`,
+    `<div class="sv sv-after">
+            <p class="sv-path">${f.after.path.map((x) => `<span>${esc(x)}</span>`).join("<i>›</i>")}</p>
+            <p class="sv-terms">${f.after.terms.map((x) => `<span>${esc(x)}</span>`).join("")}</p>
+            <p class="sv-links">${f.after.links.map((x, i) => `<span>${[I.file, I.audio][i]}${esc(x)}</span>`).join("")}<span class="sv-q">${I.cards}${esc(f.after.questions)}</span></p>
+          </div>`,
+    `<div class="sv sv-study">
+            ${f.study.rows.map(([d, x, m, st]) => `<p class="sv-plan${st ? ` sv-plan--${st}` : ""}"><b>${esc(d)}</b><span>${esc(x)}</span><em>${esc(m)}</em></p>`).join("")}
+            <p class="sv-quiet">${I.bell}<span>${esc(f.study.quiet)}</span></p>
+          </div>`,
+    `<div class="sv sv-career">
+            <p class="sv-terms">${f.career.skills.map((x) => `<span>${esc(x)}</span>`).join("")}</p>
+            <p class="sv-proj">${I.task}<span>${esc(f.career.project)}</span></p>
+            <p class="sv-proj sv-proj--path">${I.flag}<span>${esc(f.career.path)}</span></p>
+          </div>`,
+  ];
+  const features = `<section class="section pv-stages" id="features" aria-labelledby="features-h">
     <div class="wrap">
-      <div class="grid grid--top">
-        <h2 id="app-h" class="span-6">${esc(a.h2)}</h2>
-        <div class="span-6 start-7 stack-4">
-          <p class="app__lede">${esc(a.p)}</p>
-          <a class="link" href="#pipeline">${esc(a.link)}</a>
-        </div>
-      </div>
-      <div class="ui app fill" role="img" aria-label="${esc(a.alt)}" data-ui-pause-host>
-        <div class="app__pane app__pane--list">
-          <div class="ui ui-panel ui-win" data-open="${esc(a.states.open)}" data-work="${esc(a.states.work)}" data-done="${esc(a.states.done)}">
-            <div class="ui-win__bar">
-              <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-              <span class="ui-win__crumb">${BEE("ui-brand", 16)}${esc(a.crumb[0])} <i>/</i> <b>${esc(a.crumb[1])}</b></span>
-              <span class="ui-spacer"></span>
-              <span class="ui-win__search" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span class="ui-win__ph">${esc(a.search)}</span><span class="ui-kbd">/</span></span>
-            </div>
-            <div class="ui-win__body">
-              <nav class="ui-win__side" aria-hidden="true">
-                <span class="ui-win__nav is-on"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M3 3.5h10v9H3z"/><path d="M5.5 6.5h5M5.5 9h3"/></svg>${esc(a.side[0][0])}<em>${a.side[0][1]}</em></span>
-                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M3 4.5h7.5v8H3z"/><path d="M5.5 2.5H13v8"/></svg>${esc(a.side[1][0])}<em>${a.side[1][1]}</em></span>
-                <span class="ui-win__label">${esc(a.sideLabel)}</span>
-                ${a.courses.map((c, i) => `<span class="ui-win__nav${i === 0 ? " is-on" : ""}"><span class="ui-win__hash">#</span>${esc(c)}</span>`).join("\n                ")}
-              </nav>
-              <div class="ui-win__main">
-                <div class="ui-win__cols" aria-hidden="true">${a.cols.map((c) => `<span>${esc(c)}</span>`).join("")}</div>
-                <ul class="ui-win__rows">
-              ${rows}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="app__pane app__pane--open" data-ui-loop>
-          <div class="ui ui-doc" data-ui="doc">
-            <article class="ui-doc__page">
-              <div class="ui-doc__label">${esc(d.label)}</div>
-              <div class="ui-doc__title">${esc(d.title)}</div>
-              <div class="ui-doc__text">${esc(d.p1a)}<mark class="ui-doc__mark is-on">${esc(d.mark1)}</mark>${esc(d.p1b)}</div>
-              <div class="ui-doc__h">${esc(d.h1)}</div>
-              <ul class="ui-doc__list">${d.concepts.map((c) => `<li class="ui-doc__text">${esc(c)}</li>`).join("")}</ul>
-              <div class="ui-doc__h">${esc(d.h2)}</div>
-              <div class="ui-doc__text">${esc(d.p2)}</div>
-              <div class="ui-doc__text">${esc(d.p3a)}<mark class="ui-doc__mark" data-kind="${esc(d.note2.kind)}" data-msg="${esc(d.note2.msg)}" data-where="${esc(d.note2.where)}">${esc(d.mark2)}</mark>${esc(d.p3b)}</div>
-              <div class="ui-doc__text">${esc(d.p4)}</div>
-            </article>
-            <aside class="ui-doc__note ui-panel is-on" aria-live="polite">
-              <div class="ui-doc__kind"><span class="ui-doc__dot"></span><span data-doc-kind>${esc(d.note1.kind)}</span></div>
-              <div class="ui-doc__msg" data-doc-msg>${esc(d.note1.msg)}</div>
-              <div class="ui-doc__where" data-doc-where>${esc(d.note1.where)}</div>
-            </aside>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>`;
-
-  const h = t.how;
-  const how = `<section class="section bg-band" id="how" aria-labelledby="how-h">
-    <div class="wrap">
-      <div class="section-head"><h2 id="how-h">${esc(h.h2)}</h2><p>${esc(h.p)}</p></div>
-      <div class="grid">
-        <article class="card card--row card--open span-4 m-nolift">
-          <span class="step-num">1</span>
-          <h3>${esc(h.steps[0].title)}</h3>
-          <p>${esc(h.steps[0].body)}</p>
-          <div class="panel">
-            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max: 340px; --ax: max(24px, 50% - 170px); --ay: 40px; --ay-sm: 32px">
-              <div class="ui ui-panel up" data-m-loop>
-                <div class="up__head"><span class="ui-title">${lang === "ko" ? "녹음 올리기" : "Upload"}</span><span class="ui-spacer"></span><span class="ui-meta">2</span></div>
-                <div class="up__file">
-                  <span class="up__icon"><img data-icon="file:file-type-audio" src="/kit/icons/audio.svg" alt="" width="22" height="22"></span>
-                  <span class="up__text"><span class="up__name">${esc(h.upload.file)}</span><span class="up__size">${esc(h.upload.size)}</span></span>
-                  <span class="up__state"><span class="up__busy">${esc(h.upload.status)}</span><span class="up__done">${CHECK}${esc(h.upload.done)}</span></span>
-                  <span class="up__bar"><i></i></span>
-                </div>
-                <div class="up__file up__file--next">
-                  <span class="up__icon"><img data-icon="file:file-type-audio" src="/kit/icons/audio.svg" alt="" width="22" height="22"></span>
-                  <span class="up__text"><span class="up__name">${esc(h.upload.next)}</span><span class="up__size">${esc(h.upload.nextSize)}</span></span>
-                  <span class="up__state"><span class="up__wait">${esc(h.upload.waiting)}</span></span>
-                </div>
-              </div>
-            </div></div>
-          </div>
-        </article>
-        <article class="card card--row card--open span-4 m-nolift">
-          <span class="step-num">2</span>
-          <h3>${esc(h.steps[1].title)}</h3>
-          <p>${esc(h.steps[1].body)}</p>
-          <div class="panel">
-            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max: 380px; --ax: max(24px, 50% - 190px); --ay: calc(100% - 196px); --ay-sm: calc(100% - 196px)">
-              <div class="ui ui-notify" data-ui="notify" data-ui-still>
-                <ul class="ui-notify__list" data-notify-list>
-                  ${h.notes
-                    .map(
-                      ([title, body, time]) =>
-                        `<li class="ui-note"><span class="ui-note__av jb-av">${BEE("", 18)}</span><span class="ui-note__text"><span class="ui-note__title"><span class="ui-note__t">${esc(title)}</span><time>${esc(time)}</time></span><span class="ui-note__body">${esc(body)}</span></span></li>`,
-                    )
-                    .join("\n                  ")}
-                </ul>
-              </div>
-            </div></div>
-          </div>
-        </article>
-        <article class="card card--row card--open span-4 m-nolift">
-          <span class="step-num">3</span>
-          <h3>${esc(h.steps[2].title)}</h3>
-          <p>${esc(h.steps[2].body)}</p>
-          <div class="panel">
-            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max: 340px; --ax: max(24px, 50% - 170px); --ay: 40px; --ay-sm: 32px">
-              <div class="ui ui-panel ui-checks" data-ui="checklist" data-ui-still>
-                <div class="ui-checks__head"><div class="ui-title">${esc(h.checks.title)}</div><span class="ui-spacer"></span><div class="ui-meta" data-checks-count>${esc(h.checks.count)}</div></div>
-                <div class="ui-checks__bar"><i data-checks-bar style="--k: 0.6"></i></div>
-                <ul class="ui-checks__list">
-                  ${h.checks.items
-                    .map((it, i) => `<li class="ui-check${i < 3 ? " is-done" : ""}"><span class="ui-check__box">${CHECK}</span><span class="ui-check__label">${esc(it)}</span></li>`)
-                    .join("\n                  ")}
-                </ul>
-              </div>
-            </div></div>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>`;
-
-  const pl = t.pipeline;
-  const lanes = diagram({
-    layout: "lanes",
-    alt: pl.diagramAlt,
-    input: { label: pl.input[0], icon: "file:file-type-audio", sub: pl.input[1] },
-    core: { label: "Junbee", icon: "/favicon.svg" },
-    lanes: [
-      { label: pl.lanes[0][0], icon: "ui:file-text", done: true, sub: pl.lanes[0][1] },
-      { label: pl.lanes[1][0], icon: "ui:notebook-pen", done: true, sub: pl.lanes[1][1] },
-      { label: pl.lanes[2][0], icon: "ui:layers", done: true, sub: pl.lanes[2][1] },
-    ],
-    ground: "dots",
-  });
-  const pipeline = `<section class="section" id="pipeline" aria-labelledby="pipeline-h">
-    <div class="wrap">
-      <div class="grid grid--top">
-        <div class="span-6 split__text">
-          <h2 id="pipeline-h">${esc(pl.h2)}</h2>
-          <p class="t-lead">${esc(pl.p)}</p>
-          <dl class="split__facts">
-            ${pl.facts.map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join("\n            ")}
-          </dl>
-          <a class="link" href="/privacy">${esc(pl.link)}</a>
-        </div>
-        <div class="frame frame--split frame--diagram span-6 start-7">
-          ${lanes.replace('class="dg"', 'class="dg" data-dg-still')}
-        </div>
-      </div>
-      <div class="subjects" data-moment="marquee-row" data-moment-opts='{"speed": 36}' aria-label="${esc(pl.subjectsLabel)}">
-        <ul class="mo-mq__track">${pl.subjects.map((s) => `<li>${esc(s)}</li>`).join("")}</ul>
-      </div>
-    </div>
-  </section>`;
-
-  const rm = t.remember;
-  const hub = diagram({
-    layout: "hub",
-    alt: rm.hub.alt,
-    center: { label: rm.hub.center, icon: "ui:book-open" },
-    spokes: rm.hub.spokes.map(([label, icon]) => ({ label, icon })),
-  });
-  const remember = `<section class="section g2" id="remember" aria-labelledby="remember-h">
-    <div class="wrap">
-      <div class="group">
-        <div class="section-head"><h2 id="remember-h">${esc(rm.h2)} <span class="muted">${esc(rm.h2muted)}</span></h2><a class="link" href="#faq">${esc(rm.link)}</a></div>
-        <div class="grid">
-          <article class="card card--row card--open span-6 m-nolift">
-            <h3>${esc(rm.cards[0].title)}</h3>
-            <p>${esc(rm.cards[0].body)}</p>
-            <div class="panel">
-              <div class="stage stage--fade-b"><div class="at-rise fit to-edge" style="--fit-max: 452px; --ax: max(24px, 50% - 226px); --ay: 40px; --ay-sm: 32px">
-                <div class="ui ui-panel cv">
-                  <div class="cv__head"><span class="ui-title">${esc(rm.curve.title)}</span><span class="ui-spacer"></span><span class="ui-meta">${esc(rm.curve.axis)} 4</span></div>
-                  ${curve(t)}
-                </div>
-              </div></div>
-            </div>
-          </article>
-          <article class="card card--row card--open span-6 m-nolift">
-            <h3>${esc(rm.cards[1].title)}</h3>
-            <p>${esc(rm.cards[1].body)}</p>
-            <div class="panel">
-              <div class="stage stage--fade-b"><div class="at-rise fit to-edge" style="--fit-max: 452px; --ax: max(24px, 50% - 226px); --ay: 40px; --ay-sm: 32px">
-                <div class="ui ui-panel cb">
-                  <div class="cb__head"><span class="ui-title">${esc(rm.comb.title)}</span><span class="ui-spacer"></span><span class="ui-meta">${esc(rm.comb.meta)}</span></div>
-                  ${comb({ total: 20, filled: 20, perRow: 10, cell: 34, label: rm.comb.label, cls: "cb__comb" })}
-                  <div class="cb__done">${BEE("cb__bee", 22)}<span><b>${esc(rm.comb.done)}</b><span>${esc(rm.comb.sub)}</span></span></div>
-                  <ul class="cb__rows">${rm.comb.rows.map(([q, r]) => `<li><span>${esc(q)}</span><span class="cb__rate">${esc(r)}</span></li>`).join("")}</ul>
-                </div>
-              </div></div>
-            </div>
-          </article>
-        </div>
-      </div>
-      <div class="grid">
-        <article class="card card--row card--open span-6 m-nolift">
-          <h3>${esc(rm.cards[2].title)}</h3>
-          <p>${esc(rm.cards[2].body)}</p>
-          <div class="panel">
-            <div class="stage stage--fade-b"><div class="at-rise fit to-edge" style="--fit-max: 452px; --ax: max(24px, 50% - 226px); --ay: 40px; --ay-sm: 32px">
-              <div class="ui ui-panel ht">
-                <div class="ht__head"><span class="ui-title">${esc(rm.hints.title)}</span><span class="ui-spacer"></span><span class="ui-meta">${esc(rm.hints.meta)}</span></div>
-                <ul class="ht__rows">
-                  ${rm.hints.rows.map(([q, at], i) => `<li class="ht__row${i === 0 ? " is-on" : ""}"><span class="ht__flag" aria-hidden="true"></span><span class="ht__q">${esc(q)}</span><span class="ht__at">${esc(at)}</span></li>`).join("\n                  ")}
-                </ul>
-              </div>
-            </div></div>
-          </div>
-        </article>
-        <article class="card card--row card--open span-6 m-nolift">
-          <h3>${esc(rm.cards[3].title)}</h3>
-          <p>${esc(rm.cards[3].body)}</p>
-          <div class="panel panel--diagram">
-            ${hub}
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>`;
-
-  const j = t.junbee;
-  const junbee = `<section class="section ground-inverse" id="junbee" aria-labelledby="junbee-h">
-    <div class="wrap">
-      <div class="section-head"><h2 id="junbee-h">${esc(j.h2)}</h2><p>${esc(j.p)}</p></div>
-      ${waveform(t)}
-      <div class="grid says">
-        ${j.messages
+      <div class="section-head pv-head"><p class="pv-eyebrow">${esc(f.label)}</p><h2 id="features-h">${esc(f.h2)}</h2><p>${esc(f.p)}</p></div>
+      <ol class="st-cards">
+        ${f.stages
           .map(
-            ([when, text]) => `<div class="span-4 say">
-          <p class="t-label say__when">${esc(when)}</p>
-          <p class="say__msg ui">${BEE("say__bee", 24)}<span>${esc(text)}</span></p>
-        </div>`,
+            (s, i) => `<li class="st-card st-card--${i}">
+          <p class="st-card__k"><b>${esc(s.n)}</b><span>${esc(s.name)}</span></p>
+          <h3>${esc(s.title)}</h3>
+          <p class="st-card__text">${esc(s.text)}</p>
+          <div class="st-card__vis" aria-hidden="true">${visuals[i]}</div>
+        </li>`,
           )
           .join("\n        ")}
+      </ol>
+    </div>
+  </section>`;
+
+  /* ---- Meet Juno: who he is ---- */
+  const jn = t.juno;
+  const moodKeys = ["listen", "work", "found", "rest"];
+  const traitIcons = [I.note, I.bell, I.file, I.lock];
+  const juno = `<section class="section pv-juno" id="juno" aria-labelledby="juno-h">
+    <div class="wrap grid pv-juno__grid">
+      <div class="pv-juno__text span-6">
+        <p class="pv-eyebrow">${esc(jn.label)}</p>
+        <h2 id="juno-h">${esc(jn.h2)}</h2>
+        <p class="pv-juno__lead">${esc(jn.p)}</p>
+        <ul class="pv-traits">
+          ${jn.traits.map(([n, d], i) => `<li><span class="pv-traits__ico">${traitIcons[i]}</span><b>${esc(n)}</b><span>${esc(d)}</span></li>`).join("\n          ")}
+        </ul>
+      </div>
+      <div class="pv-juno__stage span-6 start-7" role="img" aria-label="${esc(jn.alt)}">
+        <div class="pv-juno__sky">
+          ${junoFig("idle", "pv-juno__bird")}
+          ${jn.says.map(([b, s], i) => `<p class="say say--${i}">${i === 2 ? `<span class="say__flag">${I.flag}</span>` : junoFace(i === 0 ? "found" : "idle", "juno--xs")}<span><b>${esc(b)}</b><small>${esc(s)}</small></span></p>`).join("\n          ")}
+          <ul class="moods">${moodKeys.map((m, i) => `<li>${junoFace(m, "juno--mood")}<span>${esc(jn.moods[i])}</span></li>`).join("")}</ul>
+        </div>
       </div>
     </div>
   </section>`;
 
-  const half = Math.ceil(t.faq.items.length / 2);
-  const faqCol = (items) =>
-    items.map(([q, ans]) => `<div class="faq__item"><h3>${esc(q)}</h3><p>${esc(ans)}</p></div>`).join("\n          ");
-  const faq = `<section class="section" id="faq" aria-labelledby="faq-h">
+  /* ---- a day with Juno: before class, in class, after class, the evening game ---- */
+  const hw = t.how;
+  const bars = wave(26);
+  const screens = [
+    phone(`<div class="ph-brief">
+            <div class="phone__top"><span class="pbtn">${I.menu}</span><b>${esc(hw.brief.title)}</b><span class="pbtn">${I.bell}</span></div>
+            <p class="ph-brief__course"><span class="sv-code">OS</span><span><b>${esc(hw.brief.course)}</b><small>${esc(hw.brief.time)}</small></span></p>
+            <p class="ph-brief__file">${I.file}<span><b>${esc(hw.brief.ready)}</b><small>${esc(hw.brief.readyMeta)}</small></span>${I.check}</p>
+            <div class="ph-brief__box"><p class="ph-brief__k">${esc(hw.brief.open)}</p><p class="ph-brief__v">${esc(hw.brief.openText)}</p></div>
+            <div class="ph-brief__box"><p class="ph-brief__k">${esc(hw.brief.ask)}</p>${hw.brief.questions.map((q, i) => `<p class="ph-brief__q"><b>${i + 1}</b><span>${esc(q)}</span></p>`).join("")}</div>
+            <p class="ph-brief__foot">${junoFace("idle", "juno--xs")}<span>${esc(hw.brief.foot)}</span></p>
+          </div>`, "phone--light"),
+    phone(`<div class="ph-rec">
+            <div class="phone__top"><span class="pbtn">${I.back}</span><b>${esc(hw.rec.course)}</b><span class="ph-live"><i></i>REC</span></div>
+            <div class="ph-rec__bird">${junoFig("listen")}</div>
+            <p class="ph-rec__status">${esc(hw.rec.status)}</p>
+            <p class="ph-rec__timer">${esc(hw.rec.timer)}</p>
+            <p class="ph-rec__course">${esc(hw.rec.course)} · ${esc(hw.rec.week)}</p>
+            <div class="rec__wave">${bars}</div>
+            <p class="ph-rec__line">${I.note}<span>${esc(hw.rec.note)}</span></p>
+            <p class="ph-rec__line">${I.clock}<span>${esc(hw.rec.limit)}</span></p>
+            <span class="rec__stop">${esc(hw.rec.stop)}</span>
+          </div>`),
+    phone(`<div class="ph-note">
+            <div class="phone__top"><span class="pbtn">${I.back}</span><b>${esc(hw.note.course)}</b><span class="pbtn">${I.dots}</span></div>
+            <p class="ph-note__ready">${junoFace("found", "juno--xs")}${esc(hw.note.ready)}</p>
+            <p class="ph-note__meta">${esc(hw.note.path)}</p>
+            <p class="ph-note__title">${esc(hw.note.title)}</p>
+            <p class="ph-note__sum">${esc(hw.note.summary)}</p>
+            <p class="ph-note__terms">${hw.note.terms.map((x) => `<span>${esc(x)}</span>`).join("")}</p>
+            <div class="ph-note__hint"><span>${I.flag}${esc(hw.note.hint)}</span>${esc(hw.note.hintText)}</div>
+            <p class="ph-note__links">${hw.note.links.map((x, i) => `<span>${[I.file, I.audio][i]}${esc(x)}</span>`).join("")}</p>
+            <p class="ph-note__foot">${I.cards}<span>${esc(hw.note.foot)}</span></p>
+          </div>`, "phone--light"),
+    phone(`<div class="ph-game">
+            <div class="phone__top"><span class="pbtn">${I.close}</span><b>${esc(hw.game.title)}</b><span class="ph-count">${esc(hw.game.count)}</span></div>
+            <span class="ph-rev__bar" style="--v: .6"><i></i></span>
+            <p class="ph-game__meta"><span>${esc(hw.game.from)}</span><em>${I.clock}${esc(hw.game.timer)}</em></p>
+            <p class="ph-game__q">${esc(hw.game.q)}</p>
+            <ul class="ph-game__opts">${hw.game.options.map((o, i) => `<li${i === hw.game.right ? ' class="is-right"' : ""}><b>${"ABCD"[i]}</b><span>${esc(o)}</span>${i === hw.game.right ? I.tick : ""}</li>`).join("")}</ul>
+            <p class="ph-game__foot">${junoFace("happy", "juno--xs")}<span>${esc(hw.game.foot)}</span></p>
+          </div>`, "phone--light"),
+  ];
+  const how = `<section class="section pv-how" id="how" aria-labelledby="how-h">
     <div class="wrap">
-      <div class="section-head"><h2 id="faq-h">${esc(t.faq.h2)}</h2></div>
-      <div class="ui keep" role="img" aria-label="${esc(t.faq.keep.alt)}">
-        <div class="keep__item keep__item--gone"><span class="keep__icon"><img src="/kit/icons/audio.svg" alt="" width="22" height="22"></span><span class="keep__text"><b>${esc(t.faq.keep.gone[0])}</b><span>${esc(t.faq.keep.gone[1])}</span></span></div>
-        ${t.faq.keep.kept
-          .map(
-            ([name, line], i) =>
-              `<div class="keep__item"><span class="keep__icon"><img src="/kit/icons/${["ui-file-text", "ui-notebook-pen", "ui-layers"][i]}.svg" alt="" width="20" height="20"></span><span class="keep__text"><b>${esc(name)}</b><span>${esc(line)}</span></span></div>`,
-          )
-          .join("\n        ")}
+      <div class="section-head pv-head"><p class="pv-eyebrow">${esc(hw.label)}</p><h2 id="how-h">${esc(hw.h2)}</h2><p>${esc(hw.p)}</p></div>
+      <ol class="pv-steps">
+        ${hw.steps.map(([when, title], i) => `<li class="pv-step"><p class="pv-step__k"><b>0${i + 1}</b><span>${esc(when)}</span></p><p class="pv-step__t">${esc(title)}</p><div class="pv-step__phone">${screens[i]}</div></li>`).join("\n        ")}
+      </ol>
+    </div>
+  </section>`;
+
+  /* ---- Juno's text messages on the lock screen ---- */
+  const nd = t.nudge;
+  const nudge = `<section class="section pv-nudge" id="nudge" aria-labelledby="nudge-h">
+    <div class="wrap grid pv-split">
+      <div class="pv-nudge__stage span-5" aria-hidden="true">
+        ${phone(`<div class="lock">
+            <p class="lock__date">${esc(nd.lock.date)}</p>
+            <p class="lock__time">${esc(nd.lock.time)}</p>
+            <div class="lock__notes">${nd.lock.notes.map(([title, body, when]) => `<div class="lock__note"><span class="lock__app lock__app--msg">${I.msg}</span><div class="lock__txt"><p class="lock__head"><b>${esc(nd.lock.app)}</b><em>${esc(when)}</em></p><p class="lock__title">${esc(title)}</p><p class="lock__body">${esc(body)}</p></div></div>`).join("")}</div>
+            <span class="lock__home"></span>
+          </div>`, "phone--lock")}
+        ${junoFig("found", "pv-nudge__bird")}
       </div>
-      <div class="grid grid--top">
-        <div class="faq span-6">
-          ${faqCol(t.faq.items.slice(0, half))}
-        </div>
-        <div class="faq span-6 start-7">
-          ${faqCol(t.faq.items.slice(half))}
+      <div class="pv-nudge__text span-6 start-7">
+        <p class="pv-eyebrow">${esc(nd.label)}</p>
+        <h2 id="nudge-h">${esc(nd.h2)}</h2>
+        <p class="pv-nudge__lead">${esc(nd.p)}</p>
+        <ul class="pv-list">
+          ${nd.items.map(([n, d], i) => `<li><span class="pv-list__ico">${[I.cal, I.note, I.flag][i]}</span><span><b>${esc(n)}</b><span>${esc(d)}</span></span></li>`).join("\n          ")}
+        </ul>
+        <p class="pv-nudge__app">${esc(nd.app)}</p>
+        <div class="btn-row"><a class="btn btn--primary" href="/signup">${esc(nd.cta)}</a></div>
+      </div>
+    </div>
+  </section>`;
+
+  /* ---- the workspace Juno keeps: the week planned, the weak topics, the next class's material ---- */
+  const w = t.workspace;
+  const navIcons = [I.cal, I.file, I.note, I.cards, I.task];
+  const dots = ["#7fa3d6", "#e2b100", "#86b38c", "#e7a86e"];
+  const workspace = `<section class="section pv-sem pv-ws" id="workspace" aria-labelledby="ws-h">
+    <div class="wrap">
+      <div class="pv-rowhead">
+        <div><p class="pv-eyebrow">${esc(w.label)}</p><h2 id="ws-h">${esc(w.h2)}</h2><p>${esc(w.p)}</p></div>
+        <a class="btn btn--primary" href="/signup">${esc(t.cta)}</a>
+      </div>
+      <div class="pv-sem__stage fill">
+        <div class="appwin" role="img" aria-label="${esc(w.alt)}">
+          <div class="appwin__bar"><span class="browser__dots"><i></i><i></i><i></i></span><span class="browser__url">${I.lock}${esc(w.url)}</span></div>
+          <div class="appwin__body">
+            <div class="aw-side">
+              <p class="aw-logo">${MARK("", 16, false)}<b>Preplit AI</b></p>
+              <p class="aw-rec"><i></i>${esc(w.record)}</p>
+              <ul class="aw-navs">${w.nav.map((label, i) => `<li class="aw-nav${i === 0 ? " is-on" : ""}">${navIcons[i]}<span>${esc(label)}</span>${i ? `<em>0${i}</em>` : ""}</li>`).join("")}</ul>
+              <p class="aw-label">${esc(w.coursesLabel)}</p>
+              <ul class="aw-courses">${w.courses.map((c, i) => `<li><i style="background:${dots[i]}"></i>${esc(c)}</li>`).join("")}</ul>
+            </div>
+            <div class="aw-main">
+              <p class="aw-eyebrow"><b>${esc(w.page.eyebrow)}</b><i></i>${esc(w.page.sub)}</p>
+              <div class="aw-head"><p class="aw-title">${esc(w.page.title)}</p></div>
+              <p class="aw-juno">${JUNO("juno--sm")}<span><b>${esc(w.juno.say)}</b><small>${esc(w.juno.sub)}</small></span></p>
+              <div class="ws-cols">
+                <div class="ws-box ws-plan">
+                  <p class="ws-label">${esc(w.plan.label)}</p>
+                  ${w.plan.rows.map(([d, task, meta, mins, st]) => `<p class="ws-task ws-task--${st || "later"}"><b>${esc(d)}</b><span class="ws-check">${st === "done" ? I.tick : ""}</span><span><strong>${esc(task)}</strong><small>${esc(meta)}</small></span><em>${esc(mins)}</em></p>`).join("")}
+                </div>
+                <div class="ws-side">
+                  <div class="ws-box">
+                    <p class="ws-label">${esc(w.weak.label)}</p>
+                    ${w.weak.rows.map(([topic, course, detail, lvl]) => `<p class="ws-topic"><span><strong>${esc(topic)}</strong><small>${esc(course)} · ${esc(detail)}</small></span><span class="ws-lvl ws-lvl--${lvl}"><i></i><i></i><i></i></span></p>`).join("")}
+                  </div>
+                  <div class="ws-box">
+                    <p class="ws-label">${esc(w.files.label)}</p>
+                    ${w.files.rows.map(([n, m], i) => `<p class="ws-file">${[I.file, I.note][i]}<span><strong>${esc(n)}</strong><small>${esc(m)}</small></span></p>`).join("")}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>`;
 
-  const f = t.footer;
-  const footer = `<footer class="footer closing footer--statement" id="contact" aria-labelledby="close-h">
-  <div class="wrap">
-    <div class="closing__cta close--type">
-      <div class="section-head">
-        <h2 id="close-h">${esc(t.close.h2)}</h2>
-        <p>${esc(t.close.p)}</p>
+  /* ---- across semesters: skills, a project, internship paths ---- */
+  const cr = t.career;
+  const career = `<section class="section ground-inverse pv-black pv-career" id="career" aria-labelledby="career-h">
+    <div class="wrap grid pv-pair">
+      <div class="pv-pair__text span-5">
+        <p class="pv-eyebrow">${esc(cr.label)}</p>
+        <h2 id="career-h">${esc(cr.h2)}</h2>
+        <p class="pv-pair__lead">${esc(cr.p)}</p>
+        <ul class="cr-items">
+          ${cr.items.map(([n, d], i) => `<li><span class="cr-items__ico">${[I.cards, I.task, I.flag][i]}</span><span><b>${esc(n)}</b><span>${esc(d)}</span></span></li>`).join("\n          ")}
+        </ul>
       </div>
-      <a class="btn btn--primary btn--xl btn--wide" href="/signup">${esc(t.cta)}${ARROW}</a>
-    </div>
-    <div class="closing__links">
-      <div class="grid">
-        <div class="span-4 stack-4">
-          <a class="nav__logo" href="#top">${BEE("nav__bee", 26)}Junbee</a>
-          <p class="footer__lede">${esc(f.lede)}</p>
+      <div class="cr-stage span-6 start-7" aria-hidden="true">
+        <div class="cr-card cr-skills">${cr.courses.map(([c, sk]) => `<div class="cr-course"><p class="cr-course__name">${esc(c)}</p><p class="cr-chips">${sk.map((x) => `<span>${esc(x)}</span>`).join("")}</p></div>`).join("")}</div>
+        <div class="cr-card cr-project">
+          <p class="cr-k">${junoFace("found", "juno--xs")}${esc(cr.project.label)}</p>
+          <p class="cr-title">${esc(cr.project.title)}</p>
+          <p class="cr-why">${esc(cr.project.why)}</p>
+          <p class="cr-meta">${esc(cr.project.meta)}</p>
         </div>
-        ${f.cols
-          .map(
-            ([title, links]) =>
-              `<div class="span-2 footer__col"><h4>${esc(title)}</h4><ul>${links.map(([href, label]) => `<li><a href="${href}">${esc(label)}</a></li>`).join("")}</ul></div>`,
-          )
-          .join("\n        ")}
-      </div>
-      <div class="footer__legal">
-        <span>${esc(f.company)} &nbsp; <a href="/privacy">${esc(f.privacy)}</a></span>
-        <a href="${other.path}" hreflang="${other.lang}" lang="${other.lang}">${esc(other.nav.switchText === "EN" ? "한국어" : "English")}</a>
+        <div class="cr-card cr-paths">
+          <p class="cr-k">${esc(cr.paths.label)}</p>
+          ${cr.paths.rows.map(([r, fit]) => `<p class="cr-path"><span><b>${esc(r)}</b><small>${esc(fit)}</small></span>${I.right}</p>`).join("")}
+        </div>
+        <p class="cr-port">${MARK("", 12, true)}<span>${esc(cr.portfolio)}</span></p>
       </div>
     </div>
-  </div>
-</footer>`;
+  </section>`;
+
+  const sf = t.safe;
+  const safeIcons = [I.trash, I.eye, I.shield];
+  const safe = `<section class="section pv-safe" id="safe" aria-labelledby="safe-h">
+    <div class="wrap">
+      <div class="grid grid--top pv-split">
+        <div class="pv-safe__visual span-5" aria-hidden="true">
+          <div class="perm-panel">
+            <div class="perm-panel__head"><span><b>${esc(sf.panel.title)}</b><small>${esc(sf.panel.sub)}</small></span><span class="perm-panel__badge"><i></i>${esc(sf.panel.badge)}</span></div>
+            <p class="perm-panel__group">${esc(sf.panel.groupA)}</p>
+            <div class="perm-panel__box">
+              <p class="prow">${JUNO("juno--sm")}<span><b>${esc(sf.panel.rows[0][0])}</b><small>${esc(sf.panel.rows[0][1])}</small></span><span class="sw on"></span></p>
+            </div>
+            <p class="perm-panel__group">${esc(sf.panel.groupB)}</p>
+            <div class="perm-panel__box">
+              ${sf.panel.rows
+                .slice(1)
+                .map(([n, d, st]) => `<p class="prow"><span class="prow__ico">${st === "lock" ? I.lock : I.shield}</span><span><b>${esc(n)}</b><small>${esc(d)}</small></span>${st === "lock" ? `<span class="prow__lock">${I.lock}</span>` : `<span class="sw"></span>`}</p>`)
+                .join("")}
+            </div>
+          </div>
+        </div>
+        <div class="pv-safe__text span-6 start-7">
+          <h2 id="safe-h">${esc(sf.h2)}</h2>
+          <p class="pv-safe__lead">${esc(sf.p)}</p>
+          <ul class="pv-list">
+            ${sf.items.map(([n, d], i) => `<li><span class="pv-list__ico">${safeIcons[i]}</span><span><b>${esc(n)}</b><span>${esc(d)}</span></span></li>`).join("\n            ")}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>`;
+
+  const c = t.course;
+  const pct = (v) => Number.parseInt(v, 10);
+  const course = `<section class="section pv-course" id="course" aria-labelledby="course-h">
+    <div class="wrap">
+      <div class="pv-rowhead">
+        <div><h2 id="course-h">${esc(c.h2)}</h2><p>${esc(c.p)}</p></div>
+        <a class="btn btn--primary" href="mailto:info@preplitai.com?subject=Course%20pilot">${esc(c.cta)}</a>
+      </div>
+      <div class="grid fill pv-course__cards">
+        <article class="ccard span-4">
+          <p class="ccard__k">${I.note}${esc(c.get.title)}</p>
+          <p class="ccard__lead">${esc(c.get.lead)}</p>
+          <div class="ccard__note" aria-hidden="true">
+            <p class="ccard__meta">${esc(c.get.note.meta)}</p>
+            <p class="ccard__title">${esc(c.get.note.title)}</p>
+            <p class="ccard__text">${esc(c.get.note.text)}</p>
+            <p class="ccard__hint"><span>${I.flag}${esc(c.get.note.hint)}</span>${esc(c.get.note.hintText)}</p>
+            <p class="ccard__foot">${JUNO("juno--xs")}${esc(c.get.note.foot)}</p>
+          </div>
+          <ul class="ccard__list">${c.get.rows.map(([n, d], i) => `<li><span class="ccard__ico">${[I.note, I.cards, JUNO("juno--xs")][i]}</span><b>${esc(n)}</b><span>${esc(d)}</span></li>`).join("")}</ul>
+        </article>
+        <article class="ccard span-4">
+          <p class="ccard__k">${I.cal}${esc(c.plan.title)}</p>
+          <p class="ccard__lead">${esc(c.plan.lead)}</p>
+          <ol class="ccard__steps">${c.plan.rows.map(([w, n, d]) => `<li><em>${esc(w)}</em><b>${esc(n)}</b><span>${esc(d)}</span></li>`).join("")}</ol>
+          <p class="ccard__facts">${c.plan.facts.map((f) => `<span>${esc(f)}</span>`).join("")}</p>
+        </article>
+        <article class="ccard span-4">
+          <p class="ccard__k">${I.flag}${esc(c.measure.title)}</p>
+          <p class="ccard__lead">${esc(c.measure.lead)}</p>
+          <ul class="ccard__targets">${c.measure.rows
+            .map(([d, v]) => {
+              const share = v.includes("%") ? pct(v) : null;
+              return `<li><b>${esc(v)}</b><span>${esc(d)}</span>${share !== null ? `<i class="ccard__bar" style="--v:${share}" aria-hidden="true"><i></i></i>` : `<i class="ccard__pips" aria-hidden="true">${"<i></i>".repeat(pct(v) || 0)}</i>`}</li>`;
+            })
+            .join("")}</ul>
+        </article>
+      </div>
+    </div>
+  </section>`;
+
+  const q = t.faq;
+  const faq = `<section class="section pv-faq" id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-4 pv-faq__head">
+          <h2 id="faq-h">${esc(q.h2)}</h2>
+          <p>${esc(q.p)} <a class="link" href="mailto:info@preplitai.com">${esc(q.email)}</a></p>
+        </div>
+        <div class="span-7 start-6 pv-faq__list">
+          ${q.items.map(([qq, aa], i) => `<details${i === 0 ? " open" : ""}><summary><span>${esc(qq)}</span><i aria-hidden="true">${I.plus}</i></summary><p>${esc(aa)}</p></details>`).join("\n          ")}
+        </div>
+      </div>
+    </div>
+  </section>`;
+
+  const g = t.get;
+  const gp = g.phone;
+  const get = `<section class="section ground-inverse pv-black pv-get g2m" id="get" aria-labelledby="get-h">
+    <div class="wrap grid pv-pair">
+        <div class="pv-pair__text span-6">
+          ${MARK("pv-get__mark", 56, true)}
+          <h2 id="get-h">${esc(g.h2)}</h2>
+          <p class="pv-pair__lead">${esc(g.p)}</p>
+          <div class="btn-row"><a class="btn btn--primary" href="/signup">${esc(t.cta)}</a><a class="btn btn--secondary" href="/login">${esc(g.login)}</a></div>
+          <ul class="pv-get__facts">${g.facts.map((f) => `<li>${I.tick}${esc(f)}</li>`).join("")}</ul>
+        </div>
+        <div class="pv-pair__stage span-5 start-8" aria-hidden="true">
+          ${phone(`<div class="home">
+          <div class="home__top">${MARK("", 18, true)}<span class="pbtn">${I.bell}</span></div>
+          <p class="home__label">${esc(gp.label)}</p>
+          <p class="home__big">${esc(gp.week)} <small>${esc(gp.of)}</small></p>
+          <div class="home__row">${JUNO("juno--sm")}<span><b>${esc(gp.review)}</b><small>${esc(gp.reviewMeta)}</small></span>${I.right}</div>
+          <p class="home__sub"><span>${esc(gp.recent)}</span><small>${esc(gp.all)}</small></p>
+          ${gp.rows.map(([cn, l, n]) => `<div class="home__row home__row--lec"><span class="home__course">${esc((t.ask.courses.find(([, name]) => name === cn) || [cn.slice(0, 2)])[0])}</span><span><b>${esc(cn)}</b><small>${esc(l)}</small></span><em>${esc(n)}</em></div>`).join("")}
+        </div>`)}
+        </div>
+    </div>
+  </section>`;
+
+  const footer = siteFooter(t, other, "home");
 
   return withUnclearTokens(`${head}
 <body>
@@ -598,25 +615,137 @@ ${header}
 <main id="top">
   ${hero}
 
-  ${app}
+  ${features}
+
+  ${juno}
 
   ${how}
 
-  ${pipeline}
+  ${nudge}
 
-  ${remember}
+  ${workspace}
 
-  ${junbee}
+  ${career}
+
+  ${safe}
+
+  ${course}
 
   ${faq}
+
+  ${get}
 </main>
 
 ${footer}
 
-<script type="module" src="/kit/system.js"></script>
-<script type="module" src="/kit/motion/motion.js"></script>
-<script type="module" src="/kit/layout/layout.js"></script>
-<script type="module" src="/kit/diagrams/mount.js"></script>
+${earlyDialog(t)}
+${SCRIPTS}
+</body>
+</html>
+`);
+}
+
+/* ---------------------------------------------------------------- the pricing page
+   The client's own pricing page, rebuilt as it was: a large headline beside a line drawing, the
+   monthly / semester switch, two plans (a white card and an orange one), then the questions. The
+   switch is two radio buttons and CSS (:has), so the page still runs no script of its own. */
+const DOODLE = `<svg class="pp-doodle" viewBox="0 0 380 270" aria-hidden="true" focusable="false">
+  <g class="pp-spots">
+    <rect x="44" y="12" width="84" height="56" rx="12" fill="#84dcc6" opacity=".85"/>
+    <circle cx="300" cy="92" r="56" fill="#f28482" opacity=".8"/>
+    <circle cx="308" cy="182" r="72" fill="#f4a261" opacity=".85"/>
+  </g>
+  <g class="pp-lines" fill="none" stroke="#111111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="72" y="26" width="92" height="42" rx="4" fill="#ffffff" fill-opacity=".85"/>
+    <path d="M87 47 Q117 37 147 47"/>
+    <path d="M72 57 L60 64 L72 64" fill="#ffffff"/>
+    <rect x="44" y="80" width="106" height="48" rx="4" fill="#ffffff" fill-opacity=".92"/>
+    <path d="M60 102 Q92 94 122 106"/>
+    <path d="M44 114 L34 122 L44 122" fill="#ffffff"/>
+    <circle cx="272" cy="146" r="70" fill="#ffffff" fill-opacity=".35"/>
+    <path d="M232 91 C262 116 282 176 272 211"/>
+    <path d="M272 76 C302 106 322 156 312 206"/>
+    <path d="M212 126 Q252 146 332 116"/>
+    <path d="M217 166 Q272 181 327 156"/>
+    <path d="M297 81 Q337 111 342 146"/>
+    <ellipse cx="148" cy="190" rx="35" ry="12" transform="rotate(-25 148 190)"/>
+    <circle cx="148" cy="190" r="14" fill="#ffffff"/>
+  </g>
+  <g fill="#111111"><circle cx="123" cy="175" r="2"/><circle cx="168" cy="158" r="2.5"/><circle cx="282" cy="61" r="2"/></g>
+</svg>`;
+
+export function renderPricing(lang) {
+  const t = copy[lang];
+  const other = lang === "ko" ? copy.en : copy.ko;
+  const pr = t.pricing;
+  const head = pageHead(t, other, {
+    title: pr.title,
+    description: pr.description,
+    path: pr.path,
+    koPath: copy.ko.pricing.path,
+    enPath: copy.en.pricing.path,
+  });
+  const plans = pr.plans
+    .map(
+      (p) => `<article class="pp-plan pp-plan--${p.id}" aria-labelledby="pp-${p.id}">
+          <div class="pp-plan__head"><h2 id="pp-${p.id}">${esc(p.name)}</h2><p>${esc(p.sub)}</p></div>
+          <div class="pp-card">
+            <p class="pp-price"><b class="pp-price__m">${esc(p.monthly)}</b><b class="pp-price__s">${esc(p.semester)}</b><span>${esc(p.per)}</span></p>
+            <p class="pp-metric">${esc(p.metric)}</p>
+            <ul class="pp-feat">${p.features.map((f) => `<li><i aria-hidden="true">${I.tick}</i><span>${esc(f)}</span></li>`).join("")}</ul>
+            <a class="pp-cta" href="${p.href}"><span>${esc(p.cta)}</span>${I.arrow}</a>
+          </div>
+        </article>`,
+    )
+    .join("\n        ");
+
+  return withUnclearTokens(`${head}
+<body class="pp-body">
+<!-- Generated by site/render.mjs (renderPricing) from site/copy.mjs: edit those, then run npm run site. -->
+${siteHeader(t, other, "pricing")}
+
+<main id="top" class="pp">
+  <section class="pp-sec pp-hero" aria-labelledby="pp-h">
+    <div class="wrap pp-hero__grid">
+      <div class="pp-hero__text">
+        <h1 id="pp-h">${esc(pr.h1[0])}<br>${esc(pr.h1[1])}</h1>
+        <p class="pp-hero__p">${esc(pr.p)}</p>
+        <fieldset class="pp-bill">
+          <legend class="pp-sr">${esc(pr.billing.label)}</legend>
+          <input type="radio" name="bill" id="bill-m" value="monthly" checked>
+          <label for="bill-m">${esc(pr.billing.monthly)}</label>
+          <input type="radio" name="bill" id="bill-s" value="semester">
+          <label for="bill-s">${esc(pr.billing.semester)}<span class="pp-off">${esc(pr.billing.off)}</span></label>
+        </fieldset>
+      </div>
+      <div class="pp-art" aria-hidden="true">${DOODLE}</div>
+    </div>
+  </section>
+
+  <section class="pp-sec pp-plans" id="plans" aria-label="${esc(t.nav.pricing)}">
+    <div class="wrap">
+      <div class="pp-cards">
+        ${plans}
+      </div>
+      <p class="pp-faqlink"><a href="#faq">${esc(pr.faqLink)}${I.down}</a></p>
+    </div>
+  </section>
+
+  <section class="pp-sec pp-faq" id="faq" aria-labelledby="pp-faq-h">
+    <div class="wrap pp-faq__wrap">
+      <h2 id="pp-faq-h">${esc(pr.faqH2)}</h2>
+      <p class="pp-faq__p">${esc(pr.faqP)}</p>
+      <div class="pp-faq__list">
+        ${pr.faq.map(([q, ans]) => `<details><summary><span>${esc(q)}</span>${I.chev}</summary><p>${esc(ans)}</p></details>`).join("\n        ")}
+      </div>
+    </div>
+  </section>
+</main>
+
+${siteFooter(t, other, "pricing")}
+
+${earlyDialog(t)}
+${SCRIPTS}
 </body>
 </html>
 `);

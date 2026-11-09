@@ -18,6 +18,7 @@ const limiters = {
   refresh: new RateLimiterMemory({ keyPrefix: 'refresh', points: 60 * scale, duration: 60 }),
   upload: new RateLimiterMemory({ keyPrefix: 'upload', points: 12 * scale, duration: 60 * 60 }),
   review: new RateLimiterMemory({ keyPrefix: 'review', points: 300 * scale, duration: 60 * 60 }),
+  chat: new RateLimiterMemory({ keyPrefix: 'chat', points: 60 * scale, duration: 60 * 60 }),
 };
 
 function limit(name, keyOf) {
@@ -49,4 +50,5 @@ module.exports = {
   refreshLimit: limit('refresh', byIp),
   uploadLimit: limit('upload', byUser),
   reviewLimit: limit('review', byUser),
+  chatLimit: limit('chat', byUser),
 };

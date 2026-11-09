@@ -1,22 +1,32 @@
-import { defineConfig, type Connect, type Plugin } from "vitest/config";
+import { defineConfig } from "vitest/config";
+import type { Connect, Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
 /*
  * Two kinds of page:
- *   - the landing pages, static HTML written by scripts/build-site.mjs:
- *     index.html (Korean, at /) and en/index.html (English, at /en/);
+ *   - the static pages written by scripts/build-site.mjs: the landing page,
+ *     index.html (Korean, at /) and en/index.html (English, at /en/), and the
+ *     pricing page, pricing/index.html (/pricing/) and en/pricing/index.html;
  *   - the React app, app.html, for /app, /login, /signup, /privacy and anything else.
  * vercel.json routes production the same way this plugin routes dev and preview.
  */
+/* The static pages, by the paths people type, with or without the last slash. */
+const PAGES: Record<string, string> = {
+  "/en": "/en/index.html",
+  "/pricing": "/pricing/index.html",
+  "/pricing/": "/pricing/index.html",
+  "/en/pricing": "/en/pricing/index.html",
+  "/en/pricing/": "/en/pricing/index.html",
+};
 const STATIC_PREFIXES = ["/api/", "/kit/", "/site/", "/brand/", "/js/", "/src/", "/node_modules/", "/@", "/assets/"];
 
 function routeToApp(): Plugin {
   const rewrite: Connect.NextHandleFunction = (req, _res, next) => {
     const url = req.url ?? "/";
     const [pathname, query] = url.split("?");
-    if (pathname === "/en") {
-      req.url = "/en/index.html" + (query ? `?${query}` : "");
+    if (PAGES[pathname]) {
+      req.url = PAGES[pathname] + (query ? `?${query}` : "");
     } else if (
       pathname !== "/" &&
       pathname !== "/en/" &&
@@ -73,6 +83,8 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, "index.html"),
         en: path.resolve(__dirname, "en/index.html"),
+        pricing: path.resolve(__dirname, "pricing/index.html"),
+        enPricing: path.resolve(__dirname, "en/pricing/index.html"),
         app: path.resolve(__dirname, "app.html"),
       },
     },

@@ -3,15 +3,70 @@ import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { ApiError, request, setSession, type Session } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { cn } from "@/lib/cn";
+import { useCopy, useLang } from "@/lib/lang";
+import { disablePush } from "@/lib/push";
 import type { User } from "@/lib/types";
+import { PageHead } from "@/workspace/kit";
+import { NotificationSettings } from "@/workspace/Notifications";
 import { AppTitle, ErrorLine } from "./ui";
 
 const message = (err: unknown, fallback: string) => (err instanceof ApiError ? err.message : fallback);
+
+const COPY = {
+  ko: {
+    title: "계정",
+    name: "이름",
+    save: "저장",
+    saved: "저장했어요.",
+    saveFailed: "저장하지 못했어요.",
+    password: "비밀번호 바꾸기",
+    current: "지금 비밀번호",
+    next: "새 비밀번호",
+    rule: "8자 이상. 바꾸면 다른 기기에서는 로그아웃돼요.",
+    changed: "비밀번호를 바꿨어요.",
+    changeFailed: "바꾸지 못했어요.",
+    language: "언어",
+    languageHint: "홈페이지와 워크스페이스가 같은 언어로 보여요.",
+    signOut: "로그아웃",
+    privacy: "개인정보 처리방침",
+    deleteTitle: "계정 지우기",
+    deleteText: "모든 과목, 녹취록, 노트, 카드, 복습 기록, 대화, 일정이 바로 지워지고 되돌릴 수 없어요.",
+    confirm: "확인을 위해 비밀번호를 입력하세요",
+    cancel: "취소",
+    deleteFailed: "지우지 못했어요.",
+  },
+  en: {
+    title: "Account",
+    name: "Name",
+    save: "Save",
+    saved: "Saved.",
+    saveFailed: "Couldn't save.",
+    password: "Change password",
+    current: "Current password",
+    next: "New password",
+    rule: "At least 8 characters. Other devices are signed out when you change it.",
+    changed: "Your password was changed.",
+    changeFailed: "Couldn't change it.",
+    language: "Language",
+    languageHint: "The home page and the workspace show in the same language.",
+    signOut: "Sign out",
+    privacy: "Privacy notice",
+    deleteTitle: "Delete account",
+    deleteText: "Every course, transcript, note, card, review record, conversation and schedule is deleted at once, and this can't be undone.",
+    confirm: "Enter your password to confirm",
+    cancel: "Cancel",
+    deleteFailed: "Couldn't delete.",
+  },
+};
 
 export default function Account() {
   const { user, replaceUser, adoptSession, logout } = useAuth();
   const navigate = useNavigate();
   const client = useQueryClient();
+  const t = useCopy(COPY);
+  const { lang, setLang } = useLang();
+  const home = lang === "en" ? "/en/" : "/";
 
   const [nameState, setNameState] = useState<{ error?: string; saved?: boolean }>({});
   const [pwState, setPwState] = useState<{ error?: string; saved?: boolean }>({});
@@ -27,7 +82,7 @@ export default function Account() {
       replaceUser(res.user);
       setNameState({ saved: true });
     } catch (err) {
-      setNameState({ error: message(err, "저장하지 못했어요.") });
+      setNameState({ error: message(err, t.saveFailed) });
     }
   };
 
@@ -44,7 +99,7 @@ export default function Account() {
       form.reset();
       setPwState({ saved: true });
     } catch (err) {
-      setPwState({ error: message(err, "바꾸지 못했어요.") });
+      setPwState({ error: message(err, t.changeFailed) });
     }
   };
 
@@ -55,74 +110,90 @@ export default function Account() {
       await request("/auth/account", { method: "DELETE", body: { password } });
       client.clear();
       setSession(null);
-      navigate("/", { replace: true });
+      window.location.replace(home);
     } catch (err) {
-      setDeleteState({ open: true, error: message(err, "지우지 못했어요.") });
+      setDeleteState({ open: true, error: message(err, t.deleteFailed) });
     }
   };
 
   const signOut = async () => {
+    // A notification about someone's lectures must not keep arriving on a device they signed out of.
+    await disablePush().catch(() => {});
     await logout();
     client.clear();
     navigate("/", { replace: true });
   };
 
   return (
-    <div className="mx-auto max-w-[32rem]">
-      <AppTitle>계정</AppTitle>
-      <h1 className="display text-4xl">계정</h1>
-      <p className="mt-2 text-slate">{user.email}</p>
+    <div className="max-w-[40rem]">
+      <AppTitle>{t.title}</AppTitle>
+      <PageHead eyebrow="Preplit AI" title={t.title} sub={user.email} />
 
-      <form onSubmit={saveName} className="mt-10 border-t border-rule pt-8">
-        <label htmlFor="name" className="field-label">이름</label>
-        <div className="flex flex-col gap-3 sm:flex-row">
+      <form onSubmit={saveName} className="window mt-5 p-4 sm:p-5">
+        <label htmlFor="name" className="field-label">{t.name}</label>
+        <div className="flex flex-col gap-2 sm:flex-row">
           <input id="name" name="name" defaultValue={user.name} maxLength={40} className="field" onChange={() => setNameState({})} />
-          <button type="submit" className="btn-ink min-h-[50px] shrink-0 px-6">저장</button>
+          <button type="submit" className="btn-ink shrink-0">{t.save}</button>
         </div>
-        <div className="mt-2">
-          {nameState.saved ? <p className="text-sm text-slate" role="status">저장했어요.</p> : <ErrorLine>{nameState.error}</ErrorLine>}
-        </div>
+        <div className="mt-2">{nameState.saved ? <p className="text-sm text-slate" role="status">{t.saved}</p> : <ErrorLine>{nameState.error}</ErrorLine>}</div>
       </form>
 
-      <form onSubmit={savePassword} className="mt-8 flex flex-col gap-4 border-t border-rule pt-8">
-        <h2 className="text-lg font-semibold">비밀번호 바꾸기</h2>
+      <section className="window mt-3 p-4 sm:p-5" aria-labelledby="language-title">
+        <h2 id="language-title" className="text-sm font-semibold">{t.language}</h2>
+        <p className="mt-0.5 text-xs text-slate">{t.languageHint}</p>
+        <div role="group" aria-labelledby="language-title" className="mt-3 inline-flex rounded-full bg-bone p-0.5 text-sm font-medium">
+          {(["ko", "en"] as const).map((l) => (
+            <button
+              key={l}
+              type="button"
+              lang={l}
+              aria-pressed={lang === l}
+              onClick={() => setLang(l)}
+              className={cn("rounded-full px-4 py-1.5 transition-colors", lang === l ? "bg-white text-ink shadow-window" : "text-slate hover:text-ink")}
+            >
+              {l === "ko" ? "한국어" : "English"}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <form onSubmit={savePassword} className="window mt-3 flex flex-col gap-3 p-4 sm:p-5">
+        <h2 className="text-sm font-semibold">{t.password}</h2>
         <div>
-          <label htmlFor="current" className="field-label">지금 비밀번호</label>
+          <label htmlFor="current" className="field-label">{t.current}</label>
           <input id="current" name="current" type="password" autoComplete="current-password" className="field" required />
         </div>
         <div>
-          <label htmlFor="next" className="field-label">새 비밀번호</label>
+          <label htmlFor="next" className="field-label">{t.next}</label>
           <input id="next" name="next" type="password" autoComplete="new-password" minLength={8} className="field" required />
-          <p className="mt-1.5 text-xs text-slate">8자 이상. 바꾸면 다른 기기에서는 로그아웃돼요.</p>
+          <p className="mt-1 text-xs text-slate">{t.rule}</p>
         </div>
-        {pwState.saved ? <p className="text-sm text-slate" role="status">비밀번호를 바꿨어요.</p> : <ErrorLine>{pwState.error}</ErrorLine>}
-        <button type="submit" className="btn-ink min-h-[50px] self-start px-6">비밀번호 바꾸기</button>
+        {pwState.saved ? <p className="text-sm text-slate" role="status">{t.changed}</p> : <ErrorLine>{pwState.error}</ErrorLine>}
+        <button type="submit" className="btn-ink self-start">{t.password}</button>
       </form>
 
-      <div className="mt-8 flex flex-col items-start gap-1 border-t border-rule pt-8">
-        <button type="button" onClick={signOut} className="btn-text">로그아웃</button>
-        <Link to="/privacy" className="btn-text text-slate">개인정보 처리방침</Link>
+      <NotificationSettings />
+
+      <div className="window mt-3 flex flex-col items-start gap-0.5 px-4 py-3 sm:px-5">
+        <button type="button" onClick={signOut} className="btn-text">{t.signOut}</button>
+        <Link to="/privacy" className="btn-text text-slate">{t.privacy}</Link>
       </div>
 
-      <div className="mt-8 border-t border-rule pt-8">
-        <h2 className="text-lg font-semibold">계정 지우기</h2>
-        <p className="mt-2 leading-relaxed text-slate">
-          모든 과목, 녹취록, 노트, 카드, 복습 기록이 바로 지워지고 되돌릴 수 없어요.
-        </p>
+      <div className="mt-7 px-1">
+        <h2 className="text-sm font-semibold">{t.deleteTitle}</h2>
+        <p className="mt-1 text-sm leading-relaxed text-slate">{t.deleteText}</p>
         {deleteState.open ? (
-          <form onSubmit={deleteAccount} className="mt-4 flex flex-col gap-3">
-            <label htmlFor="delete-password" className="field-label">확인을 위해 비밀번호를 입력하세요</label>
+          <form onSubmit={deleteAccount} className="mt-3 flex flex-col gap-2">
+            <label htmlFor="delete-password" className="field-label">{t.confirm}</label>
             <input id="delete-password" name="password" type="password" autoComplete="current-password" className="field" required />
             <ErrorLine>{deleteState.error}</ErrorLine>
             <div className="flex gap-3">
-              <button type="submit" className="btn-quiet min-h-[44px] border-maroon text-maroon">계정 지우기</button>
-              <button type="button" onClick={() => setDeleteState({ open: false })} className="btn-text">취소</button>
+              <button type="submit" className="btn-quiet border-maroon text-maroon">{t.deleteTitle}</button>
+              <button type="button" onClick={() => setDeleteState({ open: false })} className="btn-text">{t.cancel}</button>
             </div>
           </form>
         ) : (
-          <button type="button" onClick={() => setDeleteState({ open: true })} className="btn-text mt-3 text-slate">
-            계정 지우기
-          </button>
+          <button type="button" onClick={() => setDeleteState({ open: true })} className="btn-text mt-2 text-slate">{t.deleteTitle}</button>
         )}
       </div>
     </div>

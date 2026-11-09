@@ -1,4 +1,4 @@
-import type { User } from "./types";
+import type { ChatEvent, User } from "./types";
 
 /*
  * The API client.
@@ -118,6 +118,78 @@ export async function request<T>(path: string, options: RequestOptions = {}, ret
   const body = await readBody(res);
   if (!res.ok) throw toError(res.status, body);
   return body as T;
+}
+
+/** Reads one server-sent event, or returns null for a heartbeat comment or anything unreadable. */
+export function parseChatEvent(block: string): ChatEvent | null {
+  let event = "";
+  let data = "";
+  for (const line of block.split("\n")) {
+    if (line.startsWith("event: ")) event = line.slice(7).trim();
+    else if (line.startsWith("data: ")) data += line.slice(6);
+  }
+  if (!event || !data) return null;
+  try {
+    return { event, data: JSON.parse(data) } as ChatEvent;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Posts and reads the answer as a stream of events. EventSource cannot be used:
+ * it cannot send the access token, which by design is only in this module.
+ * Errors before the stream opens throw like any other request.
+ */
+export async function streamChat(
+  body: unknown,
+  onEvent: (event: ChatEvent) => void,
+  signal: AbortSignal,
+  retried = false,
+): Promise<void> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+
+  let res: Response;
+  try {
+    res = await fetch("/api/chat", {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+      credentials: "same-origin",
+      signal,
+    });
+  } catch (err) {
+    if ((err as Error).name === "AbortError") throw err;
+    throw new ApiError(0, "Network", "인터넷 연결을 확인해 주세요.");
+  }
+
+  if (res.status === 401 && !retried) {
+    const session = await refreshSession();
+    if (session) return streamChat(body, onEvent, signal, true);
+  }
+  if (!res.ok || !res.body) throw toError(res.status, await readBody(res));
+
+  const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+  let buffer = "";
+  for (;;) {
+    let chunk: ReadableStreamReadResult<string>;
+    try {
+      chunk = await reader.read();
+    } catch (err) {
+      if ((err as Error).name === "AbortError") throw err;
+      throw new ApiError(0, "Network", "인터넷 연결을 확인해 주세요.");
+    }
+    if (chunk.done) return;
+    buffer += chunk.value;
+    let end = buffer.indexOf("\n\n");
+    while (end !== -1) {
+      const event = parseChatEvent(buffer.slice(0, end));
+      buffer = buffer.slice(end + 2);
+      if (event) onEvent(event);
+      end = buffer.indexOf("\n\n");
+    }
+  }
 }
 
 /**
