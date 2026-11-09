@@ -12,7 +12,7 @@
 
 const ko = {
   lang: "ko",
-  path: "/",
+  path: "/ko/",
   title: "Preplit AI: 한 학기를 함께하는 학생 비서 Juno",
   description:
     "한 번만 설정하면 Juno가 모든 수업을 함께 듣고, 노트를 정리하고, 마감 전에 문자로 알려 주고, 매일 짧은 게임으로 복습시키고, 듣는 과목을 커리어 계획으로 이어 줘요.",
@@ -367,7 +367,7 @@ const ko = {
     close: "닫기",
   },
   pricing: {
-    path: "/pricing/",
+    path: "/ko/pricing/",
     title: "요금제 · Preplit AI",
     description: "대학생을 위한 투명하고 합리적인 요금제. 무료 플랜과 학생 프로, 학기 패스 할인까지.",
     h1: ["나의 학업에 꼭 맞는", "최적의 요금제."],
@@ -421,7 +421,7 @@ const ko = {
   },
   footer: {
     cols: [
-      ["제품", [["#features", "이렇게 써요"], ["#juno", "Juno 소개"], ["#workspace", "워크스페이스"], ["#career", "커리어"], ["/pricing/", "요금제"], ["/signup", "파일럿 참여하기"]]],
+      ["제품", [["#features", "이렇게 써요"], ["#juno", "Juno 소개"], ["#workspace", "워크스페이스"], ["#career", "커리어"], ["/ko/pricing/", "요금제"], ["/signup", "파일럿 참여하기"]]],
       ["자료", [["#faq", "자주 묻는 질문"], ["#course", "수업 파일럿"], ["mailto:info@preplitai.com", "문의하기"]]],
       ["약관", [["/privacy", "개인정보 처리방침"], ["#safe", "Juno의 권한"]]],
       ["계정", [["/login", "로그인"], ["/signup", "가입하기"]]],
@@ -437,7 +437,7 @@ const ko = {
 
 const en = {
   lang: "en",
-  path: "/en/",
+  path: "/",
   title: "Preplit AI: Juno, the student companion for your whole semester",
   description:
     "Set Juno up once. It sits in every lecture, files your notes, texts you before deadlines, trains you with a daily game and turns your courses into a career plan.",
@@ -792,7 +792,7 @@ const en = {
     close: "Close",
   },
   pricing: {
-    path: "/en/pricing/",
+    path: "/pricing/",
     title: "Pricing · Preplit AI",
     description: "Simple, student-first pricing: a free plan, Student Pro, and a Semester Pass discount.",
     h1: ["The right plan", "for your needs."],
@@ -846,7 +846,7 @@ const en = {
   },
   footer: {
     cols: [
-      ["Product", [["#features", "How it works"], ["#juno", "Meet Juno"], ["#workspace", "Workspace"], ["#career", "Career"], ["/en/pricing/", "Pricing"], ["/signup", "Join the pilot"]]],
+      ["Product", [["#features", "How it works"], ["#juno", "Meet Juno"], ["#workspace", "Workspace"], ["#career", "Career"], ["/pricing/", "Pricing"], ["/signup", "Join the pilot"]]],
       ["Resources", [["#faq", "Questions"], ["#course", "Course pilot"], ["mailto:info@preplitai.com", "Email us"]]],
       ["Legal", [["/privacy", "Privacy notice"], ["#safe", "Juno's permissions"]]],
       ["Account", [["/login", "Log in"], ["/signup", "Sign up"]]],

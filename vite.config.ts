@@ -5,19 +5,19 @@ import path from "path";
 
 /*
  * Two kinds of page:
- *   - the static pages written by scripts/build-site.mjs: the landing page,
- *     index.html (Korean, at /) and en/index.html (English, at /en/), and the
- *     pricing page, pricing/index.html (/pricing/) and en/pricing/index.html;
+ *   - the static pages written by scripts/build-site.mjs, English first: the
+ *     landing page, index.html (English, at /) and ko/index.html (Korean, at
+ *     /ko/), and the pricing page, pricing/index.html and ko/pricing/index.html;
  *   - the React app, app.html, for /app, /login, /signup, /privacy and anything else.
  * vercel.json routes production the same way this plugin routes dev and preview.
  */
 /* The static pages, by the paths people type, with or without the last slash. */
 const PAGES: Record<string, string> = {
-  "/en": "/en/index.html",
+  "/ko": "/ko/index.html",
   "/pricing": "/pricing/index.html",
   "/pricing/": "/pricing/index.html",
-  "/en/pricing": "/en/pricing/index.html",
-  "/en/pricing/": "/en/pricing/index.html",
+  "/ko/pricing": "/ko/pricing/index.html",
+  "/ko/pricing/": "/ko/pricing/index.html",
 };
 const STATIC_PREFIXES = ["/api/", "/kit/", "/site/", "/brand/", "/js/", "/src/", "/node_modules/", "/@", "/assets/"];
 
@@ -29,7 +29,7 @@ function routeToApp(): Plugin {
       req.url = PAGES[pathname] + (query ? `?${query}` : "");
     } else if (
       pathname !== "/" &&
-      pathname !== "/en/" &&
+      pathname !== "/ko/" &&
       !path.extname(pathname) &&
       !STATIC_PREFIXES.some((p) => pathname.startsWith(p))
     ) {
@@ -82,9 +82,9 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, "index.html"),
-        en: path.resolve(__dirname, "en/index.html"),
+        ko: path.resolve(__dirname, "ko/index.html"),
         pricing: path.resolve(__dirname, "pricing/index.html"),
-        enPricing: path.resolve(__dirname, "en/pricing/index.html"),
+        koPricing: path.resolve(__dirname, "ko/pricing/index.html"),
         app: path.resolve(__dirname, "app.html"),
       },
     },

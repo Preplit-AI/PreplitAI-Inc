@@ -2,26 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://preplitai.com/</loc>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://preplitai.com/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://preplitai.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://preplitai.com/ko/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://preplitai.com/"/>
     <lastmod>2026-11-05</lastmod>
   </url>
   <url>
-    <loc>https://preplitai.com/en/</loc>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://preplitai.com/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://preplitai.com/en/"/>
+    <loc>https://preplitai.com/ko/</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://preplitai.com/ko/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://preplitai.com/"/>
     <lastmod>2026-11-05</lastmod>
   </url>
   <url>
     <loc>https://preplitai.com/pricing/</loc>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://preplitai.com/pricing/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://preplitai.com/en/pricing/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://preplitai.com/ko/pricing/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://preplitai.com/pricing/"/>
     <lastmod>2026-11-09</lastmod>
   </url>
   <url>
-    <loc>https://preplitai.com/en/pricing/</loc>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://preplitai.com/pricing/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://preplitai.com/en/pricing/"/>
+    <loc>https://preplitai.com/ko/pricing/</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://preplitai.com/ko/pricing/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://preplitai.com/pricing/"/>
     <lastmod>2026-11-09</lastmod>
   </url>
   <url>

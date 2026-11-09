@@ -2,7 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 
 /*
  * The language of the whole site: the landing page, the sign-in pages and the
- * workspace. Korean is the source and the default; English is the translation.
+ * workspace. English is the first language and the default for a first visit;
+ * Korean is the other.
  * The landing page remembers the language last read (public/js/lang.js writes
  * the same key), so choosing English there carries into the workspace.
  */
@@ -15,9 +16,9 @@ function initialLang(): Lang {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === "ko" || stored === "en") return stored;
   } catch {
-    // Storage can be blocked; Korean is the default anyway.
+    // Storage can be blocked; English is the default anyway.
   }
-  return "ko";
+  return "en";
 }
 
 type LangValue = { lang: Lang; setLang: (lang: Lang) => void };
@@ -39,7 +40,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
   return <LangContext.Provider value={{ lang, setLang }}>{children}</LangContext.Provider>;
 }
 
-/** Outside the provider (a component rendered on its own, as in a test) the language is Korean. */
+/** Outside the provider (a component rendered on its own, as in a test) the language is Korean, the language the copy is written in first. */
 const FALLBACK: LangValue = { lang: "ko", setLang: () => {} };
 
 export function useLang() {

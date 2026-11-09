@@ -1,10 +1,14 @@
 {
+  "redirects": [
+    { "source": "/en", "destination": "/", "permanent": true },
+    { "source": "/en/:path*", "destination": "/:path*", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { "source": "/en", "destination": "/en/index.html" },
+    { "source": "/ko", "destination": "/ko/index.html" },
     { "source": "/pricing", "destination": "/pricing/index.html" },
-    { "source": "/en/pricing", "destination": "/en/pricing/index.html" },
-    { "source": "/((?!api/|kit/|assets/|brand/|js/|en/|pricing/).*)", "destination": "/app.html" }
+    { "source": "/ko/pricing", "destination": "/ko/pricing/index.html" },
+    { "source": "/((?!api/|kit/|assets/|brand/|js/|ko/|pricing/).*)", "destination": "/app.html" }
   ],
   "headers": [
     {

@@ -1,6 +1,7 @@
-// Writes the static pages from site/render.mjs: the landing page, index.html (Korean)
-// and en/index.html (English), and the pricing page, pricing/index.html and
-// en/pricing/index.html. Runs before `vite` and `vite build`.
+// Writes the static pages from site/render.mjs. English is the first language: the
+// landing page is index.html (English, at /) and ko/index.html (Korean, at /ko/), and
+// the pricing page pricing/index.html and ko/pricing/index.html. Runs before `vite`
+// and `vite build`.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,10 +9,10 @@ import { render, renderPricing } from "../site/render.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const pages = [
-  ["ko", "index.html", render],
-  ["en", "en/index.html", render],
-  ["ko", "pricing/index.html", renderPricing],
-  ["en", "en/pricing/index.html", renderPricing],
+  ["en", "index.html", render],
+  ["ko", "ko/index.html", render],
+  ["en", "pricing/index.html", renderPricing],
+  ["ko", "ko/pricing/index.html", renderPricing],
 ];
 
 for (const [lang, file, page] of pages) {

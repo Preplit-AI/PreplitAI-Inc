@@ -11,10 +11,10 @@ import { render, renderPricing } from "../../site/render.mjs";
 const ROOT = path.resolve(__dirname, "../..");
 const langs = ["ko", "en"] as const;
 const pages = [
-  ["ko", "index.html", render, "/"],
-  ["en", "en/index.html", render, "/en/"],
-  ["ko", "pricing/index.html", renderPricing, "/pricing/"],
-  ["en", "en/pricing/index.html", renderPricing, "/en/pricing/"],
+  ["en", "index.html", render, "/"],
+  ["ko", "ko/index.html", render, "/ko/"],
+  ["en", "pricing/index.html", renderPricing, "/pricing/"],
+  ["ko", "ko/pricing/index.html", renderPricing, "/ko/pricing/"],
 ] as const;
 
 function strings(value: unknown): string[] {

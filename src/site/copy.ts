@@ -21,8 +21,8 @@ export type SiteCopy = {
 };
 
 const ko: SiteCopy = {
-  home: "/",
-  pricing: "/pricing/",
+  home: "/ko/",
+  pricing: "/ko/pricing/",
   nav: {
     product: "기능",
     juno: "Juno 소개",
@@ -47,8 +47,8 @@ const ko: SiteCopy = {
 };
 
 const en: SiteCopy = {
-  home: "/en/",
-  pricing: "/en/pricing/",
+  home: "/",
+  pricing: "/pricing/",
   nav: {
     product: "Features",
     juno: "Meet Juno",

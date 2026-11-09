@@ -66,7 +66,7 @@ export default function Account() {
   const client = useQueryClient();
   const t = useCopy(COPY);
   const { lang, setLang } = useLang();
-  const home = lang === "en" ? "/en/" : "/";
+  const home = lang === "ko" ? "/ko/" : "/";
 
   const [nameState, setNameState] = useState<{ error?: string; saved?: boolean }>({});
   const [pwState, setPwState] = useState<{ error?: string; saved?: boolean }>({});

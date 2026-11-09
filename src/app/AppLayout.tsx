@@ -70,7 +70,7 @@ const COPY = {
   },
 };
 
-const homeHref = (lang: Lang) => (lang === "en" ? "/en/" : "/");
+const homeHref = (lang: Lang) => (lang === "ko" ? "/ko/" : "/");
 
 export function AppLayout() {
   const { status, user } = useAuth();
