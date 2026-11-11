@@ -6,8 +6,20 @@
  * Built on the taste-skill kit in public/kit (system.css, the motion layer, the
  * effect grounds). Page CSS lives in site/landing.css.
  */
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { copy } from "./copy.mjs";
 import ART from "./juno-art.json" with { type: "json" };
+
+/*
+ * The pages' own scripts carry a fingerprint of their contents (?v=…), so a
+ * changed script has a new address: a phone that kept the old copy in its
+ * cache fetches the new one on its next visit instead of running the old one.
+ * Paths are from the project root, where `npm run site` and the tests run.
+ */
+const fingerprint = (file) => createHash("sha256").update(readFileSync(resolve(process.cwd(), "public", file))).digest("hex").slice(0, 10);
+const script = (file) => `/${file}?v=${fingerprint(file)}`;
 
 /* Juno, the magpie, as the app draws him (src/brand/Juno.tsx), in every mood. Written by
    src/test/juno.test.tsx; inlined here so the page needs no extra requests. */
@@ -118,7 +130,7 @@ function pageHead(t, other, { title, description, path, koPath, enPath }) {
 <link rel="stylesheet" href="/kit/layout/layout.css">
 <link rel="stylesheet" href="/site/landing.css">
 <script src="/kit/backgrounds/backgrounds.js"></script>
-<script src="/js/lang.js"></script>
+<script src="${script("js/lang.js")}"></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://preplitai.com/#organization","name":"Preplit AI, Inc.","url":"https://preplitai.com","logo":"https://preplitai.com/icon-512.png","email":"info@preplitai.com"},{"@type":"WebSite","@id":"https://preplitai.com/#website","url":"https://preplitai.com","name":"Preplit AI","publisher":{"@id":"https://preplitai.com/#organization"},"inLanguage":["ko","en"]},{"@type":"SoftwareApplication","name":"Preplit AI","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":${JSON.stringify(t.description)},"inLanguage":"${t.lang}","publisher":{"@id":"https://preplitai.com/#organization"}}]}
 </script>
@@ -195,7 +207,7 @@ function earlyDialog(t) {
     <button class="early__ok" type="button" data-early-close autofocus>${esc(e.button)}</button>
   </div>
 </dialog>
-<script src="/js/early.js"></script>`;
+<script src="${script("js/early.js")}"></script>`;
 }
 
 const SCRIPTS = `<script type="module" src="/kit/system.js"></script>

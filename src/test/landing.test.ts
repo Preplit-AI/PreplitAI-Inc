@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { copy } from "../../site/copy.mjs";
@@ -108,8 +109,15 @@ describe.each(pages)("the rendered page (%s, %s)", (lang, file, page, canonical)
   });
 
   it("points only at files that exist", () => {
-    for (const [, url] of html.matchAll(/(?:href|src)="(\/(?:kit|brand|js)\/[^"]+)"/g)) {
+    for (const [, url] of html.matchAll(/(?:href|src)="(\/(?:kit|brand|js)\/[^"?]+)/g)) {
       expect(fs.existsSync(path.join(ROOT, "public", url)), url).toBe(true);
+    }
+  });
+
+  it("names its own scripts by their current contents, so a phone never keeps running an old copy", () => {
+    for (const file of ["js/lang.js", "js/early.js"]) {
+      const hash = crypto.createHash("sha256").update(fs.readFileSync(path.join(ROOT, "public", file))).digest("hex").slice(0, 10);
+      expect(html).toContain(`src="/${file}?v=${hash}"`);
     }
   });
 
@@ -117,7 +125,7 @@ describe.each(pages)("the rendered page (%s, %s)", (lang, file, page, canonical)
     expect(html).toContain('href="/signup"');
     expect(html).not.toMatch(/href="\/(workspace|app)[/"]/);
     expect(html).toContain('<dialog class="early" id="early"');
-    expect(html).toContain('<script src="/js/early.js"></script>');
+    expect(html).toMatch(/<script src="\/js\/early\.js\?v=[a-f0-9]{10}"><\/script>/);
     expect(html).not.toContain("pv-word");
   });
 
