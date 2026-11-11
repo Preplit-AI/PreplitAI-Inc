@@ -2,6 +2,7 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const { Pool } = require('pg');
+const { withRetry } = require('./retry');
 
 /**
  * One database for the whole API.
@@ -230,7 +231,17 @@ async function connectPostgres() {
     max: 10,
   });
   pool.on('error', (err) => console.error('[db] idle client error:', err.message));
-  await pool.query('SELECT 1');
+  try {
+    // Production retries a reset connection or a database still waking up
+    // (db/retry.js); development falls back to PGlite at once instead.
+    await withRetry(() => pool.query('SELECT 1'), {
+      delays: isProduction ? [250, 750, 1500] : [],
+      onRetry: (err, n, ms) => console.warn(`[db] connection attempt ${n} failed (${err.code || err.message}); retrying in ${ms} ms`),
+    });
+  } catch (err) {
+    pool.end().catch(() => {});
+    throw err;
+  }
   return pgDriver(pool);
 }
 
