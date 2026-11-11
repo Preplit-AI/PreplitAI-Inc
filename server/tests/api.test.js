@@ -109,7 +109,10 @@ test('sign-up sets a strict httpOnly refresh cookie and never returns the passwo
   const res = await call('POST', '/auth/signup', { body: { email: 'A@Example.com ', password: 'correct horse battery', name: ' 민지 ' } });
   assert.equal(res.status, 201);
   assert.ok(res.json.accessToken);
-  assert.deepEqual(Object.keys(res.json.user).sort(), ['createdAt', 'email', 'id', 'name']);
+  assert.deepEqual(Object.keys(res.json.user).sort(), ['createdAt', 'email', 'google', 'hasPassword', 'id', 'name']);
+  assert.equal(res.json.user.hasPassword, true);
+  assert.equal(res.json.user.google, false);
+  assert.doesNotMatch(JSON.stringify(res.json), /\$2[aby]\$/, 'no bcrypt hash anywhere in the answer');
   assert.equal(res.json.user.email, 'a@example.com');
   assert.equal(res.json.user.name, '민지');
   const cookie = res.headers.get('set-cookie');

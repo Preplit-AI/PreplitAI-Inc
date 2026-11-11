@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/lib/auth";
 import { LangProvider } from "@/lib/lang";
-import { Login, Signup } from "@/pages/Auth";
+import { ForgotPassword, Login, ResetPassword, Signup } from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import { AppLayout } from "@/app/AppLayout";
 import { EarlyWall } from "@/site/EarlyAccess";
@@ -64,9 +64,11 @@ export default function App() {
                 <Routes>
                   <Route path="/" element={<StaticHome />} />
                   <Route path="/privacy" element={<Privacy />} />
-                  {/* Not public yet: log-in, sign-up and the app show the early-access note (src/site/EarlyAccess.tsx). */}
-                  <Route path="/login" element={<EarlyWall feature="login" showPage><Login /></EarlyWall>} />
-                  <Route path="/signup" element={<EarlyWall feature="signup" showPage><Signup /></EarlyWall>} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  {/* The workspace is not public yet: it shows the early-access note (src/site/EarlyAccess.tsx). */}
                   {/* One shell for every signed-in screen, so a recording in progress survives moving between them. */}
                   <Route element={<EarlyWall feature="workspace"><AppLayout /></EarlyWall>}>
                     <Route path="/workspace" element={<Semester />} />

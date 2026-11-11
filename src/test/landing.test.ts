@@ -113,7 +113,9 @@ describe.each(pages)("the rendered page (%s, %s)", (lang, file, page, canonical)
     }
   });
 
-  it("is not public yet: sign-up and log-in open the early-access note, and the footer has no wordmark", () => {
+  it("sends sign-up and log-in to their pages, keeps the early-access note for the workspace, and has no footer wordmark", () => {
+    expect(html).toContain('href="/signup"');
+    expect(html).not.toMatch(/href="\/(workspace|app)[/"]/);
     expect(html).toContain('<dialog class="early" id="early"');
     expect(html).toContain('<script src="/js/early.js"></script>');
     expect(html).not.toContain("pv-word");

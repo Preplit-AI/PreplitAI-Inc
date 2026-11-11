@@ -40,6 +40,22 @@ module.exports = {
   /** If set, sign-up requires this code. Use it to keep the pilot to its cohort. */
   PILOT_INVITE_CODE: (process.env.PILOT_INVITE_CODE || '').trim(),
 
+  /**
+   * Where the site lives. Links in e-mails and the Google return address are
+   * built from this, never from the request's Host header, which a client sets.
+   */
+  PUBLIC_URL: (process.env.PUBLIC_URL || (isProduction ? 'https://www.preplitai.com' : 'http://localhost:8080')).replace(/\/+$/, ''),
+
+  /** Sign in with Google is offered only when both are set (Google Cloud, OAuth client of type "Web application"). */
+  GOOGLE_CLIENT_ID: (process.env.GOOGLE_CLIENT_ID || '').trim(),
+  GOOGLE_CLIENT_SECRET: (process.env.GOOGLE_CLIENT_SECRET || '').trim(),
+
+  /** "Forgot password?" is offered only when a Resend key is set; EMAIL_FROM must be on a domain verified in Resend. */
+  RESEND_API_KEY: (process.env.RESEND_API_KEY || '').trim(),
+  EMAIL_FROM: (process.env.EMAIL_FROM || 'Preplit AI <no-reply@preplitai.com>').trim(),
+  /** How long a password-reset link works. */
+  RESET_TOKEN_TTL_MS: 60 * 60 * 1000,
+
   /** Lectures one student may process per rolling 30 days. Protects the transcription budget. */
   MONTHLY_LECTURE_LIMIT: int(process.env.MONTHLY_LECTURE_LIMIT, 40),
   /** Lectures processed at the same time across the whole server. */

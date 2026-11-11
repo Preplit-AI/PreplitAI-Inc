@@ -42,6 +42,32 @@ const SCHEMA = [
   `ALTER TABLE refresh_tokens ADD COLUMN IF NOT EXISTS rotated_at TIMESTAMPTZ`,
   `CREATE INDEX IF NOT EXISTS refresh_tokens_hash_idx ON refresh_tokens (token_hash)`,
 
+  // google_sub: the Google account signed in with (its stable "sub" id), if any.
+  // email_verified_at: when the student proved the address is theirs, by Google
+  // or by a reset link. Until then a password set at sign-up is not trusted to
+  // outrank a Google sign-in for the same address (see routes/auth.js).
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_sub VARCHAR(255)`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMPTZ`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS users_google_sub_idx ON users (google_sub)`,
+
+  // A password-reset link: only its hash is kept, it works once, for an hour.
+  `CREATE TABLE IF NOT EXISTS password_resets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token_hash VARCHAR(64) NOT NULL UNIQUE,
+    expires_at TIMESTAMPTZ NOT NULL,
+    used_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+
+  // Rate-limit counters, kept here rather than in memory so every serverless
+  // instance counts against the same limit (middleware/rateLimit.js).
+  `CREATE TABLE IF NOT EXISTS rate_limits (
+    key VARCHAR(320) PRIMARY KEY,
+    hits INTEGER NOT NULL,
+    reset_at TIMESTAMPTZ NOT NULL
+  )`,
+
   // A course the student takes. The old "spaces" table is left untouched for
   // anyone with data in it; see migrations/2026-11-03-drop-legacy.sql.
   `CREATE TABLE IF NOT EXISTS courses (

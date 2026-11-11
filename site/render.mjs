@@ -180,8 +180,8 @@ function siteFooter(t, other, page) {
 </footer>`;
 }
 
-/* Preplit AI isn't public yet: sign-up, log-in and the app open this note instead (public/js/early.js).
-   The backend is unchanged; a developer passes once with ?dev=1 on any page. */
+/* The workspace isn't public yet: a link into it opens this note instead (public/js/early.js);
+   sign-up and log-in work. The backend is unchanged; a developer passes once with ?dev=1 on any page. */
 function earlyDialog(t) {
   const e = t.early;
   return `<dialog class="early" id="early" aria-labelledby="early-h" aria-describedby="early-p">

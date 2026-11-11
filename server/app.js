@@ -23,10 +23,15 @@ const app = express();
 app.disable('x-powered-by');
 
 // Behind a reverse proxy, set TRUST_PROXY (e.g. "1") so rate limits key on the
-// real client address instead of the proxy's.
+// real client address instead of the proxy's. On Vercel the platform's own
+// proxy sets X-Forwarded-For to the client's address (it overwrites what the
+// client sent), so one trusted hop is right there without any setting;
+// without it every visitor would share the proxy's address and one limit.
 if (process.env.TRUST_PROXY) {
   const hops = Number(process.env.TRUST_PROXY);
   app.set('trust proxy', Number.isFinite(hops) ? hops : process.env.TRUST_PROXY);
+} else if (process.env.VERCEL) {
+  app.set('trust proxy', 1);
 }
 
 // ── CORS ─────────────────────────────────────────────────────────────────────

@@ -3,6 +3,10 @@ export type User = {
   email: string;
   name: string;
   createdAt: string;
+  /** False for an account made with Google that never set a password. */
+  hasPassword?: boolean;
+  /** Signs in with Google. */
+  google?: boolean;
 };
 
 export type Course = {

@@ -13,7 +13,7 @@ import { EarlyAccessDialog } from "./EarlyAccess";
  */
 export function SiteHeader() {
   const { lang, setLang } = useLang();
-  const { status } = useAuth();
+  const { status, logout } = useAuth();
   const c = siteCopy[lang];
   const t = c.nav;
   const words = [
@@ -24,7 +24,8 @@ export function SiteHeader() {
   ] as const;
   const word = `text-[0.8125rem] font-semibold text-ink/80 transition-colors hover:text-ink ${lang === "en" ? "uppercase tracking-[0.14em]" : "tracking-[0.02em]"}`;
 
-  // Not public yet: the ways in open the early-access note instead (a developer passes with ?dev=1).
+  // Signing up and logging in are open; the workspace is not public yet, so its link
+  // opens the early-access note instead (a developer passes with ?dev=1).
   const [early, setEarly] = useState<string | null>(null);
   const gate = (label: string) => (event: MouseEvent) => {
     if (hasDevAccess()) return;
@@ -58,11 +59,14 @@ export function SiteHeader() {
             {t.switchTo}
           </button>
           {status === "signed-in" ? (
-            <Link to="/workspace" onClick={gate(t.myNotes)} className="btn-ink">{t.myNotes}</Link>
+            <>
+              <button type="button" onClick={() => { logout().finally(() => window.location.assign(c.home)); }} className="hidden min-h-[44px] items-center px-2.5 text-[0.9375rem] font-medium text-ink sm:inline-flex">{t.logout}</button>
+              <Link to="/workspace" onClick={gate(t.myNotes)} className="btn-ink">{t.myNotes}</Link>
+            </>
           ) : (
             <>
-              <Link to="/login" onClick={gate(t.login)} className="hidden min-h-[44px] items-center px-2.5 text-[0.9375rem] font-medium text-ink sm:inline-flex">{t.login}</Link>
-              <Link to="/signup" onClick={gate(t.start)} className="btn-ink gap-1.5 sm:h-12 sm:px-6">
+              <Link to="/login" className="hidden min-h-[44px] items-center px-2.5 text-[0.9375rem] font-medium text-ink sm:inline-flex">{t.login}</Link>
+              <Link to="/signup" className="btn-ink gap-1.5 sm:h-12 sm:px-6">
                 {t.start}
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </Link>

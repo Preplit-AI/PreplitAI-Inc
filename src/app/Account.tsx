@@ -11,10 +11,19 @@ import { PageHead } from "@/workspace/kit";
 import { NotificationSettings } from "@/workspace/Notifications";
 import { AppTitle, ErrorLine } from "./ui";
 
-const message = (err: unknown, fallback: string) => (err instanceof ApiError ? err.message : fallback);
-
 const COPY = {
   ko: {
+    errors: {
+      WrongPassword: "비밀번호가 맞지 않아요.",
+      WeakPassword: "새 비밀번호는 8자 이상이어야 해요.",
+      WrongConfirmation: "이메일 주소가 맞지 않아요.",
+      TooManyRequests: "시도가 너무 많아요. 몇 분 뒤에 다시 해 주세요.",
+      Network: "인터넷 연결을 확인해 주세요.",
+    } as Record<string, string>,
+    googleOnly: "Google로 로그인하는 계정이에요. 비밀번호로도 로그인하려면, 로그인 화면의",
+    googleOnlyLink: "비밀번호 찾기",
+    googleOnlyEnd: "에서 만들 수 있어요.",
+    confirmEmail: "확인을 위해 이메일 주소를 입력하세요",
     title: "계정",
     name: "이름",
     save: "저장",
@@ -37,6 +46,17 @@ const COPY = {
     deleteFailed: "지우지 못했어요.",
   },
   en: {
+    errors: {
+      WrongPassword: "That password is not right.",
+      WeakPassword: "The new password needs at least 8 characters.",
+      WrongConfirmation: "That e-mail address is not this account's.",
+      TooManyRequests: "Too many attempts. Try again in a few minutes.",
+      Network: "Check your internet connection.",
+    } as Record<string, string>,
+    googleOnly: "You sign in with Google. To log in with a password as well, set one from",
+    googleOnlyLink: "Forgot password?",
+    googleOnlyEnd: "on the log-in page.",
+    confirmEmail: "Type your e-mail address to confirm",
     title: "Account",
     name: "Name",
     save: "Save",
@@ -73,6 +93,9 @@ export default function Account() {
   const [deleteState, setDeleteState] = useState<{ open: boolean; error?: string }>({ open: false });
 
   if (!user) return null;
+  // Older sessions predate the field; an account counts as having a password unless the server says not.
+  const hasPassword = user.hasPassword !== false;
+  const message = (err: unknown, fallback: string) => (err instanceof ApiError ? t.errors[err.code] ?? fallback : fallback);
 
   const saveName = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -105,9 +128,9 @@ export default function Account() {
 
   const deleteAccount = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const password = String(new FormData(e.currentTarget).get("password") ?? "");
+    const typed = String(new FormData(e.currentTarget).get("confirm") ?? "");
     try {
-      await request("/auth/account", { method: "DELETE", body: { password } });
+      await request("/auth/account", { method: "DELETE", body: hasPassword ? { password: typed } : { confirmEmail: typed } });
       client.clear();
       setSession(null);
       window.location.replace(home);
@@ -157,20 +180,29 @@ export default function Account() {
         </div>
       </section>
 
-      <form onSubmit={savePassword} className="window mt-3 flex flex-col gap-3 p-4 sm:p-5">
-        <h2 className="text-sm font-semibold">{t.password}</h2>
-        <div>
-          <label htmlFor="current" className="field-label">{t.current}</label>
-          <input id="current" name="current" type="password" autoComplete="current-password" className="field" required />
-        </div>
-        <div>
-          <label htmlFor="next" className="field-label">{t.next}</label>
-          <input id="next" name="next" type="password" autoComplete="new-password" minLength={8} className="field" required />
-          <p className="mt-1 text-xs text-slate">{t.rule}</p>
-        </div>
-        {pwState.saved ? <p className="text-sm text-slate" role="status">{t.changed}</p> : <ErrorLine>{pwState.error}</ErrorLine>}
-        <button type="submit" className="btn-ink self-start">{t.password}</button>
-      </form>
+      {hasPassword ? (
+        <form onSubmit={savePassword} className="window mt-3 flex flex-col gap-3 p-4 sm:p-5">
+          <h2 className="text-sm font-semibold">{t.password}</h2>
+          <div>
+            <label htmlFor="current" className="field-label">{t.current}</label>
+            <input id="current" name="current" type="password" autoComplete="current-password" className="field" required />
+          </div>
+          <div>
+            <label htmlFor="next" className="field-label">{t.next}</label>
+            <input id="next" name="next" type="password" autoComplete="new-password" minLength={8} className="field" required />
+            <p className="mt-1 text-xs text-slate">{t.rule}</p>
+          </div>
+          {pwState.saved ? <p className="text-sm text-slate" role="status">{t.changed}</p> : <ErrorLine>{pwState.error}</ErrorLine>}
+          <button type="submit" className="btn-ink self-start">{t.password}</button>
+        </form>
+      ) : (
+        <section className="window mt-3 p-4 sm:p-5">
+          <h2 className="text-sm font-semibold">{t.password}</h2>
+          <p className="mt-1 text-sm leading-relaxed text-slate">
+            {t.googleOnly} <Link to="/forgot-password" className="font-semibold text-ink underline underline-offset-4">{t.googleOnlyLink}</Link> {t.googleOnlyEnd}
+          </p>
+        </section>
+      )}
 
       <NotificationSettings />
 
@@ -184,8 +216,12 @@ export default function Account() {
         <p className="mt-1 text-sm leading-relaxed text-slate">{t.deleteText}</p>
         {deleteState.open ? (
           <form onSubmit={deleteAccount} className="mt-3 flex flex-col gap-2">
-            <label htmlFor="delete-password" className="field-label">{t.confirm}</label>
-            <input id="delete-password" name="password" type="password" autoComplete="current-password" className="field" required />
+            <label htmlFor="delete-confirm" className="field-label">{hasPassword ? t.confirm : t.confirmEmail}</label>
+            {hasPassword ? (
+              <input id="delete-confirm" name="confirm" type="password" autoComplete="current-password" className="field" required />
+            ) : (
+              <input id="delete-confirm" name="confirm" type="email" autoComplete="off" className="field" required />
+            )}
             <ErrorLine>{deleteState.error}</ErrorLine>
             <div className="flex gap-3">
               <button type="submit" className="btn-quiet border-maroon text-maroon">{t.deleteTitle}</button>

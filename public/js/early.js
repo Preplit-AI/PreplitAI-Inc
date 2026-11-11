@@ -1,5 +1,5 @@
-// Preplit AI isn't public yet. On the static pages, every way into the product (sign-up, log-in,
-// the workspace) opens the early-access note instead; the backend is unchanged.
+// The workspace isn't public yet. On the static pages, a link into it opens the early-access
+// note instead; signing up and logging in work. The backend is unchanged.
 // A developer passes once with ?dev=1 on any page (remembered on this device; ?dev=0 undoes it).
 // The React app reads the same key (src/lib/earlyAccess.ts).
 (function () {
@@ -15,7 +15,7 @@
   var dialog = document.getElementById("early");
   if (!dialog || typeof dialog.showModal !== "function") return;
   var feature = dialog.querySelector("[data-early-feature]");
-  var GATED = /^\/(signup|login|workspace|app)(\/|$)/;
+  var GATED = /^\/(workspace|app)(\/|$)/;
 
   document.addEventListener("click", function (event) {
     var link = event.target && event.target.closest ? event.target.closest("a[href]") : null;

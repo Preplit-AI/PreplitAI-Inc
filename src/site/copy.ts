@@ -10,13 +10,15 @@ export type SiteCopy = {
   pricing: string;
   nav: {
     product: string; juno: string; pricing: string; faq: string;
-    login: string; start: string; myNotes: string; switchTo: string; switchLabel: string; menu: string;
+    login: string; logout: string; start: string; myNotes: string; switchTo: string; switchLabel: string; menu: string;
   };
   footer: { privacy: string; contact: string; company: string };
-  /** The early-access note: Preplit AI isn't public yet (src/site/EarlyAccess.tsx). */
+  /** The early-access note: the workspace isn't public yet (src/site/EarlyAccess.tsx). */
   early: {
     badge: string; title: string; body: string; button: string; close: string;
-    features: { login: string; signup: string; workspace: string };
+    /** For a signed-in student: their account is kept, the workspace opens later. */
+    signedIn: string; logout: string;
+    features: { workspace: string };
   };
 };
 
@@ -29,6 +31,7 @@ const ko: SiteCopy = {
     pricing: "요금제",
     faq: "질문",
     login: "로그인",
+    logout: "로그아웃",
     start: "시작하기",
     myNotes: "내 워크스페이스",
     switchTo: "EN",
@@ -42,7 +45,9 @@ const ko: SiteCopy = {
     body: "Preplit AI 서비스는 지금 승인된 개발자 계정만 이용할 수 있어요. 정식 출시를 기다려 주세요.",
     button: "알겠어요, 기다릴게요",
     close: "닫기",
-    features: { login: "로그인", signup: "가입하기", workspace: "워크스페이스" },
+    signedIn: "계정은 준비됐어요",
+    logout: "로그아웃",
+    features: { workspace: "워크스페이스" },
   },
 };
 
@@ -55,6 +60,7 @@ const en: SiteCopy = {
     pricing: "Pricing",
     faq: "FAQ",
     login: "Log in",
+    logout: "Log out",
     start: "Start",
     myNotes: "My workspace",
     switchTo: "KO",
@@ -68,7 +74,9 @@ const en: SiteCopy = {
     body: "Access to Preplit AI services is currently restricted to authorized developer accounts only. Please wait for our official public release.",
     button: "Got it, I will wait",
     close: "Close",
-    features: { login: "Log in", signup: "Sign up", workspace: "Course workspace" },
+    signedIn: "Your account is ready",
+    logout: "Log out",
+    features: { workspace: "Course workspace" },
   },
 };
 
