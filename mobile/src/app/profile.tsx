@@ -1,0 +1,118 @@
+import { useState } from "react";
+import { Linking, Platform, View } from "react-native";
+import { router } from "expo-router";
+import { API_ORIGIN } from "@/lib/api";
+import { useAuth, type ProfileChanges } from "@/lib/auth";
+import { EXPLAIN_LANGUAGES, languageName, useLang } from "@/lib/i18n";
+import { color, space } from "@/lib/theme";
+import type { Profile, UiLanguage } from "@/lib/types";
+import { Button, Card, Chip, Chips, Notice, Row, Screen, Section, Segment, Sheet, T, Toggle } from "@/ui";
+import { Juno } from "@/ui/Juno";
+
+/*
+ * The profile: who the student is to Juno, and the settings that are theirs to
+ * change. Everything Juno knows about them is shown here and can be edited.
+ */
+
+const QUIET_PRESETS: [number, number][] = [[22, 8], [23, 7], [0, 9]];
+
+export default function ProfileScreen() {
+  const { t, lang, setLang, errorText } = useLang();
+  const { user, profile, saveProfile, logout } = useAuth();
+  const [languages, setLanguages] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [leaving, setLeaving] = useState(false);
+  const p = profile as Profile;
+
+  const change = (changes: ProfileChanges) => {
+    setError(null);
+    saveProfile(changes).catch((err) => setError(errorText(err)));
+  };
+  // Leaves for the welcome screen first, then ends the session: the screens behind this one
+  // close the moment the student is signed out, and this way there is somewhere to be.
+  const signOut = () => {
+    setLeaving(true);
+    router.replace("/welcome");
+    logout().catch(() => {});
+  };
+  const edit = (step: number) => router.push({ pathname: "/onboarding", params: { step: String(step) } });
+  const studying = [p.department, p.degreeLevel ? t.onboarding.degrees[p.degreeLevel] : null, p.academicYear ? `${p.academicYear}` : null].filter(Boolean).join(" · ");
+  const privacy = () => Linking.openURL(`${API_ORIGIN || (Platform.OS === "web" ? window.location.origin : "")}/privacy`);
+
+  return (
+    <Screen back title={t.profile.title}>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: space.lg, marginTop: space.md }}>
+        <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: color.ink, alignItems: "center", justifyContent: "center" }}>
+          <T variant="title" tone={color.white}>{(user?.name ?? "?").trim().charAt(0).toUpperCase()}</T>
+        </View>
+        <View style={{ flex: 1 }}>
+          <T variant="title">{user?.name}</T>
+          <T variant="small">{user?.email}</T>
+        </View>
+      </View>
+      {error ? <View style={{ marginTop: space.md }}><Notice tone="error" text={error} /></View> : null}
+
+      <Section title={t.profile.study}>
+        <Card style={{ paddingVertical: 0 }}>
+          <Row icon="map-pin" title={p.university ?? t.onboarding.done.notSaid} sub={p.campus} onPress={() => edit(1)} />
+          <Row icon="book" title={t.onboarding.done.studying} sub={studying || t.onboarding.done.notSaid} onPress={() => edit(2)} />
+          <Row icon="target" title={t.onboarding.done.goal} sub={[p.targetRole, ...p.careerInterests].filter(Boolean).join(", ") || t.onboarding.done.notSaid} onPress={() => edit(5)} last />
+        </Card>
+      </Section>
+
+      <Section title={t.profile.languages}>
+        <Card style={{ gap: space.md }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: space.md }}>
+            <Juno size={40} mood="happy" />
+            <View style={{ flex: 1 }}>
+              <T variant="small">{t.profile.explainLanguage}</T>
+              <T variant="heading">{languageName(p.explainLanguage) ?? t.onboarding.done.notSaid}</T>
+            </View>
+            <Button small variant="secondary" label={t.common.edit} onPress={() => setLanguages(true)} />
+          </View>
+          <View>
+            <T variant="small" style={{ marginBottom: 8 }}>{t.profile.appLanguage}</T>
+            <Segment<UiLanguage> options={[{ value: "en", label: "English" }, { value: "ko", label: "한국어" }]} value={lang} onChange={(next) => { setLang(next); change({ uiLanguage: next }); }} />
+          </View>
+        </Card>
+      </Section>
+
+      <Section title={t.profile.notifications}>
+        <Card style={{ paddingVertical: space.xs }}>
+          <Toggle label={t.profile.dailyQuiz} value={p.dailyQuiz} onChange={(dailyQuiz) => change({ dailyQuiz })} />
+          <View style={{ paddingBottom: space.md, gap: 8 }}>
+            <T variant="strong">{t.profile.quiet}</T>
+            <T variant="small">{t.profile.quietLine(p.quietFrom, p.quietUntil)}</T>
+            <Chips>
+              {QUIET_PRESETS.map(([from, until]) => (
+                <Chip key={from} label={`${from}:00 – ${until}:00`} selected={p.quietFrom === from && p.quietUntil === until} onPress={() => change({ quietFrom: from, quietUntil: until })} />
+              ))}
+            </Chips>
+          </View>
+        </Card>
+        <View style={{ marginTop: space.md }}><Notice text={t.profile.notifyNote} /></View>
+      </Section>
+
+      <Section title={t.profile.data}>
+        <Card style={{ paddingVertical: 0 }}>
+          <Row icon="shield" title={t.profile.privacy} onPress={privacy} />
+          <Row icon="lock" title={t.profile.data} sub={t.profile.dataLine} last />
+        </Card>
+      </Section>
+
+      <View style={{ marginTop: space.xxl, gap: space.md }}>
+        <Button variant="secondary" icon="log-out" label={t.profile.logout} loading={leaving} onPress={signOut} />
+        <T variant="small" tone={color.slateLight} style={{ textAlign: "center" }}>{t.appName} · {t.profile.version} 0.1.0</T>
+      </View>
+
+      <Sheet visible={languages} onClose={() => setLanguages(false)} title={t.profile.explainLanguage}>
+        <T variant="small" style={{ marginBottom: space.lg }}>{t.onboarding.language.why}</T>
+        <Chips>
+          {EXPLAIN_LANGUAGES.map((l) => (
+            <Chip key={l.code} label={l.name} selected={p.explainLanguage === l.code} onPress={() => { change({ explainLanguage: l.code }); setLanguages(false); }} />
+          ))}
+        </Chips>
+      </Sheet>
+    </Screen>
+  );
+}

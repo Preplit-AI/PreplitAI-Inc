@@ -27,6 +27,9 @@ function routeToApp(): Plugin {
     const [pathname, query] = url.split("?");
     if (PAGES[pathname]) {
       req.url = PAGES[pathname] + (query ? `?${query}` : "");
+    } else if (pathname === "/m" || pathname.startsWith("/m/")) {
+      // The mobile app's web build (public/m, from npm run mobile:web): its own single page.
+      if (!path.extname(pathname)) req.url = "/m/index.html" + (query ? `?${query}` : "");
     } else if (
       pathname !== "/" &&
       pathname !== "/ko/" &&

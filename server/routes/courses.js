@@ -3,7 +3,7 @@ const express = require('express');
 const { authMiddleware } = require('../middleware/auth');
 const { listCourses, countCourses, createCourse, updateCourse, deleteCourse } = require('../services/courseStore');
 const { isDate, cleanClassDays } = require('../services/semesterStore');
-const { isUuid, fail } = require('../utils/http');
+const { isUuid, fail, cleanText } = require('../utils/http');
 
 const router = express.Router();
 router.use(authMiddleware);
@@ -22,6 +22,24 @@ function scheduleFrom(body) {
     if (body[field] === undefined) continue;
     if (body[field] !== null && !isDate(body[field])) return null;
     out[field] = body[field];
+  }
+  // Optional timetable details. Each may be cleared with null.
+  const text = (field, max) => {
+    if (body[field] === undefined) return true;
+    if (body[field] === null || body[field] === '') { out[field] = null; return true; }
+    if (typeof body[field] !== 'string') return false;
+    out[field] = cleanText(body[field], max) || null;
+    return true;
+  };
+  if (!text('code', 24) || !text('instructor', 80) || !text('location', 80) || !text('language', 8)) return null;
+  for (const field of ['startsAt', 'endsAt']) {
+    if (body[field] === undefined) continue;
+    if (body[field] !== null && !/^([01]\d|2[0-3]):[0-5]\d$/.test(body[field])) return null;
+    out[field] = body[field];
+  }
+  if (body.credits !== undefined) {
+    if (body.credits !== null && !(Number.isInteger(body.credits) && body.credits >= 0 && body.credits <= 30)) return null;
+    out.credits = body.credits;
   }
   return out;
 }
@@ -51,7 +69,8 @@ router.post('/', async (req, res, next) => {
 });
 
 // ── PATCH /api/courses/:id ───────────────────────────────────────────────────
-// Any of: name, classDays (0 = Sunday to 6 = Saturday), midtermOn, finalOn.
+// Any of: name, classDays (0 = Sunday to 6 = Saturday), midtermOn, finalOn, code,
+// instructor, credits, location, startsAt and endsAt ("HH:MM"), language.
 router.patch('/:id', async (req, res, next) => {
   try {
     if (!isUuid(req.params.id)) return fail(res, 404, 'NotFound', '과목을 찾을 수 없어요.');

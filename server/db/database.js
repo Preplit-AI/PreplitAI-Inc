@@ -212,6 +212,96 @@ const SCHEMA = [
     sent_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (user_id, key)
   )`,
+
+  // ── The mobile app (2026-11) ────────────────────────────────────────────────
+  // The Student Intelligence Profile: what the student told Juno at onboarding,
+  // one row per student, edited by them at any time. Nothing here is guessed.
+  // Three languages are kept apart on purpose: the app's (ui_language), the one
+  // Juno explains in (explain_language) and each course's own (courses.language).
+  `CREATE TABLE IF NOT EXISTS student_profiles (
+    user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    country VARCHAR(2),
+    university VARCHAR(120),
+    campus VARCHAR(80),
+    department VARCHAR(120),
+    degree_level VARCHAR(16),
+    stage VARCHAR(16),
+    academic_year SMALLINT,
+    expected_graduation VARCHAR(7),
+    timezone VARCHAR(64),
+    ui_language VARCHAR(8),
+    explain_language VARCHAR(8),
+    languages JSONB NOT NULL DEFAULT '[]'::jsonb,
+    korean_level VARCHAR(16),
+    academic_goal VARCHAR(300),
+    career_interests JSONB NOT NULL DEFAULT '[]'::jsonb,
+    target_role VARCHAR(120),
+    skills_wanted JSONB NOT NULL DEFAULT '[]'::jsonb,
+    daily_quiz BOOLEAN NOT NULL DEFAULT true,
+    quiet_from SMALLINT NOT NULL DEFAULT 22,
+    quiet_until SMALLINT NOT NULL DEFAULT 8,
+    onboarding_step SMALLINT NOT NULL DEFAULT 0,
+    onboarded_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+
+  // What a timetable needs beyond the weekday, as the student entered it.
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS code VARCHAR(24)`,
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS instructor VARCHAR(80)`,
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS credits SMALLINT`,
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS location VARCHAR(80)`,
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS starts_at VARCHAR(5)`,
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS ends_at VARCHAR(5)`,
+  `ALTER TABLE courses ADD COLUMN IF NOT EXISTS language VARCHAR(8)`,
+
+  // A lecture made from an uploaded document (slides, a PDF) rather than speech.
+  `ALTER TABLE lectures ADD COLUMN IF NOT EXISTS material VARCHAR(12)`,
+
+  // Something the student has to do. It may belong to a course; if the course
+  // is deleted the task stays. remind_minutes is how long before due_at to remind.
+  `CREATE TABLE IF NOT EXISTS tasks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    course_id UUID REFERENCES courses(id) ON DELETE SET NULL,
+    title VARCHAR(160) NOT NULL,
+    notes VARCHAR(1000),
+    kind VARCHAR(12) NOT NULL DEFAULT 'task' CHECK (kind IN ('task', 'assignment', 'exam', 'study')),
+    due_at TIMESTAMPTZ,
+    priority SMALLINT NOT NULL DEFAULT 2 CHECK (priority BETWEEN 1 AND 3),
+    remind_minutes INT,
+    done_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS tasks_user_idx ON tasks (user_id, done_at, due_at)`,
+
+  // A project the student is building, with its milestones. The skills listed
+  // on it count as "developing" while it is active and "demonstrated" once it
+  // is done: a skill is never claimed without the work behind it.
+  `CREATE TABLE IF NOT EXISTS projects (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    course_id UUID REFERENCES courses(id) ON DELETE SET NULL,
+    title VARCHAR(120) NOT NULL,
+    summary VARCHAR(800),
+    status VARCHAR(8) NOT NULL DEFAULT 'idea' CHECK (status IN ('idea', 'active', 'done')),
+    skills JSONB NOT NULL DEFAULT '[]'::jsonb,
+    link VARCHAR(300),
+    outcome VARCHAR(800),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS projects_user_idx ON projects (user_id, created_at DESC)`,
+  `CREATE TABLE IF NOT EXISTS project_milestones (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(160) NOT NULL,
+    position INT NOT NULL DEFAULT 0,
+    done_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS project_milestones_project_idx ON project_milestones (project_id, position)`,
 ];
 
 let driver = null; // { kind, query(text, params), transaction(fn), close() }

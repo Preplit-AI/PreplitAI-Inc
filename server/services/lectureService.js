@@ -33,8 +33,21 @@ const OUTPUT_SHAPE = `{
   "summary": "두 문장 요약",
   "sections": [ { "heading": "소제목", "points": ["핵심 내용", "..."] } ],
   "flagged": [ { "quote": "교수가 한 말을 짧게 인용", "at": "mm:ss 또는 빈 문자열", "note": "무엇이 시험에 나오는지" } ],
-  "cards": [ { "front": "질문", "back": "답" } ]
+  "cards": [ { "front": "질문", "back": "답" } ],
+  "terms": [ { "term": "강의에 나온 핵심 용어 (강의에서 쓴 원어 그대로)", "english": "영어 용어 (모르면 빈 문자열)", "meaning": "강의에서 설명한 뜻, 한 문장" } ]
 }`;
+
+/**
+ * For a student who asked for another language: the same rules, with rule 4
+ * replaced. The lecture's own terms stay, since the exam uses them.
+ */
+function systemPromptFor(language) {
+  if (!language || language === 'Korean') return SYSTEM_PROMPT;
+  return SYSTEM_PROMPT.replace(
+    /4\. .*/,
+    `4. 학생은 유학생이다. 모든 문장(title, summary, heading, points, note, 카드, terms의 meaning)을 ${language}로 쓴다. 강의에 나온 전문 용어는 강의에서 쓴 원어 그대로 쓰고, 처음 나올 때 괄호에 ${language} 뜻을 붙인다. 예: 교착 상태 (deadlock). flagged의 quote는 교수가 한 말 그대로, 번역하지 않는다.`
+  );
+}
 
 const SUMMARY_SYSTEM_PROMPT = `너는 강의 노트의 제목과 요약을 쓴다. 주어진 소제목과 내용에 있는 것만 쓴다. 한국어로 쓴다. JSON만 출력한다: { "title": "강의 주제를 담은 짧은 제목 (40자 이내)", "summary": "두 문장 요약" }`;
 
@@ -71,7 +84,14 @@ function clean(data) {
     .filter((c) => c.front && c.back)
     .slice(0, MAX_CARDS);
 
-  return { title: str(data.title, 120), summary: str(data.summary, 600), sections, flagged, cards };
+  // Key terms in the lecture's own language, at most 20. Optional: older notes have none.
+  const seen = new Set();
+  const terms = (Array.isArray(data.terms) ? data.terms : [])
+    .map((t) => ({ term: str(t && t.term, 80), english: str(t && t.english, 80), meaning: str(t && t.meaning, 300) }))
+    .filter((t) => t.term && t.meaning && !seen.has(t.term.toLowerCase()) && seen.add(t.term.toLowerCase()))
+    .slice(0, 20);
+
+  return { title: str(data.title, 120), summary: str(data.summary, 600), sections, flagged, cards, terms };
 }
 
 function validate(data) {
@@ -123,16 +143,16 @@ function pickEvenly(items, max) {
   return Array.from({ length: max }, (_, i) => items[Math.floor(i * step)]);
 }
 
-async function generate(userPrompt) {
+async function generate(userPrompt, language) {
   try {
-    return await callLLM({ systemPrompt: SYSTEM_PROMPT, userPrompt, primaryModel: NOTES_MODEL, jsonMode: true, patient: true });
+    return await callLLM({ systemPrompt: systemPromptFor(language), userPrompt, primaryModel: NOTES_MODEL, jsonMode: true, patient: true });
   } catch (err) {
     err.code = err.code || 'LLM_UNAVAILABLE';
     throw err;
   }
 }
 
-async function writePart({ part, index, total, courseName, title }) {
+async function writePart({ part, index, total, courseName, title, language }) {
   const cardsHere = Math.min(4, Math.max(2, Math.ceil(MAX_CARDS / total)));
   const userPrompt = `과목: ${courseName}
 학생이 붙인 제목: ${title || '(없음)'}
@@ -149,7 +169,7 @@ ${part}`;
   // and a whole lecture is a lot to lose over one bad reply.
   let lastError = null;
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const raw = await generate(userPrompt);
+    const raw = await generate(userPrompt, language);
     try {
       return clean(parseJson(raw));
     } catch (err) {
@@ -161,11 +181,11 @@ ${part}`;
 }
 
 /** The title and summary of a long lecture, read from its finished notes. Without them the notes are still complete. */
-async function titleAndSummary({ sections, courseName, title }) {
+async function titleAndSummary({ sections, courseName, title, language }) {
   const outline = sections.map((s) => `- ${s.heading}: ${s.points[0]}`).join('\n').slice(0, 6000);
   try {
     const raw = await callLLM({
-      systemPrompt: SUMMARY_SYSTEM_PROMPT,
+      systemPrompt: language && language !== 'Korean' ? SUMMARY_SYSTEM_PROMPT.replace('한국어로 쓴다.', `${language}로 쓴다.`) : SUMMARY_SYSTEM_PROMPT,
       userPrompt: `과목: ${courseName}\n학생이 붙인 제목: ${title || '(없음)'}\n\n소제목과 내용:\n${outline}`,
       primaryModel: NOTES_MODEL,
       jsonMode: true,
@@ -182,7 +202,7 @@ async function titleAndSummary({ sections, courseName, title }) {
 /**
  * @returns {Promise<{ title: string, summary: string, sections: {heading:string,points:string[]}[], flagged: {quote:string,at:string,note:string}[], cards: {front:string,back:string}[] }>}
  */
-async function buildNotes({ transcript, courseName, title }) {
+async function buildNotes({ transcript, courseName, title, language = null }) {
   const parts = splitTranscript(transcript);
 
   if (parts.length <= 1) {
@@ -193,7 +213,7 @@ async function buildNotes({ transcript, courseName, title }) {
 ${OUTPUT_SHAPE}
 
 녹취록 ([mm:ss]는 녹음 시작부터의 시간):
-${transcript}`);
+${transcript}`, language);
     try {
       return validate(parseJson(raw));
     } catch (err) {
@@ -206,7 +226,7 @@ ${transcript}`);
   // saved with a hole in it, and a provider limit is waited out rather than hit harder.
   const written = [];
   for (let index = 0; index < parts.length; index += 1) {
-    written.push(await writePart({ part: parts[index], index, total: parts.length, courseName, title }));
+    written.push(await writePart({ part: parts[index], index, total: parts.length, courseName, title, language }));
   }
 
   const sections = written.flatMap((p) => p.sections);
@@ -215,14 +235,15 @@ ${transcript}`);
     err.code = 'NOTES_INVALID';
     throw err;
   }
-  const { title: noteTitle, summary } = await titleAndSummary({ sections, courseName, title });
+  const { title: noteTitle, summary } = await titleAndSummary({ sections, courseName, title, language });
   return {
     title: noteTitle,
     summary,
     sections,
     flagged: written.flatMap((p) => p.flagged),
     cards: pickEvenly(written.flatMap((p) => p.cards), MAX_CARDS),
+    terms: written.flatMap((p) => p.terms).filter((t, i, all) => all.findIndex((o) => o.term.toLowerCase() === t.term.toLowerCase()) === i).slice(0, 20),
   };
 }
 
-module.exports = { buildNotes, validate, splitTranscript, pickEvenly };
+module.exports = { buildNotes, validate, splitTranscript, pickEvenly, systemPromptFor };

@@ -93,6 +93,9 @@ app.use('/api/junbee', junbeeRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/semester', semesterRoutes);
 app.use('/api/push', pushRoutes);
+app.use('/api/profile', require('./routes/profile'));
+app.use('/api/tasks', require('./routes/tasks'));
+app.use('/api/projects', require('./routes/projects'));
 
 app.use('/api', (req, res) => {
   res.status(404).json({ success: false, error: 'NotFound', message: '없는 주소예요.' });

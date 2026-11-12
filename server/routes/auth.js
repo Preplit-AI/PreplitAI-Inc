@@ -72,9 +72,12 @@ function inviteMatches(code) {
   return sameText(code.trim(), PILOT_INVITE_CODE);
 }
 
-/** Only in-app paths, so a crafted next= cannot send anyone to another site. Same rule as src/pages/Auth.tsx. */
+/**
+ * Only in-app paths, so a crafted next= cannot send anyone to another site. Same
+ * rule as src/pages/Auth.tsx, plus /m, where the mobile app's web build lives.
+ */
 function safeNext(value) {
-  return typeof value === 'string' && /^\/(app|workspace)(\/[\w\-/]*)?$/.test(value) ? value : '/workspace';
+  return typeof value === 'string' && /^\/(app|workspace|m)(\/[\w\-/]*)?$/.test(value) ? value : '/workspace';
 }
 
 function setRefreshCookie(res, raw) {
@@ -251,7 +254,9 @@ async function accountForGoogle(profile, intent) {
 router.get('/google/callback', googleLimit, async (req, res, next) => {
   const ticket = readCookie(req, GOOGLE_COOKIE);
   res.clearCookie(GOOGLE_COOKIE, { httpOnly: true, secure: isProduction, sameSite: 'lax', path: GOOGLE_PATH });
-  const back = (page, code) => res.redirect(303, `${page}?error=${code}`);
+  // A sign-in that began in the mobile app's web build (/m) goes back to its own pages.
+  let home = '';
+  const back = (page, code) => res.redirect(303, `${home}${page}?error=${code}`);
 
   let flow;
   try {
@@ -259,6 +264,7 @@ router.get('/google/callback', googleLimit, async (req, res, next) => {
   } catch {
     return back('/login', 'GoogleFailed');
   }
+  if (flow.next === '/m' || flow.next.startsWith('/m/')) home = '/m';
   const from = flow.intent === 'signup' ? '/signup' : '/login';
   if (req.query.error) return back(from, req.query.error === 'access_denied' ? 'GoogleCancelled' : 'GoogleFailed');
   if (!sameText(req.query.state, flow.state) || typeof req.query.code !== 'string') return back(from, 'GoogleFailed');

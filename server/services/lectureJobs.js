@@ -21,9 +21,12 @@ const { PROCESSING_CONCURRENCY } = require('../config/constants');
 let running = 0;
 const waiting = [];
 
+/** @returns a promise that settles when this lecture has been processed (or has failed and been recorded). */
 function enqueue(job) {
-  waiting.push(job);
-  pump();
+  return new Promise((resolve) => {
+    waiting.push({ ...job, settled: resolve });
+    pump();
+  });
 }
 
 function pump() {
@@ -34,6 +37,7 @@ function pump() {
       .catch((err) => console.error('[lecture] unexpected job error:', err))
       .finally(() => {
         running -= 1;
+        job.settled();
         pump();
       });
   }
@@ -41,7 +45,7 @@ function pump() {
 
 const MIN_WORDS = 40;
 
-async function processLecture({ lectureId, userId, courseName, title, audioPath, text }) {
+async function processLecture({ lectureId, userId, courseName, title, audioPath, text, language = null }) {
   let failureReason = 'processing_failed';
   try {
     let transcript;
@@ -68,7 +72,7 @@ async function processLecture({ lectureId, userId, courseName, title, audioPath,
     }
 
     failureReason = 'notes_failed';
-    const notes = await buildNotes({ transcript, courseName, title });
+    const notes = await buildNotes({ transcript, courseName, title, language });
 
     const now = new Date();
     await db.transaction(async (tx) => {
@@ -127,6 +131,19 @@ function supersedeMessages(tx, userId, lectureId) {
  * A restart loses in-flight jobs. Their lectures are marked failed so the
  * student is told, instead of watching "처리 중" forever.
  */
+/**
+ * On a serverless host there is no restart to notice: a lecture whose function
+ * was cut off would say "processing" for ever. One still processing after
+ * fifteen minutes is recorded as failed the next time its student looks.
+ */
+async function failStalledJobs(userId) {
+  await db.query(
+    `UPDATE lectures SET status = 'failed', failure_reason = 'interrupted', finished_at = now(), message_dismissed = false
+      WHERE user_id = $1 AND status = 'processing' AND created_at < now() - interval '15 minutes'`,
+    [userId]
+  );
+}
+
 async function failInterruptedJobs() {
   const result = await db.query(
     `UPDATE lectures SET status = 'failed', failure_reason = 'interrupted', finished_at = now()
@@ -135,4 +152,4 @@ async function failInterruptedJobs() {
   if (result.rowCount) console.warn('[lecture] marked ' + result.rowCount + ' interrupted lecture(s) as failed');
 }
 
-module.exports = { enqueue, failInterruptedJobs };
+module.exports = { enqueue, failInterruptedJobs, failStalledJobs };

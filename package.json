@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:api": "npm --prefix server test"
+    "test:api": "npm --prefix server test",
+    "mobile:web": "node scripts/build-mobile-web.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.83.0",
@@ -36,6 +37,7 @@
     "react-router-dom": "^6.30.1",
     "remark-gfm": "^4.0.1",
     "ts-fsrs": "^5.4.2",
+    "unpdf": "^2.1.0",
     "validator": "^13.15.23",
     "web-push": "^3.6.7"
   },

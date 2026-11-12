@@ -7,6 +7,7 @@ const db = require('../db/database');
  */
 
 const COLUMNS = `c.id, c.name, c.created_at, c.class_days,
+  c.code, c.instructor, c.credits, c.location, c.starts_at, c.ends_at, c.language,
   to_char(c.midterm_on, 'YYYY-MM-DD') AS midterm_on,
   to_char(c.final_on, 'YYYY-MM-DD') AS final_on`;
 
@@ -19,6 +20,13 @@ function toCourse(row) {
     classDays: row.class_days || [],
     midtermOn: row.midterm_on || null,
     finalOn: row.final_on || null,
+    code: row.code || null,
+    instructor: row.instructor || null,
+    credits: row.credits ?? null,
+    location: row.location || null,
+    startsAt: row.starts_at || null,
+    endsAt: row.ends_at || null,
+    language: row.language || null,
   };
 }
 
@@ -46,13 +54,18 @@ async function countCourses(userId) {
   return result.rows[0].n;
 }
 
-async function createCourse(userId, name, { classDays = [], midtermOn = null, finalOn = null } = {}) {
+/** The optional timetable details, by their column names. */
+const DETAILS = { code: 'code', instructor: 'instructor', credits: 'credits', location: 'location', startsAt: 'starts_at', endsAt: 'ends_at', language: 'language' };
+
+async function createCourse(userId, name, { classDays = [], midtermOn = null, finalOn = null, ...details } = {}) {
   const result = await db.query(
     `INSERT INTO courses AS c (user_id, name, class_days, midterm_on, final_on)
      VALUES ($1, $2, $3, $4::date, $5::date) RETURNING ${COLUMNS}`,
     [userId, name, JSON.stringify(classDays), midtermOn, finalOn]
   );
-  return toCourse({ ...result.rows[0], lecture_count: 0 });
+  const course = toCourse({ ...result.rows[0], lecture_count: 0 });
+  const given = Object.keys(DETAILS).some((key) => details[key] !== undefined && details[key] !== null);
+  return given ? { ...(await updateCourse(userId, course.id, details)), lectureCount: 0 } : course;
 }
 
 /**
@@ -70,6 +83,7 @@ async function updateCourse(userId, id, changes) {
   if (changes.classDays !== undefined) set('class_days', JSON.stringify(changes.classDays));
   if (changes.midtermOn !== undefined) set('midterm_on', changes.midtermOn, '::date');
   if (changes.finalOn !== undefined) set('final_on', changes.finalOn, '::date');
+  for (const [key, column] of Object.entries(DETAILS)) if (changes[key] !== undefined) set(column, changes[key]);
   if (!sets.length) return getCourse(userId, id);
   const result = await db.query(
     `UPDATE courses AS c SET ${sets.join(', ')} WHERE c.id = $1 AND c.user_id = $2 RETURNING ${COLUMNS}`,

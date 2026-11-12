@@ -10,7 +10,9 @@
     { "source": "/ko", "destination": "/ko/index.html" },
     { "source": "/pricing", "destination": "/pricing/index.html" },
     { "source": "/ko/pricing", "destination": "/ko/pricing/index.html" },
-    { "source": "/((?!api/|kit/|assets/|brand/|js/|ko/|pricing/).*)", "destination": "/app.html" }
+    { "source": "/m", "destination": "/m/index.html" },
+    { "source": "/m/:path*", "destination": "/m/index.html" },
+    { "source": "/((?!api/|kit/|assets/|brand/|js/|ko/|pricing/|m/).*)", "destination": "/app.html" }
   ],
   "headers": [
     {

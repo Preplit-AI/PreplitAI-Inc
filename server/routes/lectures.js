@@ -7,7 +7,10 @@ const fsp = require('fs/promises');
 const crypto = require('crypto');
 const { authMiddleware } = require('../middleware/auth');
 const { uploadLimit } = require('../middleware/rateLimit');
-const { enqueue } = require('../services/lectureJobs');
+const { enqueue, failStalledJobs } = require('../services/lectureJobs');
+const { textFromDocument, DOCUMENT_EXTENSIONS } = require('../services/documents');
+const { getProfile, LANGUAGE_NAMES } = require('../services/profileStore');
+const { keepAlive } = require('../utils/keepAlive');
 const { getCourse } = require('../services/courseStore');
 const { lectureUsage, createLecture, listLectures, getLecture, deleteLecture } = require('../services/lectureStore');
 const { titleForRecording } = require('../services/semesterStore');
@@ -31,8 +34,13 @@ const upload = multer({
   limits: { fileSize: MAX_AUDIO_BYTES, files: 1, fields: 6, fieldSize: 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname || '').toLowerCase();
+    if (file.fieldname === 'document') {
+      // Slides, a PDF or a text file: read for its text, never stored.
+      const docOk = /^(application\/pdf|text\/)/.test(file.mimetype) || file.mimetype === 'application/octet-stream';
+      if (DOCUMENT_EXTENSIONS.has(ext) && docOk) return cb(null, true);
+    }
     const typeOk = /^(audio|video)\//.test(file.mimetype) || file.mimetype === 'application/octet-stream';
-    if (AUDIO_EXTENSIONS.has(ext) && typeOk) return cb(null, true);
+    if (file.fieldname === 'audio' && AUDIO_EXTENSIONS.has(ext) && typeOk) return cb(null, true);
     const err = new Error('Unsupported file type');
     err.code = 'UNSUPPORTED_FILE';
     cb(err);
@@ -40,13 +48,18 @@ const upload = multer({
 });
 
 function receiveUpload(req, res, next) {
-  upload.single('audio')(req, res, (err) => {
-    if (!err) return next();
+  upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'document', maxCount: 1 }])(req, res, (err) => {
+    if (!err) {
+      const files = req.files || {};
+      req.file = (files.audio && files.audio[0]) || null;
+      req.document = (files.document && files.document[0]) || null;
+      return next();
+    }
     if (err.code === 'LIMIT_FILE_SIZE') {
       return fail(res, 413, 'FileTooLarge', `파일이 너무 커요. ${Math.round(MAX_AUDIO_BYTES / 1024 / 1024)}MB까지 올릴 수 있어요.`);
     }
     if (err.code === 'UNSUPPORTED_FILE') {
-      return fail(res, 415, 'UnsupportedFile', '녹음 파일만 올릴 수 있어요. (m4a, mp3, wav 등)');
+      return fail(res, 415, 'UnsupportedFile', '녹음 파일(m4a, mp3, wav 등)이나 문서(PDF, txt)만 올릴 수 있어요.');
     }
     return fail(res, 400, 'BadUpload', '파일을 받지 못했어요. 다시 올려 주세요.');
   });
@@ -68,19 +81,45 @@ function recordedAtFrom(value) {
 }
 
 // ── POST /api/lectures ───────────────────────────────────────────────────────
-// multipart/form-data: courseId, title?, and either `audio` (file) or `text`.
+// multipart/form-data: courseId, title?, and one of `audio` (a recording),
+// `document` (a PDF or text file, read for its text) or `text`.
 // Answers 202 at once; processing continues in the background.
 router.post('/', uploadLimit, receiveUpload, async (req, res, next) => {
   const audioPath = req.file ? req.file.path : null;
-  const discard = () => (audioPath ? fsp.rm(audioPath, { force: true }).catch(() => {}) : null);
+  const documentFile = req.document || null;
+  const discard = () =>
+    Promise.all([audioPath, documentFile && documentFile.path].filter(Boolean).map((p) => fsp.rm(p, { force: true }).catch(() => {})));
   try {
-    if (process.env.VERCEL) {
+    // Transcribing a recording needs ffmpeg and more time and upload size than a
+    // serverless function has. Text and documents are processed here; recordings
+    // need the long-running server (server/index.js).
+    if (process.env.VERCEL && audioPath) {
       await discard();
-      return fail(res, 501, 'NotSupportedHere', '이 서버에서는 강의를 처리할 수 없어요.');
+      return fail(res, 501, 'AudioNeedsWorker', '이 서버에서는 녹음 파일을 처리할 수 없어요. 문서나 텍스트는 올릴 수 있어요.');
     }
 
     const { courseId } = req.body || {};
-    const text = typeof req.body?.text === 'string' ? req.body.text.trim() : '';
+    let text = typeof req.body?.text === 'string' ? req.body.text.trim() : '';
+    let material = null;
+    if (documentFile) {
+      if (audioPath || text) {
+        await discard();
+        return fail(res, 400, 'TwoInputs', '파일 하나만 보내 주세요.');
+      }
+      try {
+        ({ text, material } = await textFromDocument(documentFile.path, documentFile.originalname));
+      } catch (err) {
+        await discard();
+        console.warn('[lecture] document not readable:', err.message);
+        return fail(res, 422, 'UnreadableDocument', '이 파일에서 글자를 읽지 못했어요.');
+      }
+      await discard();
+      // A scanned PDF has pictures of text, not text.
+      if (text.split(/\s+/).filter(Boolean).length < 40) {
+        return fail(res, 422, 'NoTextInDocument', '이 파일에는 읽을 수 있는 글자가 거의 없어요. 스캔한 PDF는 아직 읽지 못해요.');
+      }
+      text = text.slice(0, MAX_TRANSCRIPT_CHARS);
+    }
     if (!isUuid(courseId)) {
       await discard();
       return fail(res, 400, 'NoCourse', '과목을 골라 주세요.');
@@ -98,6 +137,7 @@ router.post('/', uploadLimit, receiveUpload, async (req, res, next) => {
       return fail(res, 404, 'NoCourse', '과목을 찾을 수 없어요.');
     }
 
+    await failStalledJobs(req.userId);
     const usage = await lectureUsage(req.userId);
     if (usage.running >= 2) {
       await discard();
@@ -115,17 +155,24 @@ router.post('/', uploadLimit, receiveUpload, async (req, res, next) => {
       courseName: course.name,
       title,
       source: audioPath ? 'audio' : 'text',
+      material,
       recordedAt,
     });
 
-    enqueue({
+    // Notes are written in the language the student asked Juno to explain in.
+    const profile = await getProfile(req.userId);
+    const language = profile.explainLanguage ? LANGUAGE_NAMES[profile.explainLanguage] : null;
+
+    // On a serverless host the function is kept alive until the notes are saved.
+    keepAlive(enqueue({
+      language,
       lectureId: lecture.id,
       userId: req.userId,
       courseName: course.name,
       title,
       audioPath,
       text: audioPath ? null : text,
-    });
+    }));
 
     res.status(202).json({ success: true, lecture });
   } catch (err) {
@@ -140,6 +187,7 @@ router.get('/', async (req, res, next) => {
   try {
     const { courseId } = req.query;
     if (courseId !== undefined && !isUuid(courseId)) return fail(res, 404, 'NotFound', '과목을 찾을 수 없어요.');
+    await failStalledJobs(req.userId);
     res.json({ success: true, lectures: await listLectures(req.userId, { courseId: courseId || null }) });
   } catch (err) {
     next(err);

@@ -15,6 +15,7 @@ function toSummary(row) {
     title: row.title,
     topic: row.topic ?? (row.notes && row.notes.title) ?? null,
     source: row.source,
+    material: row.material ?? null,
     status: row.status,
     durationSeconds: row.duration_seconds ?? null,
     cardCount: row.card_count ?? 0,
@@ -35,18 +36,18 @@ async function lectureUsage(userId) {
   return result.rows[0];
 }
 
-async function createLecture(userId, { courseId, courseName, title, source, recordedAt = null }) {
+async function createLecture(userId, { courseId, courseName, title, source, material = null, recordedAt = null }) {
   const created = await db.query(
-    `INSERT INTO lectures (user_id, course_id, title, source, recorded_at) VALUES ($1, $2, $3, $4, $5)
-     RETURNING id, course_id, title, source, status, created_at, recorded_at`,
-    [userId, courseId, title, source, recordedAt]
+    `INSERT INTO lectures (user_id, course_id, title, source, recorded_at, material) VALUES ($1, $2, $3, $4, $5, $6)
+     RETURNING id, course_id, title, source, material, status, created_at, recorded_at`,
+    [userId, courseId, title, source, recordedAt, material]
   );
   return toSummary({ ...created.rows[0], course_name: courseName });
 }
 
 async function listLectures(userId, { courseId = null } = {}) {
   const result = await db.query(
-    `SELECT l.id, l.course_id, c.name AS course_name, l.title, l.notes->>'title' AS topic, l.source, l.status,
+    `SELECT l.id, l.course_id, c.name AS course_name, l.title, l.notes->>'title' AS topic, l.source, l.material, l.status,
             l.duration_seconds, l.card_count, l.created_at, l.recorded_at, l.finished_at
        FROM lectures l JOIN courses c ON c.id = l.course_id
       WHERE l.user_id = $1 AND l.status <> 'failed' AND ($2::uuid IS NULL OR l.course_id = $2::uuid)

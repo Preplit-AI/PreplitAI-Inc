@@ -4,6 +4,7 @@ const { authMiddleware } = require('../middleware/auth');
 const { chatLimit } = require('../middleware/rateLimit');
 const { getCourse } = require('../services/courseStore');
 const { getLecture } = require('../services/lectureStore');
+const { getProfile } = require('../services/profileStore');
 const { runChat } = require('../services/chatAgent');
 const {
   listConversations,
@@ -60,7 +61,8 @@ router.delete('/conversations/:id', async (req, res, next) => {
   }
 });
 
-// ── POST /api/chat  { question, conversationId?, courseId? } ─────────────────
+// ── POST /api/chat  { question, conversationId?, courseId?, lectureId?, mode? } ──
+// mode "career" is the career and project conversation of the mobile app.
 // Answers as a stream of server-sent events: status, delta, reset, then done or
 // error. Problems found before the stream opens are ordinary JSON errors. The
 // question and answer are saved only when the answer completes.
@@ -107,6 +109,9 @@ router.post('/', chatLimit, async (req, res, next) => {
     holdsSlot = true;
 
     const history = conversation ? await recentHistory(userId, conversation.id) : [];
+    // What the student told Juno at onboarding: who they are and the language to explain in.
+    const profile = await getProfile(userId);
+    const mode = req.body.mode === 'career' ? 'career' : null;
 
     const abort = new AbortController();
     res.on('close', () => {
@@ -131,6 +136,8 @@ router.post('/', chatLimit, async (req, res, next) => {
         courseId: course ? course.id : null,
         courseName: course ? course.name : null,
         viewing,
+        profile,
+        mode,
         history,
         question,
         signal: abort.signal,
