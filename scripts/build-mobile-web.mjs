@@ -10,6 +10,7 @@
 // the app's build can never stop the website from deploying. Run this after
 // changing anything in mobile/, then commit public/m with the change.
 import { execSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -39,17 +40,46 @@ const packaged = path.join(served, "assets", "node_modules");
 if (fs.existsSync(packaged)) {
   fs.renameSync(packaged, path.join(served, "assets", "vendor"));
   const scripts = path.join(served, "_expo", "static", "js", "web");
-  let pointed = 0;
+  const page = path.join(served, "index.html");
+
+  // A script is named after its contents (name-<hash>.js) and cached for a long
+  // time under that name. So a script that is changed here must also be renamed,
+  // or browsers and the CDN would keep serving the copy they already have. And
+  // renaming one changes every script that loads it by name, so this repeats
+  // until nothing changes.
+  const hashOf = (text) => crypto.createHash("md5").update(text).digest("hex");
+  const renamed = new Map();
+  let touched = new Set();
   for (const name of fs.readdirSync(scripts)) {
     const file = path.join(scripts, name);
     const before = fs.readFileSync(file, "utf8");
     const after = before.replaceAll("/assets/node_modules/", "/assets/vendor/");
-    if (after !== before) {
+    if (after === before) continue;
+    fs.writeFileSync(file, after);
+    touched.add(name);
+  }
+  for (let round = 0; touched.size; round += 1) {
+    if (round > 20) throw new Error("mobile: scripts refer to each other in a loop; cannot rename them");
+    const moves = [];
+    for (const name of touched) {
+      const fresh = name.replace(/-[a-f0-9]{32}\.js$/, `-${hashOf(fs.readFileSync(path.join(scripts, name), "utf8"))}.js`);
+      if (fresh === name) continue;
+      fs.renameSync(path.join(scripts, name), path.join(scripts, fresh));
+      moves.push([name, fresh]);
+      renamed.set(name, fresh);
+    }
+    touched = new Set();
+    if (!moves.length) break;
+    for (const file of [page, ...fs.readdirSync(scripts).map((name) => path.join(scripts, name))]) {
+      const before = fs.readFileSync(file, "utf8");
+      let after = before;
+      for (const [old, fresh] of moves) after = after.replaceAll(old, fresh);
+      if (after === before) continue;
       fs.writeFileSync(file, after);
-      pointed += 1;
+      if (file !== page) touched.add(path.basename(file));
     }
   }
-  console.log(`mobile: moved packaged assets to assets/vendor (${pointed} scripts updated)`);
+  console.log(`mobile: moved packaged assets to assets/vendor (${renamed.size} scripts renamed)`);
 }
 const leftover = fs.readdirSync(served, { recursive: true }).filter((f) => String(f).split(path.sep).includes("node_modules"));
 if (leftover.length) throw new Error(`public/m still has files under node_modules, which would not deploy: ${leftover[0]}`);
