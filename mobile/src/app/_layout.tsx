@@ -105,7 +105,7 @@ function EarlyAccess() {
 }
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({ SchibstedGrotesk_400Regular, SchibstedGrotesk_500Medium, SchibstedGrotesk_600SemiBold, SchibstedGrotesk_700Bold });
+  const [fontsLoaded, fontsFailed] = useFonts({ SchibstedGrotesk_400Regular, SchibstedGrotesk_500Medium, SchibstedGrotesk_600SemiBold, SchibstedGrotesk_700Bold });
   const [client] = useState(
     () =>
       new QueryClient({
@@ -119,7 +119,8 @@ export default function RootLayout() {
   );
   const [allowed] = useState(() => Platform.OS !== "web" || hasDevAccess());
 
-  if (!fontsLoaded) return null;
+  // A font that cannot be fetched must not keep the app from opening: it starts in the system font instead.
+  if (!fontsLoaded && !fontsFailed) return null;
 
   return (
     <SafeAreaProvider>
