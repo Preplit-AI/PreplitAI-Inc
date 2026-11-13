@@ -6,7 +6,7 @@ import { useLang } from "@/lib/i18n";
 import { color, space } from "@/lib/theme";
 import { Button, Field, Notice, Screen, T, type InputRef } from "@/ui";
 import { GoogleButton, OrLine, googleAvailable, useAuthConfig } from "@/ui/AuthParts";
-import { Juno } from "@/ui/Juno";
+import { Owl } from "@/ui/Owl";
 
 export default function Login() {
   const { t, errorText } = useLang();
@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <Screen back footer={<Button label={t.auth.login} loading={busy} onPress={submit} />}>
       <View style={{ gap: space.sm, marginBottom: space.xxl, marginTop: space.md }}>
-        <Juno size={56} mood="happy" />
+        <Owl size={56} mood="attentive" />
         <T variant="display" style={{ marginTop: space.sm }}>{t.auth.loginTitle}</T>
       </View>
       {googleAvailable(config.data) ? (

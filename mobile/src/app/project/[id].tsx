@@ -56,12 +56,12 @@ export default function ProjectScreen() {
     }
   };
 
-  const tone = project.status === "done" ? { bg: color.sage, fg: color.green } : project.status === "active" ? { bg: color.sky, fg: color.blue } : { bg: color.bone, fg: color.inkSoft };
+  const tone = project.status === "done" ? { bg: color.settledSoft, fg: color.settled } : project.status === "active" ? { bg: color.mist, fg: color.mistInk } : { bg: color.sunken, fg: color.inkSoft };
 
   return (
     <Screen
       back
-      right={<IconButton icon="trash-2" label={t.project.delete} tone={color.slate} onPress={() => setConfirming(true)} />}
+      right={<IconButton icon="trash-2" label={t.project.delete} tone={color.inkMuted} onPress={() => setConfirming(true)} />}
       footer={
         project.status === "idea" ? <Button icon="play" label={t.project.start} loading={save.isPending} onPress={() => setStatus("active").catch(fail)} />
         : project.status === "active" ? <Button icon="award" label={t.project.finish} onPress={() => { setLink(project.link ?? ""); setOutcome(project.outcome ?? ""); setError(null); setFinishing(true); }} />
@@ -79,8 +79,8 @@ export default function ProjectScreen() {
           <Card style={{ gap: space.md }}>
             {project.link ? (
               <Pressable accessibilityRole="link" onPress={() => Linking.openURL(project.link!)} style={{ flexDirection: "row", alignItems: "center", gap: space.sm, minHeight: 44 }}>
-                <Icon name="external-link" size={16} color={color.blue} />
-                <T tone={color.blue} numberOfLines={1} style={{ flex: 1, textDecorationLine: "underline" }}>{project.link}</T>
+                <Icon name="external-link" size={16} color={color.mistInk} />
+                <T tone={color.mistInk} numberOfLines={1} style={{ flex: 1, textDecorationLine: "underline" }}>{project.link}</T>
               </Pressable>
             ) : null}
             {project.outcome ? <T>{project.outcome}</T> : null}
@@ -91,7 +91,7 @@ export default function ProjectScreen() {
       <Section title={t.project.steps}>
         {total ? (
           <View style={{ gap: 6, marginBottom: space.md }}>
-            <ProgressBar value={done / total} tone={project.status === "done" ? color.green : color.ink} />
+            <ProgressBar value={done / total} tone={project.status === "done" ? color.settled : color.ink} />
             <T variant="small">{t.career.milestones(done, total)}</T>
           </View>
         ) : null}
@@ -106,12 +106,12 @@ export default function ProjectScreen() {
                   accessibilityLabel={m.title}
                   hitSlop={10}
                   onPress={() => milestone.mutateAsync({ id: m.id, done: !m.done }).catch(fail)}
-                  style={{ width: 26, height: 26, borderRadius: 8, borderWidth: 1.5, borderColor: m.done ? color.ink : color.ruleStrong, backgroundColor: m.done ? color.ink : color.white, alignItems: "center", justifyContent: "center" }}
+                  style={{ width: 26, height: 26, borderRadius: 8, borderWidth: 1.5, borderColor: m.done ? color.action : color.ruleStrong, backgroundColor: m.done ? color.action : color.surface, alignItems: "center", justifyContent: "center" }}
                 >
-                  {m.done ? <Icon name="check" size={15} color={color.white} /> : null}
+                  {m.done ? <Icon name="check" size={15} color={color.onAction} /> : null}
                 </Pressable>
-                <T style={[{ flex: 1 }, m.done ? { color: color.slateLight, textDecorationLine: "line-through" } : null]}>{m.title}</T>
-                <IconButton icon="x" label={t.common.delete} tone={color.slateLight} onPress={() => milestone.mutateAsync({ remove: m.id }).catch(fail)} />
+                <T style={[{ flex: 1 }, m.done ? { color: color.inkFaint, textDecorationLine: "line-through" } : null]}>{m.title}</T>
+                <IconButton icon="x" label={t.common.delete} tone={color.inkFaint} onPress={() => milestone.mutateAsync({ remove: m.id }).catch(fail)} />
               </View>
             ))}
           </Card>

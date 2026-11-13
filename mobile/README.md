@@ -1,7 +1,13 @@
-# Preplit AI: the mobile app
+# CampusGo: the mobile app
 
 One Expo (React Native) project for Android phones and tablets, iPhones and iPads, and the web.
 Juno, the student's companion, runs through all of it.
+
+**Where this stands (13 November).** The app wears the CampusGo identity: its name, the cap-and-G
+logo, Juno the owl, colours, type and both themes (see "Design system"). What it *does* is still
+the earlier study-assistant milestone described below. The CampusGo direction (Landing, Campus
+Radar, Community, the Opportunity Board, Juno's stages earned by real milestones) has not been
+built; only stage 1 of Juno is shown, on the Profile.
 
 This is the first milestone of the product vision (`PREPLIT_Complete_Product_Vision.md`): the
 usable academic foundation. It is not the whole vision. The **status matrix** below says exactly
@@ -73,7 +79,7 @@ mobile/                          the app (Expo SDK 58, React Native 0.88, TypeSc
     notify.ts / notify.web.ts    delivering them: the phone's own scheduler, or the browser
     notifications.tsx            keeps this device's schedule in step with the student's tasks
   src/ui/                        the design system and the parts screens share
-  assets/juno/                   Juno's six moods, exported from the website's drawing
+  assets/owl/                    Juno the owl: six faces, six figures, five stages (from brand/campusgo)
 
 server/                          the API (Express + PostgreSQL), shared with the website
   routes/profile|tasks|projects  added for the app
@@ -191,18 +197,31 @@ the profile, log out, log in, Google sign-up, and the Korean interface.
 
 Defined in `src/lib/theme.ts` and `src/ui/index.tsx`; screens use only these.
 
-- **Colour.** The website's palette: ink on paper, bone for quiet surfaces, the logo's maroon for
-  what is urgent and gold for Juno and review. Each course gets one soft tint, the same everywhere.
-- **Type.** Schibsted Grotesk (400, 500, 600, 700); Korean and other scripts fall back to the
-  system font. Seven text styles; nothing smaller than 12 pt.
-- **Controls.** Every control is at least 44 pt tall. Primary actions are ink pills, one per screen,
-  pinned above the keyboard.
+The identity is CampusGo's: the brand book is the design system at
+https://claude.ai/artifact/38VRAL2mvhRveuBqtaraWT and its files are in `brand/campusgo/` at the
+repository root. `src/lib/theme.ts` carries the same colours under the app's own names.
+
+- **Themes.** Day (a pale sky ground, white cards, navy ink) and Night (deep navy). The app follows
+  the phone; the Profile has a switch (phone setting, Day, Night) kept on the device
+  (`src/lib/appearance.tsx`). `color` holds the theme in use and is read while rendering, so never
+  copy a colour into a module-level constant; when the theme changes the screens are drawn again.
+- **Colour.** Blue is the brand and the action (`action`): the one filled button, a chosen chip, a
+  switch that is on. `lamp`, the amber of the logo's tassel and Juno's eyes, is the one accent, for
+  the thing that matters now (the review that is due, an exam within a week, what the professor
+  flagged). `danger` is for errors and wrong answers only. Each course gets one quiet tint.
+- **Type.** Lexend for headings (`display`, `title`) and Juno's own voice (`voice`); Schibsted
+  Grotesk for everything a student operates. Korean and other scripts fall back to the system
+  font. Nothing smaller than 12 pt.
+- **Controls.** Every control is at least 44 pt tall. The primary action is one blue button per
+  screen, pinned above the keyboard.
 - **Parts.** `Screen`, `Card`, `Section`, `Row`, `Button`, `Field`, `Chip`, `Segment`, `Toggle`,
-  `Sheet`, `Notice`, `Badge`, `ProgressBar`, and Juno (`Juno`, `JunoFigure`, `JunoSays`, `Empty`).
+  `Sheet`, `Notice`, `Badge`, `ProgressBar`, and Juno (`Owl`, `OwlFigure`, `OwlSays`, `Empty`).
 - **States.** Every list has a loading, an empty and a failed state; a failed request says so and
   offers to try again.
-- **Juno.** One drawing, six moods, exported from `src/brand/Juno.tsx` at the repository root and
-  kept identical by `src/test/juno.test.tsx`.
+- **Juno.** An Oriental scops owl, six moods and no sad one, five stages. The files in
+  `assets/owl/` are exported from `brand/campusgo/source/owl.mjs` and the mark and icons from
+  `brand/campusgo/source/logo.mjs`; redraw there, not by hand. Juno never asks for attention: no
+  streaks, no guilt.
 
 ## Decisions made, and how to undo them
 
@@ -210,7 +229,8 @@ Defined in `src/lib/theme.ts` and `src/ui/index.tsx`; screens use only these.
 |---|---|---|
 | React Native with Expo | One codebase for both stores and the web; reuses the existing TypeScript API types | |
 | The web build is committed to `public/m` | The website's deploy cannot be broken by the app's build | Build it on Vercel instead and delete `public/m` |
-| The name shown is "Preplit AI" | The website's spelling (decided 9 November) | `expo.name` in `app.json`, `appName` in `src/lib/i18n.tsx` |
+| The name shown is "CampusGo" | The name chosen on 13 November, replacing CampusOwl the same day | `expo.name` in `app.json`, `appName` in `src/lib/i18n.tsx` |
+| The slug, URL scheme and bundle ids still say `preplit` | Changing them changes the app's identity in the stores and breaks installed builds; it belongs with the first store build | `slug`, `scheme`, `bundleIdentifier` and `package` in `app.json` |
 | Notifications are local to each device | They arrive with the app closed and need no server; no task data leaves the phone for them | For reminders that follow the student across devices, send pushes from the server instead |
 | A reminder inside quiet hours is moved, never sent | Quiet hours are the student's own rule | `reminderMoment` in `src/lib/reminders.ts` |
 | Notifications are switched on per device, in Profile | The system's permission question is asked only when the student asks for reminders | `turnOn` in `src/lib/notifications.tsx` |

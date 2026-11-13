@@ -4,10 +4,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLang } from "@/lib/i18n";
 import { color, font } from "@/lib/theme";
 import { Icon, useLayout, type IconName } from "@/ui";
-import { Juno } from "@/ui/Juno";
+import { Owl } from "@/ui/Owl";
 
 /*
- * The four places the app is made of, and Juno, who is reachable from all of
+ * The four places the app is made of, and Owl, who is reachable from all of
  * them. On a phone the tabs sit at the bottom, under the thumb; on a tablet
  * they move to a rail on the left and the content gets the width.
  *
@@ -28,7 +28,7 @@ export default function TabsLayout() {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.paper }}>
+    <View style={{ flex: 1, backgroundColor: color.ground }}>
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -37,14 +37,14 @@ export default function TabsLayout() {
           tabBarVariant: tablet ? "material" : "uikit",
           tabBarLabelPosition: "below-icon",
           tabBarActiveTintColor: color.ink,
-          tabBarInactiveTintColor: color.slateLight,
-          tabBarActiveBackgroundColor: tablet ? color.bone : "transparent",
+          tabBarInactiveTintColor: color.inkFaint,
+          tabBarActiveBackgroundColor: tablet ? color.sunken : "transparent",
           tabBarLabelStyle: { fontFamily: font.semibold, fontSize: tablet ? 11 : 11.5 },
           tabBarItemStyle: tablet ? { borderRadius: 14, marginVertical: 4, paddingVertical: 8 } : undefined,
           tabBarStyle: tablet
-            ? { backgroundColor: color.white, borderRightColor: color.rule, borderRightWidth: 1, paddingTop: insets.top + 16, paddingHorizontal: 8, width: 124, minWidth: 124 }
-            : { backgroundColor: color.white, borderTopColor: color.rule, height: 62 + insets.bottom, paddingTop: 6 },
-          sceneStyle: { backgroundColor: color.paper },
+            ? { backgroundColor: color.surface, borderRightColor: color.rule, borderRightWidth: 1, paddingTop: insets.top + 16, paddingHorizontal: 8, width: 124, minWidth: 124 }
+            : { backgroundColor: color.surface, borderTopColor: color.rule, height: 62 + insets.bottom, paddingTop: 6 },
+          sceneStyle: { backgroundColor: color.ground },
         }}
       >
         {TABS.map((tab) => (
@@ -60,8 +60,8 @@ export default function TabsLayout() {
       </Tabs>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={t.course.askJuno}
-        onPress={() => router.push("/juno")}
+        accessibilityLabel={t.course.askOwl}
+        onPress={() => router.push("/owl")}
         style={({ pressed }) => [
           {
             position: "absolute",
@@ -70,7 +70,9 @@ export default function TabsLayout() {
             width: 60,
             height: 60,
             borderRadius: 30,
-            backgroundColor: color.gold,
+            backgroundColor: color.go,
+            borderWidth: 1.5,
+            borderColor: color.go,
             alignItems: "center",
             justifyContent: "center",
             shadowColor: "#000",
@@ -82,7 +84,7 @@ export default function TabsLayout() {
           pressed && { transform: [{ scale: 0.96 }] },
         ]}
       >
-        <Juno size={50} mood="happy" tone={color.goldTint} />
+        <Owl size={50} mood="attentive" />
       </Pressable>
     </View>
   );

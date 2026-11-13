@@ -12,7 +12,7 @@ import type { UiLanguage } from "./types";
  */
 
 const en = {
-  appName: "Preplit AI",
+  appName: "CampusGo",
   common: {
     continue: "Continue", back: "Back", skip: "Skip for now", save: "Save", cancel: "Cancel", done: "Done", add: "Add",
     edit: "Edit", delete: "Delete", close: "Close", retry: "Try again", optional: "optional", loading: "Loading",
@@ -55,7 +55,7 @@ const en = {
   } as Record<string, string>,
   early: {
     badge: "You're early!", title: "Developer Access Only",
-    body: "Access to Preplit AI services is currently restricted to authorized developer accounts only. Please wait for our official public release.",
+    body: "Access to CampusGo services is currently restricted to authorized developer accounts only. Please wait for our official public release.",
     button: "Back to the website",
   },
   welcome: {
@@ -110,7 +110,7 @@ const en = {
       why: "Each course gets its own workspace for lectures, notes, tasks and quizzes.",
       added: (n: number) => (n === 1 ? "1 course added" : `${n} courses added`), addAnother: "Add another course", addFirst: "Add your first course",
       none: "You can add courses later, but Juno is most useful with at least one.",
-      notConnected: "Preplit AI isn't connected to your university's systems, so you add courses yourself.",
+      notConnected: "CampusGo isn't connected to your university's systems, so you add courses yourself.",
     },
     goals: {
       title: "What are you working toward?", line: "Pick what fits, or write your own. This shapes the projects and skills I suggest.",
@@ -131,7 +131,7 @@ const en = {
     noCourses: "No courses yet", noCoursesLine: "Add a course and it gets its own workspace.",
     lectures: (n: number) => (n === 1 ? "1 lecture" : `${n} lectures`), cardsDue: (n: number) => `${n} to review`,
     examIn: (kind: string, days: number) => (days === 0 ? `${kind} today` : days === 1 ? `${kind} tomorrow` : `${kind} in ${days} days`),
-    overview: "Overview", materials: "Lectures", tasks: "Tasks", askJuno: "Ask Juno", quiz: "Quick quiz", addMaterial: "Add a lecture",
+    overview: "Overview", materials: "Lectures", tasks: "Tasks", askOwl: "Ask Juno", quiz: "Quick quiz", addMaterial: "Add a lecture",
     noMaterials: "Nothing here yet", noMaterialsLine: "Add slides, a PDF or pasted notes and Juno turns them into study notes.",
     schedule: "Schedule", noSchedule: "No class times yet", exams: "Exams", details: "Details", list: "List", week: "Week", noClasses: "No classes",
   },
@@ -145,7 +145,7 @@ const en = {
     reviewDone: (n: number) => `${n} reviewed today`, reviewNone: "No questions waiting. Add a lecture and Juno writes some.", play: "Play",
     exams: "Coming up", latest: "Latest notes", addTask: "Add a task", addLecture: "Add a lecture",
     overdue: "Overdue", dueToday: "Due today", dueTomorrow: "Due tomorrow", dueIn: (days: number) => `Due in ${days} days`, noDate: "No date",
-    juno: {
+    owl: {
       "first-course": "Add your first course and I'll set up its workspace.",
       setup: "Tell me when your semester started and I'll file each lecture under its week.",
       quiet: "All quiet. Nothing needs you right now.",
@@ -198,7 +198,7 @@ const en = {
     again: "Back to home", empty: "Nothing to review right now", emptyLine: "New questions appear after you add a lecture, and old ones return when it's time.",
     estimate: "This is a learning check, not a grade.",
   },
-  juno: {
+  owl: {
     title: "Juno", placeholder: "Ask about your lectures", placeholderCareer: "Ask about projects and careers", send: "Send",
     thinking: "Juno is thinking", searching: "Looking through your lectures",
     emptyTitle: "Ask me anything about your courses", emptyLine: "I answer from your own lectures and show where each answer comes from.",
@@ -230,10 +230,10 @@ const en = {
   notify: {
     device: "Notifications on this device",
     onClosed: "On. Reminders arrive even when the app is closed.",
-    onOpen: "On. In a browser, reminders arrive only while Preplit AI is open in a tab. The installed app delivers them any time.",
+    onOpen: "On. In a browser, reminders arrive only while CampusGo is open in a tab. The installed app delivers them any time.",
     off: "Off. Reminders still show on your Home screen.",
     asking: "Allow notifications when your device asks, and reminders start.",
-    blocked: "Notifications are blocked for Preplit AI on this device. Allow them in your settings and they start at once.",
+    blocked: "Notifications are blocked for CampusGo on this device. Allow them in your settings and they start at once.",
     unsupported: "This browser can't show notifications. Reminders show on your Home screen.",
     openSettings: "Open settings", test: "Send a test notification", testTitle: "Juno here", testBody: "This is what a reminder looks like.",
     testSent: "Sent. It should appear in a moment.", testFailed: "The notification couldn't be shown.",
@@ -241,11 +241,13 @@ const en = {
     quizTitle: "Today's review", quizBody: "A few questions from your lectures are ready. It takes about five minutes.",
     dailyAt: (hour: number) => `Every day at ${hour}:00, once you have questions to review`,
     taskOn: "You'll get a notification then.",
-    taskOnOpen: "You'll get a notification then if Preplit AI is open. It also shows on your Home screen.",
+    taskOnOpen: "You'll get a notification then if CampusGo is open. It also shows on your Home screen.",
     taskOff: "Shows on your Home screen when it's time. Turn on notifications in your profile to be pinged too.",
   },
   profile: {
-    title: "Profile", account: "Account", study: "Your studies", languages: "Languages", appLanguage: "App language", explainLanguage: "Juno explains in",
+    title: "Profile", owlStage: "Stage 1 · Owlet", owlTitle: "Juno", owlLine: "Earned by starting your profile.",
+    appearance: "Appearance", themeSystem: "Phone setting", themeDawn: "Day", themeDusk: "Night",
+    account: "Account", study: "Your studies", languages: "Languages", appLanguage: "App language", explainLanguage: "Juno explains in",
     editStudy: "Edit university and program", editGoals: "Edit goals", notifications: "Reminders", dailyQuiz: "Daily quiz reminder",
     quiet: "Quiet hours", quietLine: (from: number, until: number) => `No reminders from ${from}:00 to ${until}:00`,
     privacy: "Privacy notice", data: "Your data", dataLine: "Your materials stay private to you. To delete your account and everything in it, use the account page on the website.",
@@ -256,7 +258,7 @@ const en = {
 type Strings = typeof en;
 
 const ko: Strings = {
-  appName: "Preplit AI",
+  appName: "CampusGo",
   common: {
     continue: "계속", back: "뒤로", skip: "나중에 할게요", save: "저장", cancel: "취소", done: "완료", add: "추가",
     edit: "수정", delete: "삭제", close: "닫기", retry: "다시 시도", optional: "선택", loading: "불러오는 중",
@@ -299,7 +301,7 @@ const ko: Strings = {
   },
   early: {
     badge: "일찍 오셨네요!", title: "개발자 전용",
-    body: "Preplit AI 서비스는 지금 승인된 개발자 계정만 이용할 수 있어요. 정식 출시를 기다려 주세요.",
+    body: "CampusGo 서비스는 지금 승인된 개발자 계정만 이용할 수 있어요. 정식 출시를 기다려 주세요.",
     button: "홈페이지로 돌아가기",
   },
   welcome: {
@@ -354,7 +356,7 @@ const ko: Strings = {
       why: "과목마다 강의, 노트, 할 일, 퀴즈를 모으는 워크스페이스가 생겨요.",
       added: (n) => `과목 ${n}개 추가됨`, addAnother: "과목 더 추가", addFirst: "첫 과목 추가",
       none: "과목은 나중에 추가할 수 있지만, 하나라도 있어야 Juno가 제대로 도와요.",
-      notConnected: "Preplit AI는 대학 시스템과 연결되어 있지 않아서, 과목은 직접 추가해요.",
+      notConnected: "CampusGo는 대학 시스템과 연결되어 있지 않아서, 과목은 직접 추가해요.",
     },
     goals: {
       title: "무엇을 향해 가고 있나요?", line: "맞는 것을 고르거나 직접 써 주세요. 제안하는 프로젝트와 역량이 여기에 맞춰져요.",
@@ -375,7 +377,7 @@ const ko: Strings = {
     noCourses: "아직 과목이 없어요", noCoursesLine: "과목을 추가하면 전용 워크스페이스가 생겨요.",
     lectures: (n) => `강의 ${n}개`, cardsDue: (n) => `복습 ${n}개`,
     examIn: (kind, days) => (days === 0 ? `오늘 ${kind}` : days === 1 ? `내일 ${kind}` : `${kind}까지 ${days}일`),
-    overview: "개요", materials: "강의", tasks: "할 일", askJuno: "Juno에게 묻기", quiz: "빠른 퀴즈", addMaterial: "강의 추가",
+    overview: "개요", materials: "강의", tasks: "할 일", askOwl: "Juno에게 묻기", quiz: "빠른 퀴즈", addMaterial: "강의 추가",
     noMaterials: "아직 아무것도 없어요", noMaterialsLine: "슬라이드, PDF, 붙여 넣은 노트를 추가하면 Juno가 공부 노트로 만들어요.",
     schedule: "시간표", noSchedule: "아직 수업 시간이 없어요", exams: "시험", details: "정보", list: "목록", week: "주간", noClasses: "수업 없음",
   },
@@ -389,7 +391,7 @@ const ko: Strings = {
     reviewDone: (n) => `오늘 ${n}개 복습함`, reviewNone: "기다리는 질문이 없어요. 강의를 추가하면 Juno가 만들어요.", play: "시작",
     exams: "다가오는 일정", latest: "최근 노트", addTask: "할 일 추가", addLecture: "강의 추가",
     overdue: "기한 지남", dueToday: "오늘 마감", dueTomorrow: "내일 마감", dueIn: (days) => `${days}일 뒤 마감`, noDate: "날짜 없음",
-    juno: {
+    owl: {
       "first-course": "첫 과목을 추가하면 워크스페이스를 만들어 둘게요.",
       setup: "학기가 언제 시작했는지 알려 주면 강의를 주차별로 정리할게요.",
       quiet: "조용해요. 지금 챙길 건 없어요.",
@@ -442,7 +444,7 @@ const ko: Strings = {
     again: "홈으로", empty: "지금은 복습할 게 없어요", emptyLine: "강의를 추가하면 새 질문이 생기고, 때가 되면 예전 질문이 돌아와요.",
     estimate: "성적이 아니라 학습 점검이에요.",
   },
-  juno: {
+  owl: {
     title: "Juno", placeholder: "강의에 대해 물어보세요", placeholderCareer: "프로젝트와 진로를 물어보세요", send: "보내기",
     thinking: "Juno가 생각하고 있어요", searching: "강의를 찾아보고 있어요",
     emptyTitle: "과목에 대해 무엇이든 물어보세요", emptyLine: "올린 강의에서 답하고, 답이 어디에서 나왔는지 보여 드려요.",
@@ -474,10 +476,10 @@ const ko: Strings = {
   notify: {
     device: "이 기기의 알림",
     onClosed: "켜짐. 앱을 닫아도 알림이 와요.",
-    onOpen: "켜짐. 브라우저에서는 Preplit AI 탭이 열려 있을 때만 알림이 와요. 설치한 앱에서는 언제든 와요.",
+    onOpen: "켜짐. 브라우저에서는 CampusGo 탭이 열려 있을 때만 알림이 와요. 설치한 앱에서는 언제든 와요.",
     off: "꺼짐. 알림은 홈 화면에 계속 보여요.",
     asking: "기기가 물어보면 알림을 허용해 주세요. 그러면 알림이 시작돼요.",
-    blocked: "이 기기에서 Preplit AI 알림이 차단되어 있어요. 설정에서 허용하면 바로 시작돼요.",
+    blocked: "이 기기에서 CampusGo 알림이 차단되어 있어요. 설정에서 허용하면 바로 시작돼요.",
     unsupported: "이 브라우저는 알림을 보여 줄 수 없어요. 알림은 홈 화면에 보여요.",
     openSettings: "설정 열기", test: "테스트 알림 보내기", testTitle: "Juno예요", testBody: "알림은 이렇게 보여요.",
     testSent: "보냈어요. 곧 나타나요.", testFailed: "알림을 보여 주지 못했어요.",
@@ -485,11 +487,13 @@ const ko: Strings = {
     quizTitle: "오늘의 복습", quizBody: "내 강의에서 나온 질문이 준비됐어요. 5분쯤 걸려요.",
     dailyAt: (hour) => `복습할 질문이 생기면 매일 ${hour}:00에`,
     taskOn: "그때 알림을 보내 드려요.",
-    taskOnOpen: "Preplit AI가 열려 있으면 그때 알림을 보내 드려요. 홈 화면에도 보여요.",
+    taskOnOpen: "CampusGo가 열려 있으면 그때 알림을 보내 드려요. 홈 화면에도 보여요.",
     taskOff: "때가 되면 홈 화면에 보여요. 알림도 받으려면 프로필에서 알림을 켜 주세요.",
   },
   profile: {
-    title: "프로필", account: "계정", study: "내 학업", languages: "언어", appLanguage: "앱 언어", explainLanguage: "Juno의 설명 언어",
+    title: "프로필", owlStage: "1단계 · 아기 소쩍새", owlTitle: "Juno", owlLine: "프로필을 시작해서 얻었어요.",
+    appearance: "화면 테마", themeSystem: "기기 설정", themeDawn: "낮", themeDusk: "밤",
+    account: "계정", study: "내 학업", languages: "언어", appLanguage: "앱 언어", explainLanguage: "Juno의 설명 언어",
     editStudy: "대학과 과정 수정", editGoals: "목표 수정", notifications: "알림", dailyQuiz: "매일 퀴즈 알림",
     quiet: "방해 금지 시간", quietLine: (from, until) => `${from}:00부터 ${until}:00까지 알림 없음`,
     privacy: "개인정보 처리방침", data: "내 데이터", dataLine: "자료는 나만 볼 수 있어요. 계정과 모든 내용을 지우려면 홈페이지의 계정 화면을 이용해 주세요.",

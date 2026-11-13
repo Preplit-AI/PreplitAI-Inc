@@ -8,8 +8,8 @@ import { useDeleteLecture, useLecture } from "@/lib/queries";
 import { color, font, radius, space } from "@/lib/theme";
 import type { Lecture } from "@/lib/types";
 import { Badge, Button, Card, Failed, Icon, IconButton, Loading, Notice, Section, T, useLayout } from "@/ui";
-import { JunoSays } from "@/ui/Juno";
-import { JunoChat } from "@/ui/JunoChat";
+import { OwlSays } from "@/ui/Owl";
+import { OwlChat } from "@/ui/OwlChat";
 import { Confirm } from "@/ui/parts";
 
 /*
@@ -37,7 +37,7 @@ function Notes({ lecture }: { lecture: Lecture }) {
 
       {notes.summary ? (
         <Section title={t.lecture.summary}>
-          <Card tone={color.goldTint}><T style={{ fontSize: 16.5, lineHeight: 25 }}>{notes.summary}</T></Card>
+          <Card><T style={{ fontSize: 16.5, lineHeight: 25 }}>{notes.summary}</T></Card>
         </Section>
       ) : null}
 
@@ -49,7 +49,7 @@ function Notes({ lecture }: { lecture: Lecture }) {
               <Card key={term.term} style={{ gap: 4 }}>
                 <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: space.sm }}>
                   <T variant="heading">{term.term}</T>
-                  {term.english && term.english.toLowerCase() !== term.term.toLowerCase() ? <Badge label={term.english} bg={color.sky} fg={color.blue} /> : null}
+                  {term.english && term.english.toLowerCase() !== term.term.toLowerCase() ? <Badge label={term.english} bg={color.mist} fg={color.mistInk} /> : null}
                 </View>
                 <T tone={color.inkSoft}>{term.meaning}</T>
               </Card>
@@ -62,13 +62,13 @@ function Notes({ lecture }: { lecture: Lecture }) {
         <Section title={t.lecture.flagged}>
           <View style={{ gap: space.sm }}>
             {notes.flagged.map((flag, i) => (
-              <View key={i} style={{ backgroundColor: color.maroonTint, borderRadius: radius.lg, padding: space.lg, gap: 6 }}>
+              <View key={i} style={{ backgroundColor: color.lampSoft, borderRadius: radius.lg, padding: space.lg, gap: 6 }}>
                 <View style={{ flexDirection: "row", gap: space.sm, alignItems: "center" }}>
-                  <Icon name="flag" size={15} color={color.maroonDeep} />
-                  {flag.at ? <T variant="small" tone={color.maroonDeep} style={{ fontFamily: font.semibold }}>{flag.at}</T> : null}
+                  <Icon name="flag" size={15} color={color.lampInk} />
+                  {flag.at ? <T variant="small" tone={color.lampInk} style={{ fontFamily: font.semibold }}>{flag.at}</T> : null}
                 </View>
-                {flag.quote ? <T tone={color.maroonDeep} style={{ fontFamily: font.medium }}>"{flag.quote}"</T> : null}
-                {flag.note ? <T variant="small" tone={color.maroonDeep}>{flag.note}</T> : null}
+                {flag.quote ? <T tone={color.ink} style={{ fontFamily: font.medium }}>"{flag.quote}"</T> : null}
+                {flag.note ? <T variant="small" tone={color.inkSoft}>{flag.note}</T> : null}
               </View>
             ))}
           </View>
@@ -82,7 +82,7 @@ function Notes({ lecture }: { lecture: Lecture }) {
               <T variant="heading">{section.heading}</T>
               {section.points.map((point, j) => (
                 <View key={j} style={{ flexDirection: "row", gap: space.sm }}>
-                  <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: color.slateLight, marginTop: 10 }} />
+                  <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: color.inkFaint, marginTop: 10 }} />
                   <T style={{ flex: 1 }}>{point}</T>
                 </View>
               ))}
@@ -110,7 +110,7 @@ export default function LectureScreen() {
   const header = (
     <View style={{ paddingTop: insets.top, paddingHorizontal: space.md, flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: insets.top + 52 }}>
       <IconButton icon="arrow-left" label={t.common.back} onPress={back} />
-      {lecture.data ? <IconButton icon="trash-2" label={t.lecture.delete} tone={color.slate} onPress={() => setConfirming(true)} /> : <View />}
+      {lecture.data ? <IconButton icon="trash-2" label={t.lecture.delete} tone={color.inkMuted} onPress={() => setConfirming(true)} /> : <View />}
     </View>
   );
 
@@ -121,7 +121,7 @@ export default function LectureScreen() {
     body = (
       <View style={{ padding: space.xl, maxWidth: 640, width: "100%", alignSelf: "center" }}>
         <T variant="title" style={{ marginBottom: space.lg }}>{lecture.data.title}</T>
-        <JunoSays mood="work">{t.lecture.processing}</JunoSays>
+        <OwlSays mood="next">{t.lecture.processing}</OwlSays>
       </View>
     );
   } else {
@@ -133,8 +133,8 @@ export default function LectureScreen() {
           {error ? <Notice tone="error" text={error} /> : null}
           <Notes lecture={data} />
         </ScrollView>
-        <View style={{ flex: 1, borderLeftWidth: 1, borderLeftColor: color.rule, backgroundColor: color.white }}>
-          <JunoChat courseId={data.courseId} lectureId={data.id} embedded />
+        <View style={{ flex: 1, borderLeftWidth: 1, borderLeftColor: color.rule, backgroundColor: color.surface }}>
+          <OwlChat courseId={data.courseId} lectureId={data.id} embedded />
         </View>
       </View>
     ) : (
@@ -148,12 +148,12 @@ export default function LectureScreen() {
   const ready = lecture.data?.status === "ready";
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.paper }}>
+    <View style={{ flex: 1, backgroundColor: color.ground }}>
       {header}
       {body}
       {ready && !tablet ? (
         <View style={{ position: "absolute", left: space.xl, right: space.xl, bottom: Math.max(insets.bottom, space.lg) }}>
-          <Button icon="message-circle" label={t.lecture.ask} onPress={() => router.push({ pathname: "/juno", params: { lectureId: id, courseId: lecture.data!.courseId } })} style={{ shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 6 }} />
+          <Button icon="message-circle" label={t.lecture.ask} onPress={() => router.push({ pathname: "/owl", params: { lectureId: id, courseId: lecture.data!.courseId } })} style={{ shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 6 }} />
         </View>
       ) : null}
       <Confirm

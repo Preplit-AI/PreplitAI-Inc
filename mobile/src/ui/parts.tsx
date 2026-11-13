@@ -44,13 +44,13 @@ export function LectureRow({ lecture, showCourse, last }: { lecture: LectureSumm
       right={
         processing ? (
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-            <ActivityIndicator size="small" color={color.honey} />
-            <Badge label={t.buddy.processing} bg={color.goldTint} fg={color.honey} />
+            <ActivityIndicator size="small" color={color.mistInk} />
+            <Badge label={t.buddy.processing} bg={color.mist} fg={color.mistInk} />
           </View>
         ) : (
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
             {lecture.cardCount ? <Badge icon="zap" label={String(lecture.cardCount)} /> : null}
-            <Icon name="chevron-right" size={18} color={color.slateLight} />
+            <Icon name="chevron-right" size={18} color={color.inkFaint} />
           </View>
         )
       }

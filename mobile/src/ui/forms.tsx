@@ -261,16 +261,16 @@ export function TaskRow({ task, onOpen, last }: { task: Task; onOpen: (task: Tas
         accessibilityLabel={task.done ? t.task.markOpen : t.task.markDone}
         hitSlop={10}
         onPress={() => save.mutate({ id: task.id, done: !task.done })}
-        style={{ width: 26, height: 26, borderRadius: 13, borderWidth: 1.5, borderColor: task.done ? color.ink : color.ruleStrong, backgroundColor: task.done ? color.ink : color.white, alignItems: "center", justifyContent: "center" }}
+        style={{ width: 26, height: 26, borderRadius: 13, borderWidth: 1.5, borderColor: task.done ? color.action : color.ruleStrong, backgroundColor: task.done ? color.action : color.surface, alignItems: "center", justifyContent: "center" }}
       >
-        {task.done ? <Icon name="check" size={15} color={color.white} /> : null}
+        {task.done ? <Icon name="check" size={15} color={color.onAction} /> : null}
       </Pressable>
       <Pressable accessibilityRole="button" onPress={() => onOpen(task)} style={{ flex: 1, gap: 3 }}>
-        <T variant="strong" numberOfLines={2} style={task.done ? { textDecorationLine: "line-through", color: color.slateLight } : null}>{task.title}</T>
+        <T variant="strong" numberOfLines={2} style={task.done ? { textDecorationLine: "line-through", color: color.inkFaint } : null}>{task.title}</T>
         <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 6 }}>
-          {task.kind !== "task" ? <Badge label={t.task.kinds[task.kind]} bg={task.kind === "exam" ? color.maroonTint : color.bone} fg={task.kind === "exam" ? color.maroonDeep : color.inkSoft} /> : null}
-          {reminding ? <Badge icon="bell" label={t.task.reminderNow} bg={color.goldTint} fg={color.honey} /> : null}
-          <T variant="small" tone={due.urgent && !task.done ? color.maroon : color.slate}>{[task.courseName, task.dueAt ? due.text : null].filter(Boolean).join(" · ") || due.text}</T>
+          {task.kind !== "task" ? <Badge label={t.task.kinds[task.kind]} bg={task.kind === "exam" ? color.sunken : color.sunken} fg={task.kind === "exam" ? color.inkSoft : color.inkSoft} /> : null}
+          {reminding ? <Badge icon="bell" label={t.task.reminderNow} bg={color.lampSoft} fg={color.lampInk} /> : null}
+          <T variant="small" tone={due.urgent && !task.done ? color.lampInk : color.inkMuted}>{[task.courseName, task.dueAt ? due.text : null].filter(Boolean).join(" · ") || due.text}</T>
         </View>
       </Pressable>
     </View>

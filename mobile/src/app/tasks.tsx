@@ -6,7 +6,7 @@ import { space } from "@/lib/theme";
 import type { Task } from "@/lib/types";
 import { Button, Card, Failed, IconButton, Loading, Screen, Segment } from "@/ui";
 import { TaskRow, TaskSheet } from "@/ui/forms";
-import { Empty } from "@/ui/Juno";
+import { Empty } from "@/ui/Owl";
 
 /** Every task, to do or done, across all courses. */
 export default function Tasks() {
@@ -25,7 +25,7 @@ export default function Tasks() {
           {tasks.data.map((task, i) => <TaskRow key={task.id} task={task} onOpen={(open) => setSheet({ open: true, task: open })} last={i === tasks.data.length - 1} />)}
         </Card>
       ) : (
-        <Empty title={t.task.empty} line={t.task.emptyLine} mood="rest" action={state === "open" ? <Button small icon="plus" label={t.task.new} onPress={() => setSheet({ open: true, task: null })} /> : undefined} />
+        <Empty title={t.task.empty} line={t.task.emptyLine} mood="resting" action={state === "open" ? <Button small icon="plus" label={t.task.new} onPress={() => setSheet({ open: true, task: null })} /> : undefined} />
       )}
       <TaskSheet visible={sheet.open} task={sheet.task} onClose={() => setSheet({ open: false, task: null })} />
     </Screen>

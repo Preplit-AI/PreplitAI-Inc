@@ -8,7 +8,7 @@ import { useProjects, useSaveProject } from "@/lib/queries";
 import { color, space } from "@/lib/theme";
 import type { Project, Skill } from "@/lib/types";
 import { Badge, Button, Card, Chip, Chips, Failed, Field, Icon, Loading, Notice, ProgressBar, Row, Section, Sheet, T, useLayout } from "@/ui";
-import { Empty, JunoSays } from "@/ui/Juno";
+import { Empty, OwlSays } from "@/ui/Owl";
 
 /*
  * Career: where the student is heading, the skills they have evidence for, and
@@ -21,9 +21,9 @@ import { Empty, JunoSays } from "@/ui/Juno";
  */
 
 const EVIDENCE = {
-  demonstrated: { bg: color.sage, fg: color.green, icon: "award" },
-  developing: { bg: color.sky, fg: color.blue, icon: "tool" },
-  wanted: { bg: color.bone, fg: color.inkSoft, icon: "target" },
+  demonstrated: { bg: color.settledSoft, fg: color.settled, icon: "award" },
+  developing: { bg: color.mist, fg: color.mistInk, icon: "tool" },
+  wanted: { bg: color.sunken, fg: color.inkSoft, icon: "target" },
 } as const;
 
 function NewProjectSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
@@ -99,7 +99,7 @@ function ProjectCard({ project }: { project: Project }) {
       </View>
       {total ? (
         <View style={{ gap: 6 }}>
-          <ProgressBar value={done / total} tone={project.status === "done" ? color.green : color.ink} />
+          <ProgressBar value={done / total} tone={project.status === "done" ? color.settled : color.ink} />
           <T variant="small">{t.career.milestones(done, total)}</T>
         </View>
       ) : null}
@@ -136,17 +136,17 @@ export default function Career() {
   const data = projects.data;
   const goal = [profile?.targetRole, ...(profile?.careerInterests ?? [])].filter(Boolean) as string[];
   const editGoals = () => router.push({ pathname: "/onboarding", params: { step: "5" } });
-  const askIdea = () => router.push({ pathname: "/juno", params: { mode: "career", q: t.career.ideaQuestion } });
+  const askIdea = () => router.push({ pathname: "/owl", params: { mode: "career", q: t.career.ideaQuestion } });
 
   const goalBlock = (
     <Section title={t.career.goal} action={goal.length ? t.common.edit : undefined} onAction={editGoals} style={{ marginTop: space.xl }}>
       {goal.length ? (
         <Card style={{ gap: space.md }}>
           {profile?.targetRole ? <T variant="title">{profile.targetRole}</T> : null}
-          {profile?.careerInterests.length ? <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>{profile.careerInterests.map((i) => <Badge key={i} label={i} bg={color.goldTint} fg={color.honey} />)}</View> : null}
+          {profile?.careerInterests.length ? <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>{profile.careerInterests.map((i) => <Badge key={i} label={i} bg={color.sunken} fg={color.inkSoft} />)}</View> : null}
         </Card>
       ) : (
-        <JunoSays mood="idle" action={<Button small icon="target" label={t.career.setGoal} onPress={editGoals} style={{ alignSelf: "flex-start" }} />}>{t.career.noGoal}</JunoSays>
+        <OwlSays mood="attentive" action={<Button small icon="target" label={t.career.setGoal} onPress={editGoals} style={{ alignSelf: "flex-start" }} />}>{t.career.noGoal}</OwlSays>
       )}
     </Section>
   );
@@ -169,16 +169,16 @@ export default function Career() {
   const projectsBlock = (
     <Section title={t.career.projects} action={t.career.newProject} onAction={() => setSheet(true)}>
       <View style={{ gap: space.md }}>
-        {data.projects.length ? data.projects.map((project) => <ProjectCard key={project.id} project={project} />) : <Empty title={t.career.noProjects} line={t.career.noProjectsLine} mood="found" action={<Button small icon="plus" label={t.career.newProject} onPress={() => setSheet(true)} />} />}
+        {data.projects.length ? data.projects.map((project) => <ProjectCard key={project.id} project={project} />) : <Empty title={t.career.noProjects} line={t.career.noProjectsLine} mood="noticing" action={<Button small icon="plus" label={t.career.newProject} onPress={() => setSheet(true)} />} />}
         <Button variant="secondary" icon="message-circle" label={t.career.askIdea} onPress={askIdea} />
       </View>
     </Section>
   );
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: color.paper }} contentContainerStyle={{ paddingTop: insets.top + space.lg, paddingBottom: 120, paddingHorizontal: tablet ? space.xxl : space.xl, width: "100%", maxWidth: tablet ? 1080 : 640, alignSelf: "center" }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ flex: 1, backgroundColor: color.ground }} contentContainerStyle={{ paddingTop: insets.top + space.lg, paddingBottom: 120, paddingHorizontal: tablet ? space.xxl : space.xl, width: "100%", maxWidth: tablet ? 1080 : 640, alignSelf: "center" }} showsVerticalScrollIndicator={false}>
       <T variant="display">{t.career.title}</T>
-      <T tone={color.slate}>{t.career.line}</T>
+      <T tone={color.inkMuted}>{t.career.line}</T>
       {tablet ? (
         <View style={{ flexDirection: "row", gap: space.xxl, alignItems: "flex-start" }}>
           <View style={{ flex: 1 }}>{goalBlock}{skillsBlock}</View>

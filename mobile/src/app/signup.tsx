@@ -7,7 +7,7 @@ import { useLang } from "@/lib/i18n";
 import { color, space } from "@/lib/theme";
 import { Button, Checkbox, Field, Notice, Screen, T, type InputRef } from "@/ui";
 import { GoogleButton, OrLine, googleAvailable, useAuthConfig } from "@/ui/AuthParts";
-import { Juno } from "@/ui/Juno";
+import { Owl } from "@/ui/Owl";
 
 /** The privacy notice lives on the website; it opens in the browser. */
 const PRIVACY_URL = `${API_ORIGIN || ""}/privacy`;
@@ -50,9 +50,9 @@ export default function Signup() {
   return (
     <Screen back footer={<Button label={t.auth.signup} loading={busy} onPress={submit} />}>
       <View style={{ gap: space.sm, marginBottom: space.xl, marginTop: space.md }}>
-        <Juno size={56} mood="happy" />
+        <Owl size={56} mood="attentive" />
         <T variant="display" style={{ marginTop: space.sm }}>{t.auth.signupTitle}</T>
-        <T tone={color.slate}>{t.auth.signupLine}</T>
+        <T tone={color.inkMuted}>{t.auth.signupLine}</T>
       </View>
       <Checkbox checked={consent} label={t.auth.consent} onChange={(checked) => { setConsent(checked); if (checked && error === t.auth.consentFirst) setError(null); }}>
         <T variant="small" tone={color.inkSoft}>{t.auth.consent}</T>

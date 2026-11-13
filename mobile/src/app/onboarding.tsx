@@ -10,7 +10,7 @@ import { color, courseTint, radius, space } from "@/lib/theme";
 import type { Course, DegreeLevel, KoreanLevel, Profile, Stage } from "@/lib/types";
 import { Button, Card, Chip, Chips, Field, Icon, IconButton, Notice, ProgressBar, Row, Screen, Segment, T } from "@/ui";
 import { CourseSheet, DateField } from "@/ui/forms";
-import { Juno, JunoSays } from "@/ui/Juno";
+import { Owl, OwlSays } from "@/ui/Owl";
 
 /*
  * Onboarding: Juno gets to know the student, one question at a time.
@@ -151,14 +151,14 @@ export default function Onboarding() {
   const suggestions = universityChosen ? [] : findUniversities(country === "OTHER" ? null : country, university);
   const typedUniversity = university.trim();
 
-  type Step = { title: string; line: string; why: string; body: ReactNode; next: () => void; ready?: boolean; mood?: "idle" | "happy" | "listen" | "work" | "found" };
+  type Step = { title: string; line: string; why: string; body: ReactNode; next: () => void; ready?: boolean; mood?: "attentive" | "attentive" | "attentive" | "next" | "noticing" };
 
   const steps: Step[] = [
     {
       title: t.onboarding.language.title,
       line: t.onboarding.language.line,
       why: t.onboarding.language.why,
-      mood: "happy",
+      mood: "attentive",
       next: () => advance({ explainLanguage, uiLanguage: lang, koreanLevel, languages: [...new Set([explainLanguage, lang])] }),
       body: (
         <>
@@ -215,9 +215,9 @@ export default function Onboarding() {
           {suggestions.length || (typedUniversity.length >= 2 && !universityChosen) ? (
             <Card style={{ paddingVertical: 0, marginTop: -space.sm, marginBottom: space.lg }}>
               {suggestions.map((u) => (
-                <Row key={u.name} icon="map-pin" title={u.name} sub={u.local} onPress={() => { setUniversity(u.name); setUniversityChosen(true); }} right={<Icon name="plus" size={18} color={color.slateLight} />} />
+                <Row key={u.name} icon="map-pin" title={u.name} sub={u.local} onPress={() => { setUniversity(u.name); setUniversityChosen(true); }} right={<Icon name="plus" size={18} color={color.inkFaint} />} />
               ))}
-              <Row icon="edit-3" title={t.onboarding.university.useTyped(typedUniversity)} onPress={() => setUniversityChosen(true)} right={<Icon name="check" size={18} color={color.slateLight} />} last />
+              <Row icon="edit-3" title={t.onboarding.university.useTyped(typedUniversity)} onPress={() => setUniversityChosen(true)} right={<Icon name="check" size={18} color={color.inkFaint} />} last />
             </Card>
           ) : null}
           <Field label={t.onboarding.university.campus} optional={t.common.optional} value={campus} onChangeText={setCampus} placeholder={t.onboarding.university.campusHint} maxLength={80} />
@@ -280,7 +280,7 @@ export default function Onboarding() {
       title: t.onboarding.courses.title,
       line: t.onboarding.courses.line,
       why: t.onboarding.courses.why,
-      mood: "listen",
+      mood: "attentive",
       next: () => advance({}),
       body: (
         <>
@@ -293,7 +293,7 @@ export default function Onboarding() {
                   title={course.name}
                   sub={courseTimes(course, t.days.short) || null}
                   onPress={() => setCourseSheet({ open: true, course })}
-                  right={<Icon name="edit-2" size={16} color={color.slateLight} />}
+                  right={<Icon name="edit-2" size={16} color={color.inkFaint} />}
                   last={i === courses.data.length - 1}
                 />
               ))}
@@ -309,7 +309,7 @@ export default function Onboarding() {
       title: t.onboarding.goals.title,
       line: t.onboarding.goals.line,
       why: t.onboarding.goals.why,
-      mood: "found",
+      mood: "noticing",
       next: () => advance({ careerInterests, targetRole: targetRole.trim() || null, skillsWanted }),
       body: (
         <>
@@ -331,16 +331,16 @@ export default function Onboarding() {
     return (
       <Screen back={() => go(STEPS - 1)} footer={<Button label={t.onboarding.done.open} icon="arrow-right" loading={busy} onPress={finish} />}>
         <View style={{ alignItems: "center", marginTop: space.lg, marginBottom: space.xl, gap: space.sm }}>
-          <Juno size={88} mood="happy" />
+          <Owl size={88} mood="attentive" />
           <T variant="display" style={{ textAlign: "center", marginTop: space.sm }}>{t.onboarding.done.title(user?.name ?? "")}</T>
-          <T tone={color.slate} style={{ textAlign: "center" }}>{t.onboarding.done.line}</T>
+          <T tone={color.inkMuted} style={{ textAlign: "center" }}>{t.onboarding.done.line}</T>
         </View>
         <Card style={{ paddingVertical: 0 }}>
-          <Row icon="map-pin" title={p.university ?? t.onboarding.done.notSaid} sub={p.campus} onPress={() => go(1)} right={<Icon name="edit-2" size={16} color={color.slateLight} />} />
-          <Row icon="book" title={t.onboarding.done.studying} sub={studying || t.onboarding.done.notSaid} onPress={() => go(2)} right={<Icon name="edit-2" size={16} color={color.slateLight} />} />
-          <Row icon="message-circle" title={t.onboarding.done.explain} sub={languageName(p.explainLanguage) ?? t.onboarding.done.notSaid} onPress={() => go(0)} right={<Icon name="edit-2" size={16} color={color.slateLight} />} />
-          <Row icon="layers" title={t.onboarding.done.courses} sub={courses.data?.length ? courses.data.map((c) => c.name).join(", ") : t.onboarding.done.notSaid} onPress={() => go(4)} right={<Icon name="edit-2" size={16} color={color.slateLight} />} />
-          <Row icon="target" title={t.onboarding.done.goal} sub={goal || t.onboarding.done.notSaid} onPress={() => go(5)} right={<Icon name="edit-2" size={16} color={color.slateLight} />} last />
+          <Row icon="map-pin" title={p.university ?? t.onboarding.done.notSaid} sub={p.campus} onPress={() => go(1)} right={<Icon name="edit-2" size={16} color={color.inkFaint} />} />
+          <Row icon="book" title={t.onboarding.done.studying} sub={studying || t.onboarding.done.notSaid} onPress={() => go(2)} right={<Icon name="edit-2" size={16} color={color.inkFaint} />} />
+          <Row icon="message-circle" title={t.onboarding.done.explain} sub={languageName(p.explainLanguage) ?? t.onboarding.done.notSaid} onPress={() => go(0)} right={<Icon name="edit-2" size={16} color={color.inkFaint} />} />
+          <Row icon="layers" title={t.onboarding.done.courses} sub={courses.data?.length ? courses.data.map((c) => c.name).join(", ") : t.onboarding.done.notSaid} onPress={() => go(4)} right={<Icon name="edit-2" size={16} color={color.inkFaint} />} />
+          <Row icon="target" title={t.onboarding.done.goal} sub={goal || t.onboarding.done.notSaid} onPress={() => go(5)} right={<Icon name="edit-2" size={16} color={color.inkFaint} />} last />
         </Card>
         {error ? <View style={{ marginTop: space.lg }}><Notice tone="error" text={error} /></View> : null}
       </Screen>
@@ -365,15 +365,15 @@ export default function Onboarding() {
         <T variant="small" style={{ minWidth: 76, textAlign: "right" }}>{t.onboarding.step(step + 1, STEPS)}</T>
       </View>
 
-      <JunoSays mood={current.mood ?? "idle"} style={{ marginTop: space.xl, marginBottom: space.xl }}>
+      <OwlSays mood={current.mood ?? "attentive"} style={{ marginTop: space.xl, marginBottom: space.xl }}>
         <T variant="title">{current.title}</T>
-        <T tone={color.slate}>{current.line}</T>
+        <T tone={color.inkMuted}>{current.line}</T>
         <Pressable accessibilityRole="button" accessibilityState={{ expanded: showWhy }} onPress={() => setShowWhy(!showWhy)} hitSlop={8} style={{ flexDirection: "row", alignItems: "center", gap: 6, alignSelf: "flex-start" }}>
-          <Icon name={showWhy ? "chevron-up" : "info"} size={14} color={color.slate} />
+          <Icon name={showWhy ? "chevron-up" : "info"} size={14} color={color.inkMuted} />
           <T variant="small" style={{ textDecorationLine: "underline" }}>{t.onboarding.why}</T>
         </Pressable>
-        {showWhy ? <View style={{ backgroundColor: color.bone, borderRadius: radius.md, padding: space.md }}><T variant="small" tone={color.inkSoft}>{current.why}</T></View> : null}
-      </JunoSays>
+        {showWhy ? <View style={{ backgroundColor: color.sunken, borderRadius: radius.md, padding: space.md }}><T variant="small" tone={color.inkSoft}>{current.why}</T></View> : null}
+      </OwlSays>
 
       {current.body}
 

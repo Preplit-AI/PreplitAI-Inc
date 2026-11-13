@@ -2,16 +2,17 @@ import { useState } from "react";
 import { Linking, Platform, View } from "react-native";
 import { router } from "expo-router";
 import { API_ORIGIN } from "@/lib/api";
+import { useAppearance, type Appearance } from "@/lib/appearance";
 import { useAuth, type ProfileChanges } from "@/lib/auth";
 import { EXPLAIN_LANGUAGES, languageName, useLang } from "@/lib/i18n";
 import { useNotifications } from "@/lib/notifications";
-import { color, space } from "@/lib/theme";
+import { color, radius, space } from "@/lib/theme";
 import type { Profile, UiLanguage } from "@/lib/types";
 import { Button, Card, Chip, Chips, Notice, Row, Screen, Section, Segment, Sheet, T, Toggle } from "@/ui";
-import { Juno } from "@/ui/Juno";
+import { Owl, OwlFigure } from "@/ui/Owl";
 
 /*
- * The profile: who the student is to Juno, and the settings that are theirs to
+ * The profile: who the student is to Owl, and the settings that are theirs to
  * change. Everything Juno knows about them is shown here and can be edited.
  */
 
@@ -21,6 +22,7 @@ export default function ProfileScreen() {
   const { t, lang, setLang, errorText } = useLang();
   const { user, profile, saveProfile, logout } = useAuth();
   const notifications = useNotifications();
+  const { appearance, setAppearance } = useAppearance();
   const [languages, setLanguages] = useState(false);
   const [tested, setTested] = useState<"sent" | "failed" | null>(null);
 
@@ -60,8 +62,8 @@ export default function ProfileScreen() {
   return (
     <Screen back title={t.profile.title}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: space.lg, marginTop: space.md }}>
-        <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: color.ink, alignItems: "center", justifyContent: "center" }}>
-          <T variant="title" tone={color.white}>{(user?.name ?? "?").trim().charAt(0).toUpperCase()}</T>
+        <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: color.goSoft, alignItems: "center", justifyContent: "center" }}>
+          <T variant="title" tone={color.goInk}>{(user?.name ?? "?").trim().charAt(0).toUpperCase()}</T>
         </View>
         <View style={{ flex: 1 }}>
           <T variant="title">{user?.name}</T>
@@ -69,6 +71,16 @@ export default function ProfileScreen() {
         </View>
       </View>
       {error ? <View style={{ marginTop: space.md }}><Notice tone="error" text={error} /></View> : null}
+
+      {/* Juno lives here. Its stage is a record of something real; starting a profile is the first. */}
+      <View style={{ marginTop: space.xl, flexDirection: "row", alignItems: "flex-end", gap: space.lg, backgroundColor: color.panel, borderRadius: radius.xl, paddingHorizontal: space.xl, paddingTop: space.lg }}>
+        <OwlFigure size={150} stage={1} />
+        <View style={{ flex: 1, paddingBottom: space.xl, gap: 4 }}>
+          <T variant="label" tone={color.lamp}>{t.profile.owlStage}</T>
+          <T variant="title" tone={color.onNavy}>{t.profile.owlTitle}</T>
+          <T variant="small" tone={color.onNavySoft}>{t.profile.owlLine}</T>
+        </View>
+      </View>
 
       <Section title={t.profile.study}>
         <Card style={{ paddingVertical: 0 }}>
@@ -81,7 +93,7 @@ export default function ProfileScreen() {
       <Section title={t.profile.languages}>
         <Card style={{ gap: space.md }}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: space.md }}>
-            <Juno size={40} mood="happy" />
+            <Owl size={40} mood="attentive" />
             <View style={{ flex: 1 }}>
               <T variant="small">{t.profile.explainLanguage}</T>
               <T variant="heading">{languageName(p.explainLanguage) ?? t.onboarding.done.notSaid}</T>
@@ -93,6 +105,14 @@ export default function ProfileScreen() {
             <Segment<UiLanguage> options={[{ value: "en", label: "English" }, { value: "ko", label: "한국어" }]} value={lang} onChange={(next) => { setLang(next); change({ uiLanguage: next }); }} />
           </View>
         </Card>
+      </Section>
+
+      <Section title={t.profile.appearance}>
+        <Segment<Appearance>
+          options={[{ value: "system", label: t.profile.themeSystem }, { value: "light", label: t.profile.themeDawn }, { value: "dark", label: t.profile.themeDusk }]}
+          value={appearance}
+          onChange={setAppearance}
+        />
       </Section>
 
       <Section title={t.profile.notifications}>
@@ -134,7 +154,7 @@ export default function ProfileScreen() {
 
       <View style={{ marginTop: space.xxl, gap: space.md }}>
         <Button variant="secondary" icon="log-out" label={t.profile.logout} loading={leaving} onPress={signOut} />
-        <T variant="small" tone={color.slateLight} style={{ textAlign: "center" }}>{t.appName} · {t.profile.version} 0.1.0</T>
+        <T variant="small" tone={color.inkFaint} style={{ textAlign: "center" }}>{t.appName} · {t.profile.version} 0.1.0</T>
       </View>
 
       <Sheet visible={languages} onClose={() => setLanguages(false)} title={t.profile.explainLanguage}>

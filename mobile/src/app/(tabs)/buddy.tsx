@@ -10,7 +10,7 @@ import { useAddLecture, useCourses, useLectures } from "@/lib/queries";
 import { color, radius, space } from "@/lib/theme";
 import { Button, Card, Chip, Chips, Field, Icon, Loading, Notice, Section, Segment, T, useLayout } from "@/ui";
 import { CourseSheet } from "@/ui/forms";
-import { Empty, Juno } from "@/ui/Juno";
+import { Empty, Owl } from "@/ui/Owl";
 import { LectureRow } from "@/ui/parts";
 
 /*
@@ -92,7 +92,7 @@ export default function Buddy() {
   const adder = (
     <Card style={{ gap: space.lg }}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: space.md }}>
-        <Juno size={44} mood="listen" />
+        <Owl size={44} mood="attentive" />
         <View style={{ flex: 1 }}>
           <T variant="heading">{t.buddy.add}</T>
           {explainIn ? <T variant="small">{t.buddy.notesIn(explainIn)}</T> : null}
@@ -115,8 +115,8 @@ export default function Buddy() {
         <>
           <Segment options={[{ value: "file", label: t.buddy.tabFile }, { value: "paste", label: t.buddy.tabPaste }]} value={mode} onChange={(next) => { setMode(next); setError(null); }} />
           {mode === "file" ? (
-            <View style={{ borderWidth: 1.5, borderStyle: "dashed", borderColor: color.ruleStrong, borderRadius: radius.lg, padding: space.xl, alignItems: "center", gap: space.sm, backgroundColor: color.paper }}>
-              <Icon name={file ? "file-text" : "upload-cloud"} size={28} color={color.slate} />
+            <View style={{ borderWidth: 1.5, borderStyle: "dashed", borderColor: color.ruleStrong, borderRadius: radius.lg, padding: space.xl, alignItems: "center", gap: space.sm, backgroundColor: color.ground }}>
+              <Icon name={file ? "file-text" : "upload-cloud"} size={28} color={color.inkMuted} />
               <T variant="strong" style={{ textAlign: "center" }} numberOfLines={2}>{file ? file.name : t.buddy.file}</T>
               <T variant="small" style={{ textAlign: "center" }}>{file?.size ? fileSize(file.size) : t.buddy.fileLine}</T>
               <Button small variant="secondary" label={t.buddy.pick} onPress={pick} style={{ marginTop: space.sm }} />
@@ -128,7 +128,7 @@ export default function Buddy() {
           {error ? <Notice tone="error" text={error} /> : null}
           <Button icon="zap" label={t.buddy.send} loading={add.isPending} onPress={send} />
           <Notice icon="mic-off" text={t.errors.AudioNeedsWorker} />
-          <T variant="small" tone={color.slateLight}>{t.buddy.consent}</T>
+          <T variant="small" tone={color.inkFaint}>{t.buddy.consent}</T>
         </>
       ) : null}
     </Card>
@@ -141,15 +141,15 @@ export default function Buddy() {
           {lectures.data.map((lecture, i) => <LectureRow key={lecture.id} lecture={lecture} showCourse last={i === lectures.data.length - 1} />)}
         </Card>
       ) : (
-        <Empty title={t.buddy.empty} line={t.buddy.emptyLine} mood="listen" />
+        <Empty title={t.buddy.empty} line={t.buddy.emptyLine} mood="attentive" />
       )}
     </Section>
   );
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: color.paper }} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingTop: insets.top + space.lg, paddingBottom: 120, paddingHorizontal: tablet ? space.xxl : space.xl, width: "100%", maxWidth: tablet ? 1080 : 640, alignSelf: "center" }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ flex: 1, backgroundColor: color.ground }} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingTop: insets.top + space.lg, paddingBottom: 120, paddingHorizontal: tablet ? space.xxl : space.xl, width: "100%", maxWidth: tablet ? 1080 : 640, alignSelf: "center" }} showsVerticalScrollIndicator={false}>
       <T variant="display">{t.buddy.title}</T>
-      <T tone={color.slate} style={{ marginBottom: space.xl }}>{t.buddy.line}</T>
+      <T tone={color.inkMuted} style={{ marginBottom: space.xl }}>{t.buddy.line}</T>
       {tablet ? (
         <View style={{ flexDirection: "row", gap: space.xxl, alignItems: "flex-start" }}>
           <View style={{ flex: 1 }}>{adder}</View>

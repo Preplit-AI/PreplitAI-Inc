@@ -34,7 +34,7 @@ export function GoogleButton({ intent, guard }: { intent: "login" | "signup"; gu
         if (guard && !guard()) return;
         window.location.assign(googleStartUrl(intent));
       }}
-      style={({ pressed }) => [{ minHeight: 52, borderRadius: radius.pill, borderWidth: 1, borderColor: "#747775", backgroundColor: color.white, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space.md }, pressed && { backgroundColor: "#F7F8F8" }]}
+      style={({ pressed }) => [{ minHeight: 52, borderRadius: radius.pill, borderWidth: 1, borderColor: "#747775", backgroundColor: "#FFFFFF", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space.md }, pressed && { backgroundColor: "#F7F8F8" }]}
     >
       <Image source={require("../../assets/google-g.svg")} style={{ width: 20, height: 20 }} contentFit="contain" />
       <Text style={{ fontFamily: font.medium, fontSize: 16, color: "#1F1F1F" }}>{t.auth.google}</Text>

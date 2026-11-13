@@ -24,24 +24,7 @@ function landingArt() {
   return `${JSON.stringify({ avatarViewBox: AVATAR_VIEWBOX, figureViewBox: "0 0 120 120", avatar: each(false), figure: each(true) }, null, 1)}\n`;
 }
 
-/** The mobile app's Juno: one file per mood, his face (mood.svg) and the whole bird (figure-mood.svg). */
-const MOBILE = path.resolve(__dirname, "../../mobile/assets/juno");
-function mobileFiles(): [string, string][] {
-  return MOODS.flatMap((mood) => [
-    [`${mood}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${AVATAR_VIEWBOX}">${renderToStaticMarkup(<JunoArt mood={mood} />)}</svg>\n`],
-    [`figure-${mood}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">${renderToStaticMarkup(<JunoArt mood={mood} around />)}</svg>\n`],
-  ] as [string, string][]);
-}
-
 describe("Juno, the magpie", () => {
-  it("the mobile app's Juno is the same drawing", () => {
-    if (process.env.UPDATE_JUNO_SVG) {
-      fs.mkdirSync(MOBILE, { recursive: true });
-      for (const [name, svg] of mobileFiles()) fs.writeFileSync(path.join(MOBILE, name), svg);
-    }
-    for (const [name, svg] of mobileFiles()) expect(fs.readFileSync(path.join(MOBILE, name), "utf8").replace(/\r\n/g, "\n"), name).toBe(svg);
-  });
-
   it("the landing page's Juno is the app's Juno", () => {
     if (process.env.UPDATE_JUNO_SVG) {
       fs.writeFileSync(FILE, landingSvg());

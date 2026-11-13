@@ -8,13 +8,13 @@ import { color, courseTint, space } from "@/lib/theme";
 import type { Task } from "@/lib/types";
 import { Badge, Button, Card, Failed, Icon, IconButton, Loading, Notice, Row, Screen, Section, Segment, T, useLayout } from "@/ui";
 import { CourseSheet, TaskRow, TaskSheet } from "@/ui/forms";
-import { Empty } from "@/ui/Juno";
+import { Empty } from "@/ui/Owl";
 import { Confirm, LectureRow } from "@/ui/parts";
 
 /*
  * One course's workspace: its timetable and exams, every lecture Juno has
  * organised for it, its tasks, and the three things to do with them: add a
- * lecture, ask Juno, take a quiz. Everything here is this course's and no other's.
+ * lecture, ask Owl, take a quiz. Everything here is this course's and no other's.
  */
 
 export default function CourseWorkspace() {
@@ -47,7 +47,7 @@ export default function CourseWorkspace() {
           {lectures.data.map((lecture, i) => <LectureRow key={lecture.id} lecture={lecture} last={i === lectures.data.length - 1} />)}
         </Card>
       ) : (
-        <Empty title={t.course.noMaterials} line={t.course.noMaterialsLine} mood="listen" />
+        <Empty title={t.course.noMaterials} line={t.course.noMaterialsLine} mood="attentive" />
       )}
     </>
   );
@@ -55,7 +55,7 @@ export default function CourseWorkspace() {
   const taskList = (
     <>
       <Card style={{ paddingVertical: tasks.data?.length ? 0 : space.lg }}>
-        {tasks.data?.length ? tasks.data.map((task, i) => <TaskRow key={task.id} task={task} onOpen={(open) => setTaskSheet({ open: true, task: open })} last={i === tasks.data.length - 1} />) : <T tone={color.slate}>{t.task.empty}</T>}
+        {tasks.data?.length ? tasks.data.map((task, i) => <TaskRow key={task.id} task={task} onOpen={(open) => setTaskSheet({ open: true, task: open })} last={i === tasks.data.length - 1} />) : <T tone={color.inkMuted}>{t.task.empty}</T>}
       </Card>
       <Button small variant="secondary" icon="plus" label={t.home.addTask} onPress={() => setTaskSheet({ open: true, task: null })} style={{ alignSelf: "flex-start", marginTop: space.md }} />
     </>
@@ -92,13 +92,13 @@ export default function CourseWorkspace() {
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: space.md }}>
         <Badge icon="file-text" label={t.course.lectures(course.lectureCount ?? 0)} />
-        {course.dueCards ? <Badge icon="zap" label={t.course.cardsDue(course.dueCards)} bg={color.goldTint} fg={color.honey} /> : null}
-        {course.nextExam ? <Badge icon="flag" label={t.course.examIn(course.nextExam.kind === "midterm" ? t.course.midterm : t.course.final, course.nextExam.days)} bg={color.maroonTint} fg={color.maroonDeep} /> : null}
+        {course.dueCards ? <Badge icon="zap" label={t.course.cardsDue(course.dueCards)} bg={color.sunken} fg={color.inkSoft} /> : null}
+        {course.nextExam ? <Badge icon="flag" label={t.course.examIn(course.nextExam.kind === "midterm" ? t.course.midterm : t.course.final, course.nextExam.days)} bg={color.lampSoft} fg={color.lampInk} /> : null}
       </View>
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.sm, marginTop: space.xl }}>
         <Button small icon="plus" label={t.course.addMaterial} onPress={() => router.push({ pathname: "/buddy", params: { courseId: course.id } })} />
-        <Button small variant="secondary" icon="message-circle" label={t.course.askJuno} onPress={() => router.push({ pathname: "/juno", params: { courseId: course.id } })} />
+        <Button small variant="secondary" icon="message-circle" label={t.course.askOwl} onPress={() => router.push({ pathname: "/owl", params: { courseId: course.id } })} />
         {course.totalCards ? <Button small variant="secondary" icon="zap" label={t.course.quiz} onPress={() => router.push({ pathname: "/quiz", params: { courseId: course.id } })} /> : null}
       </View>
       {error ? <View style={{ marginTop: space.md }}><Notice tone="error" text={error} /></View> : null}

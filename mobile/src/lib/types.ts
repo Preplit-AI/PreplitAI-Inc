@@ -99,7 +99,7 @@ export type Lecture = LectureSummary & { notes: Notes | null; transcript: string
 export type ReviewCard = Card & { lectureId: string; lectureTitle: string; courseId: string; courseName: string };
 
 /** What Juno has to say on the home screen; the wording is the app's (lib/i18n). */
-export type JunoMessage =
+export type OwlMessage =
   | { kind: "first-course" | "setup" | "quiet" }
   | { kind: "processing"; title: string; courseName: string }
   | { kind: "lecture"; message: { lectureId: string; kind: "ready" | "unclear" | "failed"; lectureTitle: string; cardCount: number } }
@@ -117,7 +117,7 @@ export type Overview = {
   review: { due: number; done: number };
   latestNote: { id: string; courseName: string; title: string; topic: string | null } | null;
   processing: boolean;
-  message: JunoMessage;
+  message: OwlMessage;
 };
 
 export type TaskKind = "task" | "assignment" | "exam" | "study";

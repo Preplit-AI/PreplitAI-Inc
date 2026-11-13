@@ -9,10 +9,10 @@ import { daysFromToday, reminderIsOn, shortDate } from "@/lib/format";
 import { useLang } from "@/lib/i18n";
 import { useOverview, useTasks } from "@/lib/queries";
 import { color, courseTint, font, radius, space } from "@/lib/theme";
-import type { JunoMessage, Task } from "@/lib/types";
+import type { OwlMessage, Task } from "@/lib/types";
 import { Badge, Button, Card, Failed, Icon, Loading, Row, Section, T, useLayout } from "@/ui";
 import { CourseSheet, TaskRow, TaskSheet } from "@/ui/forms";
-import { JunoSays, type JunoMood } from "@/ui/Juno";
+import { OwlSays, type OwlMood } from "@/ui/Owl";
 
 /*
  * Home answers five questions: what do I have today, what needs my attention,
@@ -52,37 +52,37 @@ export default function Home() {
   const urgent = (tasks.data ?? []).filter((task) => reminderIsOn(task) || (task.dueAt !== null && daysFromToday(task.dueAt) <= 3)).slice(0, 5);
 
   /** Juno's one line for right now, and what to do about it. */
-  const juno = ((): { text: string; mood: JunoMood; action?: ReactNode } => {
-    const m: JunoMessage = data.message;
+  const owl = ((): { text: string; mood: OwlMood; action?: ReactNode } => {
+    const m: OwlMessage = data.message;
     const small = (label: string, onPress: () => void, icon?: "arrow-right" | "plus" | "play") => <Button small label={label} icon={icon} onPress={onPress} style={{ alignSelf: "flex-start" }} />;
     switch (m.kind) {
       case "first-course":
-        return { text: t.home.juno["first-course"], mood: "happy", action: small(t.course.new, () => setCourseSheet(true), "plus") };
+        return { text: t.home.owl["first-course"], mood: "attentive", action: small(t.course.new, () => setCourseSheet(true), "plus") };
       case "setup":
-        return { text: t.home.juno.setup, mood: "idle", action: small(t.common.continue, () => router.push({ pathname: "/onboarding", params: { step: "3" } }), "arrow-right") };
+        return { text: t.home.owl.setup, mood: "attentive", action: small(t.common.continue, () => router.push({ pathname: "/onboarding", params: { step: "3" } }), "arrow-right") };
       case "processing":
-        return { text: t.home.juno.processing(m.title), mood: "work" };
+        return { text: t.home.owl.processing(m.title), mood: "next" };
       case "lecture": {
         const dismiss = () => request(`/junbee/${m.message.lectureId}/dismiss`, { method: "POST" }).then(() => client.invalidateQueries({ queryKey: ["overview"] })).catch(() => {});
-        if (m.message.kind === "failed") return { text: t.home.juno.failed(m.message.lectureTitle), mood: "rest", action: small(t.common.close, dismiss) };
+        if (m.message.kind === "failed") return { text: t.home.owl.failed(m.message.lectureTitle), mood: "resting", action: small(t.common.close, dismiss) };
         return {
-          text: t.home.juno.ready(m.message.lectureTitle, m.message.cardCount),
-          mood: "found",
+          text: t.home.owl.ready(m.message.lectureTitle, m.message.cardCount),
+          mood: "noticing",
           action: small(t.common.open, () => { dismiss(); router.push({ pathname: "/lecture/[id]", params: { id: m.message.lectureId } }); }, "arrow-right"),
         };
       }
       case "class-today":
-        return { text: t.home.juno.classToday(m.courseName), mood: "listen", action: small(t.home.addLecture, () => router.push({ pathname: "/buddy", params: { courseId: m.courseId } }), "plus") };
+        return { text: t.home.owl.classToday(m.courseName), mood: "attentive", action: small(t.home.addLecture, () => router.push({ pathname: "/buddy", params: { courseId: m.courseId } }), "plus") };
       case "semester-over":
-        return { text: t.home.juno.semesterOver(m.lectures), mood: "rest" };
+        return { text: t.home.owl.semesterOver(m.lectures), mood: "resting" };
       case "exam-soon":
-        return { text: t.home.juno.examSoon(m.courseName, m.exam === "midterm" ? t.course.midterm : t.course.final, m.days), mood: "idle", action: small(t.course.quiz, () => router.push("/quiz"), "play") };
+        return { text: t.home.owl.examSoon(m.courseName, m.exam === "midterm" ? t.course.midterm : t.course.final, m.days), mood: "attentive", action: small(t.course.quiz, () => router.push("/quiz"), "play") };
       case "cards-due":
-        return { text: t.home.juno.cardsDue(m.count), mood: "idle", action: small(t.home.play, () => router.push("/quiz"), "play") };
+        return { text: t.home.owl.cardsDue(m.count), mood: "attentive", action: small(t.home.play, () => router.push("/quiz"), "play") };
       case "cards-finished":
-        return { text: t.home.juno.cardsFinished(m.count), mood: "happy" };
+        return { text: t.home.owl.cardsFinished(m.count), mood: "attentive" };
       default:
-        return { text: t.home.juno.quiet, mood: "rest" };
+        return { text: t.home.owl.quiet, mood: "resting" };
     }
   })();
 
@@ -110,23 +110,23 @@ export default function Home() {
           })}
         </Card>
       ) : (
-        <Card><T tone={color.slate}>{t.home.noClassToday}</T></Card>
+        <Card><T tone={color.inkMuted}>{t.home.noClassToday}</T></Card>
       )}
     </Section>
   );
 
   const reviewBlock = (
     <Section title={t.home.review}>
-      <Card tone={data.review.due ? color.goldTint : undefined} onPress={data.review.due ? () => router.push("/quiz") : undefined}>
+      <Card tone={data.review.due ? color.lampSoft : undefined} onPress={data.review.due ? () => router.push("/quiz") : undefined}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: space.md }}>
-          <View style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: data.review.due ? color.gold : color.bone, alignItems: "center", justifyContent: "center" }}>
+          <View style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: data.review.due ? color.lamp : color.sunken, alignItems: "center", justifyContent: "center" }}>
             <Icon name={data.review.due ? "zap" : "check"} size={20} color={color.ink} />
           </View>
           <View style={{ flex: 1 }}>
             <T variant="strong">{data.review.due ? t.home.reviewLine(data.review.due) : data.review.done ? t.home.reviewDone(data.review.done) : t.home.reviewNone}</T>
-            {data.review.due && data.review.done ? <T variant="small" tone={color.honey}>{t.home.reviewDone(data.review.done)}</T> : null}
+            {data.review.due && data.review.done ? <T variant="small" tone={color.lampInk}>{t.home.reviewDone(data.review.done)}</T> : null}
           </View>
-          {data.review.due ? <View style={{ backgroundColor: color.ink, borderRadius: radius.pill, paddingHorizontal: space.lg, minHeight: 40, justifyContent: "center" }}><T variant="strong" tone={color.white} style={{ fontSize: 14 }}>{t.home.play}</T></View> : null}
+          {data.review.due ? <View style={{ backgroundColor: color.action, borderRadius: radius.pill, paddingHorizontal: space.lg, minHeight: 40, justifyContent: "center" }}><T variant="strong" tone={color.onAction} style={{ fontSize: 14 }}>{t.home.play}</T></View> : null}
         </View>
       </Card>
     </Section>
@@ -135,7 +135,7 @@ export default function Home() {
   const attentionBlock = (
     <Section title={t.home.attention} action={t.common.seeAll} onAction={() => router.push("/tasks")}>
       <Card style={{ paddingVertical: urgent.length ? 0 : space.lg }}>
-        {urgent.length ? urgent.map((task, i) => <TaskRow key={task.id} task={task} onOpen={(open) => setTaskSheet({ open: true, task: open })} last={i === urgent.length - 1} />) : <T tone={color.slate}>{t.home.nothingDue}</T>}
+        {urgent.length ? urgent.map((task, i) => <TaskRow key={task.id} task={task} onOpen={(open) => setTaskSheet({ open: true, task: open })} last={i === urgent.length - 1} />) : <T tone={color.inkMuted}>{t.home.nothingDue}</T>}
       </Card>
       <Button small variant="secondary" icon="plus" label={t.home.addTask} onPress={() => setTaskSheet({ open: true, task: null })} style={{ alignSelf: "flex-start", marginTop: space.md }} />
     </Section>
@@ -150,7 +150,7 @@ export default function Home() {
             icon="flag"
             title={exam.courseName}
             sub={`${exam.exam === "midterm" ? t.course.midterm : t.course.final} · ${shortDate(`${exam.on}T00:00:00`, lang)}`}
-            right={<Badge label={t.common.inDays(exam.days)} bg={exam.days <= 7 ? color.maroonTint : color.bone} fg={exam.days <= 7 ? color.maroonDeep : color.inkSoft} />}
+            right={<Badge label={t.common.inDays(exam.days)} bg={exam.days <= 7 ? color.lampSoft : color.sunken} fg={exam.days <= 7 ? color.lampInk : color.inkSoft} />}
             onPress={() => router.push({ pathname: "/course/[id]", params: { id: exam.courseId } })}
             last={i === all.length - 1}
           />
@@ -169,7 +169,7 @@ export default function Home() {
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: color.paper }}
+      style={{ flex: 1, backgroundColor: color.ground }}
       contentContainerStyle={{ paddingTop: insets.top + space.lg, paddingBottom: 120, paddingHorizontal: tablet ? space.xxl : space.xl, width: "100%", maxWidth: tablet ? 1080 : 640, alignSelf: "center" }}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={color.ink} />}
       showsVerticalScrollIndicator={false}
@@ -183,12 +183,12 @@ export default function Home() {
           </T>
           <T variant="display" numberOfLines={2}>{greeting}, {user?.name.split(" ")[0]}</T>
         </View>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.profile.title} onPress={() => router.push("/profile")} style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: color.ink, alignItems: "center", justifyContent: "center" }}>
-          <T variant="strong" tone={color.white}>{(user?.name ?? "?").trim().charAt(0).toUpperCase()}</T>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.profile.title} onPress={() => router.push("/profile")} style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: color.goSoft, alignItems: "center", justifyContent: "center" }}>
+          <T variant="strong" tone={color.goInk}>{(user?.name ?? "?").trim().charAt(0).toUpperCase()}</T>
         </Pressable>
       </View>
 
-      <JunoSays mood={juno.mood} action={juno.action} style={{ marginTop: space.xl }}>{juno.text}</JunoSays>
+      <OwlSays mood={owl.mood} action={owl.action} style={{ marginTop: space.xl }}>{owl.text}</OwlSays>
 
       {tablet ? (
         <View style={{ flexDirection: "row", gap: space.xxl, alignItems: "flex-start" }}>

@@ -1,0 +1,112 @@
+/* CampusGo — generated from tokens.json */
+@font-face { font-family: "Lexend"; src: url("./fonts/Lexend_400Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Lexend"; src: url("./fonts/Lexend_500Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Lexend"; src: url("./fonts/Lexend_600SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Schibsted Grotesk"; src: url("./fonts/SchibstedGrotesk_400Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Schibsted Grotesk"; src: url("./fonts/SchibstedGrotesk_500Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Schibsted Grotesk"; src: url("./fonts/SchibstedGrotesk_600SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Schibsted Grotesk"; src: url("./fonts/SchibstedGrotesk_700Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+:root, [data-theme="light"] {
+  --ground: #F5F8FF;
+  --surface: #FFFFFF;
+  --surface-sunken: #E8EEFB;
+  --rule: #D8E1F4;
+  --rule-strong: #7685AC;
+  --ink: #0B1A45;
+  --ink-soft: #35456F;
+  --ink-muted: #56658F;
+  --go: #2B5FF5;
+  --on-go: #FFFFFF;
+  --go-soft: #E3EBFF;
+  --go-ink: #1F4FD6;
+  --action: #2B5FF5;
+  --action-hover: #1F4FD6;
+  --on-action: #FFFFFF;
+  --navy: #0B1A45;
+  --navy-deep: #060F2E;
+  --navy-raise: #1B2A63;
+  --on-navy: #F5F8FF;
+  --lamp: #F0A63A;
+  --lamp-soft: #FCEBCB;
+  --lamp-ink: #7D4A05;
+  --on-lamp: #0B1A45;
+  --bark: #8A7560;
+  --bark-deep: #55463A;
+  --down: #EBE0CD;
+  --settled: #0E6F60;
+  --settled-soft: #D9F0EA;
+  --clock: #B0371A;
+  --clock-soft: #FBE4DC;
+  --error: #B0371A;
+  --error-soft: #FBE4DC;
+  --focus: #0B1A45;
+  --shadow-card: 0 1px 2px rgba(11,26,69,0.04), 0 8px 24px rgba(43,95,245,0.08);
+  --shadow-float: 0 2px 6px rgba(11,26,69,0.08), 0 20px 48px rgba(43,95,245,0.16);
+}
+[data-theme="dark"] {
+  --ground: #0A1330;
+  --surface: #131F47;
+  --surface-sunken: #060C22;
+  --rule: #243263;
+  --rule-strong: #6C7FBC;
+  --ink: #EEF2FF;
+  --ink-soft: #C2CCEA;
+  --ink-muted: #95A3CC;
+  --go: #2B5FF5;
+  --on-go: #FFFFFF;
+  --go-soft: #1A2960;
+  --go-ink: #A3BBFF;
+  --action: #7FA2FF;
+  --action-hover: #9DB8FF;
+  --on-action: #0A1330;
+  --navy: #0B1A45;
+  --navy-deep: #060F2E;
+  --navy-raise: #1B2A63;
+  --on-navy: #F5F8FF;
+  --lamp: #F0A63A;
+  --lamp-soft: #3A2D14;
+  --lamp-ink: #F6C672;
+  --on-lamp: #0B1A45;
+  --bark: #8A7560;
+  --bark-deep: #55463A;
+  --down: #EBE0CD;
+  --settled: #78D6C5;
+  --settled-soft: #12322E;
+  --clock: #FFA283;
+  --clock-soft: #3C1F17;
+  --error: #FFA283;
+  --error-soft: #3C1F17;
+  --focus: #F8CF8A;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.35);
+  --shadow-float: 0 2px 6px rgba(0,0,0,0.5), 0 18px 48px rgba(0,0,0,0.5);
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 999px;
+  --font-display: "Lexend", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --font-sans: "Schibsted Grotesk", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+}
+.display-xl { font-family: var(--font-display); font-size: 52px; line-height: 58px; font-weight: 600; letter-spacing: -0.03em; }
+.display-lg { font-family: var(--font-display); font-size: 38px; line-height: 44px; font-weight: 600; letter-spacing: -0.025em; }
+.display-md { font-family: var(--font-display); font-size: 28px; line-height: 34px; font-weight: 600; letter-spacing: -0.02em; }
+.display-sm { font-family: var(--font-display); font-size: 20px; line-height: 26px; font-weight: 600; letter-spacing: -0.015em; }
+.voice { font-family: var(--font-display); font-size: 18px; line-height: 26px; font-weight: 500; letter-spacing: -0.01em; }
+.count { font-family: var(--font-display); font-size: 28px; line-height: 30px; font-weight: 600; letter-spacing: -0.01em; }
+.title { font-family: var(--font-sans); font-size: 17px; line-height: 24px; font-weight: 600; }
+.body-lg { font-family: var(--font-sans); font-size: 17px; line-height: 26px; font-weight: 400; }
+.body { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 400; }
+.label { font-family: var(--font-sans); font-size: 14px; line-height: 18px; font-weight: 600; }
+.caption { font-family: var(--font-sans); font-size: 12.5px; line-height: 17px; font-weight: 500; }
+.overline { font-family: var(--font-sans); font-size: 11.5px; line-height: 14px; font-weight: 600; letter-spacing: 0.09em; }
