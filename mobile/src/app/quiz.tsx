@@ -127,6 +127,7 @@ export default function Quiz() {
                 key={i}
                 accessibilityRole="radio"
                 accessibilityState={{ selected: chosen, disabled: show }}
+                aria-checked={chosen}
                 disabled={show}
                 onPress={() => { setPicked(i); answer(isAnswer); }}
                 style={({ pressed }) => [

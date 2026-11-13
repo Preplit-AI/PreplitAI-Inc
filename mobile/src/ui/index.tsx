@@ -261,6 +261,7 @@ export function Chip({ label, selected, onPress, icon }: { label: string; select
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected: Boolean(selected) }}
+      aria-pressed={selected === undefined ? undefined : selected}
       onPress={onPress}
       style={({ pressed }) => [styles.chip, selected && { backgroundColor: color.ink, borderColor: color.ink }, pressed && { opacity: 0.8 }]}
     >
@@ -281,7 +282,7 @@ export function Segment<V extends string>({ options, value, onChange }: { option
       {options.map((option) => {
         const on = option.value === value;
         return (
-          <Pressable key={option.value} accessibilityRole="tab" accessibilityState={{ selected: on }} onPress={() => onChange(option.value)} style={[styles.segmentItem, on && styles.segmentOn]}>
+          <Pressable key={option.value} accessibilityRole="tab" accessibilityState={{ selected: on }} aria-selected={on} onPress={() => onChange(option.value)} style={[styles.segmentItem, on && styles.segmentOn]}>
             <Text style={{ fontFamily: on ? font.semibold : font.medium, fontSize: 14, color: on ? color.ink : color.slate }} numberOfLines={1}>{option.label}</Text>
           </Pressable>
         );
@@ -292,7 +293,7 @@ export function Segment<V extends string>({ options, value, onChange }: { option
 
 export function Toggle({ label, sub, value, onChange }: { label: string; sub?: string; value: boolean; onChange: (value: boolean) => void }) {
   return (
-    <Pressable accessibilityRole="switch" accessibilityState={{ checked: value }} accessibilityLabel={label} onPress={() => onChange(!value)} style={[styles.row, { minHeight: 56 }]}>
+    <Pressable accessibilityRole="switch" accessibilityState={{ checked: value }} aria-checked={value} accessibilityLabel={label} onPress={() => onChange(!value)} style={[styles.row, { minHeight: 56 }]}>
       <View style={{ flex: 1 }}>
         <T variant="strong">{label}</T>
         {sub ? <T variant="small">{sub}</T> : null}
@@ -306,7 +307,7 @@ export function Toggle({ label, sub, value, onChange }: { label: string; sub?: s
 
 export function Checkbox({ checked, onChange, children, label }: { checked: boolean; onChange: (checked: boolean) => void; children: ReactNode; label: string }) {
   return (
-    <Pressable accessibilityRole="checkbox" accessibilityState={{ checked }} accessibilityLabel={label} onPress={() => onChange(!checked)} style={{ flexDirection: "row", gap: space.md, alignItems: "flex-start" }}>
+    <Pressable accessibilityRole="checkbox" accessibilityState={{ checked }} aria-checked={checked} accessibilityLabel={label} onPress={() => onChange(!checked)} style={{ flexDirection: "row", gap: space.md, alignItems: "flex-start" }}>
       <View style={[styles.checkbox, checked && { backgroundColor: color.ink, borderColor: color.ink }]}>
         {checked ? <Icon name="check" size={15} color={color.white} /> : null}
       </View>

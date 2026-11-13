@@ -26,7 +26,12 @@
       "bundler": "metro",
       "output": "single"
     },
-    "plugins": ["expo-router", "expo-font", "expo-image"],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-image",
+      "expo-notifications"
+    ],
     "experiments": {
       "baseUrl": "/m"
     }

@@ -1,4 +1,4 @@
-/* Shows the bee's notifications when Junbee is closed, and opens the right screen when one is pressed. */
+/* Shows Juno's notifications when Preplit AI is closed, and opens the right screen when one is pressed. Used by the website and by the mobile app's web build (/m). */
 
 self.addEventListener("push", (event) => {
   let data = {};
@@ -8,7 +8,7 @@ self.addEventListener("push", (event) => {
     data = {};
   }
   event.waitUntil(
-    self.registration.showNotification(data.title || "Junbee", {
+    self.registration.showNotification(data.title || "Preplit AI", {
       body: data.body || "",
       icon: "/icon-192.png",
       badge: "/icon-192.png",

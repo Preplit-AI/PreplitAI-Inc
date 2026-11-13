@@ -102,6 +102,7 @@ export default function ProjectScreen() {
                 <Pressable
                   accessibilityRole="checkbox"
                   accessibilityState={{ checked: m.done }}
+                  aria-checked={m.done}
                   accessibilityLabel={m.title}
                   hitSlop={10}
                   onPress={() => milestone.mutateAsync({ id: m.id, done: !m.done }).catch(fail)}

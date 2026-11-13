@@ -8,6 +8,7 @@ import { useFonts, SchibstedGrotesk_400Regular, SchibstedGrotesk_500Medium, Schi
 import { AuthProvider, useAuth } from "@/lib/auth";
 import { hasDevAccess } from "@/lib/earlyAccess";
 import { LangProvider, useLang } from "@/lib/i18n";
+import { NotificationsProvider } from "@/lib/notifications";
 import { color, space } from "@/lib/theme";
 import { Button, Failed, Loading, T } from "@/ui";
 import { JunoFigure } from "@/ui/Juno";
@@ -129,7 +130,9 @@ export default function RootLayout() {
           <StatusBar style="dark" />
           {allowed ? (
             <AuthProvider>
-              <Screens />
+              <NotificationsProvider>
+                <Screens />
+              </NotificationsProvider>
             </AuthProvider>
           ) : (
             <EarlyAccess />

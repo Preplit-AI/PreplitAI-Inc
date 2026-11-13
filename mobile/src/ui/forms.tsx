@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
 import { useLang } from "@/lib/i18n";
+import { useNotifications } from "@/lib/notifications";
 import { addDays, clockTime, daysFromToday, isDateText, isTimeText, isoDate, maskDate, maskTime, reminderIsOn, shortDate, toMoment } from "@/lib/format";
 import { useCourses, useDeleteTask, useSaveCourse, useSaveTask } from "@/lib/queries";
 import { color, space } from "@/lib/theme";
@@ -126,6 +127,8 @@ export function TaskSheet({ visible, onClose, task, courseId }: { visible: boole
   const courses = useCourses();
   const save = useSaveTask();
   const remove = useDeleteTask();
+  const notifications = useNotifications();
+  const remindNote = !notifications.on ? t.notify.taskOff : notifications.whenClosed ? t.notify.taskOn : t.notify.taskOnOpen;
   const [title, setTitle] = useState("");
   const [kind, setKind] = useState<TaskKind>("task");
   const [course, setCourse] = useState<string | null>(null);
@@ -216,7 +219,7 @@ export function TaskSheet({ visible, onClose, task, courseId }: { visible: boole
           <Chips style={{ marginBottom: space.sm }}>
             {REMINDERS.map((r) => <Chip key={r.key} label={t.task.reminders[r.key]} selected={remind === r.minutes} onPress={() => setRemind(r.minutes)} />)}
           </Chips>
-          {remind !== null ? <T variant="small" style={{ marginBottom: space.lg }}>{t.task.remindNote}</T> : <View style={{ height: space.md }} />}
+          {remind !== null ? <T variant="small" style={{ marginBottom: space.lg }}>{remindNote}</T> : <View style={{ height: space.md }} />}
         </>
       ) : null}
       <T variant="strong" style={{ fontSize: 13.5, marginBottom: 8 }}>{t.task.priority}</T>
@@ -254,6 +257,7 @@ export function TaskRow({ task, onOpen, last }: { task: Task; onOpen: (task: Tas
       <Pressable
         accessibilityRole="checkbox"
         accessibilityState={{ checked: task.done }}
+        aria-checked={task.done}
         accessibilityLabel={task.done ? t.task.markOpen : t.task.markDone}
         hitSlop={10}
         onPress={() => save.mutate({ id: task.id, done: !task.done })}

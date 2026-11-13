@@ -69,6 +69,9 @@ mobile/                          the app (Expo SDK 58, React Native 0.88, TypeSc
     lecture/[id]                 one lecture's notes (split with Juno on tablets)
     quiz, juno, tasks, profile, project/[id]
   src/lib/                       no UI: api, auth, queries, i18n, theme, format, quiz, data, types
+    reminders.ts                 when each reminder is delivered, quiet hours kept (pure, tested)
+    notify.ts / notify.web.ts    delivering them: the phone's own scheduler, or the browser
+    notifications.tsx            keeps this device's schedule in step with the student's tasks
   src/ui/                        the design system and the parts screens share
   assets/juno/                   Juno's six moods, exported from the website's drawing
 
@@ -131,7 +134,9 @@ been bundled for Android and iOS but never run on one.
 | Course workspace | Complete (personal) | Shared workspaces: not started |
 | Home / Today | Complete | Classes, urgent tasks, review, exams, latest notes, Juno's line |
 | Tasks and deadlines | Complete | Create, edit, complete, delete, per course |
-| Reminders | **Partial** | The reminder time is saved and shows on Home when due. Phone notifications: not started |
+| Reminders in the app | Complete | A task's reminder shows on Home from its time until the task is done |
+| Notifications, installed app | Built · **not verified on a device** | Local notifications scheduled on the phone: task reminders and the daily quiz, quiet hours kept, delivered with the app closed, no server involved. Bundles for Android and iOS; never run on one |
+| Notifications, web build | **Partial** | Shown only while the app is open in a tab (verified). With the tab closed nothing arrives: that needs web push, a server-side scheduler and VAPID keys (not set up) |
 | Weekly plan proposed by Juno | Not started | |
 | Lecture Buddy: PDF, text file, pasted text | Complete | Up to 4 MB on the current host |
 | Lecture Buddy: recordings | **Blocked** | Needs the long-running audio server (ffmpeg + storage). The app says so and offers no button |
@@ -163,13 +168,18 @@ Nothing in the app uses mock data.
 | Check | Command | Result |
 |---|---|---|
 | Type check | `npm run typecheck` | clean |
-| App logic (quiz, dates, onboarding suggestions) | `npx vitest run` at the root | 108 passed (11 for the app) |
+| App logic (quiz, dates, reminders and quiet hours, onboarding suggestions) | `npx vitest run` at the root | 118 passed (21 for the app) |
 | API | `cd server && npm test` | 119 passed (7 for what the app added) |
 | Web build | `npm run mobile:web` | 68 files, 2.8 MB |
 | Android and iOS bundles | `npx expo export --platform android --platform ios` | both compile |
 | The whole journey in a browser, 390×844 | Playwright against the real API and model | passed |
 | Tablet layouts, 1024×768 and 820×1180 | Playwright | passed |
 | On a phone or tablet | | **not done** |
+
+Notifications were checked in a browser by recording what the app hands to the browser: the test
+notification, and a real task reminder that fired at its moment (60 seconds after saving, with the
+course, the due time and a link to the task list), once only across a reload. The switch's three
+states (off, waiting for the system's answer, on) and the blocked state read correctly.
 
 The browser run covered: the early-access wall, welcome, sign-up with the consent guard, all six
 onboarding steps, leaving and resuming onboarding, Home, adding a course, pasted-text and PDF
@@ -201,7 +211,9 @@ Defined in `src/lib/theme.ts` and `src/ui/index.tsx`; screens use only these.
 | React Native with Expo | One codebase for both stores and the web; reuses the existing TypeScript API types | |
 | The web build is committed to `public/m` | The website's deploy cannot be broken by the app's build | Build it on Vercel instead and delete `public/m` |
 | The name shown is "Preplit AI" | The website's spelling (decided 9 November) | `expo.name` in `app.json`, `appName` in `src/lib/i18n.tsx` |
-| Reminders show in the app, not as notifications | Notifications need a device to verify and a push service | Add `expo-notifications`; the reminder times are already stored |
+| Notifications are local to each device | They arrive with the app closed and need no server; no task data leaves the phone for them | For reminders that follow the student across devices, send pushes from the server instead |
+| A reminder inside quiet hours is moved, never sent | Quiet hours are the student's own rule | `reminderMoment` in `src/lib/reminders.ts` |
+| Notifications are switched on per device, in Profile | The system's permission question is asked only when the student asks for reminders | `turnOn` in `src/lib/notifications.tsx` |
 | Recordings are refused on Vercel | No ffmpeg, a 4.5 MB request limit, and time limits | Run `server/index.js` on a long-running host with storage |
 | Quiz answers rate the card (right = good, wrong = again) | Keeps one review schedule for the website and the app | `useRateCard` in `src/lib/queries.ts` |
 | Timezone is saved at onboarding | For reminders and "today" | It is one field of the profile |
@@ -213,12 +225,13 @@ Defined in `src/lib/theme.ts` and `src/ui/index.tsx`; screens use only these.
   processing by the model provider.
 - Lecture recording: permission, consent and university rules, before any recording feature ships.
 - Google OAuth clients for Android and iOS; Apple requires "Sign in with Apple" beside Google.
-- Phone notifications, the audio server, and file storage.
+- Notifications checked on real phones (Android 13+ asks permission; iOS limits an app to 64 scheduled).
+- The audio server and file storage.
 
 ## Next
 
 1. Device testing, then store test builds (EAS, TestFlight, Play internal testing).
-2. Phone notifications for task reminders and the daily quiz.
+2. Web push for the browser build (server-side scheduler and VAPID keys), so reminders arrive with the tab closed.
 3. The audio server and storage, then recordings in Lecture Buddy.
 4. Juno proposing tasks and a weekly plan from uploaded material, each one confirmed by the student.
 5. Skill mapping from coursework ("introduced", "practiced"), then the portfolio.

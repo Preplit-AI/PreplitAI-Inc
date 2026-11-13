@@ -25,8 +25,9 @@ export const keys = {
   projects: ["projects"] as const,
 };
 
-export function useOverview() {
+export function useOverview(enabled = true) {
   return useQuery({
+    enabled,
     queryKey: keys.overview,
     queryFn: () => request<Overview>(`/semester?since=${encodeURIComponent(startOfToday())}`),
     // While Juno is reading a lecture, look again every few seconds.
@@ -54,8 +55,9 @@ export function useLecture(id: string) {
   });
 }
 
-export function useTasks(state: "open" | "done" | "all" = "open", courseId?: string) {
+export function useTasks(state: "open" | "done" | "all" = "open", courseId?: string, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: keys.tasks(state, courseId),
     queryFn: async () => (await request<{ tasks: Task[] }>(`/tasks?state=${state}${courseId ? `&courseId=${courseId}` : ""}`)).tasks,
   });

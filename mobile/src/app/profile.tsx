@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { API_ORIGIN } from "@/lib/api";
 import { useAuth, type ProfileChanges } from "@/lib/auth";
 import { EXPLAIN_LANGUAGES, languageName, useLang } from "@/lib/i18n";
+import { useNotifications } from "@/lib/notifications";
 import { color, space } from "@/lib/theme";
 import type { Profile, UiLanguage } from "@/lib/types";
 import { Button, Card, Chip, Chips, Notice, Row, Screen, Section, Segment, Sheet, T, Toggle } from "@/ui";
@@ -19,7 +20,24 @@ const QUIET_PRESETS: [number, number][] = [[22, 8], [23, 7], [0, 9]];
 export default function ProfileScreen() {
   const { t, lang, setLang, errorText } = useLang();
   const { user, profile, saveProfile, logout } = useAuth();
+  const notifications = useNotifications();
   const [languages, setLanguages] = useState(false);
+  const [tested, setTested] = useState<"sent" | "failed" | null>(null);
+
+  // Where reminders stand on this device, in one plain sentence.
+  const notifyLine =
+    notifications.permission === "unsupported" ? t.notify.unsupported
+    : notifications.blocked ? t.notify.blocked
+    : notifications.wanted && !notifications.on ? t.notify.asking
+    : !notifications.on ? t.notify.off
+    : notifications.whenClosed ? t.notify.onClosed
+    : t.notify.onOpen;
+  const toggleNotifications = (next: boolean) => {
+    setTested(null);
+    if (next) notifications.turnOn();
+    else notifications.turnOff();
+  };
+  const sendTest = async () => setTested((await notifications.sendTest()) ? "sent" : "failed");
   const [error, setError] = useState<string | null>(null);
   const [leaving, setLeaving] = useState(false);
   const p = profile as Profile;
@@ -79,7 +97,22 @@ export default function ProfileScreen() {
 
       <Section title={t.profile.notifications}>
         <Card style={{ paddingVertical: space.xs }}>
-          <Toggle label={t.profile.dailyQuiz} value={p.dailyQuiz} onChange={(dailyQuiz) => change({ dailyQuiz })} />
+          {notifications.permission === "unsupported" ? null : (
+            <Toggle label={t.notify.device} value={notifications.wanted} onChange={toggleNotifications} />
+          )}
+          <View style={{ paddingBottom: space.md, gap: space.md }}>
+            <Notice tone={notifications.blocked ? "warn" : notifications.on ? "good" : "info"} icon={notifications.on ? "bell" : "bell-off"} text={notifyLine} />
+            {notifications.blocked && notifications.canOpenSettings ? <Button small variant="secondary" icon="settings" label={t.notify.openSettings} onPress={notifications.openSettings} style={{ alignSelf: "flex-start" }} /> : null}
+            {notifications.on ? (
+              <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: space.md }}>
+                <Button small variant="secondary" icon="send" label={t.notify.test} onPress={sendTest} />
+                <T variant="small">{tested === "sent" ? t.notify.testSent : tested === "failed" ? t.notify.testFailed : t.notify.scheduled(notifications.scheduled)}</T>
+              </View>
+            ) : null}
+          </View>
+        </Card>
+        <Card style={{ paddingVertical: space.xs, marginTop: space.md }}>
+          <Toggle label={t.profile.dailyQuiz} sub={t.notify.dailyAt(notifications.dailyQuizHour)} value={p.dailyQuiz} onChange={(dailyQuiz) => change({ dailyQuiz })} />
           <View style={{ paddingBottom: space.md, gap: 8 }}>
             <T variant="strong">{t.profile.quiet}</T>
             <T variant="small">{t.profile.quietLine(p.quietFrom, p.quietUntil)}</T>
@@ -90,7 +123,6 @@ export default function ProfileScreen() {
             </Chips>
           </View>
         </Card>
-        <View style={{ marginTop: space.md }}><Notice text={t.profile.notifyNote} /></View>
       </Section>
 
       <Section title={t.profile.data}>
