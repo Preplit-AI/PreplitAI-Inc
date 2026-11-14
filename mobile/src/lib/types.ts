@@ -77,7 +77,7 @@ export type LectureSummary = {
   title: string;
   topic: string | null;
   source: "audio" | "text";
-  material: "pdf" | "text" | null;
+  material: "pdf" | "text" | "live" | null;
   status: "processing" | "ready" | "failed";
   cardCount: number;
   createdAt: string;
@@ -99,7 +99,7 @@ export type Lecture = LectureSummary & { notes: Notes | null; transcript: string
 export type ReviewCard = Card & { lectureId: string; lectureTitle: string; courseId: string; courseName: string };
 
 /** What Juno has to say on the home screen; the wording is the app's (lib/i18n). */
-export type OwlMessage =
+export type JunoMessage =
   | { kind: "first-course" | "setup" | "quiet" }
   | { kind: "processing"; title: string; courseName: string }
   | { kind: "lecture"; message: { lectureId: string; kind: "ready" | "unclear" | "failed"; lectureTitle: string; cardCount: number } }
@@ -117,7 +117,7 @@ export type Overview = {
   review: { due: number; done: number };
   latestNote: { id: string; courseName: string; title: string; topic: string | null } | null;
   processing: boolean;
-  message: OwlMessage;
+  message: JunoMessage;
 };
 
 export type TaskKind = "task" | "assignment" | "exam" | "study";
@@ -168,5 +168,6 @@ export type ChatEvent =
   | { type: "status"; tool: string }
   | { type: "delta"; text: string }
   | { type: "reset" }
+  | { type: "action"; action: { type: "task_saved" | "task_done"; task: Task } }
   | { type: "done"; conversation: { id: string }; messages: ChatMessage[] }
   | { type: "error"; code: string; message: string };

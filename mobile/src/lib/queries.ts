@@ -75,7 +75,7 @@ export function useProjects() {
 }
 
 /** After a change: every list that could show it is fetched again. */
-function useRefresh() {
+export function useRefresh() {
   const client = useQueryClient();
   return (...roots: string[]) => Promise.all(roots.map((root) => client.invalidateQueries({ queryKey: [root] })));
 }

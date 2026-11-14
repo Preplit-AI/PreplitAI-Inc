@@ -6,13 +6,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { request } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { daysFromToday, reminderIsOn, shortDate } from "@/lib/format";
+import { useCampus } from "@/lib/campus";
 import { useLang } from "@/lib/i18n";
 import { useOverview, useTasks } from "@/lib/queries";
 import { color, courseTint, font, radius, space } from "@/lib/theme";
-import type { OwlMessage, Task } from "@/lib/types";
+import type { JunoMessage, Task } from "@/lib/types";
 import { Badge, Button, Card, Failed, Icon, Loading, Row, Section, T, useLayout } from "@/ui";
 import { CourseSheet, TaskRow, TaskSheet } from "@/ui/forms";
-import { OwlSays, type OwlMood } from "@/ui/Owl";
+import { ScanSheet } from "@/ui/Scan";
+import { JunoSays, type JunoMood } from "@/ui/Juno";
 
 /*
  * Home answers five questions: what do I have today, what needs my attention,
@@ -30,6 +32,8 @@ export default function Home() {
   const tasks = useTasks("open");
   const [taskSheet, setTaskSheet] = useState<{ open: boolean; task: Task | null }>({ open: false, task: null });
   const [courseSheet, setCourseSheet] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const campus = useCampus();
   const [refreshing, setRefreshing] = useState(false);
 
   const refresh = async () => {
@@ -52,37 +56,37 @@ export default function Home() {
   const urgent = (tasks.data ?? []).filter((task) => reminderIsOn(task) || (task.dueAt !== null && daysFromToday(task.dueAt) <= 3)).slice(0, 5);
 
   /** Juno's one line for right now, and what to do about it. */
-  const owl = ((): { text: string; mood: OwlMood; action?: ReactNode } => {
-    const m: OwlMessage = data.message;
+  const owl = ((): { text: string; mood: JunoMood; action?: ReactNode } => {
+    const m: JunoMessage = data.message;
     const small = (label: string, onPress: () => void, icon?: "arrow-right" | "plus" | "play") => <Button small label={label} icon={icon} onPress={onPress} style={{ alignSelf: "flex-start" }} />;
     switch (m.kind) {
       case "first-course":
-        return { text: t.home.owl["first-course"], mood: "attentive", action: small(t.course.new, () => setCourseSheet(true), "plus") };
+        return { text: t.home.juno["first-course"], mood: "idle", action: small(t.course.new, () => setCourseSheet(true), "plus") };
       case "setup":
-        return { text: t.home.owl.setup, mood: "attentive", action: small(t.common.continue, () => router.push({ pathname: "/onboarding", params: { step: "3" } }), "arrow-right") };
+        return { text: t.home.juno.setup, mood: "idle", action: small(t.common.continue, () => router.push({ pathname: "/onboarding", params: { step: "3" } }), "arrow-right") };
       case "processing":
-        return { text: t.home.owl.processing(m.title), mood: "next" };
+        return { text: t.home.juno.processing(m.title), mood: "work" };
       case "lecture": {
         const dismiss = () => request(`/junbee/${m.message.lectureId}/dismiss`, { method: "POST" }).then(() => client.invalidateQueries({ queryKey: ["overview"] })).catch(() => {});
-        if (m.message.kind === "failed") return { text: t.home.owl.failed(m.message.lectureTitle), mood: "resting", action: small(t.common.close, dismiss) };
+        if (m.message.kind === "failed") return { text: t.home.juno.failed(m.message.lectureTitle), mood: "rest", action: small(t.common.close, dismiss) };
         return {
-          text: t.home.owl.ready(m.message.lectureTitle, m.message.cardCount),
-          mood: "noticing",
+          text: t.home.juno.ready(m.message.lectureTitle, m.message.cardCount),
+          mood: "found",
           action: small(t.common.open, () => { dismiss(); router.push({ pathname: "/lecture/[id]", params: { id: m.message.lectureId } }); }, "arrow-right"),
         };
       }
       case "class-today":
-        return { text: t.home.owl.classToday(m.courseName), mood: "attentive", action: small(t.home.addLecture, () => router.push({ pathname: "/buddy", params: { courseId: m.courseId } }), "plus") };
+        return { text: t.home.juno.classToday(m.courseName), mood: "idle", action: small(t.home.addLecture, () => router.push({ pathname: "/buddy", params: { courseId: m.courseId } }), "plus") };
       case "semester-over":
-        return { text: t.home.owl.semesterOver(m.lectures), mood: "resting" };
+        return { text: t.home.juno.semesterOver(m.lectures), mood: "rest" };
       case "exam-soon":
-        return { text: t.home.owl.examSoon(m.courseName, m.exam === "midterm" ? t.course.midterm : t.course.final, m.days), mood: "attentive", action: small(t.course.quiz, () => router.push("/quiz"), "play") };
+        return { text: t.home.juno.examSoon(m.courseName, m.exam === "midterm" ? t.course.midterm : t.course.final, m.days), mood: "idle", action: small(t.course.quiz, () => router.push("/quiz"), "play") };
       case "cards-due":
-        return { text: t.home.owl.cardsDue(m.count), mood: "attentive", action: small(t.home.play, () => router.push("/quiz"), "play") };
+        return { text: t.home.juno.cardsDue(m.count), mood: "idle", action: small(t.home.play, () => router.push("/quiz"), "play") };
       case "cards-finished":
-        return { text: t.home.owl.cardsFinished(m.count), mood: "attentive" };
+        return { text: t.home.juno.cardsFinished(m.count), mood: "idle" };
       default:
-        return { text: t.home.owl.quiet, mood: "resting" };
+        return { text: t.home.juno.quiet, mood: "rest" };
     }
   })();
 
@@ -114,6 +118,44 @@ export default function Home() {
       )}
     </Section>
   );
+
+  // Three things a student does most, one tap each.
+  const quick = (
+    <View style={{ flexDirection: "row", gap: space.sm, marginTop: space.lg }}>
+      {([
+        { icon: "mic", label: t.homeX.record, go: () => router.push("/buddy") },
+        { icon: "message-circle", label: t.homeX.tell, go: () => router.push("/juno") },
+        { icon: "image", label: t.homeX.scan, go: () => setScanning(true) },
+      ] as const).map((action) => (
+        <Pressable key={action.label} accessibilityRole="button" onPress={action.go} style={({ pressed }) => [{ flex: 1, minHeight: 84, borderRadius: radius.lg, borderWidth: 1, borderColor: color.rule, backgroundColor: color.surface, padding: space.md, justifyContent: "space-between" }, pressed && { backgroundColor: color.sunken }]}>
+          <Icon name={action.icon} size={20} color={color.ink} />
+          <T variant="small" tone={color.ink} style={{ fontFamily: font.semibold, fontSize: 13 }}>{action.label}</T>
+        </Pressable>
+      ))}
+    </View>
+  );
+
+  const coursesBlock = data.courses.length ? (
+    <Section title={t.homeX.courses} action={t.homeX.allCourses} onAction={() => router.push("/courses")}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -space.xl }} contentContainerStyle={{ paddingHorizontal: space.xl, gap: space.sm }}>
+        {data.courses.map((course, i) => (
+          <Pressable key={course.id} accessibilityRole="button" onPress={() => router.push({ pathname: "/course/[id]", params: { id: course.id } })} style={({ pressed }) => [{ width: 148, minHeight: 92, borderRadius: radius.lg, backgroundColor: courseTint(i).bg, padding: space.md, justifyContent: "space-between" }, pressed && { opacity: 0.85 }]}>
+            <Icon name="book-open" size={18} color={courseTint(i).fg} />
+            <T variant="strong" tone={courseTint(i).fg} numberOfLines={2} style={{ fontSize: 14.5, lineHeight: 19 }}>{course.name}</T>
+          </Pressable>
+        ))}
+      </ScrollView>
+    </Section>
+  ) : null;
+
+  const campusNews = campus.data?.connected ? campus.data.items.filter((item) => item.forInternational).slice(0, 2) : [];
+  const campusBlock = campusNews.length ? (
+    <Section title={t.homeX.campus} action={t.common.seeAll} onAction={() => router.push("/campus")}>
+      <Card style={{ paddingVertical: 0 }}>
+        {campusNews.map((item, i) => <Row key={item.id} icon="map-pin" title={item.title} sub={item.source} onPress={() => router.push("/campus")} last={i === campusNews.length - 1} />)}
+      </Card>
+    </Section>
+  ) : null;
 
   const reviewBlock = (
     <Section title={t.home.review}>
@@ -183,22 +225,24 @@ export default function Home() {
           </T>
           <T variant="display" numberOfLines={2}>{greeting}, {user?.name.split(" ")[0]}</T>
         </View>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.profile.title} onPress={() => router.push("/profile")} style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: color.goSoft, alignItems: "center", justifyContent: "center" }}>
-          <T variant="strong" tone={color.goInk}>{(user?.name ?? "?").trim().charAt(0).toUpperCase()}</T>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.profile.title} onPress={() => router.push("/profile")} style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: color.ink, alignItems: "center", justifyContent: "center" }}>
+          <T variant="strong" tone={color.onInk}>{(user?.name ?? "?").trim().charAt(0).toUpperCase()}</T>
         </Pressable>
       </View>
 
-      <OwlSays mood={owl.mood} action={owl.action} style={{ marginTop: space.xl }}>{owl.text}</OwlSays>
+      <JunoSays mood={owl.mood} action={owl.action} style={{ marginTop: space.xl }}>{owl.text}</JunoSays>
+      {quick}
 
       {tablet ? (
         <View style={{ flexDirection: "row", gap: space.xxl, alignItems: "flex-start" }}>
-          <View style={{ flex: 1 }}>{todayBlock}{reviewBlock}{latestBlock}</View>
-          <View style={{ flex: 1 }}>{attentionBlock}{comingBlock}</View>
+          <View style={{ flex: 1 }}>{todayBlock}{coursesBlock}{reviewBlock}{latestBlock}</View>
+          <View style={{ flex: 1 }}>{attentionBlock}{campusBlock}{comingBlock}</View>
         </View>
       ) : (
-        <>{todayBlock}{attentionBlock}{reviewBlock}{comingBlock}{latestBlock}</>
+        <>{attentionBlock}{todayBlock}{coursesBlock}{reviewBlock}{campusBlock}{comingBlock}{latestBlock}</>
       )}
 
+      <ScanSheet visible={scanning} onClose={() => setScanning(false)} />
       <TaskSheet visible={taskSheet.open} task={taskSheet.task} onClose={() => setTaskSheet({ open: false, task: null })} />
       <CourseSheet visible={courseSheet} onClose={() => setCourseSheet(false)} onSaved={(course) => router.push({ pathname: "/course/[id]", params: { id: course.id } })} />
     </ScrollView>

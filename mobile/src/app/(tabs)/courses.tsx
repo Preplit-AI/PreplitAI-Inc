@@ -9,7 +9,7 @@ import { color, courseTint, font, radius, space } from "@/lib/theme";
 import type { CourseSummary } from "@/lib/types";
 import { Badge, Button, Card, Failed, Icon, IconButton, Loading, Segment, T, useLayout } from "@/ui";
 import { CourseSheet } from "@/ui/forms";
-import { Empty } from "@/ui/Owl";
+import { Empty } from "@/ui/Juno";
 
 /* Every course this semester, as a list of workspaces or as the week's timetable. */
 
@@ -115,7 +115,7 @@ export default function Courses() {
           )}
         </>
       ) : (
-        <Empty title={t.course.noCourses} line={t.course.noCoursesLine} mood="attentive" action={<Button small icon="plus" label={t.course.new} onPress={() => setSheet(true)} />} />
+        <Empty title={t.course.noCourses} line={t.course.noCoursesLine} mood="idle" action={<Button small icon="plus" label={t.course.new} onPress={() => setSheet(true)} />} />
       )}
 
       <CourseSheet visible={sheet} onClose={() => setSheet(false)} onSaved={(course) => router.push({ pathname: "/course/[id]", params: { id: course.id } })} />

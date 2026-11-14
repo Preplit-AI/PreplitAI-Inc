@@ -7,7 +7,7 @@ import { useLecture, useRateCard, useReview } from "@/lib/queries";
 import { color, font, radius, space } from "@/lib/theme";
 import type { ReviewCard } from "@/lib/types";
 import { Button, Card, Failed, Icon, Loading, ProgressBar, Screen, T } from "@/ui";
-import { Empty, OwlFigure } from "@/ui/Owl";
+import { Empty, JunoFigure } from "@/ui/Juno";
 
 /*
  * The quick quiz: a few questions from the student's own lectures, one at a
@@ -48,7 +48,7 @@ export default function Quiz() {
 
   if (loading || (!questions && !failed)) return <Screen back title={t.quiz.title}><Loading /></Screen>;
   if (failed || !questions) return <Screen back title={t.quiz.title}><Failed text={t.errors.Network} retryLabel={t.common.retry} onRetry={() => (params.lectureId ? lecture.refetch() : review.refetch())} /></Screen>;
-  if (!questions.length) return <Screen back title={t.quiz.title}><Empty title={t.quiz.empty} line={t.quiz.emptyLine} mood="resting" /></Screen>;
+  if (!questions.length) return <Screen back title={t.quiz.title}><Empty title={t.quiz.empty} line={t.quiz.emptyLine} mood="rest" /></Screen>;
 
   const leave = () => (router.canGoBack() ? router.back() : router.replace("/"));
 
@@ -59,7 +59,7 @@ export default function Quiz() {
     return (
       <Screen footer={<Button label={t.common.done} onPress={leave} />}>
         <View style={{ alignItems: "center", gap: space.sm, marginTop: space.xl }}>
-          <OwlFigure size={150} mood={right === questions.length ? "attentive" : "noticing"} />
+          <JunoFigure size={150} mood={right === questions.length ? "idle" : "found"} />
           <T variant="display" style={{ textAlign: "center" }}>{t.quiz.doneTitle}</T>
           <T variant="heading" tone={color.inkMuted}>{t.quiz.score(right, questions.length)}</T>
           <T variant="small">{t.quiz.estimate}</T>

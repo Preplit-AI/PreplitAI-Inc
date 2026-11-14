@@ -75,7 +75,7 @@ export async function showNow(note: { title: string; body: string; url: string }
  * Replaces everything scheduled with this plan: the task reminders, and the
  * daily quiz reminder if there is one. @returns how many were scheduled.
  */
-export async function replaceSchedule(planned: Planned[], daily: Daily | null): Promise<number> {
+export async function replaceSchedule(planned: Planned[], daily: Daily | null, nudges: Daily[] = []): Promise<number> {
   await prepare();
   await Notifications.cancelAllScheduledNotificationsAsync();
   let count = 0;
@@ -83,6 +83,14 @@ export async function replaceSchedule(planned: Planned[], daily: Daily | null): 
     await Notifications.scheduleNotificationAsync({
       content: { title: note.title, body: note.body, data: { url: note.url } },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: note.at, channelId: CHANNEL },
+    });
+    count += 1;
+  }
+  // A question or two from Juno at other hours of the day, each its own repeating notification.
+  for (const nudge of nudges) {
+    await Notifications.scheduleNotificationAsync({
+      content: { title: nudge.title, body: nudge.body, data: { url: nudge.url } },
+      trigger: { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour: nudge.hour, minute: 30, channelId: CHANNEL },
     });
     count += 1;
   }

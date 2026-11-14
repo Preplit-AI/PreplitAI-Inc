@@ -46,12 +46,12 @@ export function useLayout() {
 }
 
 // ── Text ─────────────────────────────────────────────────────────────────────
-// Headings are Lexend; everything a student operates is Schibsted Grotesk.
+// One family, Schibsted Grotesk: bold for headings, regular for reading.
 const TEXT = themed(() => StyleSheet.create({
-  display: { fontFamily: font.display, fontSize: 28, lineHeight: 34, letterSpacing: -0.7, color: color.ink },
-  title: { fontFamily: font.display, fontSize: 21, lineHeight: 27, letterSpacing: -0.4, color: color.ink },
+  display: { fontFamily: font.bold, fontSize: 30, lineHeight: 36, letterSpacing: -0.8, color: color.ink },
+  title: { fontFamily: font.bold, fontSize: 22, lineHeight: 28, letterSpacing: -0.4, color: color.ink },
   /** Juno speaking in the first person. */
-  voice: { fontFamily: font.voice, fontSize: 17, lineHeight: 25, letterSpacing: -0.2, color: color.ink },
+  voice: { fontFamily: font.medium, fontSize: 16.5, lineHeight: 24, color: color.ink },
   heading: { fontFamily: font.semibold, fontSize: 17, lineHeight: 23, color: color.ink },
   body: { fontFamily: font.regular, fontSize: 15.5, lineHeight: 23, color: color.ink },
   strong: { fontFamily: font.semibold, fontSize: 15.5, lineHeight: 23, color: color.ink },
@@ -398,7 +398,7 @@ export function ProgressBar({ value, tone }: { value: number; tone?: string }) {
 
 const sheet = themed(() => StyleSheet.create({
   header: { flexDirection: "row", alignItems: "center", gap: space.sm, minHeight: 52 },
-  button: { minHeight: 50, borderRadius: radius.md, paddingHorizontal: space.xl, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space.sm },
+  button: { minHeight: 52, borderRadius: radius.pill, paddingHorizontal: space.xl, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space.sm },
   iconButton: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center" },
   card: { backgroundColor: color.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: color.rule, padding: space.lg },
   row: { flexDirection: "row", alignItems: "center", gap: space.md, paddingVertical: space.md, minHeight: 60 },
@@ -412,7 +412,7 @@ const sheet = themed(() => StyleSheet.create({
   },
   chip: { minHeight: 44, paddingHorizontal: space.lg, borderRadius: radius.pill, borderWidth: 1, borderColor: color.ruleStrong, backgroundColor: color.surface, flexDirection: "row", alignItems: "center", gap: 6 },
   segment: { flexDirection: "row", backgroundColor: color.sunken, borderRadius: radius.pill, padding: 3 },
-  segmentItem: { flex: 1, minHeight: 40, borderRadius: radius.pill, alignItems: "center", justifyContent: "center", paddingHorizontal: space.md },
+  segmentItem: { flexGrow: 1, flexShrink: 1, flexBasis: "auto", minHeight: 40, borderRadius: radius.pill, alignItems: "center", justifyContent: "center", paddingHorizontal: space.md },
   segmentOn: { backgroundColor: color.surface, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 4, shadowOffset: { width: 0, height: 1 }, elevation: 1 },
   toggle: { width: 48, height: 28, borderRadius: 14, backgroundColor: color.ruleStrong, padding: 4 },
   toggleKnob: { width: 20, height: 20, borderRadius: 10, backgroundColor: color.onInk },

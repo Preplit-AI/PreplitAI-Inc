@@ -2,6 +2,7 @@
 const { streamTurn } = require('./llmService');
 const { TOOL_DEFS, KNOWLEDGE_TOOLS, MAX_EMPTY_SEARCHES, createSources, runTool } = require('./chatTools');
 const { LANGUAGE_NAMES } = require('./profileStore');
+const { COMPANION_TOOL_DEFS, COMPANION_MODE } = require('./companionTools');
 const { CHAT_MODEL } = require('../config/constants');
 
 /**
@@ -107,7 +108,7 @@ function systemPrompt({ courseName, viewing, profile = null, mode = null }) {
   const open = viewing
     ? `\n학생은 지금 '${viewing.courseName}' 과목의 '${viewing.title}' 노트를 보고 있다 (lecture_id: ${viewing.id}). "이 강의", "여기"는 이 강의를 뜻한다.`
     : '';
-  return `${SYSTEM_PROMPT}\n\n오늘 날짜: ${today} (한국 시간)\n${scope}${open}${profileLines(profile)}${mode === 'career' ? CAREER_MODE : ''}${languageLines(profile)}`;
+  return `${SYSTEM_PROMPT}\n\n오늘 날짜: ${today} (한국 시간)\n${scope}${open}${profileLines(profile)}${mode === 'career' ? CAREER_MODE : mode === 'companion' ? COMPANION_MODE : ''}${languageLines(profile)}`;
 }
 
 const CITATION = /\[S(\d+)\]/g;
@@ -171,11 +172,13 @@ async function* runChat({ userId, courseId = null, courseName = null, viewing = 
     { role: 'user', content: question },
   ];
   let tokens = 0;
-  const context = { userId, courseId, sources, emptySearches: 0 };
+  const companion = mode === 'companion';
+  const context = { userId, courseId, sources, emptySearches: 0, companion, actions: [] };
+  const allTools = companion ? [...TOOL_DEFS, ...COMPANION_TOOL_DEFS] : TOOL_DEFS;
 
   for (let round = 0; round < MAX_ROUNDS; round += 1) {
     const moreAllowed = round < MAX_ROUNDS - 1 && context.emptySearches < MAX_EMPTY_SEARCHES;
-    const tools = moreAllowed ? TOOL_DEFS : undefined;
+    const tools = moreAllowed ? allTools : undefined;
     let text = '';
     let calls = [];
 
@@ -220,6 +223,8 @@ async function* runChat({ userId, courseId = null, courseName = null, viewing = 
         tool_call_id: call.id || `call_${round}_${index}`,
         content: await runTool(call, context),
       });
+      // What the tool changed for the student (a task saved, a task done), told to the app at once.
+      for (const action of context.actions.splice(0)) yield { type: 'action', action };
     }
   }
 

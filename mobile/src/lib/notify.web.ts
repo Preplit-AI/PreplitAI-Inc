@@ -101,7 +101,8 @@ function check() {
   }
 }
 
-export async function replaceSchedule(planned: Planned[], daily: Daily | null): Promise<number> {
+// In a browser only the evening reminder is kept: nudges through the day need the installed app.
+export async function replaceSchedule(planned: Planned[], daily: Daily | null, _nudges: Daily[] = []): Promise<number> {
   plan = planned;
   everyDay = daily;
   if (timer) clearInterval(timer);

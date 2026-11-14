@@ -6,7 +6,7 @@ import { useAuth } from "./auth";
 import { useLang } from "./i18n";
 import * as notify from "./notify";
 import { useOverview, useTasks } from "./queries";
-import { dailyQuizHour, planReminders } from "./reminders";
+import { dailyQuizHour, isQuiet, planReminders } from "./reminders";
 
 /*
  * Reminders as notifications on this device.
@@ -93,9 +93,13 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
     const words = { today: t.home.dueToday, tomorrow: t.home.dueTomorrow, inDays: t.home.dueIn };
     const planned = planReminders(tasks.data, { from: quietFrom, until: quietUntil }, new Date(), words, "/tasks");
     const daily = wantsQuiz && hasCards ? { hour: quizHour, title: t.notify.quizTitle, body: t.notify.quizBody, url: "/quiz" } : null;
+    // Juno drops in with a question late morning and mid-afternoon, never inside quiet hours.
+    const nudges = wantsQuiz && hasCards
+      ? [11, 15].filter((hour) => !isQuiet(hour, { from: quietFrom, until: quietUntil })).map((hour, i) => ({ hour, title: t.homeX.nudgeTitle, body: t.homeX.nudges[i % t.homeX.nudges.length], url: "/quiz" }))
+      : [];
     let cancelled = false;
     notify
-      .replaceSchedule(planned, daily)
+      .replaceSchedule(planned, daily, nudges)
       .then((count) => {
         if (!cancelled) setScheduled(count);
       })

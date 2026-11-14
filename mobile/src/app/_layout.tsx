@@ -4,7 +4,6 @@ import { Stack, router, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Lexend_500Medium, Lexend_600SemiBold } from "@expo-google-fonts/lexend";
 import { useFonts, SchibstedGrotesk_400Regular, SchibstedGrotesk_500Medium, SchibstedGrotesk_600SemiBold, SchibstedGrotesk_700Bold } from "@expo-google-fonts/schibsted-grotesk";
 import { AppearanceProvider, useAppearance } from "@/lib/appearance";
 import { AuthProvider, useAuth } from "@/lib/auth";
@@ -13,7 +12,7 @@ import { LangProvider, useLang } from "@/lib/i18n";
 import { NotificationsProvider } from "@/lib/notifications";
 import { color, space } from "@/lib/theme";
 import { Button, Failed, Loading, T } from "@/ui";
-import { OwlFigure } from "@/ui/Owl";
+import { JunoFigure } from "@/ui/Juno";
 
 /*
  * The root of the app: fonts, the data cache, the language, the signed-in
@@ -87,7 +86,7 @@ function Screens() {
         <Stack.Screen name="tasks" />
         <Stack.Screen name="profile" />
         <Stack.Screen name="quiz" options={{ animation: "slide_from_bottom" }} />
-        <Stack.Screen name="owl" options={{ presentation: "modal", animation: "slide_from_bottom" }} />
+        <Stack.Screen name="material" />
       </Stack.Protected>
     </Stack>
   );
@@ -98,8 +97,8 @@ function EarlyAccess() {
   const { t } = useLang();
   return (
     <View style={{ flex: 1, backgroundColor: color.ground, alignItems: "center", justifyContent: "center", padding: space.xxl, gap: space.md }}>
-      <OwlFigure size={170} mood="resting" />
-      <T variant="label" tone={color.lampInk}>{t.early.badge}</T>
+      <JunoFigure size={140} mood="rest" />
+      <T variant="label" tone={color.brand}>{t.early.badge}</T>
       <T variant="title" style={{ textAlign: "center" }}>{t.early.title}</T>
       <T style={{ textAlign: "center", maxWidth: 420, color: color.inkMuted }}>{t.early.body}</T>
       <Button small variant="secondary" label={t.early.button} onPress={() => window.location.assign("/")} style={{ marginTop: space.md }} />
@@ -127,7 +126,7 @@ function Themed({ allowed }: { allowed: boolean }) {
 }
 
 export default function RootLayout() {
-  const [fontsLoaded, fontsFailed] = useFonts({ SchibstedGrotesk_400Regular, SchibstedGrotesk_500Medium, SchibstedGrotesk_600SemiBold, SchibstedGrotesk_700Bold, Lexend_500Medium, Lexend_600SemiBold });
+  const [fontsLoaded, fontsFailed] = useFonts({ SchibstedGrotesk_400Regular, SchibstedGrotesk_500Medium, SchibstedGrotesk_600SemiBold, SchibstedGrotesk_700Bold });
   const [client] = useState(
     () =>
       new QueryClient({

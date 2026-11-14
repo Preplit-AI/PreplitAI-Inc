@@ -8,13 +8,13 @@ import { color, courseTint, space } from "@/lib/theme";
 import type { Task } from "@/lib/types";
 import { Badge, Button, Card, Failed, Icon, IconButton, Loading, Notice, Row, Screen, Section, Segment, T, useLayout } from "@/ui";
 import { CourseSheet, TaskRow, TaskSheet } from "@/ui/forms";
-import { Empty } from "@/ui/Owl";
+import { Empty } from "@/ui/Juno";
 import { Confirm, LectureRow } from "@/ui/parts";
 
 /*
  * One course's workspace: its timetable and exams, every lecture Juno has
  * organised for it, its tasks, and the three things to do with them: add a
- * lecture, ask Owl, take a quiz. Everything here is this course's and no other's.
+ * lecture, ask Juno, take a quiz. Everything here is this course's and no other's.
  */
 
 export default function CourseWorkspace() {
@@ -47,7 +47,7 @@ export default function CourseWorkspace() {
           {lectures.data.map((lecture, i) => <LectureRow key={lecture.id} lecture={lecture} last={i === lectures.data.length - 1} />)}
         </Card>
       ) : (
-        <Empty title={t.course.noMaterials} line={t.course.noMaterialsLine} mood="attentive" />
+        <Empty title={t.course.noMaterials} line={t.course.noMaterialsLine} mood="idle" />
       )}
     </>
   );
@@ -98,7 +98,7 @@ export default function CourseWorkspace() {
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.sm, marginTop: space.xl }}>
         <Button small icon="plus" label={t.course.addMaterial} onPress={() => router.push({ pathname: "/buddy", params: { courseId: course.id } })} />
-        <Button small variant="secondary" icon="message-circle" label={t.course.askOwl} onPress={() => router.push({ pathname: "/owl", params: { courseId: course.id } })} />
+        <Button small variant="secondary" icon="message-circle" label={t.course.askJuno} onPress={() => router.push({ pathname: "/juno", params: { courseId: course.id } })} />
         {course.totalCards ? <Button small variant="secondary" icon="zap" label={t.course.quiz} onPress={() => router.push({ pathname: "/quiz", params: { courseId: course.id } })} /> : null}
       </View>
       {error ? <View style={{ marginTop: space.md }}><Notice tone="error" text={error} /></View> : null}

@@ -142,4 +142,40 @@ async function transcribeFile(inputPath, { prompt } = {}) {
   }
 }
 
-module.exports = { transcribeFile, classify, mergeRanges, UNCLEAR };
+/**
+ * One short piece of a class that is being listened to live. It goes to Whisper
+ * as it is: a piece of a minute or less needs no ffmpeg, which is what lets a
+ * serverless function do this.
+ *
+ * @param {string} filePath the piece, with its extension (deleted by the caller)
+ * @param {{ prompt?: string, offsetSeconds?: number, fallbackSeconds?: number }} options
+ *   offsetSeconds: how far into the class this piece starts
+ * @returns {Promise<{ lines: string[], seconds: number, speechSegments: number }>}
+ */
+async function transcribeChunk(filePath, { prompt, offsetSeconds = 0, fallbackSeconds = 0 } = {}) {
+  const groq = getClient();
+  const result = await groq.audio.transcriptions.create({
+    file: fs.createReadStream(filePath),
+    model: TRANSCRIBE_MODEL,
+    response_format: 'verbose_json',
+    temperature: 0,
+    ...(prompt ? { prompt: prompt.slice(0, 200) } : {}),
+  });
+  const lines = [];
+  let speechSegments = 0;
+  for (const segment of result.segments || []) {
+    const kind = classify(segment);
+    if (kind === 'silence') continue;
+    const at = '[' + stamp(offsetSeconds + segment.start) + '] ';
+    if (kind === 'unclear') {
+      if (lines[lines.length - 1]?.endsWith(UNCLEAR)) continue;
+      lines.push(at + UNCLEAR);
+    } else {
+      speechSegments += 1;
+      lines.push(at + segment.text.trim());
+    }
+  }
+  return { lines, seconds: Number(result.duration) || fallbackSeconds, speechSegments };
+}
+
+module.exports = { transcribeFile, transcribeChunk, classify, mergeRanges, stamp, UNCLEAR };

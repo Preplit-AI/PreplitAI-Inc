@@ -6,13 +6,13 @@ import { useAppearance, type Appearance } from "@/lib/appearance";
 import { useAuth, type ProfileChanges } from "@/lib/auth";
 import { EXPLAIN_LANGUAGES, languageName, useLang } from "@/lib/i18n";
 import { useNotifications } from "@/lib/notifications";
-import { color, radius, space } from "@/lib/theme";
+import { color, space } from "@/lib/theme";
 import type { Profile, UiLanguage } from "@/lib/types";
 import { Button, Card, Chip, Chips, Notice, Row, Screen, Section, Segment, Sheet, T, Toggle } from "@/ui";
-import { Owl, OwlFigure } from "@/ui/Owl";
+import { Juno } from "@/ui/Juno";
 
 /*
- * The profile: who the student is to Owl, and the settings that are theirs to
+ * The profile: who the student is to Juno, and the settings that are theirs to
  * change. Everything Juno knows about them is shown here and can be edited.
  */
 
@@ -55,15 +55,15 @@ export default function ProfileScreen() {
     router.replace("/welcome");
     logout().catch(() => {});
   };
-  const edit = (step: number) => router.push({ pathname: "/onboarding", params: { step: String(step) } });
+  const edit = (step: string) => router.push({ pathname: "/onboarding", params: { step } });
   const studying = [p.department, p.degreeLevel ? t.onboarding.degrees[p.degreeLevel] : null, p.academicYear ? `${p.academicYear}` : null].filter(Boolean).join(" · ");
   const privacy = () => Linking.openURL(`${API_ORIGIN || (Platform.OS === "web" ? window.location.origin : "")}/privacy`);
 
   return (
     <Screen back title={t.profile.title}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: space.lg, marginTop: space.md }}>
-        <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: color.goSoft, alignItems: "center", justifyContent: "center" }}>
-          <T variant="title" tone={color.goInk}>{(user?.name ?? "?").trim().charAt(0).toUpperCase()}</T>
+        <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: color.ink, alignItems: "center", justifyContent: "center" }}>
+          <T variant="title" tone={color.onInk}>{(user?.name ?? "?").trim().charAt(0).toUpperCase()}</T>
         </View>
         <View style={{ flex: 1 }}>
           <T variant="title">{user?.name}</T>
@@ -72,28 +72,17 @@ export default function ProfileScreen() {
       </View>
       {error ? <View style={{ marginTop: space.md }}><Notice tone="error" text={error} /></View> : null}
 
-      {/* Juno lives here. Its stage is a record of something real; starting a profile is the first. */}
-      <View style={{ marginTop: space.xl, flexDirection: "row", alignItems: "flex-end", gap: space.lg, backgroundColor: color.panel, borderRadius: radius.xl, paddingHorizontal: space.xl, paddingTop: space.lg }}>
-        <OwlFigure size={150} stage={1} />
-        <View style={{ flex: 1, paddingBottom: space.xl, gap: 4 }}>
-          <T variant="label" tone={color.lamp}>{t.profile.owlStage}</T>
-          <T variant="title" tone={color.onNavy}>{t.profile.owlTitle}</T>
-          <T variant="small" tone={color.onNavySoft}>{t.profile.owlLine}</T>
-        </View>
-      </View>
-
       <Section title={t.profile.study}>
         <Card style={{ paddingVertical: 0 }}>
-          <Row icon="map-pin" title={p.university ?? t.onboarding.done.notSaid} sub={p.campus} onPress={() => edit(1)} />
-          <Row icon="book" title={t.onboarding.done.studying} sub={studying || t.onboarding.done.notSaid} onPress={() => edit(2)} />
-          <Row icon="target" title={t.onboarding.done.goal} sub={[p.targetRole, ...p.careerInterests].filter(Boolean).join(", ") || t.onboarding.done.notSaid} onPress={() => edit(5)} last />
+          <Row icon="map-pin" title={p.university ?? t.onboarding.done.notSaid} sub={p.campus} onPress={() => edit("university")} />
+          <Row icon="book" title={t.onboarding.done.studying} sub={studying || t.onboarding.done.notSaid} onPress={() => edit("major")} last />
         </Card>
       </Section>
 
       <Section title={t.profile.languages}>
         <Card style={{ gap: space.md }}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: space.md }}>
-            <Owl size={40} mood="attentive" />
+            <Juno size={40} mood="idle" />
             <View style={{ flex: 1 }}>
               <T variant="small">{t.profile.explainLanguage}</T>
               <T variant="heading">{languageName(p.explainLanguage) ?? t.onboarding.done.notSaid}</T>

@@ -111,7 +111,7 @@ router.post('/', chatLimit, async (req, res, next) => {
     const history = conversation ? await recentHistory(userId, conversation.id) : [];
     // What the student told Juno at onboarding: who they are and the language to explain in.
     const profile = await getProfile(userId);
-    const mode = req.body.mode === 'career' ? 'career' : null;
+    const mode = req.body.mode === 'career' ? 'career' : req.body.mode === 'companion' ? 'companion' : null;
 
     const abort = new AbortController();
     res.on('close', () => {
@@ -148,6 +148,7 @@ router.post('/', chatLimit, async (req, res, next) => {
         else if (event.type === 'status') send('status', { tool: event.tool });
         else if (event.type === 'delta') send('delta', { text: event.text });
         else if (event.type === 'reset') send('reset', {});
+        else if (event.type === 'action') send('action', event.action);
       }
       if (finished && !abort.signal.aborted) {
         const saved = await saveExchange(userId, {

@@ -8,7 +8,7 @@ import { useProjects, useSaveProject } from "@/lib/queries";
 import { color, space } from "@/lib/theme";
 import type { Project, Skill } from "@/lib/types";
 import { Badge, Button, Card, Chip, Chips, Failed, Field, Icon, Loading, Notice, ProgressBar, Row, Section, Sheet, T, useLayout } from "@/ui";
-import { Empty, OwlSays } from "@/ui/Owl";
+import { Empty, JunoSays } from "@/ui/Juno";
 
 /*
  * Career: where the student is heading, the skills they have evidence for, and
@@ -136,7 +136,7 @@ export default function Career() {
   const data = projects.data;
   const goal = [profile?.targetRole, ...(profile?.careerInterests ?? [])].filter(Boolean) as string[];
   const editGoals = () => router.push({ pathname: "/onboarding", params: { step: "5" } });
-  const askIdea = () => router.push({ pathname: "/owl", params: { mode: "career", q: t.career.ideaQuestion } });
+  const askIdea = () => router.push({ pathname: "/juno", params: { mode: "career", q: t.career.ideaQuestion } });
 
   const goalBlock = (
     <Section title={t.career.goal} action={goal.length ? t.common.edit : undefined} onAction={editGoals} style={{ marginTop: space.xl }}>
@@ -146,7 +146,7 @@ export default function Career() {
           {profile?.careerInterests.length ? <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>{profile.careerInterests.map((i) => <Badge key={i} label={i} bg={color.sunken} fg={color.inkSoft} />)}</View> : null}
         </Card>
       ) : (
-        <OwlSays mood="attentive" action={<Button small icon="target" label={t.career.setGoal} onPress={editGoals} style={{ alignSelf: "flex-start" }} />}>{t.career.noGoal}</OwlSays>
+        <JunoSays mood="idle" action={<Button small icon="target" label={t.career.setGoal} onPress={editGoals} style={{ alignSelf: "flex-start" }} />}>{t.career.noGoal}</JunoSays>
       )}
     </Section>
   );
@@ -169,7 +169,7 @@ export default function Career() {
   const projectsBlock = (
     <Section title={t.career.projects} action={t.career.newProject} onAction={() => setSheet(true)}>
       <View style={{ gap: space.md }}>
-        {data.projects.length ? data.projects.map((project) => <ProjectCard key={project.id} project={project} />) : <Empty title={t.career.noProjects} line={t.career.noProjectsLine} mood="noticing" action={<Button small icon="plus" label={t.career.newProject} onPress={() => setSheet(true)} />} />}
+        {data.projects.length ? data.projects.map((project) => <ProjectCard key={project.id} project={project} />) : <Empty title={t.career.noProjects} line={t.career.noProjectsLine} mood="found" action={<Button small icon="plus" label={t.career.newProject} onPress={() => setSheet(true)} />} />}
         <Button variant="secondary" icon="message-circle" label={t.career.askIdea} onPress={askIdea} />
       </View>
     </Section>

@@ -96,6 +96,9 @@ app.use('/api/push', pushRoutes);
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/projects', require('./routes/projects'));
+app.use('/api/listen', require('./routes/listen'));
+app.use('/api/campus', require('./routes/campus'));
+app.use('/api/community', require('./routes/community'));
 
 app.use('/api', (req, res) => {
   res.status(404).json({ success: false, error: 'NotFound', message: '없는 주소예요.' });

@@ -8,8 +8,8 @@ import { useDeleteLecture, useLecture } from "@/lib/queries";
 import { color, font, radius, space } from "@/lib/theme";
 import type { Lecture } from "@/lib/types";
 import { Badge, Button, Card, Failed, Icon, IconButton, Loading, Notice, Section, T, useLayout } from "@/ui";
-import { OwlSays } from "@/ui/Owl";
-import { OwlChat } from "@/ui/OwlChat";
+import { JunoSays } from "@/ui/Juno";
+import { JunoChat } from "@/ui/JunoChat";
 import { Confirm } from "@/ui/parts";
 
 /*
@@ -121,7 +121,7 @@ export default function LectureScreen() {
     body = (
       <View style={{ padding: space.xl, maxWidth: 640, width: "100%", alignSelf: "center" }}>
         <T variant="title" style={{ marginBottom: space.lg }}>{lecture.data.title}</T>
-        <OwlSays mood="next">{t.lecture.processing}</OwlSays>
+        <JunoSays mood="work">{t.lecture.processing}</JunoSays>
       </View>
     );
   } else {
@@ -134,7 +134,7 @@ export default function LectureScreen() {
           <Notes lecture={data} />
         </ScrollView>
         <View style={{ flex: 1, borderLeftWidth: 1, borderLeftColor: color.rule, backgroundColor: color.surface }}>
-          <OwlChat courseId={data.courseId} lectureId={data.id} embedded />
+          <JunoChat courseId={data.courseId} lectureId={data.id} embedded />
         </View>
       </View>
     ) : (
@@ -153,7 +153,7 @@ export default function LectureScreen() {
       {body}
       {ready && !tablet ? (
         <View style={{ position: "absolute", left: space.xl, right: space.xl, bottom: Math.max(insets.bottom, space.lg) }}>
-          <Button icon="message-circle" label={t.lecture.ask} onPress={() => router.push({ pathname: "/owl", params: { lectureId: id, courseId: lecture.data!.courseId } })} style={{ shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 6 }} />
+          <Button icon="message-circle" label={t.lecture.ask} onPress={() => router.push({ pathname: "/juno", params: { lectureId: id, courseId: lecture.data!.courseId } })} style={{ shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 6 }} />
         </View>
       ) : null}
       <Confirm

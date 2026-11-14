@@ -4,6 +4,10 @@ const db = require('../db/database');
 const { authMiddleware } = require('../middleware/auth');
 const { getCourse } = require('../services/courseStore');
 const { isUuid, fail, cleanText } = require('../utils/http');
+const multer = require('multer');
+const { limit } = require('../middleware/rateLimit');
+const { listCourses } = require('../services/courseStore');
+const { readDeadlines } = require('../services/deadlineReader');
 
 /**
  * Tasks and deadlines, always scoped to one student. A task may belong to a
@@ -14,6 +18,39 @@ const router = express.Router();
 router.use(authMiddleware);
 
 const KINDS = ['task', 'assignment', 'exam', 'study'];
+
+// ── POST /api/tasks/from-image ───────────────────────────────────────────────
+// A screenshot of the student's LMS (or a photo of a syllabus) in; the deadlines
+// that can be seen in it out. Nothing is saved: the app shows the list and the
+// student chooses which to keep. The picture is read in memory and not stored.
+const picture = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 4 * 1024 * 1024, files: 1, fields: 2 },
+  fileFilter: (req, file, cb) => cb(null, file.fieldname === 'image' && /^image\/(png|jpeg|webp)$/.test(file.mimetype)),
+});
+const scanLimit = limit('scan', (req) => req.userId || req.ip, { points: 20, seconds: 60 * 60 });
+
+router.post('/from-image', scanLimit, (req, res, next) => {
+  picture.single('image')(req, res, (err) => {
+    if (err) return fail(res, err.code === 'LIMIT_FILE_SIZE' ? 413 : 400, err.code === 'LIMIT_FILE_SIZE' ? 'FileTooLarge' : 'BadUpload', '사진을 받지 못했어요. 4MB 이하의 사진을 올려 주세요.');
+    next();
+  });
+}, async (req, res, next) => {
+  try {
+    if (!req.file) return fail(res, 415, 'UnsupportedFile', 'PNG, JPG, WebP 사진만 읽을 수 있어요.');
+    const courses = await listCourses(req.userId);
+    let items;
+    try {
+      items = await readDeadlines(req.file.buffer, req.file.mimetype, { courses });
+    } catch (err) {
+      console.warn('[tasks] picture not read:', err.message);
+      return fail(res, err.code === 'LLM_NOT_CONFIGURED' ? 503 : 422, 'UnreadableImage', '이 사진에서 마감을 읽지 못했어요.');
+    }
+    res.json({ success: true, items });
+  } catch (err) {
+    next(err);
+  }
+});
 const MAX_OPEN = 300;
 
 const COLUMNS = `t.id, t.course_id, c.name AS course_name, t.title, t.notes, t.kind, t.due_at, t.priority,

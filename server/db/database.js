@@ -292,6 +292,85 @@ const SCHEMA = [
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS projects_user_idx ON projects (user_id, created_at DESC)`,
+
+  // A class being listened to live. Its transcript grows a piece at a time; the
+  // audio itself is never stored. The row is deleted when the class is saved as
+  // a lecture or discarded.
+  `CREATE TABLE IF NOT EXISTS listen_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+    transcript TEXT NOT NULL DEFAULT '',
+    seconds REAL NOT NULL DEFAULT 0,
+    chunk_count INT NOT NULL DEFAULT 0,
+    started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    last_chunk_at TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS listen_sessions_user_idx ON listen_sessions (user_id)`,
+
+  // A notice from a university's own public board, with its title in English
+  // and what kind of thing it is. `described` says the model has had its turn.
+  `CREATE TABLE IF NOT EXISTS campus_items (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    campus VARCHAR(24) NOT NULL,
+    source VARCHAR(32) NOT NULL,
+    article VARCHAR(24) NOT NULL,
+    title TEXT NOT NULL,
+    title_en TEXT,
+    kind VARCHAR(16) NOT NULL DEFAULT 'general',
+    intl BOOLEAN NOT NULL DEFAULT false,
+    described BOOLEAN NOT NULL DEFAULT false,
+    category VARCHAR(60),
+    url TEXT NOT NULL,
+    posted_on DATE,
+    pinned BOOLEAN NOT NULL DEFAULT false,
+    first_seen TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (source, article)
+  )`,
+  `CREATE INDEX IF NOT EXISTS campus_items_idx ON campus_items (campus, posted_on DESC)`,
+  `CREATE TABLE IF NOT EXISTS campus_fetches (
+    campus VARCHAR(24) PRIMARY KEY,
+    fetched_at TIMESTAMPTZ NOT NULL
+  )`,
+
+  // The community: one room per university. A post may carry one picture, kept
+  // beside it so a list of posts never loads the bytes.
+  `CREATE TABLE IF NOT EXISTS community_posts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    room VARCHAR(120) NOT NULL,
+    kind VARCHAR(12) NOT NULL DEFAULT 'post' CHECK (kind IN ('post', 'question')),
+    body VARCHAR(1500) NOT NULL DEFAULT '',
+    has_image BOOLEAN NOT NULL DEFAULT false,
+    hidden_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS community_posts_room_idx ON community_posts (room, created_at DESC)`,
+  `CREATE TABLE IF NOT EXISTS community_images (
+    post_id UUID PRIMARY KEY REFERENCES community_posts(id) ON DELETE CASCADE,
+    bytes BYTEA NOT NULL,
+    type VARCHAR(20) NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS community_comments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    post_id UUID NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    body VARCHAR(800) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS community_comments_post_idx ON community_comments (post_id, created_at)`,
+  `CREATE TABLE IF NOT EXISTS community_likes (
+    post_id UUID NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (post_id, user_id)
+  )`,
+  `CREATE TABLE IF NOT EXISTS community_reports (
+    post_id UUID NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    reason VARCHAR(200),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (post_id, user_id)
+  )`,
   `CREATE TABLE IF NOT EXISTS project_milestones (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,

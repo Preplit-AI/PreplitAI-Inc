@@ -72,6 +72,8 @@ module.exports = {
   MAX_CHAT_MESSAGE_CHARS: 4000,
 
   TRANSCRIBE_MODEL: process.env.TRANSCRIBE_MODEL || 'whisper-large-v3-turbo',
+  // Reads pictures: a screenshot of the student's LMS becomes a list of deadlines.
+  VISION_MODEL: process.env.VISION_MODEL || 'qwen/qwen3.8-27b',
   NOTES_MODEL: process.env.NOTES_MODEL || 'openai/gpt-oss-120b',
   CHAT_MODEL: process.env.CHAT_MODEL || 'openai/gpt-oss-120b',
   /** How much transcript goes into one notes request. About 4,500 tokens, which leaves room for the answer on an 8,000-a-minute plan. */

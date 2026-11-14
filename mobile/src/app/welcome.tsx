@@ -2,9 +2,9 @@ import { Pressable, View } from "react-native";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useLang } from "@/lib/i18n";
-import { color, radius, scheme, space } from "@/lib/theme";
+import { color, radius, space } from "@/lib/theme";
 import { Button, Icon, Screen, T, useLayout } from "@/ui";
-import { OwlFigure } from "@/ui/Owl";
+import { JunoFigure } from "@/ui/Juno";
 
 /** The first screen a new student sees: Juno says who he is, and there are two ways forward. */
 export default function Welcome() {
@@ -12,8 +12,8 @@ export default function Welcome() {
   const { tablet } = useLayout();
 
   const owl = (
-    <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: color.goSoft, borderRadius: radius.xl, paddingTop: tablet ? 72 : space.xxl, paddingBottom: tablet ? 56 : space.lg, flex: tablet ? 1 : undefined }}>
-      <OwlFigure size={tablet ? 300 : 220} mood="attentive" />
+    <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: color.lampSoft, borderRadius: radius.xl, paddingVertical: tablet ? 72 : space.xxl, flex: tablet ? 1 : undefined }}>
+      <JunoFigure size={tablet ? 260 : 190} mood="happy" />
     </View>
   );
 
@@ -46,8 +46,8 @@ export default function Welcome() {
     >
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: space.lg }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
-          <Image source={scheme() === "dark" ? require("../../assets/mark-on-navy.svg") : require("../../assets/mark.svg")} style={{ width: 38, height: 38 }} contentFit="contain" />
-          <T variant="title" style={{ fontSize: 21 }}>Campus<T variant="title" tone={color.goInk} style={{ fontSize: 21 }}>Go</T></T>
+          <Image source={require("../../assets/mark.png")} style={{ width: 26, height: 32 }} contentFit="contain" />
+          <T variant="heading">{t.appName}</T>
         </View>
         <Pressable accessibilityRole="button" accessibilityLabel={t.welcome.language} onPress={() => setLang(lang === "en" ? "ko" : "en")} hitSlop={8} style={{ flexDirection: "row", alignItems: "center", gap: 6, minHeight: 44, paddingHorizontal: space.md, borderRadius: radius.pill, borderWidth: 1, borderColor: color.ruleStrong, backgroundColor: color.surface }}>
           <Icon name="globe" size={16} color={color.inkMuted} />

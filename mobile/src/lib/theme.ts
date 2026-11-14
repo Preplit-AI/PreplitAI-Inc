@@ -1,112 +1,98 @@
 /*
- * The design tokens: CampusGo's, from brand/campusgo/tokens.json at the repo
- * root. Two themes share every name: Day (a pale sky ground, white cards, navy
- * ink) and Night (deep navy).
+ * The design tokens: Preplit AI's. Ink on paper, the logo's maroon, and Juno's
+ * gold. Two themes share every name: light (paper) and dark (ink).
  *
  * `color` always holds the theme in use. A screen reads it while it renders, so
  * it must not be copied into a module-level constant; AppearanceProvider
  * (lib/appearance.tsx) switches it and redraws the screens.
  *
- * Blue is the brand and the action: one filled button per screen. The one
- * accent is `lamp`, the amber of the logo's tassel and Juno's eyes. It marks
- * the thing that matters now: use it once on a screen.
+ * How the colours are used:
+ *   ink     text, and the one filled button on a screen (`action`)
+ *   brand   the maroon of the cap: recording, the brand's own moments
+ *   lamp    Juno's gold: what Juno is pointing at right now, one thing per screen
+ *   danger  errors and wrong answers only
  */
 
 export type Scheme = "light" | "dark";
 
-const day = {
+const light = {
   // Grounds
-  ground: "#F5F8FF",
+  ground: "#FAFAF9",
   surface: "#FFFFFF",
-  sunken: "#E8EEFB",
-  sunkenDeep: "#D8E1F4",
-  rule: "#D8E1F4",
-  ruleStrong: "#7685AC",
+  sunken: "#F2F2EF",
+  sunkenDeep: "#E7E7E3",
+  rule: "#E7E7E4",
+  ruleStrong: "#C9C9C4",
   // Text
-  ink: "#0B1A45",
-  inkSoft: "#35456F",
-  inkMuted: "#56658F",
-  inkFaint: "#7685AC",
-  /** On a fill of `ink`. */
-  onInk: "#F5F8FF",
-  // The brand blue
-  go: "#2B5FF5",
-  onGo: "#FFFFFF",
-  goSoft: "#E3EBFF",
-  goInk: "#1F4FD6",
+  ink: "#0A0A0A",
+  inkSoft: "#26272B",
+  inkMuted: "#5B5F66",
+  inkFaint: "#8C9097",
+  onInk: "#FFFFFF",
   /** The fill of the one main button on a screen, and of what is switched on or chosen. */
-  action: "#2B5FF5",
+  action: "#0A0A0A",
   onAction: "#FFFFFF",
-  // The brand navy
-  navy: "#0B1A45",
-  navyDeep: "#060F2E",
-  navyRaise: "#1B2A63",
-  onNavy: "#F5F8FF",
-  onNavySoft: "#C6D0EE",
-  /** A dark brand field that stands off the ground in both themes: Juno's card on the Profile. */
-  panel: "#0B1A45",
-  // The lamp
-  lamp: "#F0A63A",
-  lampSoft: "#FCEBCB",
-  lampInk: "#7D4A05",
-  onLamp: "#0B1A45",
+  // The maroon of the cap
+  brand: "#A00020",
+  brandDeep: "#7E0019",
+  brandSoft: "#F8E4E7",
+  onBrand: "#FFFFFF",
+  // Juno's gold
+  lamp: "#F8D000",
+  lampSoft: "#FFF6CC",
+  lampInk: "#7A5600",
+  onLamp: "#0A0A0A",
   // States
-  settled: "#0E6F60",
-  settledSoft: "#D9F0EA",
-  danger: "#B0371A",
-  dangerDeep: "#8F2C13",
-  dangerSoft: "#FBE4DC",
-  mist: "#E3EBFF",
-  mistInk: "#1F4FD6",
-  focus: "#0B1A45",
-  scrim: "rgba(6,15,46,0.45)",
+  settled: "#1F6B3A",
+  settledSoft: "#DCEBDD",
+  danger: "#A00020",
+  dangerDeep: "#7E0019",
+  dangerSoft: "#F8E4E7",
+  mist: "#DCE7F6",
+  mistInk: "#234E8C",
+  focus: "#0A0A0A",
+  scrim: "rgba(10,10,10,0.45)",
 };
 
-export type Palette = typeof day;
+export type Palette = typeof light;
 
-const night: Palette = {
-  ground: "#0A1330",
-  surface: "#131F47",
-  sunken: "#060C22",
-  sunkenDeep: "#243263",
-  rule: "#243263",
-  ruleStrong: "#6C7FBC",
-  ink: "#EEF2FF",
-  inkSoft: "#C2CCEA",
-  inkMuted: "#95A3CC",
-  inkFaint: "#7384B8",
-  onInk: "#0A1330",
-  go: "#2B5FF5",
-  onGo: "#FFFFFF",
-  goSoft: "#1A2960",
-  goInk: "#A3BBFF",
-  action: "#7FA2FF",
-  onAction: "#0A1330",
-  navy: "#0B1A45",
-  navyDeep: "#060F2E",
-  navyRaise: "#1B2A63",
-  onNavy: "#F5F8FF",
-  onNavySoft: "#C6D0EE",
-  panel: "#1B2A63",
-  lamp: "#F0A63A",
-  lampSoft: "#3A2D14",
-  lampInk: "#F6C672",
-  onLamp: "#0B1A45",
-  settled: "#78D6C5",
-  settledSoft: "#12322E",
-  danger: "#FFA283",
-  dangerDeep: "#FFB8A0",
-  dangerSoft: "#3C1F17",
-  mist: "#1A2960",
-  mistInk: "#A3BBFF",
-  focus: "#F8CF8A",
+const dark: Palette = {
+  ground: "#0D0D0E",
+  surface: "#19191B",
+  sunken: "#050506",
+  sunkenDeep: "#2A2A2D",
+  rule: "#2A2A2D",
+  ruleStrong: "#5A5A60",
+  ink: "#F4F4F2",
+  inkSoft: "#D3D3CF",
+  inkMuted: "#A2A2A8",
+  inkFaint: "#7B7B82",
+  onInk: "#0A0A0A",
+  action: "#F4F4F2",
+  onAction: "#0A0A0A",
+  brand: "#E0405C",
+  brandDeep: "#F07F93",
+  brandSoft: "#3A1019",
+  onBrand: "#FFFFFF",
+  lamp: "#F8D000",
+  lampSoft: "#332B00",
+  lampInk: "#FFE35C",
+  onLamp: "#0A0A0A",
+  settled: "#7FD19A",
+  settledSoft: "#12301D",
+  danger: "#FF8C9B",
+  dangerDeep: "#FFB0BA",
+  dangerSoft: "#3A1218",
+  mist: "#172A45",
+  mistInk: "#A9C7F2",
+  focus: "#F8D000",
   scrim: "rgba(0,0,0,0.6)",
 };
 
-const PALETTES: Record<Scheme, Palette> = { light: day, dark: night };
+const PALETTES: Record<Scheme, Palette> = { light, dark };
 
 /** The colours of the theme in use. Read it while rendering. */
-export const color: Palette = { ...day };
+export const color: Palette = { ...light };
 
 let current: Scheme = "light";
 export const scheme = () => current;
@@ -122,10 +108,6 @@ export const font = {
   medium: "SchibstedGrotesk_500Medium",
   semibold: "SchibstedGrotesk_600SemiBold",
   bold: "SchibstedGrotesk_700Bold",
-  /** Lexend: headings, card titles, the name. */
-  display: "Lexend_600SemiBold",
-  /** Lexend, medium: Juno speaking in the first person. */
-  voice: "Lexend_500Medium",
 } as const;
 
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 28, huge: 40 } as const;
@@ -136,23 +118,23 @@ export const TABLET = 768;
 /** The widest a single reading column gets. */
 export const COLUMN = 640;
 
-/** One quiet tint per course, by its place in the list, so a course looks the same everywhere. None is the lamp. */
+/** One soft tint per course, by its place in the list, so a course looks the same everywhere. */
 const COURSE_TINTS: Record<Scheme, { bg: string; fg: string }[]> = {
   light: [
-    { bg: "#E3EBFF", fg: "#1F4FD6" },
-    { bg: "#EFE6D6", fg: "#6B5237" },
-    { bg: "#DDEFE3", fg: "#2F6340" },
-    { bg: "#ECE3F3", fg: "#6A3F85" },
-    { bg: "#F6E3DC", fg: "#8A4630" },
-    { bg: "#E2E7F2", fg: "#35456F" },
+    { bg: "#DCE7F6", fg: "#234E8C" },
+    { bg: "#DCEBDD", fg: "#1F6B3A" },
+    { bg: "#FBE6D3", fg: "#8A4B12" },
+    { bg: "#F6E2DF", fg: "#7E0019" },
+    { bg: "#FFF6CC", fg: "#7A5600" },
+    { bg: "#E9E9E5", fg: "#26272B" },
   ],
   dark: [
-    { bg: "#1A2960", fg: "#A3BBFF" },
-    { bg: "#3A3026", fg: "#E3CFB0" },
-    { bg: "#16301F", fg: "#A6D3A9" },
-    { bg: "#30244A", fg: "#D4BCEC" },
-    { bg: "#3A231C", fg: "#EDB9A6" },
-    { bg: "#243263", fg: "#C2CCEA" },
+    { bg: "#172A45", fg: "#A9C7F2" },
+    { bg: "#12301D", fg: "#9BD9AE" },
+    { bg: "#3A2816", fg: "#F1C79A" },
+    { bg: "#3A1218", fg: "#F3A9B4" },
+    { bg: "#332B00", fg: "#FFE35C" },
+    { bg: "#2A2A2D", fg: "#D3D3CF" },
   ],
 };
 

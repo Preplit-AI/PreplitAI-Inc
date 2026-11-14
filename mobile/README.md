@@ -1,17 +1,34 @@
-# CampusGo: the mobile app
+# Preplit AI: the mobile app
 
 One Expo (React Native) project for Android phones and tablets, iPhones and iPads, and the web.
-Juno, the student's companion, runs through all of it.
+Preplit AI is a companion for international students in Korea: it holds a student's context
+(university, year, major, courses, deadlines) and does the remembering for them. Juno, the magpie
+in the graduation cap, is the way in.
 
-**Where this stands (13 November).** The app wears the CampusGo identity: its name, the cap-and-G
-logo, Juno the owl, colours, type and both themes (see "Design system"). What it *does* is still
-the earlier study-assistant milestone described below. The CampusGo direction (Landing, Campus
-Radar, Community, the Opportunity Board, Juno's stages earned by real milestones) has not been
-built; only stage 1 of Juno is shown, on the Profile.
+## Where this stands (14 November)
 
-This is the first milestone of the product vision (`PREPLIT_Complete_Product_Vision.md`): the
-usable academic foundation. It is not the whole vision. The **status matrix** below says exactly
-what works, what is partial and what has not been started.
+The app was reshaped around five places, with Juno in the middle:
+
+    Home · Campus · Juno · Buddy · Community
+
+| Part | Status | What is true today |
+|---|---|---|
+| Onboarding | Complete | One question a screen, answered with a tap; nine short steps; every answer saved as it is given. The semester is assumed to start on the usual day for Korea, and says so |
+| Juno, the main chat | Complete | Answers from the student's own lectures with sources. Told about a deadline ("lab report due Friday 6pm") he saves it with a reminder, lists what is open, and ticks things off (`server/services/companionTools.js`) |
+| Deadlines from a screenshot | Complete | A picture of an LMS page becomes a list of deadlines to choose from; nothing is saved until the student ticks it; a date that is not visible stays empty (`server/services/deadlineReader.js`) |
+| Lecture Buddy, live | Complete in a browser · **not verified on a phone** | Pick the course, press the button, the transcript appears as the class goes, Stop saves the notes to that course. Recorded in 20-second pieces that are transcribed and deleted: no audio is stored (`server/routes/listen.js`, `src/lib/listen.ts`, `listen.web.ts`). On a phone the app must stay open while it listens |
+| Campus board | Complete for **Ajou University only** | The university's public notice boards, read at most every three hours, titles put into English and sorted (scholarship, job, program, event, academic, visa, housing). Every item opens the university's own page. Any other university is told it is not connected yet (`server/services/campusFeed.js`) |
+| Opportunities | **Partial** | A tab of the campus board: the scholarships, jobs and programs the university itself posted. No city job listings, and no check of whether the student is eligible |
+| Community | Complete | One room per university: posts, questions, one photo each, replies, likes, report, delete your own. First names only. Three reports hide a post. There is no moderator's screen yet |
+| Quizzes through the day | **Partial** | Questions come from lecture notes as before. On the installed app Juno sends a nudge at 11:30 and 15:30 and the evening reminder, outside quiet hours; in a browser only the evening one, and only while the app is open |
+| Juno reaching out by himself | **Partial** | Reminders and nudges are scheduled on the device. Nothing is pushed from the server, so Juno cannot yet message a student about something new (a campus notice, a reply) while the app is closed |
+| Campus information ("where to find what") | **Partial** | Links to the portal, LMS, library, international office, cafeteria menus and career centre for Ajou. No maps, buildings or arrival guide: those need checked content per campus |
+| Presentations from notes | Not started | |
+| Career and projects | Retired from the tabs | The screens still exist but nothing links to them; the opportunity board replaces them |
+
+The older sections below describe the first milestone (courses, lectures from files, quiz, tasks,
+notifications). Where they speak of four tabs or say recordings are unavailable, the table above
+is the newer truth.
 
 ## Try it
 
@@ -195,33 +212,21 @@ the profile, log out, log in, Google sign-up, and the Korean interface.
 
 ## Design system
 
-Defined in `src/lib/theme.ts` and `src/ui/index.tsx`; screens use only these.
+Defined in `src/lib/theme.ts` and `src/ui/index.tsx`; screens use only these. The brand is Preplit AI's:
+ink on paper, the maroon of the logo's cap, and Juno's gold.
 
-The identity is CampusGo's: the brand book is the design system at
-https://claude.ai/artifact/38VRAL2mvhRveuBqtaraWT and its files are in `brand/campusgo/` at the
-repository root. `src/lib/theme.ts` carries the same colours under the app's own names.
-
-- **Themes.** Day (a pale sky ground, white cards, navy ink) and Night (deep navy). The app follows
-  the phone; the Profile has a switch (phone setting, Day, Night) kept on the device
-  (`src/lib/appearance.tsx`). `color` holds the theme in use and is read while rendering, so never
-  copy a colour into a module-level constant; when the theme changes the screens are drawn again.
-- **Colour.** Blue is the brand and the action (`action`): the one filled button, a chosen chip, a
-  switch that is on. `lamp`, the amber of the logo's tassel and Juno's eyes, is the one accent, for
-  the thing that matters now (the review that is due, an exam within a week, what the professor
-  flagged). `danger` is for errors and wrong answers only. Each course gets one quiet tint.
-- **Type.** Lexend for headings (`display`, `title`) and Juno's own voice (`voice`); Schibsted
-  Grotesk for everything a student operates. Korean and other scripts fall back to the system
-  font. Nothing smaller than 12 pt.
-- **Controls.** Every control is at least 44 pt tall. The primary action is one blue button per
-  screen, pinned above the keyboard.
+- **Themes.** Light (paper) and dark (ink). The app follows the phone; the Profile has a switch kept on
+  the device (`src/lib/appearance.tsx`). `color` holds the theme in use and is read while rendering,
+  so never copy a colour into a module-level constant.
+- **Colour.** `action` (ink) is the one filled button on a screen. `brand` (maroon) is for recording
+  and the brand's own moments. `lamp` (gold) is what Juno is pointing at: the review that is due, an
+  exam within a week, a pinned notice. `danger` is for errors and wrong answers.
+- **Type.** Schibsted Grotesk throughout: bold for headings, regular for reading. Nothing smaller than 12 pt.
+- **Controls.** Every control is at least 44 pt tall; primary actions are ink pills pinned above the keyboard.
 - **Parts.** `Screen`, `Card`, `Section`, `Row`, `Button`, `Field`, `Chip`, `Segment`, `Toggle`,
-  `Sheet`, `Notice`, `Badge`, `ProgressBar`, and Juno (`Owl`, `OwlFigure`, `OwlSays`, `Empty`).
-- **States.** Every list has a loading, an empty and a failed state; a failed request says so and
-  offers to try again.
-- **Juno.** An Oriental scops owl, six moods and no sad one, five stages. The files in
-  `assets/owl/` are exported from `brand/campusgo/source/owl.mjs` and the mark and icons from
-  `brand/campusgo/source/logo.mjs`; redraw there, not by hand. Juno never asks for attention: no
-  streaks, no guilt.
+  `Sheet`, `Notice`, `Badge`, `ProgressBar`, Juno (`Juno`, `JunoFigure`, `JunoSays`, `Empty`),
+  `JunoChat` and `ScanSheet`.
+- **Juno.** The magpie, six moods, from the website's drawing (`src/brand/Juno.tsx` at the repository root).
 
 ## Decisions made, and how to undo them
 
@@ -229,7 +234,7 @@ repository root. `src/lib/theme.ts` carries the same colours under the app's own
 |---|---|---|
 | React Native with Expo | One codebase for both stores and the web; reuses the existing TypeScript API types | |
 | The web build is committed to `public/m` | The website's deploy cannot be broken by the app's build | Build it on Vercel instead and delete `public/m` |
-| The name shown is "CampusGo" | The name chosen on 13 November, replacing CampusOwl the same day | `expo.name` in `app.json`, `appName` in `src/lib/i18n.tsx` |
+| The name shown is "Preplit AI" | Restored on 14 November; the CampusOwl and CampusGo names were dropped | `expo.name` in `app.json`, `appName` in `src/lib/i18n.tsx` |
 | The slug, URL scheme and bundle ids still say `preplit` | Changing them changes the app's identity in the stores and breaks installed builds; it belongs with the first store build | `slug`, `scheme`, `bundleIdentifier` and `package` in `app.json` |
 | Notifications are local to each device | They arrive with the app closed and need no server; no task data leaves the phone for them | For reminders that follow the student across devices, send pushes from the server instead |
 | A reminder inside quiet hours is moved, never sent | Quiet hours are the student's own rule | `reminderMoment` in `src/lib/reminders.ts` |

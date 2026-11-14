@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "CampusGo",
+    "name": "Preplit AI",
     "slug": "preplit",
     "scheme": "preplit",
     "version": "0.1.0",
@@ -14,7 +14,7 @@
     "android": {
       "package": "com.preplitai.app",
       "adaptiveIcon": {
-        "backgroundColor": "#2B5FF5",
+        "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -30,11 +30,11 @@
       "expo-router",
       "expo-font",
       "expo-image",
-      "expo-notifications"
+      "expo-notifications",
+      "expo-audio"
     ],
     "experiments": {
       "baseUrl": "/m"
-    },
-    "backgroundColor": "#2B5FF5"
+    }
   }
 }

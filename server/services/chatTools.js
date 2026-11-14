@@ -5,6 +5,7 @@ const { reviewToday } = require('./reviewStore');
 const { searchChunks, noteChunksFor, flaggedChunks, chunkAt, formatAt } = require('./lectureChunks');
 const { semesterOverview } = require('./semesterStore');
 const { isUuid } = require('../utils/http');
+const { COMPANION_HANDLERS } = require('./companionTools');
 
 /**
  * What the workspace's Junbee can do. This is how features connect to the bot:
@@ -273,7 +274,9 @@ const HANDLERS = {
  * throws and fails the answer, so the model never answers around missing data.
  */
 async function runTool(call, context) {
-  const handler = Object.prototype.hasOwnProperty.call(HANDLERS, call.name) ? HANDLERS[call.name] : null;
+  const own = (set) => (Object.prototype.hasOwnProperty.call(set, call.name) ? set[call.name] : null);
+  // The companion's tools exist only in the app's main chat.
+  const handler = own(HANDLERS) || (context.companion ? own(COMPANION_HANDLERS) : null);
   if (!handler) return JSON.stringify({ error: '없는 도구예요.' });
   let args;
   try {

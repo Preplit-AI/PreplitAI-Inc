@@ -741,3 +741,63 @@ test('deleting the account removes conversations, messages, chunks and usage', a
     assert.equal(n, 0, table);
   }
 });
+
+// ── The companion: Juno in the app's main chat ───────────────────────────────
+
+test('told about a deadline in the main chat, Juno saves it and tells the app at once', async () => {
+  const { token } = await signup();
+  script = [
+    [toolCall('save_task', { title: 'Lab report 3', kind: 'assignment', due_at: '2031-03-14T18:00' })],
+    say('Lab report 3을 3월 14일 오후 6시로 저장했어요. 하루 전에 알려 드릴게요.'),
+  ];
+  const res = await ask(token, { question: 'I have lab report 3 due March 14 at 6pm', mode: 'companion' });
+  assert.equal(res.status, 200);
+
+  const offered = seenTurns.at(-2).tools.map((tool) => tool.function.name);
+  assert.ok(offered.includes('save_task') && offered.includes('search_lectures'), 'the companion has both kinds of tool');
+
+  const action = res.of('action');
+  assert.equal(action.type, 'task_saved');
+  assert.equal(action.task.title, 'Lab report 3');
+  assert.equal(action.task.kind, 'assignment');
+  assert.equal(new Date(action.task.dueAt).toISOString(), '2031-03-14T09:00:00.000Z', '18:00 in Korea');
+  assert.equal(action.task.remindMinutes, 1440, 'a day before, when there is more than a day to go');
+  assert.equal(lastToolResult().saved, true);
+
+  const tasks = await call('GET', '/tasks?state=open', { token });
+  assert.deepEqual(tasks.json.tasks.map((task) => task.title), ['Lab report 3']);
+
+  // "What's left?" is answered from the list, and "done" ticks it off.
+  script = [[toolCall('list_tasks', {})], (messages) => {
+    const id = JSON.parse(messages.at(-1).content).tasks[0].id;
+    return [toolCall('complete_task', { task_id: id })];
+  }, say('끝낸 걸로 표시했어요.')];
+  const done = await ask(token, { question: 'I finished the lab report', mode: 'companion' });
+  assert.equal(done.of('action').type, 'task_done');
+  assert.equal((await call('GET', '/tasks?state=open', { token })).json.tasks.length, 0);
+});
+
+test('a date Juno cannot read is refused, a day without a time means the end of that day, and nothing is saved without a title', async () => {
+  const { token } = await signup();
+  script = [
+    [toolCall('save_task', { title: 'Quiz', due_at: 'next Friday' })],
+    [toolCall('save_task', { title: 'Quiz', kind: 'exam', due_at: '2031-03-14' })],
+    [toolCall('save_task', { title: '   ' })],
+    say('퀴즈를 3월 14일로 저장했어요.'),
+  ];
+  const res = await ask(token, { question: 'quiz on the 14th of March 2031', mode: 'companion' });
+  const saved = res.events.filter((e) => e.event === 'action');
+  assert.equal(saved.length, 1, 'only the readable one was saved');
+  assert.equal(new Date(saved[0].data.task.dueAt).toISOString(), '2031-03-14T14:59:00.000Z', '23:59 in Korea');
+  assert.equal((await call('GET', '/tasks?state=open', { token })).json.tasks.length, 1);
+});
+
+test('outside the main chat Juno has no hands: the same call saves nothing', async () => {
+  const { token } = await signup();
+  script = [[toolCall('save_task', { title: 'Sneaky' })], say('저는 강의 내용만 도와드릴 수 있어요.')];
+  const res = await ask(token, { question: 'save this' });
+  assert.equal(res.events.some((e) => e.event === 'action'), false);
+  assert.equal(seenTurns.at(-2).tools.some((tool) => tool.function.name === 'save_task'), false);
+  assert.ok(lastToolResult().error);
+  assert.equal((await call('GET', '/tasks?state=open', { token })).json.tasks.length, 0);
+});

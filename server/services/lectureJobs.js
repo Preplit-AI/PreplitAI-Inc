@@ -45,7 +45,7 @@ function pump() {
 
 const MIN_WORDS = 40;
 
-async function processLecture({ lectureId, userId, courseName, title, audioPath, text, language = null }) {
+async function processLecture({ lectureId, userId, courseName, title, audioPath, text, language = null, durationSeconds: knownSeconds = null }) {
   let failureReason = 'processing_failed';
   try {
     let transcript;
@@ -61,6 +61,8 @@ async function processLecture({ lectureId, userId, courseName, title, audioPath,
       if (result.speechSegments === 0) failureReason = 'no_speech';
     } else {
       transcript = text;
+      // A class that was listened to live: its length is known though there is no file.
+      durationSeconds = knownSeconds;
     }
 
     const words = (transcript || '').replace(/\[\d{2}:\d{2}\]|\[불명확\]/g, ' ').split(/\s+/).filter(Boolean).length;

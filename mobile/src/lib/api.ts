@@ -140,7 +140,7 @@ export type ChatRequest = {
   conversationId?: string | null;
   courseId?: string | null;
   lectureId?: string | null;
-  mode?: "career" | null;
+  mode?: "career" | "companion" | null;
 };
 
 /**
@@ -202,6 +202,7 @@ export function parseChatEvent(block: string): ChatEvent | null {
     if (name === "status") return { type: "status", tool: String(payload.tool) };
     if (name === "delta") return { type: "delta", text: String(payload.text) };
     if (name === "reset") return { type: "reset" };
+    if (name === "action") return { type: "action", action: payload };
     if (name === "done") return { type: "done", conversation: payload.conversation, messages: payload.messages };
     if (name === "error") return { type: "error", code: String(payload.error), message: String(payload.message ?? "") };
   } catch {
