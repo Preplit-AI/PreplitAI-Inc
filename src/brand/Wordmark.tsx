@@ -6,7 +6,7 @@ export function LogoMark({ className, white = false }: { className?: string; whi
     <img
       src={white ? "/brand/preplit-mark-white-256.png" : "/brand/preplit-mark-256.png"}
       alt=""
-      width={26}
+      width={18}
       height={28}
       draggable={false}
       className={cn("h-7 w-auto select-none", className)}

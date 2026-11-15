@@ -78,7 +78,7 @@ const I = {
 };
 
 const MARK = (cls = "", size = 24, white = false, lazy = true) =>
-  `<img class="${cls}" src="/brand/${white ? "preplit-mark-white-256" : "preplit-mark-256"}.png" alt="" width="${size}" height="${Math.round(size * 1.37)}"${lazy ? ' loading="lazy"' : ""}>`;
+  `<img class="${cls}" src="/brand/${white ? "preplit-mark-white-256" : "preplit-mark-256"}.png" alt="" width="${size}" height="${Math.round(size * 1.58)}"${lazy ? ' loading="lazy"' : ""}>`;
 /* Juno, the magpie: the app's avatar drawing (src/brand/Juno.tsx), saved as public/brand/juno.svg. */
 const JUNO = (cls = "") => `<span class="juno ${cls}" aria-hidden="true"><img src="/brand/juno.svg" alt="" width="38" height="38"></span>`;
 
@@ -108,9 +108,9 @@ function pageHead(t, other, { title, description, path, koPath, enPath }) {
 <link rel="alternate" hreflang="ko" href="https://preplitai.com${koPath}">
 <link rel="alternate" hreflang="en" href="https://preplitai.com${enPath}">
 <link rel="alternate" hreflang="x-default" href="https://preplitai.com${enPath}">
-<link rel="icon" href="/favicon.ico?v=3" sizes="48x48">
-<link rel="icon" href="/favicon-32.png?v=3" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
+<link rel="icon" href="/favicon.ico?v=4" sizes="48x48">
+<link rel="icon" href="/favicon-32.png?v=4" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
 <link rel="manifest" href="/site.webmanifest">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">

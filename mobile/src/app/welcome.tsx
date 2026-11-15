@@ -1,6 +1,7 @@
 import { Pressable, View } from "react-native";
 import { Image } from "expo-image";
 import { router } from "expo-router";
+import { useAppearance } from "@/lib/appearance";
 import { useLang } from "@/lib/i18n";
 import { color, radius, space } from "@/lib/theme";
 import { Button, Icon, Screen, T, useLayout } from "@/ui";
@@ -9,6 +10,7 @@ import { JunoFigure } from "@/ui/Juno";
 /** The first screen a new student sees: Juno says who he is, and there are two ways forward. */
 export default function Welcome() {
   const { t, lang, setLang } = useLang();
+  const { scheme } = useAppearance();
   const { tablet } = useLayout();
 
   const owl = (
@@ -46,7 +48,7 @@ export default function Welcome() {
     >
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: space.lg }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
-          <Image source={require("../../assets/mark.png")} style={{ width: 26, height: 32 }} contentFit="contain" />
+          <Image source={scheme === "dark" ? require("../../assets/mark-white.png") : require("../../assets/mark.png")} style={{ width: 22, height: 34 }} contentFit="contain" />
           <T variant="heading">{t.appName}</T>
         </View>
         <Pressable accessibilityRole="button" accessibilityLabel={t.welcome.language} onPress={() => setLang(lang === "en" ? "ko" : "en")} hitSlop={8} style={{ flexDirection: "row", alignItems: "center", gap: 6, minHeight: 44, paddingHorizontal: space.md, borderRadius: radius.pill, borderWidth: 1, borderColor: color.ruleStrong, backgroundColor: color.surface }}>
