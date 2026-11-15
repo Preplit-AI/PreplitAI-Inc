@@ -52,10 +52,20 @@ jobs:
           check /api/health 200;  has '"ok"'
           check /api/campus 401
           check /healthz 200
-          loc=$(docker compose exec -T web wget -q -S --max-redirect=0 -O /dev/null http://127.0.0.1/en/pricing 2>&1 | awk '/Location:/{print $2}')
-          echo "/en/pricing -> $loc"; [ "$loc" = "http://127.0.0.1/pricing" ] || [ "$loc" = "/pricing" ]
-          csp=$(docker compose exec -T web wget -q -S -O /dev/null "http://127.0.0.1/js/$(docker compose exec -T web ls /usr/share/nginx/html/js | head -1)" 2>&1 | grep -c "Content-Security-Policy" || true)
-          echo "security headers on /js/: $csp"; [ "$csp" -ge 1 ]
+          # The redirect and the headers, read with Node from the api container (busybox wget cannot stop at a redirect).
+          js=$(docker compose exec -T web ls /usr/share/nginx/html/js | head -1)
+          docker compose exec -T -e JS="$js" api node -e "
+            (async () => {
+              const r = await fetch('http://web/en/pricing', { redirect: 'manual' });
+              console.log('/en/pricing ->', r.status, r.headers.get('location'));
+              if (r.status !== 301 || !/\/pricing$/.test(r.headers.get('location') || '')) process.exit(1);
+              for (const path of ['/', '/js/' + process.env.JS, '/m/welcome', '/api/health']) {
+                const h = (await fetch('http://web' + path)).headers;
+                const ok = h.get('content-security-policy') && h.get('x-frame-options');
+                console.log(path, 'security headers:', ok ? 'yes' : 'MISSING', '| cache:', h.get('cache-control'));
+                if (!ok && !path.startsWith('/api/')) process.exit(1);
+              }
+            })().catch((e) => { console.error(e); process.exit(1); });"
 
       - name: A student can sign up (API and database)
         run: |
