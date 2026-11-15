@@ -10,13 +10,13 @@ const authRoutes = require('./routes/auth');
 const courseRoutes = require('./routes/courses');
 const lectureRoutes = require('./routes/lectures');
 const reviewRoutes = require('./routes/review');
-const junbeeRoutes = require('./routes/junbee');
+const junoRoutes = require('./routes/juno');
 const chatRoutes = require('./routes/chat');
 const semesterRoutes = require('./routes/semester');
 const pushRoutes = require('./routes/push');
 
 /**
- * The Junbee API. Shared by the long-running server (index.js) and the Vercel
+ * The Preplit AI API. Shared by the long-running server (index.js) and the Vercel
  * function (api/index.js), so both get the same CORS policy and headers.
  */
 const app = express();
@@ -89,7 +89,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/lectures', lectureRoutes);
 app.use('/api/review', reviewRoutes);
-app.use('/api/junbee', junbeeRoutes);
+app.use('/api/juno', junoRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/semester', semesterRoutes);
 app.use('/api/push', pushRoutes);

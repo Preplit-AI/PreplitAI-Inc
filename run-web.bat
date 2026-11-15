@@ -1,5 +1,5 @@
 @echo off
-title Junbee Web (port 8080)
+title Preplit AI Web (port 8080)
 cd /d "%~dp0"
 echo.
 echo Starting Vite dev server on http://localhost:8080

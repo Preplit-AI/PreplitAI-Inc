@@ -89,10 +89,10 @@ async function deleteLecture(userId, id) {
 }
 
 /**
- * Which of Junbee's three lecture messages applies right now, with the measured
+ * Which of Juno's three lecture messages applies right now, with the measured
  * facts that fill it in, or null. The wording lives in the client.
  */
-async function currentJunbeeMessage(userId) {
+async function currentJunoMessage(userId) {
   const result = await db.query(
     `SELECT id, title, source, status, card_count, unclear_ranges
        FROM lectures
@@ -115,4 +115,4 @@ async function currentJunbeeMessage(userId) {
   };
 }
 
-module.exports = { lectureUsage, createLecture, listLectures, getLecture, deleteLecture, currentJunbeeMessage };
+module.exports = { lectureUsage, createLecture, listLectures, getLecture, deleteLecture, currentJunoMessage };

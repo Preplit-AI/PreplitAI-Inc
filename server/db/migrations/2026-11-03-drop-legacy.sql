@@ -1,6 +1,6 @@
--- Drop tables left over from the pre-Junbee product.
+-- Drop tables left over from the earlier product.
 --
--- Junbee's pilot is Learn and Remember: courses, lectures, cards, review_logs.
+-- The pilot is Learn and Remember: courses, lectures, cards, review_logs.
 -- Video lectures, podcasts, credits, Stripe subscriptions, grounded chat,
 -- uploaded-document RAG and the analytics dashboard were removed on 2026-11-03.
 -- These tables are no longer read or written by any code.

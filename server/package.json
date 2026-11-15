@@ -1,7 +1,7 @@
 {
-  "name": "junbee-api",
+  "name": "preplit-api",
   "version": "1.0.0",
-  "description": "Junbee pilot API: courses, lectures, notes, cards, review",
+  "description": "Preplit AI API: accounts, courses, lectures, notes, review, Juno, campus and community",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

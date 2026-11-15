@@ -110,10 +110,13 @@ describe("definition of done, checked against the source", () => {
     for (const f of files) expect(text(f), f).not.toMatch(/coming soon|준비 중이에요|곧 만나요/i);
   });
 
-  it("Junbee is gone from what students see: the app is Preplit AI and the companion is Juno", () => {
-    // Storage names and the server's /junbee route stay, so recordings on a phone and old links keep working.
-    const visible = /["'`>][^"'`<]*\bJunbee\b/;
-    for (const f of files) expect(text(f), f).not.toMatch(visible);
+  it("the old name is gone: the product is Preplit AI and the companion inside it is Juno", () => {
+    // Only the code that moves data saved under the old name may still spell it.
+    const moving = ["recorder/store.ts"];
+    for (const f of files) {
+      if (f.endsWith("brand.test.tsx") || moving.some((m) => f.replace(/\\/g, "/").endsWith(m))) continue;
+      expect(text(f), f).not.toMatch(/junbee/i);
+    }
   });
 
   it("no access token is ever written to browser storage", () => {

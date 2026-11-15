@@ -23,7 +23,7 @@ router.use(authMiddleware);
 // ── Upload handling ──────────────────────────────────────────────────────────
 // Audio lands in the OS temp directory under a random name (the original file
 // name never touches the disk) and is deleted as soon as it is transcribed.
-const UPLOAD_DIR = path.join(os.tmpdir(), 'junbee-uploads');
+const UPLOAD_DIR = path.join(os.tmpdir(), 'preplit-uploads');
 const AUDIO_EXTENSIONS = new Set(['.m4a', '.mp3', '.wav', '.webm', '.ogg', '.oga', '.opus', '.aac', '.mp4', '.flac', '.amr', '.3gp']);
 
 const upload = multer({

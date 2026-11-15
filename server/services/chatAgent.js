@@ -6,7 +6,7 @@ const { COMPANION_TOOL_DEFS, COMPANION_MODE } = require('./companionTools');
 const { CHAT_MODEL } = require('../config/constants');
 
 /**
- * Junbee in the workspace: answers questions from the student's own lectures.
+ * Juno in the workspace: answers questions from the student's own lectures.
  *
  * The product's rule still applies here: only what was said, nothing filled in
  * where the transcript says [불명확]. So the model looks things up with tools

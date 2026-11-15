@@ -2,7 +2,7 @@
 const db = require('../db/database');
 
 /**
- * Lectures cut into pieces Junbee can search and cite.
+ * Lectures cut into pieces Juno can search and cite.
  *
  * Search works on Korean without a Korean tokenizer or a database extension.
  * Korean attaches particles to words (상태, 상태를, 상태의), so whole-word
@@ -14,7 +14,7 @@ const db = require('../db/database');
  *
  * Rarer terms count for more. A chunk must cover a good share of the question's
  * weight, so that a topic the lectures never mention returns nothing rather
- * than a weak match: "nothing found" is what lets Junbee say so honestly.
+ * than a weak match: "nothing found" is what lets Juno say so honestly.
  */
 
 const TARGET_CHARS = 800;

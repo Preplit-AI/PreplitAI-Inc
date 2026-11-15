@@ -11,7 +11,7 @@ import type { LectureMessage } from "@/lib/types";
 export function JunoSlot({ message, onlyFor, className }: { message: LectureMessage | null | undefined; onlyFor?: string; className?: string }) {
   const client = useQueryClient();
   const dismiss = useMutation({
-    mutationFn: (lectureId: string) => request(`/junbee/${lectureId}/dismiss`, { method: "POST" }),
+    mutationFn: (lectureId: string) => request(`/juno/${lectureId}/dismiss`, { method: "POST" }),
     onMutate: async () => {
       await client.cancelQueries({ queryKey: keys.juno });
       client.setQueryData(keys.juno, null);

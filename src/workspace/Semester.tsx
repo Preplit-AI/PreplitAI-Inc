@@ -237,7 +237,7 @@ function JunoToday({ overview, onAddCourse }: { overview: SemesterOverview; onAd
   const message = overview.message;
 
   const dismiss = useMutation({
-    mutationFn: (lectureId: string) => request(`/junbee/${lectureId}/dismiss`, { method: "POST" }),
+    mutationFn: (lectureId: string) => request(`/juno/${lectureId}/dismiss`, { method: "POST" }),
     onSettled: () => {
       client.invalidateQueries({ queryKey: semesterKeys.all });
       client.invalidateQueries({ queryKey: keys.juno });

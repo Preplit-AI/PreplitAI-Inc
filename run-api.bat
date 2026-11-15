@@ -1,5 +1,5 @@
 @echo off
-title Junbee API (port 5000)
+title Preplit AI API (port 5000)
 cd /d "%~dp0server"
 if not exist "node_modules" (
   echo Installing backend dependencies, this may take a few minutes...

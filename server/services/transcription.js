@@ -20,7 +20,7 @@ const { TRANSCRIBE_MODEL } = require('../config/constants');
  * 3. Segments Whisper reports as non-speech are dropped (a student who starts
  *    recording twelve minutes late gets no invented first twelve minutes).
  *    Segments it was not confident about become "[불명확]" and their time
- *    ranges are returned, so Junbee can say which minutes it left out.
+ *    ranges are returned, so Juno can say which minutes it left out.
  */
 
 const SEGMENT_SECONDS = 600;
@@ -79,7 +79,7 @@ function mergeRanges(ranges, gapSeconds = 30) {
  */
 async function transcribeFile(inputPath, { prompt } = {}) {
   const groq = getClient();
-  const workDir = path.join(os.tmpdir(), 'junbee-audio-' + crypto.randomBytes(8).toString('hex'));
+  const workDir = path.join(os.tmpdir(), 'preplit-audio-' + crypto.randomBytes(8).toString('hex'));
   await fsp.mkdir(workDir, { recursive: true });
 
   try {

@@ -43,7 +43,7 @@ export function useLecture(id: string) {
 export function useJunoMessage(poll: boolean) {
   return useQuery({
     queryKey: keys.juno,
-    queryFn: () => request<{ message: LectureMessage | null }>("/junbee").then((r) => r.message),
+    queryFn: () => request<{ message: LectureMessage | null }>("/juno").then((r) => r.message),
     refetchInterval: poll ? POLL_MS : false,
   });
 }

@@ -10,7 +10,7 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 
-const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'junbee-test-'));
+const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'preplit-test-'));
 process.env.NODE_ENV = 'test';
 process.env.DB_DRIVER = 'pglite';
 process.env.PGLITE_DIR = dataDir;
@@ -90,7 +90,7 @@ async function signup(email) {
 
 async function waitForLecture(token, id) {
   for (let i = 0; i < 100; i += 1) {
-    const res = await call('GET', '/junbee', { token });
+    const res = await call('GET', '/juno', { token });
     if (res.json.message && res.json.message.lectureId === id) return res.json.message;
     await new Promise((r) => setTimeout(r, 50));
   }
@@ -199,11 +199,11 @@ test('the full loop: transcript to notes to cards to review', async () => {
   assert.equal(after1.json.cards.length, 2);
 
   // Dismissed messages never come back.
-  assert.equal((await call('POST', `/junbee/${message.lectureId}/dismiss`, { token })).status, 200);
-  assert.equal((await call('GET', '/junbee', { token })).json.message, null);
+  assert.equal((await call('POST', `/juno/${message.lectureId}/dismiss`, { token })).status, 200);
+  assert.equal((await call('GET', '/juno', { token })).json.message, null);
 });
 
-test('a failed lecture keeps nothing and Junbee says so', async () => {
+test('a failed lecture keeps nothing and Juno says so', async () => {
   notesBehaviour = 'fail';
   const { token } = await signup('fail@example.com');
   const course = (await call('POST', '/courses', { token, body: { name: '통계' } })).json.course;
@@ -218,7 +218,7 @@ test('a failed lecture keeps nothing and Junbee says so', async () => {
   assert.equal((await db.query('SELECT COUNT(*)::int AS n FROM cards WHERE lecture_id = $1', [message.lectureId])).rows[0].n, 0);
   assert.equal((await call('GET', '/lectures', { token })).json.lectures.length, 0);
 
-  await call('POST', `/junbee/${message.lectureId}/dismiss`, { token });
+  await call('POST', `/juno/${message.lectureId}/dismiss`, { token });
   assert.equal((await db.query('SELECT COUNT(*)::int AS n FROM lectures WHERE id = $1', [message.lectureId])).rows[0].n, 0);
   notesBehaviour = 'ok';
 });

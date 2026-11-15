@@ -10,7 +10,7 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 
-const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'junbee-semester-test-'));
+const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'preplit-semester-test-'));
 process.env.NODE_ENV = 'test';
 process.env.DB_DRIVER = 'pglite';
 process.env.PGLITE_DIR = dataDir;
@@ -266,7 +266,7 @@ test('hard cards are the ones last rated 다시 or 어려움', async () => {
 
 const facts = (overrides = {}) => ({
   hasCourses: true,
-  junbee: null,
+  juno: null,
   processing: null,
   semester: { currentWeek: 5, weeks: 16 },
   classToday: [],
@@ -283,7 +283,7 @@ test('the bee says the most urgent thing, and only one thing', () => {
   const review = { due: 12, done: 0 };
 
   assert.equal(chooseMessage(facts({ hasCourses: false })).kind, 'first-course');
-  assert.deepEqual(chooseMessage(facts({ junbee: lecture, classToday: klass, exams: exam, review })), { kind: 'lecture', message: lecture });
+  assert.deepEqual(chooseMessage(facts({ juno: lecture, classToday: klass, exams: exam, review })), { kind: 'lecture', message: lecture });
   assert.equal(chooseMessage(facts({ processing: { id: 'l', courseName: 'x', title: 'y' }, classToday: klass })).kind, 'processing');
   assert.equal(chooseMessage(facts({ semester: null })).kind, 'setup');
   assert.equal(chooseMessage(facts({ classToday: klass, exams: exam, review })).kind, 'class-today');
@@ -326,7 +326,7 @@ test('the overview tells the student what to do first, end to end', async () => 
   assert.equal(overview.latestNote.id, lecture.id);
   assert.equal(overview.courses[0].recordedToday, true);
 
-  await call('POST', `/junbee/${lecture.id}/dismiss`, { token });
+  await call('POST', `/juno/${lecture.id}/dismiss`, { token });
   overview = (await call('GET', '/semester', { token })).json;
   assert.equal(overview.message.kind, 'exam-soon');
   assert.equal(overview.message.days, 13);

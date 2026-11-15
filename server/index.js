@@ -8,7 +8,7 @@ const { PORT } = require('./config/constants');
 db.ready
   .then(failInterruptedJobs)
   .then(() => {
-    const server = app.listen(PORT, () => console.log(`Junbee API on http://localhost:${PORT}`));
+    const server = app.listen(PORT, () => console.log(`Preplit AI API on http://localhost:${PORT}`));
     // Large audio uploads on a slow campus connection can take a while.
     server.requestTimeout = 15 * 60 * 1000;
     startReminders();

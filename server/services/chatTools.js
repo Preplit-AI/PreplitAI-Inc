@@ -8,7 +8,7 @@ const { isUuid } = require('../utils/http');
 const { COMPANION_HANDLERS } = require('./companionTools');
 
 /**
- * What the workspace's Junbee can do. This is how features connect to the bot:
+ * What Juno can do in the workspace. This is how features connect to the bot:
  * each tool is a thin wrapper over the same service the HTTP routes use.
  *
  * Three limits are enforced here rather than asked of the model:

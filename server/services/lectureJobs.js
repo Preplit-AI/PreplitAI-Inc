@@ -14,7 +14,7 @@ const { PROCESSING_CONCURRENCY } = require('../config/constants');
  *
  * Success writes the transcript, notes and cards in one transaction. Failure
  * writes none of them: the lecture row is marked failed with only a reason
- * code, which is what lets Junbee truthfully say that nothing was saved. The
+ * code, which is what lets Juno truthfully say that nothing was saved. The
  * uploaded audio is deleted either way.
  */
 
@@ -119,7 +119,7 @@ async function processLecture({ lectureId, userId, courseName, title, audioPath,
 }
 
 /**
- * Junbee shows one message at a time and never brings an old one back, so a
+ * Juno shows one message at a time and never brings an old one back, so a
  * new message retires every earlier one.
  */
 function supersedeMessages(tx, userId, lectureId) {

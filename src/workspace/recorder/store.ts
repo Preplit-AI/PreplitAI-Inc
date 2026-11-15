@@ -24,7 +24,14 @@ export type StoredRecording = {
   error?: string;
 };
 
-const DB_NAME = "junbee-recordings";
+const DB_NAME = "preplit-recordings";
+/**
+ * Where recordings were kept before the product had its current name. Anything
+ * still there is moved across the first time this device opens the store, then
+ * the old database is deleted. Remove this once no device can still hold one
+ * (recordings are kept 14 days at most).
+ */
+const OLD_DB_NAME = "junbee-recordings";
 const RECORDINGS = "recordings";
 const CHUNKS = "chunks";
 /** Past this, a recording nobody came back for is removed. */
@@ -32,20 +39,62 @@ const KEEP_MS = 14 * 24 * 60 * 60 * 1000;
 
 let opening: Promise<IDBDatabase> | null = null;
 
+function openNamed(name: string, create: boolean): Promise<IDBDatabase | null> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(name, 1);
+    req.onupgradeneeded = () => {
+      // The old database is only read, never created: if it is not there, there is nothing to move.
+      if (!create) {
+        req.transaction?.abort();
+        return;
+      }
+      req.result.createObjectStore(RECORDINGS, { keyPath: "id" });
+      req.result.createObjectStore(CHUNKS, { keyPath: ["recordingId", "seq"] });
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => (create ? reject(req.error) : resolve(null));
+  });
+}
+
+const readAll = <T,>(db: IDBDatabase, store: string) =>
+  new Promise<T[]>((resolve, reject) => {
+    const req = db.transaction(store, "readonly").objectStore(store).getAll();
+    req.onsuccess = () => resolve(req.result as T[]);
+    req.onerror = () => reject(req.error);
+  });
+
+/** Moves recordings saved under the old name into the current store. A failure leaves them where they were. */
+async function moveOldRecordings(db: IDBDatabase) {
+  const old = await openNamed(OLD_DB_NAME, false).catch(() => null);
+  if (!old) return;
+  try {
+    const recordings = await readAll<StoredRecording>(old, RECORDINGS);
+    const chunks = await readAll<{ recordingId: string; seq: number; blob: Blob }>(old, CHUNKS);
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction([RECORDINGS, CHUNKS], "readwrite");
+      for (const r of recordings) tx.objectStore(RECORDINGS).put(r);
+      for (const c of chunks) tx.objectStore(CHUNKS).put(c);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+    old.close();
+    indexedDB.deleteDatabase(OLD_DB_NAME);
+  } catch {
+    old.close();
+  }
+}
+
 function open(): Promise<IDBDatabase> {
   if (!opening) {
-    opening = new Promise((resolve, reject) => {
-      const req = indexedDB.open(DB_NAME, 1);
-      req.onupgradeneeded = () => {
-        req.result.createObjectStore(RECORDINGS, { keyPath: "id" });
-        req.result.createObjectStore(CHUNKS, { keyPath: ["recordingId", "seq"] });
-      };
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => {
+    opening = openNamed(DB_NAME, true)
+      .then(async (db) => {
+        await moveOldRecordings(db as IDBDatabase);
+        return db as IDBDatabase;
+      })
+      .catch((err) => {
         opening = null;
-        reject(req.error);
-      };
-    });
+        throw err;
+      });
   }
   return opening;
 }

@@ -86,7 +86,7 @@ async function sendToUser(userId, payload, key) {
       );
       if (!logged.rowCount) return false;
     }
-    const body = JSON.stringify({ title: 'Junbee', body: payload.body, url: payload.url });
+    const body = JSON.stringify({ title: 'Juno', body: payload.body, url: payload.url });
     await Promise.all(
       subscriptions.rows.map(async (row) => {
         try {

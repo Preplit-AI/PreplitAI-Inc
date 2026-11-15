@@ -41,7 +41,7 @@ function routeToApp(): Plugin {
     next();
   };
   return {
-    name: "junbee-route-to-app",
+    name: "preplit-route-to-app",
     configureServer(server) {
       server.middlewares.use(rewrite);
     },

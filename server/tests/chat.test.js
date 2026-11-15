@@ -11,7 +11,7 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 
-const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'junbee-chat-test-'));
+const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'preplit-chat-test-'));
 process.env.NODE_ENV = 'test';
 process.env.DB_DRIVER = 'pglite';
 process.env.PGLITE_DIR = dataDir;

@@ -17,7 +17,7 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 
-const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'junbee-eval-'));
+const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'preplit-eval-'));
 process.env.DB_DRIVER = 'pglite';
 process.env.PGLITE_DIR = dataDir;
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'eval-secret-that-is-long-enough-for-the-check-0123456789';

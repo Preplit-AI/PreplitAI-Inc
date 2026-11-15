@@ -2,11 +2,11 @@
 const express = require('express');
 const db = require('../db/database');
 const { authMiddleware } = require('../middleware/auth');
-const { currentJunbeeMessage } = require('../services/lectureStore');
+const { currentJunoMessage } = require('../services/lectureStore');
 const { isUuid, fail } = require('../utils/http');
 
 /**
- * What Junbee says about a lecture that just finished, one message at a time:
+ * What Juno says about a lecture that just finished, one message at a time:
  *
  *   ready    notes are ready, with the card count
  *   unclear  notes are ready, and these minutes were left as [불명확]
@@ -19,16 +19,16 @@ const { isUuid, fail } = require('../utils/http');
 const router = express.Router();
 router.use(authMiddleware);
 
-// ── GET /api/junbee ──────────────────────────────────────────────────────────
+// ── GET /api/juno ────────────────────────────────────────────────────────────
 router.get('/', async (req, res, next) => {
   try {
-    res.json({ success: true, message: await currentJunbeeMessage(req.userId) });
+    res.json({ success: true, message: await currentJunoMessage(req.userId) });
   } catch (err) {
     next(err);
   }
 });
 
-// ── POST /api/junbee/:lectureId/dismiss ──────────────────────────────────────
+// ── POST /api/juno/:lectureId/dismiss ────────────────────────────────────────
 // A dismissed message never comes back. Dismissing a failure also removes the
 // empty lecture row, since nothing of that lecture was kept.
 router.post('/:lectureId/dismiss', async (req, res, next) => {

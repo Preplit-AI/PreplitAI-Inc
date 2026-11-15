@@ -67,7 +67,7 @@ export default function Home() {
       case "processing":
         return { text: t.home.juno.processing(m.title), mood: "work" };
       case "lecture": {
-        const dismiss = () => request(`/junbee/${m.message.lectureId}/dismiss`, { method: "POST" }).then(() => client.invalidateQueries({ queryKey: ["overview"] })).catch(() => {});
+        const dismiss = () => request(`/juno/${m.message.lectureId}/dismiss`, { method: "POST" }).then(() => client.invalidateQueries({ queryKey: ["overview"] })).catch(() => {});
         if (m.message.kind === "failed") return { text: t.home.juno.failed(m.message.lectureTitle), mood: "rest", action: small(t.common.close, dismiss) };
         return {
           text: t.home.juno.ready(m.message.lectureTitle, m.message.cardCount),

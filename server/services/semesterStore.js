@@ -1,7 +1,7 @@
 'use strict';
 const db = require('../db/database');
 const { listCourses, getCourse } = require('./courseStore');
-const { currentJunbeeMessage } = require('./lectureStore');
+const { currentJunoMessage } = require('./lectureStore');
 const { reviewToday } = require('./reviewStore');
 
 /**
@@ -210,7 +210,7 @@ function mergeCells(perCourse, semester) {
 function chooseMessage(facts) {
   if (!facts.hasCourses) return { kind: 'first-course' };
   if (facts.processing) return { kind: 'processing', lectureId: facts.processing.id, courseName: facts.processing.courseName, title: facts.processing.title };
-  if (facts.junbee) return { kind: 'lecture', message: facts.junbee };
+  if (facts.juno) return { kind: 'lecture', message: facts.juno };
   if (!facts.semester) return { kind: 'setup' };
 
   const unrecorded = facts.classToday.find((c) => !c.recordedToday);
@@ -227,12 +227,12 @@ function chooseMessage(facts) {
 }
 
 async function semesterOverview(userId, { since, today = kstDate() } = {}) {
-  const [semester, courses, lectures, counts, junbee, review] = await Promise.all([
+  const [semester, courses, lectures, counts, juno, review] = await Promise.all([
     currentSemester(userId, today),
     listCourses(userId),
     lecturesOf(userId),
     cardCounts(userId),
-    currentJunbeeMessage(userId),
+    currentJunoMessage(userId),
     reviewToday(userId, since),
   ]);
 
@@ -291,7 +291,7 @@ async function semesterOverview(userId, { since, today = kstDate() } = {}) {
     processing: Boolean(processing),
     message: chooseMessage({
       hasCourses: courses.length > 0,
-      junbee,
+      juno,
       processing,
       semester,
       classToday,

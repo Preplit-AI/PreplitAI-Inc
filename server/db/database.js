@@ -79,7 +79,7 @@ const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS courses_user_idx ON courses (user_id)`,
 
   // One recorded lecture. A failed lecture keeps no transcript, notes or cards;
-  // the row exists only so Junbee can say that nothing was saved.
+  // the row exists only so Juno can say that nothing was saved.
   `CREATE TABLE IF NOT EXISTS lectures (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -124,7 +124,7 @@ const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS review_logs_user_idx ON review_logs (user_id, reviewed_at DESC)`,
 
   // A searchable piece of a lecture: its transcript, or a part of its notes.
-  // These are what Junbee cites in the workspace, and they go with the lecture.
+  // These are what Juno cites in the workspace, and they go with the lecture.
   `CREATE TABLE IF NOT EXISTS lecture_chunks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,

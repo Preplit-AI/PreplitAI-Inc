@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
 import { useLang } from "@/lib/lang";
 import { disablePush, enablePush, pushState, type PushState } from "@/lib/push";
 
-const DISMISSED = "junbee-notification-prompt-dismissed";
+const DISMISSED = "preplit-notification-prompt-dismissed";
 
 function usePushState() {
   const [state, setState] = useState<PushState | null>(null);
