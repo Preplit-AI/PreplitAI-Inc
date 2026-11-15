@@ -24,10 +24,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # A throwaway secret, for every later step (docker compose reads it each time).
+      - name: Test secret
+        run: echo "JWT_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+
       - name: Build and start
-        run: |
-          export JWT_SECRET="$(openssl rand -hex 32)"
-          docker compose up -d --build --wait --wait-timeout 180
+        run: docker compose up -d --build --wait --wait-timeout 180
 
       - name: nginx configuration is valid
         run: docker compose exec -T web nginx -t
