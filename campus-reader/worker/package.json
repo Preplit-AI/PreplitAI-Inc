@@ -1,0 +1,14 @@
+{
+  "name": "preplit-campus-reader",
+  "private": true,
+  "description": "Reads university notice boards every 3 hours from Cloudflare and sends them to the Preplit AI API.",
+  "scripts": {
+    "dev": "wrangler dev --test-scheduled",
+    "deploy": "wrangler deploy",
+    "key": "wrangler secret put CAMPUS_INGEST_KEY",
+    "logs": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "4.156.2"
+  }
+}

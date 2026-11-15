@@ -1,0 +1,20 @@
+# The campus reader as a Cloudflare Worker. See ../README.md.
+name = "preplit-campus-reader"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# No public address: the Worker only runs on its schedule.
+workers_dev = false
+preview_urls = false
+
+[triggers]
+# Every 3 hours, at 17 past (UTC).
+crons = ["17 */3 * * *"]
+
+[vars]
+CAMPUS_INGEST_URL = "https://www.preplitai.com/api/campus/ingest"
+
+[observability]
+enabled = true
+
+# CAMPUS_INGEST_KEY is a secret: npm run key

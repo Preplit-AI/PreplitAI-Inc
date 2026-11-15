@@ -151,6 +151,65 @@ test('a campus that is not set up says so, and a site that is down is not hidden
   siteDown = false;
 });
 
+test('with a campus reader set up, the board comes only from what the reader sends, and only with its key', async () => {
+  const before = fetched.length;
+  assert.equal((await call('POST', '/campus/ingest', { body: { campus: 'ajou', boards: [] } })).status, 404, 'closed while no key is set');
+
+  process.env.CAMPUS_INGEST_KEY = 'reader-key-for-the-tests-0123456789';
+  try {
+    const send = (body, key = process.env.CAMPUS_INGEST_KEY) =>
+      realFetch(base + '/campus/ingest', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` }, body: JSON.stringify(body) })
+        .then(async (res) => ({ status: res.status, json: await res.json() }));
+    assert.equal((await send({ campus: 'ajou', boards: [] }, 'wrong')).status, 401);
+    assert.equal((await send({ campus: 'nowhere', boards: [] })).status, 400);
+
+    const oia = 'https://www.ajou.ac.kr/oia/notice/notice.do';
+    const sent = await send({
+      campus: 'ajou',
+      boards: [
+        { id: 'ajou-oia', items: [
+          { article: '501', title: '2027 동계 단기연수 참가자 모집', category: 'Program', url: `${oia}?mode=view&articleNo=501`, postedOn: '2026-11-14', pinned: false },
+          { article: '502', title: 'A link to somewhere else', url: 'https://example.com/?mode=view&articleNo=502' },
+          { article: '../1', title: 'Not an article', url: `${oia}?mode=view&articleNo=../1` },
+        ] },
+        { id: 'ajou-notice', error: 'answered 503' },
+        { id: 'hanyang-notice', items: [{ article: '1', title: 'Another campus', url: 'https://www.hanyang.ac.kr/?mode=view&articleNo=1' }] },
+      ],
+    });
+    assert.equal(sent.status, 200);
+    assert.deepEqual([sent.json.boards, sent.json.notices, sent.json.dropped], [1, 1, 2], 'only a notice linking to its own board is kept');
+
+    // Students are answered from what was sent; the API does not read the university's site itself.
+    await db.query(`UPDATE campus_fetches SET fetched_at = now() - interval '9 hours'`);
+    await send({ campus: 'ajou', boards: [{ id: 'ajou-oia', items: [] }] });
+    const board = await call('GET', '/campus', { token: await student('reader@example.com', 'Ajou University') });
+    assert.equal(fetched.length, before, 'the university\'s site was not read by the API');
+    assert.ok(board.json.items.some((item) => item.url.endsWith('articleNo=501')));
+    assert.ok(Date.now() - new Date(board.json.fetchedAt).getTime() < 60_000, 'updated when the reader last sent a board');
+    assert.equal(board.json.items.some((item) => item.url.includes('example.com')), false);
+  } finally {
+    delete process.env.CAMPUS_INGEST_KEY;
+  }
+});
+
+test('the campus reader reads every board one at a time and sends them in with its key', async () => {
+  const { sendCampus } = require('../services/campusSend');
+  process.env.CAMPUS_INGEST_KEY = 'reader-key-for-the-tests-0123456789';
+  try {
+    const before = fetched.length;
+    const lines = [];
+    const sent = await sendCampus('ajou', { target: base + '/campus/ingest', key: process.env.CAMPUS_INGEST_KEY, log: (line) => lines.push(line) });
+    assert.equal(fetched.length - before, 4, 'each board read once');
+    assert.equal(sent.boards, 4);
+    assert.ok(sent.notices >= 4);
+    assert.ok(lines.some((line) => line.includes('sent:')));
+    await assert.rejects(sendCampus('ajou', { target: base + '/campus/ingest', key: 'wrong', log: () => {} }), /401/);
+    await assert.rejects(sendCampus('ajou', { target: base + '/campus/ingest', log: () => {} }), /not set/);
+  } finally {
+    delete process.env.CAMPUS_INGEST_KEY;
+  }
+});
+
 test('the community is one room per university: posts, a picture, replies, likes, reports', async () => {
   const linh = await student('linh@example.com', 'Inha University', 'Linh Tran');
   const omar = await student('omar@example.com', ' inha  university ', 'Omar Farooq');

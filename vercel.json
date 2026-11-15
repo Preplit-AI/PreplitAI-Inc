@@ -23,7 +23,7 @@
   ],
   "rewrites": [
     {
-      "source": "/api/((?!campus-board).*)",
+      "source": "/api/(.*)",
       "destination": "/api/index.js"
     },
     {
@@ -112,13 +112,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "api/campus-board.js": {
-      "regions": [
-        "icn1"
-      ],
-      "maxDuration": 30
-    }
-  }
+  ]
 }

@@ -52,3 +52,7 @@ server/.data/
 
 # The design skill's deal history
 .taste-skill/
+
+# Cloudflare Worker (campus-reader/worker): local secrets and build cache
+.dev.vars
+.wrangler/

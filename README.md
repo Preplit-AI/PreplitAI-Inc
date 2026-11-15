@@ -14,7 +14,8 @@ Built by Preplit AI, Inc. · info@preplitai.com
 | API | `server/` | Express and PostgreSQL. Shared by the app and the website. Routes are listed in [server/README.md](server/README.md) |
 | Website | `src/`, `site/`, `public/` | The public site (landing, pricing, privacy), sign-up and log-in, and the earlier web workspace, which is behind a developer-only wall |
 | Web build of the app | `public/m/` | The app built for the browser, served at `/m`. Generated: rebuild it, don't edit it |
-| Vercel functions | `api/` | `index.js` runs the API; `campus-board.js` reads university notice boards |
+| Vercel function | `api/` | `index.js` runs the API |
+| Campus reader | `campus-reader/` | A Cloudflare Worker that reads university notice boards every 3 hours and sends them to the API (Ajou refuses Vercel's network) |
 
 ## The app
 
@@ -23,7 +24,7 @@ Five places, with Juno in the middle: **Home · Campus · Juno · Buddy · Commu
 - **Onboarding.** One question a screen, answered with a tap: language, Korean level, university, program, year, major, where the student is now, a first class. Juno asks; every answer is saved as it is given.
 - **Juno.** The main chat. Answers from the student's own lectures with sources. Told about a deadline ("lab report due Friday 6pm"), Juno saves it with a reminder; he can also read deadlines out of a screenshot of the student's LMS.
 - **Lecture Buddy.** Pick the course, press one button, and the class is transcribed as it happens; Stop saves the notes, key terms and a short quiz to that course. No audio is stored.
-- **Campus.** The university's own notices, in English, sorted into scholarships, jobs, programs, events, visa and academic notices, with links to the portal, LMS and offices. Ajou University only so far, and not yet working on the live site (see the app's README).
+- **Campus.** The university's own notices, in English, sorted into scholarships, jobs, programs, events, visa and academic notices, with links to the portal, LMS and offices. Ajou University only so far. On the live site the boards are read by a Cloudflare Worker, because Ajou's site refuses Vercel's network (see [campus-reader/](campus-reader/README.md)).
 - **Community.** One room per university for its international students: photos, questions, replies.
 - **Reminders.** Deadlines and short quizzes arrive as phone notifications, never in quiet hours.
 
@@ -87,7 +88,7 @@ After changing the app, rebuild its web version and commit it with the change:
 npm run mobile:web
 ```
 
-Vercel needs `DATABASE_URL`, `JWT_SECRET` and `GROQ_API_KEY`. Optional: `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` (Google sign-in), `RESEND_API_KEY` and `EMAIL_FROM` (password reset), `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` (web push).
+Vercel needs `DATABASE_URL`, `JWT_SECRET` and `GROQ_API_KEY`. Optional: `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` (Google sign-in), `RESEND_API_KEY` and `EMAIL_FROM` (password reset), `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` (web push), `CAMPUS_INGEST_KEY` (the campus reader's key; see [campus-reader/](campus-reader/README.md)).
 
 ## Security
 

@@ -2,8 +2,8 @@
 
 /**
  * The universities whose public notice boards the campus board reads, and how
- * one page of a board is read. Nothing here touches the database, so the small
- * function that reads the boards from Seoul (api/campus-board.js) can use it.
+ * one page of a board is read. Nothing here touches the database, so the
+ * campus reader (server/scripts/campusReader.js) runs it with no install.
  */
 
 const CAMPUSES = {

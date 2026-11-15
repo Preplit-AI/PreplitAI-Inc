@@ -1,7 +1,7 @@
 'use strict';
 const db = require('../db/database');
 const { callLLM } = require('./llmService');
-const { NOTES_MODEL, PUBLIC_URL } = require('../config/constants');
+const { NOTES_MODEL } = require('../config/constants');
 const { CAMPUSES, parseBoard, readBoard } = require('./campusBoards');
 
 /**
@@ -15,6 +15,13 @@ const { CAMPUSES, parseBoard, readBoard } = require('./campusBoards');
  * plainly that their campus is not connected yet.
  *
  * The boards are read at most once every three hours, a page each.
+ *
+ * Ajou's site does not answer requests from Amazon's network, where Vercel
+ * runs the API, although it answers almost every other network. So in
+ * production the boards are read elsewhere (server/scripts/campusReader.js, on a
+ * schedule) and sent to POST /api/campus/ingest; with CAMPUS_INGEST_KEY set the
+ * API never reads the boards itself. Without it (development) it reads them
+ * directly.
  */
 
 const KINDS = ['scholarship', 'job', 'program', 'event', 'academic', 'visa', 'housing', 'general'];
@@ -27,24 +34,8 @@ function campusFor(university) {
   return key ? { key, ...CAMPUSES[key] } : null;
 }
 
-/**
- * Korean university sites often refuse visitors from abroad, and the API runs
- * in Washington. On Vercel the boards are read through a small function that
- * runs in Seoul (api/campus-board.js); anywhere else they are read directly.
- */
-async function fetchBoard(board) {
-  if (!process.env.VERCEL || process.env.CAMPUS_DIRECT === '1') return readBoard(board);
-  const base = process.env.CAMPUS_RELAY_URL || PUBLIC_URL;
-  let res;
-  try {
-    res = await fetch(`${base}/api/campus-board?board=${encodeURIComponent(board.id)}`, { signal: AbortSignal.timeout(30000) });
-  } catch (err) {
-    throw new Error(board.id + ' relay could not be reached: ' + err.message);
-  }
-  const body = await res.json().catch(() => null);
-  if (!res.ok || !body || !Array.isArray(body.items)) throw new Error(board.id + ' relay: ' + ((body && body.error) || res.status));
-  return body.items;
-}
+/** True when the boards are read by the outside reader and sent in, rather than read here. */
+const readElsewhere = () => Boolean(process.env.CAMPUS_INGEST_KEY);
 
 const hasHangul = (text) => /[가-힣]/.test(text);
 
@@ -105,38 +96,93 @@ async function describeWaiting(key) {
   }
 }
 
+/** Keeps what was read from each board. `results` is one { board, items } or { board, error } per board. */
+async function storeBoards(key, results) {
+  let read = 0;
+  let kept = 0;
+  for (const { board, items, error } of results) {
+    if (error) { console.warn('[campus] ' + board.id + ': ' + error); continue; }
+    read += 1;
+    for (const item of items) {
+      await db.query(
+        `INSERT INTO campus_items (campus, source, article, title, title_en, kind, intl, category, url, posted_on, pinned)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+         ON CONFLICT (source, article) DO UPDATE SET title = EXCLUDED.title, pinned = EXCLUDED.pinned, posted_on = COALESCE(EXCLUDED.posted_on, campus_items.posted_on)`,
+        [key, board.id, item.article, item.title, hasHangul(item.title) ? null : item.title, board.kind, board.intl, item.category, item.url, item.postedOn, item.pinned]
+      );
+      kept += 1;
+    }
+  }
+  // The time shown as "updated" is the last time a board was actually read.
+  if (read) await stampRead(key);
+  return { read, kept };
+}
+
+const stampRead = (key) => db.query(
+  `INSERT INTO campus_fetches (campus, fetched_at) VALUES ($1, now()) ON CONFLICT (campus) DO UPDATE SET fetched_at = now()`,
+  [key]
+);
+
 const refreshing = new Map();
 
-/** Reads every board of a campus once and keeps what is new. A board that fails leaves the others unaffected. */
+/** Reads every board of a campus once, here, and keeps what is new. A board that fails leaves the others unaffected. */
 function refreshCampus(key) {
   if (refreshing.has(key)) return refreshing.get(key);
   const campus = CAMPUSES[key];
   const work = (async () => {
-    await db.query(
-      `INSERT INTO campus_fetches (campus, fetched_at) VALUES ($1, now()) ON CONFLICT (campus) DO UPDATE SET fetched_at = now()`,
-      [key]
-    );
-    const results = await Promise.allSettled(campus.boards.map(fetchBoard));
-    let read = 0;
-    for (let i = 0; i < results.length; i += 1) {
-      const result = results[i];
-      const board = campus.boards[i];
-      if (result.status !== 'fulfilled') { console.warn('[campus] ' + result.reason.message); continue; }
-      read += 1;
-      for (const item of result.value) {
-        await db.query(
-          `INSERT INTO campus_items (campus, source, article, title, title_en, kind, intl, category, url, posted_on, pinned)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-           ON CONFLICT (source, article) DO UPDATE SET title = EXCLUDED.title, pinned = EXCLUDED.pinned, posted_on = COALESCE(EXCLUDED.posted_on, campus_items.posted_on)`,
-          [key, item.source, item.article, item.title, hasHangul(item.title) ? null : item.title, board.kind, board.intl, item.category, item.url, item.postedOn, item.pinned]
-        );
-      }
-    }
+    // Stamped before reading, so a site that is down is not asked again on every visit.
+    await stampRead(key);
+    const settled = await Promise.allSettled(campus.boards.map(readBoard));
+    const results = settled.map((r, i) => (r.status === 'fulfilled' ? { board: campus.boards[i], items: r.value } : { board: campus.boards[i], error: r.reason.message }));
+    const { read } = await storeBoards(key, results);
     if (!read) throw new Error('no board of ' + key + ' could be read');
     await describeWaiting(key);
   })().finally(() => refreshing.delete(key));
   refreshing.set(key, work);
   return work;
+}
+
+const MAX_ITEMS = 200;
+const text = (value, max) => (typeof value === 'string' && value.trim() ? value.trim().slice(0, max) : null);
+
+/**
+ * What the outside reader sends: { campus, boards: [{ id, items } or { id, error }] }.
+ * Only boards of that campus are taken, and only notices whose link goes to
+ * that board's own page, so the reader cannot put anything else on the board.
+ * Returns null when the campus is unknown.
+ */
+async function ingestCampus(body) {
+  const key = body && typeof body.campus === 'string' ? body.campus : '';
+  const campus = Object.prototype.hasOwnProperty.call(CAMPUSES, key) ? CAMPUSES[key] : null;
+  if (!campus || !Array.isArray(body.boards)) return null;
+  const results = [];
+  let dropped = 0;
+  for (const sent of body.boards.slice(0, campus.boards.length)) {
+    const board = campus.boards.find((b) => sent && b.id === sent.id);
+    if (!board || results.some((r) => r.board === board)) continue;
+    if (!Array.isArray(sent.items)) {
+      results.push({ board, error: text(sent.error, 300) || 'not read' });
+      continue;
+    }
+    const items = [];
+    for (const raw of sent.items.slice(0, MAX_ITEMS)) {
+      const article = raw && typeof raw.article === 'string' && /^\d{1,15}$/.test(raw.article) ? raw.article : null;
+      const title = text(raw && raw.title, 500);
+      const ok = article && title && raw.url === board.url + '?mode=view&articleNo=' + article;
+      if (!ok) { dropped += 1; continue; }
+      items.push({
+        article,
+        title,
+        url: raw.url,
+        category: text(raw.category, 100),
+        postedOn: typeof raw.postedOn === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.postedOn) ? raw.postedOn : null,
+        pinned: raw.pinned === true,
+      });
+    }
+    results.push({ board, items });
+  }
+  const { read, kept } = await storeBoards(key, results);
+  return { campus: key, boards: read, notices: kept, dropped, translate: read ? describeWaiting(key) : null };
 }
 
 const toItem = (row, boards) => ({
@@ -163,7 +209,10 @@ async function campusBoard(key) {
   const last = fetched.rows[0] ? new Date(fetched.rows[0].fetched_at).getTime() : 0;
   let background = null;
   let failed = false;
-  if (!last) {
+  if (readElsewhere()) {
+    // Nothing is read here; until the reader has sent this campus once, there is nothing to show.
+    failed = !last;
+  } else if (!last) {
     try { await refreshCampus(key); } catch (err) { failed = true; console.warn('[campus] first read failed:', err.message); await db.query('DELETE FROM campus_fetches WHERE campus = $1', [key]); }
   } else if (Date.now() - last > STALE_MS) {
     background = refreshCampus(key).catch((err) => console.warn('[campus] refresh failed:', err.message));
@@ -189,4 +238,4 @@ async function campusBoard(key) {
   };
 }
 
-module.exports = { CAMPUSES, campusFor, parseBoard, campusBoard, refreshCampus };
+module.exports = { CAMPUSES, campusFor, parseBoard, campusBoard, refreshCampus, ingestCampus };

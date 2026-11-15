@@ -43,6 +43,7 @@ All routes except `/api/health`, `/api/auth/config`, `signup`, `login`, `refresh
 | POST | `/api/listen/:id/finish` | Save the class as a lecture in its course (202, notes made in the background) |
 | DELETE | `/api/listen/:id` | Stop and keep nothing |
 | GET | `/api/campus` | The notice board of the student's own university, if it is connected |
+| POST | `/api/campus/ingest` | Notices sent by the campus reader; only with `CAMPUS_INGEST_KEY`, and closed (404) when it is not set |
 | GET/POST | `/api/community` | The room for the student's university; post `body`, `kind`, `image?` |
 | GET/DELETE | `/api/community/:id` | A post with its replies; or delete your own |
 | POST | `/api/community/:id/comments`, `/like`, `/report` | Reply, like (again to undo), report |
