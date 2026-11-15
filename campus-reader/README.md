@@ -40,7 +40,7 @@ You need Node 22 and the Cloudflare account that holds preplitai.com. Run the co
    npm --prefix campus-reader/worker exec wrangler login
    ```
 
-4. **Deploy the Worker:**
+4. **Deploy the Worker.** A new account first needs its email address verified, and Workers & Pages opened once in the Cloudflare dashboard (that creates the account's `workers.dev` subdomain, which schedules need; the Worker itself gets no public address):
 
    ```bash
    npm --prefix campus-reader/worker run deploy
