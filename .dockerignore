@@ -1,0 +1,21 @@
+# Only what the two images build from (Dockerfile.web, Dockerfile.api).
+.git
+.github
+.claude
+.vercel
+.playwright-mcp
+**/node_modules
+**/.env
+**/.env.*
+dist
+server/.data
+server/outputs
+mobile
+campus-reader
+brand
+*.pdf
+*.log
+*.tsbuildinfo
+docker-compose.yml
+Dockerfile.*
+DEPLOY.md

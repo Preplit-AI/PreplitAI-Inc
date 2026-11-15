@@ -1,0 +1,66 @@
+name: Docker
+
+# Builds the images Coolify deploys and runs the whole stack once: the pages
+# load through nginx, the API answers through it, and a student can sign up.
+on:
+  push:
+    paths:
+      - "Dockerfile.*"
+      - "docker-compose.yml"
+      - ".dockerignore"
+      - "docker/**"
+      - ".github/workflows/docker.yml"
+  workflow_dispatch:
+
+jobs:
+  stack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      POSTGRES_PASSWORD: ci-only-database-password
+      GROQ_API_KEY: ci-not-a-real-key
+      PUBLIC_URL: http://localhost
+      ALLOWED_ORIGINS: http://localhost
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and start
+        run: |
+          export JWT_SECRET="$(openssl rand -hex 32)"
+          docker compose up -d --build --wait --wait-timeout 180
+
+      - name: nginx configuration is valid
+        run: docker compose exec -T web nginx -t
+
+      - name: Pages, app and API through nginx
+        run: |
+          get() { docker compose exec -T web wget -q -S -O /tmp/body "http://127.0.0.1$1" 2>&1 | awk '/HTTP\//{s=$2} END{print s}'; }
+          has() { docker compose exec -T web grep -q "$1" /tmp/body; }
+          check() { s=$(get "$1"); echo "$1 -> $s"; [ "$s" = "$2" ] || { echo "expected $2"; exit 1; }; }
+          check / 200;            has "Preplit AI"
+          check /ko 200;          has 'lang="ko"'
+          check /pricing 200
+          check /ko/pricing/ 200
+          check /login 200;       has 'id="root"'
+          check /app 200
+          check /m 200;           has '/m/_expo'
+          check /m/welcome 200;   has '/m/_expo'
+          check /brand/preplit-mark-256.png 200
+          check /api/health 200;  has '"ok"'
+          check /api/campus 401
+          check /healthz 200
+          loc=$(docker compose exec -T web wget -q -S --max-redirect=0 -O /dev/null http://127.0.0.1/en/pricing 2>&1 | awk '/Location:/{print $2}')
+          echo "/en/pricing -> $loc"; [ "$loc" = "http://127.0.0.1/pricing" ] || [ "$loc" = "/pricing" ]
+          csp=$(docker compose exec -T web wget -q -S -O /dev/null "http://127.0.0.1/js/$(docker compose exec -T web ls /usr/share/nginx/html/js | head -1)" 2>&1 | grep -c "Content-Security-Policy" || true)
+          echo "security headers on /js/: $csp"; [ "$csp" -ge 1 ]
+
+      - name: A student can sign up (API and database)
+        run: |
+          docker compose exec -T api node -e "
+            fetch('http://127.0.0.1:5000/api/auth/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'ci@example.com', password: 'correct horse battery', name: 'CI Student' }) })
+              .then(async (r) => { const b = await r.json(); console.log(r.status, b.success); process.exit(r.status === 201 && b.accessToken ? 0 : 1); })
+              .catch((e) => { console.error(e); process.exit(1); });"
+
+      - name: Logs
+        if: always()
+        run: docker compose logs --no-color --tail 80

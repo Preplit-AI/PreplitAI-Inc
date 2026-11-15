@@ -417,10 +417,23 @@ function pgliteDriver(db) {
   };
 }
 
+/**
+ * A database on this machine or on a private container network (a host with
+ * no dot in it, such as `db` in docker-compose.yml) is reached without TLS;
+ * anything else, such as Neon, with it. PGSSL=disable or =require overrides.
+ */
+function wantsSsl(url) {
+  if (process.env.PGSSL === 'disable') return false;
+  if (process.env.PGSSL === 'require') return true;
+  let host = '';
+  try { host = new URL(url).hostname; } catch { return true; }
+  return !(host === 'localhost' || host === '127.0.0.1' || host === '::1' || host === '[::1]' || (host && !host.includes('.')));
+}
+
 async function connectPostgres() {
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.PGSSL === 'disable' || /localhost|127\.0\.0\.1/.test(process.env.DATABASE_URL)
+    ssl: !wantsSsl(process.env.DATABASE_URL)
       ? false
       : { rejectUnauthorized: process.env.PGSSL_REJECT_UNAUTHORIZED !== 'false' },
     max: 10,
