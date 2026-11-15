@@ -61,7 +61,8 @@ require.cache[llmPath].exports = {
 
 const app = require('../app');
 const db = require('../db/database');
-const { parseBoard, campusFor } = require('../services/campusFeed');
+const { campusFor } = require('../services/campusFeed');
+const { parseBoard } = require('../services/campusBoards');
 
 let server;
 let base;
