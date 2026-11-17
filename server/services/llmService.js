@@ -5,20 +5,53 @@ const { FALLBACK_MODELS } = require('../config/constants');
 let client = null;
 
 /**
- * The Groq client, built lazily.
+ * OpenRouter / Gemini 2.5 Flash through an OpenAI-compatible endpoint.
  *
- * The key is read at call time, not at module load, so a missing key does not
- * take the whole API down on boot - but it fails the individual request loudly
- * instead of producing nothing. There is no offline or mock mode.
+ * Priorities for credentials:
+ * 1. OPENROUTER_API_KEY (or key starting with 'sk-or-') -> connects to OpenRouter at https://openrouter.ai/api/v1
+ * 2. GEMINI_API_KEY -> connects to Google Gemini OpenAI-compatible endpoint
+ * 3. GROQ_API_KEY -> connects to Groq or local test server via GROQ_BASE_URL
+ *
+ * Tests override GROQ_BASE_URL to point at a local test server, which continues
+ * to work without hitting external providers.
  */
 function getClient() {
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY || process.env.GROQ_API_KEY;
   if (!apiKey) {
-    const err = new Error('GROQ_API_KEY is not set, so transcription, notes and chat are unavailable.');
+    const err = new Error('OPENROUTER_API_KEY, GEMINI_API_KEY or GROQ_API_KEY is not set, so AI services are unavailable.');
     err.code = 'LLM_NOT_CONFIGURED';
     throw err;
   }
-  if (!client) client = new Groq({ apiKey, timeout: 5 * 60 * 1000, maxRetries: 2 });
+  if (!client) {
+    let baseURL = process.env.GROQ_BASE_URL;
+    let customFetch = undefined;
+
+    const isOpenRouter = Boolean(process.env.OPENROUTER_API_KEY || apiKey.startsWith('sk-or-'));
+    if (!baseURL) {
+      if (isOpenRouter) {
+        baseURL = 'https://openrouter.ai/api/v1';
+        // groq-sdk prefixes /openai/v1/chat/completions to baseURL; rewrite it to OpenRouter's /api/v1/chat/completions
+        customFetch = (url, init) => {
+          const cleanUrl = typeof url === 'string' ? url.replace('/api/v1/openai/v1/', '/api/v1/') : url;
+          return fetch(cleanUrl, init);
+        };
+      } else if (process.env.GEMINI_API_KEY) {
+        baseURL = 'https://generativelanguage.googleapis.com/v1beta/openai';
+        customFetch = (url, init) => {
+          const cleanUrl = typeof url === 'string' ? url.replace('/openai/openai/v1/', '/openai/') : url;
+          return fetch(cleanUrl, init);
+        };
+      }
+    }
+
+    client = new Groq({
+      apiKey,
+      timeout: 5 * 60 * 1000,
+      maxRetries: 2,
+      ...(baseURL ? { baseURL } : {}),
+      ...(customFetch ? { fetch: customFetch } : {}),
+    });
+  }
   return client;
 }
 
@@ -111,9 +144,6 @@ async function* streamTurn({ primaryModel, messages, tools, signal, temperature 
           messages,
           stream: true,
           max_completion_tokens: maxTokens,
-          // Answers come from what the tools returned, so long deliberation adds
-          // cost and delay and no accuracy. Only these models accept the setting.
-          ...(model.startsWith('openai/gpt-oss') ? { reasoning_effort: 'low' } : {}),
           ...(tools && tools.length ? { tools, tool_choice: 'auto' } : {}),
         },
         { signal }

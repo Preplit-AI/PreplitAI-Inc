@@ -801,3 +801,15 @@ test('outside the main chat Juno has no hands: the same call saves nothing', asy
   assert.ok(lastToolResult().error);
   assert.equal((await call('GET', '/tasks?state=open', { token })).json.tasks.length, 0);
 });
+
+test('a weekday the student names is turned into a date by the server, not the model', () => {
+  const { weekdayDate } = require('../services/companionTools');
+  // Sunday 15 November 2026, noon in Korea.
+  const now = Date.parse('2026-11-15T12:00:00+09:00');
+  const kst = (d) => new Date(d.getTime() + 9 * 3600000).toISOString().slice(0, 16);
+  assert.equal(kst(weekdayDate('Thursday', false, undefined, now)), '2026-11-19T23:59', '"next Thursday" on a Sunday is in four days');
+  assert.equal(kst(weekdayDate('Thursday', true, undefined, now)), '2026-11-26T23:59', '"Thursday next week" is a week later');
+  assert.equal(kst(weekdayDate('Friday', false, '2026-11-22T18:00', now)), '2026-11-20T18:00', 'the time is kept, the wrong date is not');
+  assert.equal(kst(weekdayDate('Sunday', false, undefined, now)), '2026-11-22T23:59', 'the same weekday as today means a week from now');
+  assert.equal(weekdayDate('Someday', false, undefined, now), null);
+});

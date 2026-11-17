@@ -86,7 +86,7 @@ function languageLines(profile) {
   const name = code && LANGUAGE_NAMES[code];
   if (!name || code === 'ko') return '';
   return `\n\n답변 언어 (위의 "한국어로 쓴다"와 해요체 규칙 대신 이 규칙을 따른다):
-- 학생은 유학생이고, 설명을 ${name}로 듣기를 원한다. 모든 답변을 ${name}로 쓴다. 말투는 똑같이 담담하고 짧게, 완전한 문장으로 쓴다.
+- 학생은 유학생이고, 설명을 ${name}로 듣기를 원한다. 모든 답변을 ${name}로 쓴다. 강의 노트나 도구 결과가 한국어여도 답변은 ${name}로 옮겨 쓴다. 말투는 똑같이 담담하고 짧게, 완전한 문장으로 쓴다.
 - 강의에 나온 전문 용어는 강의에서 쓴 원어 그대로 먼저 쓰고, 처음 나올 때 괄호 안에 ${name} 뜻을 붙인다. 예: 교착 상태 (deadlock). 시험과 수업에서 그 원어를 알아야 하기 때문이다.
 - 위 규칙에 따옴표로 정해 둔 문장들("올린 강의에서는 찾지 못했어요." 등)은 같은 뜻의 ${name} 문장으로 말한다.
 - 도구로 찾을 때는 강의 자료의 언어(주로 한국어)와 ${name} 표현을 모두 시도한다.`;
@@ -100,15 +100,30 @@ const CAREER_MODE = `
 - 프로젝트는 학생이 직접 만든다. 대신 만들어 주겠다고 하지 않고, 학생이 하지 않은 일을 한 것처럼 쓰지 않는다. 역량은 "수업에서 접했다"와 "직접 해 봤다"를 구분해서 말한다.
 - 진로 설명은 일반적인 정보라고 밝히고 말한다. 취업, 비자, 자격 요건을 보장하거나 단정하지 않는다. 그런 것은 학교나 공식 기관에서 확인하라고 말한다.`;
 
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+/**
+ * Today and the next two weeks in Korea, each with its weekday. Models get
+ * weekdays wrong when they work them out ("next Thursday" became a Saturday),
+ * so they are given, not computed.
+ */
+function calendarLines(now = Date.now()) {
+  const day = (n) => {
+    const d = new Date(now + 9 * 60 * 60 * 1000 + n * 86400000);
+    return `${d.toISOString().slice(0, 10)} ${WEEKDAYS[d.getUTCDay()]}`;
+  };
+  const next = Array.from({ length: 14 }, (_, i) => day(i + 1)).join(', ');
+  return `오늘 날짜: ${day(0)} (한국 시간)\n앞으로 2주의 날짜와 요일 (요일은 계산하지 말고 여기서 읽는다): ${next}`;
+}
+
 function systemPrompt({ courseName, viewing, profile = null, mode = null }) {
-  const today = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const scope = courseName
     ? `이 대화는 '${courseName}' 과목으로 범위가 정해져 있다. 도구도 이 과목만 본다.`
     : '이 대화는 학생의 모든 과목을 다룬다.';
   const open = viewing
     ? `\n학생은 지금 '${viewing.courseName}' 과목의 '${viewing.title}' 노트를 보고 있다 (lecture_id: ${viewing.id}). "이 강의", "여기"는 이 강의를 뜻한다.`
     : '';
-  return `${SYSTEM_PROMPT}\n\n오늘 날짜: ${today} (한국 시간)\n${scope}${open}${profileLines(profile)}${mode === 'career' ? CAREER_MODE : mode === 'companion' ? COMPANION_MODE : ''}${languageLines(profile)}`;
+  return `${SYSTEM_PROMPT}\n\n${calendarLines()}\n${scope}${open}${profileLines(profile)}${mode === 'career' ? CAREER_MODE : mode === 'companion' ? COMPANION_MODE : ''}${languageLines(profile)}`;
 }
 
 const CITATION = /\[S(\d+)\]/g;

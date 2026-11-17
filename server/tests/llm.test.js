@@ -1,7 +1,8 @@
 'use strict';
 /**
- * The real Groq SDK against a local server that speaks the same protocol, so
- * the stream handling is tested on real bytes without calling the provider.
+ * The Groq SDK (used as an OpenAI-compatible HTTP client) against a local
+ * server that speaks the same protocol, so the stream handling is tested on
+ * real bytes without calling the provider.
  */
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
@@ -10,6 +11,8 @@ const http = require('http');
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-secret-that-is-long-enough-for-the-check-0123456789';
 process.env.GROQ_API_KEY = 'local-test-key';
+// Set a known fallback list so the cascade assertions below are stable.
+process.env.FALLBACK_MODELS = 'fallback-a,fallback-b';
 
 /** Decides each response: receives the parsed request, writes to the response. */
 let respond = null;
@@ -139,7 +142,7 @@ test('a model that fails before saying anything falls through to the next', asyn
   const { error, text } = await run();
   assert.equal(error, null);
   assert.equal(text, '다음 모델의 답이에요.');
-  assert.deepEqual(requestedModels, ['model-a', 'openai/gpt-oss-120b']);
+  assert.deepEqual(requestedModels, ['model-a', 'fallback-a']);
 });
 
 test('when every model fails the error says so, with no provider detail lost to the log', async () => {
@@ -150,7 +153,7 @@ test('when every model fails the error says so, with no provider detail lost to 
   const { error, events } = await run();
   assert.equal(error.code, 'LLM_UNAVAILABLE');
   assert.equal(events.length, 0);
-  assert.deepEqual(requestedModels, ['model-a', 'openai/gpt-oss-120b', 'openai/gpt-oss-20b']);
+  assert.deepEqual(requestedModels, ['model-a', 'fallback-a', 'fallback-b']);
 });
 
 const rateLimited = (res) => {
@@ -193,15 +196,15 @@ test('a chat answer that hits a rate limit fails quickly, and says it was busy',
   assert.equal(error.code, 'LLM_BUSY');
 });
 
-test('chat asks these models not to over-deliberate, and does not send the setting to others', async () => {
+test('chat does not send reasoning_effort to Gemini models', async () => {
   const seen = [];
   respond = (body, res) => {
     seen.push([body.model, body.reasoning_effort]);
     sse(res, [chunk({ content: '답이에요.' }), chunk({}, 'stop'), 'data: [DONE]\n\n']);
   };
-  await run({ primaryModel: 'openai/gpt-oss-120b' });
+  await run({ primaryModel: 'gemini-2.5-flash' });
   await run({ primaryModel: 'other/model' });
-  assert.deepEqual(seen, [['openai/gpt-oss-120b', 'low'], ['other/model', undefined]]);
+  assert.deepEqual(seen, [['gemini-2.5-flash', undefined], ['other/model', undefined]]);
 });
 
 test('an empty answer falls through to the next model', async () => {

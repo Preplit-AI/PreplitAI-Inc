@@ -71,13 +71,16 @@ module.exports = {
   MONTHLY_CHAT_LIMIT: int(process.env.MONTHLY_CHAT_LIMIT, 600),
   MAX_CHAT_MESSAGE_CHARS: 4000,
 
-  TRANSCRIBE_MODEL: process.env.TRANSCRIBE_MODEL || 'whisper-large-v3-turbo',
+  TRANSCRIBE_MODEL: process.env.TRANSCRIBE_MODEL || 'google/gemini-2.5-flash',
   // Reads pictures: a screenshot of the student's LMS becomes a list of deadlines.
-  VISION_MODEL: process.env.VISION_MODEL || 'qwen/qwen3.8-27b',
-  NOTES_MODEL: process.env.NOTES_MODEL || 'openai/gpt-oss-120b',
-  CHAT_MODEL: process.env.CHAT_MODEL || 'openai/gpt-oss-120b',
-  /** How much transcript goes into one notes request. About 4,500 tokens, which leaves room for the answer on an 8,000-a-minute plan. */
-  NOTES_PART_CHARS: int(process.env.NOTES_PART_CHARS, 8000),
+  VISION_MODEL: process.env.VISION_MODEL || 'google/gemini-2.5-flash',
+  NOTES_MODEL: process.env.NOTES_MODEL || 'google/gemini-2.5-flash',
+  CHAT_MODEL: process.env.CHAT_MODEL || 'google/gemini-2.5-flash',
+  /**
+   * How much transcript goes into one notes request. Gemini 2.5 Flash accepts
+   * 1M tokens, so a full 90-minute lecture fits in one shot.
+   */
+  NOTES_PART_CHARS: int(process.env.NOTES_PART_CHARS, 120000),
   /** Tried, in order, when the chosen model fails. */
-  FALLBACK_MODELS: ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'],
+  FALLBACK_MODELS: (process.env.FALLBACK_MODELS || 'google/gemini-2.5-flash').split(',').map((s) => s.trim()).filter(Boolean),
 };
