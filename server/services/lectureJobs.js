@@ -45,7 +45,7 @@ function pump() {
 
 const MIN_WORDS = 40;
 
-async function processLecture({ lectureId, userId, courseName, title, audioPath, text, language = null, durationSeconds: knownSeconds = null }) {
+async function processLecture({ lectureId, userId, courseName, courseLanguage = null, title, audioPath, text, language = null, durationSeconds: knownSeconds = null }) {
   let failureReason = 'processing_failed';
   try {
     let transcript;
@@ -54,7 +54,7 @@ async function processLecture({ lectureId, userId, courseName, title, audioPath,
 
     if (audioPath) {
       failureReason = 'transcription_failed';
-      const result = await transcribeFile(audioPath, { prompt: courseName });
+      const result = await transcribeFile(audioPath, { prompt: courseName, language: courseLanguage });
       transcript = result.transcript;
       durationSeconds = result.durationSeconds;
       unclearRanges = result.unclearRanges;

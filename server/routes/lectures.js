@@ -169,6 +169,7 @@ router.post('/', uploadLimit, receiveUpload, async (req, res, next) => {
       lectureId: lecture.id,
       userId: req.userId,
       courseName: course.name,
+      courseLanguage: course.language || null,
       title,
       audioPath,
       text: audioPath ? null : text,

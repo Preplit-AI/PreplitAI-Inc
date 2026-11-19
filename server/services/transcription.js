@@ -7,12 +7,17 @@ const crypto = require('crypto');
 const { spawn } = require('child_process');
 const ffmpegPath = require('ffmpeg-static');
 const { getClient } = require('./llmService');
+const transcribeService = require('./transcribeService');
 const { TRANSCRIBE_MODEL } = require('../config/constants');
 
 /**
- * Audio in, transcript out — powered by Gemini 2.5 Flash, which natively
- * understands audio files sent as inline data through the chat completions
- * endpoint.
+ * Audio in, transcript out.
+ *
+ * With TRANSCRIBE_INTERNAL_API_KEY set, audio goes to the Preplit transcription
+ * service (transcribeService.js: Whisper on a GPU, silence removed first). The
+ * language model below is the fallback, and the only path when the key is not
+ * set: Gemini 2.5 Flash understands audio sent as inline data through the chat
+ * completions endpoint.
  *
  * 1. ffmpeg re-encodes whatever the phone produced to 16 kHz mono and cuts it
  *    into ten-minute pieces, which keeps every request well under the API's
@@ -153,12 +158,52 @@ async function transcribeWithGemini(client, filePath, { prompt, model }) {
   return { segments: parsed.segments, duration };
 }
 
+/** Timestamped lines from the transcription service's segments, `offset` seconds into the class. */
+function linesFromService(result, offset = 0) {
+  const segments = result && !result.no_speech_detected && Array.isArray(result.segments) ? result.segments : [];
+  const lines = [];
+  for (const segment of segments) {
+    const text = String(segment.text || '').trim();
+    if (text) lines.push('[' + stamp(offset + (Number(segment.start) || 0)) + '] ' + text);
+  }
+  const stats = (result && result.audio_stats) || {};
+  return { lines, seconds: Number(stats.original_duration_seconds) || 0 };
+}
+
+/**
+ * Tries the transcription service, then the language model. A failure of the
+ * service is not a failure of the lecture while the model can still do it.
+ */
+async function withFallback(label, viaService, viaModel) {
+  if (!transcribeService.configured()) return viaModel();
+  try {
+    return await viaService();
+  } catch (err) {
+    console.warn(`[transcription] ${label}: service failed (${err.message}); using the language model`);
+    try {
+      return await viaModel();
+    } catch (modelErr) {
+      // Nothing configured to fall back on: report what the service said.
+      throw modelErr.code === 'LLM_NOT_CONFIGURED' ? err : modelErr;
+    }
+  }
+}
+
 /**
  * @param {string} inputPath audio file on disk (deleted by the caller)
- * @param {{ prompt?: string }} options prompt: course name, to help with jargon
+ * @param {{ prompt?: string, language?: string }} options prompt: course name, to help with jargon; language: the course's teaching language
  * @returns {Promise<{ transcript: string, durationSeconds: number, unclearRanges: {start:number,end:number}[], speechSegments: number }>}
  */
-async function transcribeFile(inputPath, { prompt } = {}) {
+async function transcribeFile(inputPath, { prompt, language } = {}) {
+  return withFallback('recording', async () => {
+    const result = await transcribeService.transcribeRecording(inputPath, { keywords: prompt, language });
+    const { lines, seconds } = linesFromService(result);
+    // The service drops silence before transcribing and reports no confidence, so it marks no unclear stretches.
+    return { transcript: lines.join('\n'), durationSeconds: Math.round(seconds), unclearRanges: [], speechSegments: lines.length };
+  }, () => transcribeFileWithModel(inputPath, { prompt }));
+}
+
+async function transcribeFileWithModel(inputPath, { prompt } = {}) {
   const client = getClient();
   const workDir = path.join(os.tmpdir(), 'preplit-audio-' + crypto.randomBytes(8).toString('hex'));
   await fsp.mkdir(workDir, { recursive: true });
@@ -222,15 +267,24 @@ async function transcribeFile(inputPath, { prompt } = {}) {
 }
 
 /**
- * One short piece of a class that is being listened to live. It goes to Gemini
- * as it is: a piece of a minute or less needs no ffmpeg.
+ * One short piece of a class that is being listened to live, transcribed in
+ * the same request: by the transcription service when it is configured, else
+ * by the language model. A piece of a minute or less needs no ffmpeg.
  *
  * @param {string} filePath the piece, with its extension (deleted by the caller)
- * @param {{ prompt?: string, offsetSeconds?: number, fallbackSeconds?: number }} options
+ * @param {{ prompt?: string, language?: string, offsetSeconds?: number, fallbackSeconds?: number }} options
  *   offsetSeconds: how far into the class this piece starts
  * @returns {Promise<{ lines: string[], seconds: number, speechSegments: number }>}
  */
-async function transcribeChunk(filePath, { prompt, offsetSeconds = 0, fallbackSeconds = 0 } = {}) {
+async function transcribeChunk(filePath, { prompt, language, offsetSeconds = 0, fallbackSeconds = 0 } = {}) {
+  return withFallback('live piece', async () => {
+    const result = await transcribeService.transcribeClip(filePath, { keywords: prompt, language });
+    const { lines, seconds } = linesFromService(result, offsetSeconds);
+    return { lines, seconds: seconds || fallbackSeconds, speechSegments: lines.length };
+  }, () => transcribeChunkWithModel(filePath, { prompt, offsetSeconds, fallbackSeconds }));
+}
+
+async function transcribeChunkWithModel(filePath, { prompt, offsetSeconds = 0, fallbackSeconds = 0 } = {}) {
   const client = getClient();
   const result = await transcribeWithGemini(client, filePath, {
     prompt,
@@ -254,4 +308,4 @@ async function transcribeChunk(filePath, { prompt, offsetSeconds = 0, fallbackSe
   return { lines, seconds: Number(result.duration) || fallbackSeconds, speechSegments };
 }
 
-module.exports = { transcribeFile, transcribeChunk, classify, mergeRanges, stamp, UNCLEAR };
+module.exports = { transcribeFile, transcribeChunk, linesFromService, classify, mergeRanges, stamp, UNCLEAR };

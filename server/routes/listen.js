@@ -137,7 +137,7 @@ router.post('/:id/chunk', chunkLimit, receiveChunk, async (req, res, next) => {
     let seconds;
     let heard = true;
     try {
-      ({ lines, seconds } = await transcribeChunk(file, { prompt, offsetSeconds: session.seconds, fallbackSeconds }));
+      ({ lines, seconds } = await transcribeChunk(file, { prompt, language: course ? course.language : null, offsetSeconds: session.seconds, fallbackSeconds }));
     } catch (err) {
       // This piece could not be transcribed. The class goes on: the gap is marked, not guessed.
       console.warn('[listen] chunk ' + seq + ' of ' + session.id + ' failed:', err.message);
