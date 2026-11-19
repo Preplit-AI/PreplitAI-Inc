@@ -45,7 +45,7 @@ services:
       CAMPUS_INGEST_KEY: ${CAMPUS_INGEST_KEY:-}
       # Lecture Buddy's transcription service; without the key, the AI model transcribes instead.
       TRANSCRIBE_SERVICE_URL: ${TRANSCRIBE_SERVICE_URL:-https://transcribe.iw12.org}
-      TRANSCRIBE_INTERNAL_API_KEY: ${TRANSCRIBE_INTERNAL_API_KEY:-}
+      TRANSCRIBE_INTERNAL_API_KEY: ${TRANSCRIBE_INTERNAL_API_KEY:-${INTERNAL_API_KEY:-}}
       PILOT_INVITE_CODE: ${PILOT_INVITE_CODE:-}
       MAX_AUDIO_MB: ${MAX_AUDIO_MB:-200}
     depends_on:

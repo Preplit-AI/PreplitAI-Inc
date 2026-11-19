@@ -114,6 +114,19 @@ test('failures are reported, not hidden: a job that failed in the background, a 
   }
 });
 
+test('the key may also be set as INTERNAL_API_KEY, the name the service itself uses', async () => {
+  delete process.env.TRANSCRIBE_INTERNAL_API_KEY;
+  process.env.INTERNAL_API_KEY = KEY;
+  try {
+    const piece = await transcribeChunk(audio('alias.webm', 'SPEECH'), {});
+    assert.equal(piece.speechSegments, 2);
+    assert.equal(requests.at(-1).key, KEY);
+  } finally {
+    delete process.env.INTERNAL_API_KEY;
+    process.env.TRANSCRIBE_INTERNAL_API_KEY = KEY;
+  }
+});
+
 test('without the service key, transcription goes to the language model instead', async () => {
   const count = requests.length;
   delete process.env.TRANSCRIBE_INTERNAL_API_KEY;

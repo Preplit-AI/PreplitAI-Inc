@@ -21,10 +21,16 @@ const path = require('path');
 
 const DEFAULT_URL = 'https://transcribe.iw12.org';
 const baseUrl = () => (process.env.TRANSCRIBE_SERVICE_URL || DEFAULT_URL).replace(/\/+$/, '');
+/** The key, under our name or the service's own (INTERNAL_API_KEY, as its specification calls it). */
+const apiKey = () => (process.env.TRANSCRIBE_INTERNAL_API_KEY || process.env.INTERNAL_API_KEY || '').trim();
 /** Set up when the key is. Tests load server/.env too, so under test only a local stand-in counts: no test ever reaches the real service. */
-const configured = () => Boolean((process.env.TRANSCRIBE_INTERNAL_API_KEY || '').trim())
+const configured = () => Boolean(apiKey())
   && (process.env.NODE_ENV !== 'test' || /^https?:\/\/(127\.0\.0\.1|localhost)[:/]/.test(process.env.TRANSCRIBE_SERVICE_URL || ''));
-const authHeaders = () => ({ 'X-API-Key': process.env.TRANSCRIBE_INTERNAL_API_KEY.trim() });
+let announced = false;
+const authHeaders = () => {
+  if (!announced) { announced = true; console.info('[transcription] using the Preplit transcription service at ' + baseUrl()); }
+  return { 'X-API-Key': apiKey() };
+};
 
 const TYPES = {
   '.webm': 'audio/webm', '.m4a': 'audio/mp4', '.mp4': 'audio/mp4', '.mp3': 'audio/mpeg', '.wav': 'audio/wav',

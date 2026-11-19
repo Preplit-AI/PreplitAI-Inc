@@ -88,7 +88,7 @@ After changing the app, rebuild its web version and commit it with the change:
 npm run mobile:web
 ```
 
-Vercel needs `DATABASE_URL`, `JWT_SECRET` and `GROQ_API_KEY`. Optional: `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` (Google sign-in), `RESEND_API_KEY` and `EMAIL_FROM` (password reset), `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` (web push), `CAMPUS_INGEST_KEY` (the campus reader's key; see [campus-reader/](campus-reader/README.md)), `TRANSCRIBE_INTERNAL_API_KEY` (Lecture Buddy's transcription service at transcribe.iw12.org; without it the AI model transcribes).
+Vercel needs `DATABASE_URL`, `JWT_SECRET` and `GROQ_API_KEY`. Optional: `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` (Google sign-in), `RESEND_API_KEY` and `EMAIL_FROM` (password reset), `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` (web push), `CAMPUS_INGEST_KEY` (the campus reader's key; see [campus-reader/](campus-reader/README.md)), `TRANSCRIBE_INTERNAL_API_KEY` or `INTERNAL_API_KEY` (Lecture Buddy's transcription service at transcribe.iw12.org; without it the AI model transcribes).
 
 ## Security
 
