@@ -191,16 +191,34 @@ async function withFallback(label, viaService, viaModel) {
 
 /**
  * @param {string} inputPath audio file on disk (deleted by the caller)
- * @param {{ prompt?: string, language?: string }} options prompt: course name, to help with jargon; language: the course's teaching language
- * @returns {Promise<{ transcript: string, durationSeconds: number, unclearRanges: {start:number,end:number}[], speechSegments: number }>}
+ * @param {{ prompt?: string, language?: string, translate?: boolean }} options prompt: course name, to help with jargon; language: the course's teaching language; translate: also return the transcript in English
+ * @returns {Promise<{ transcript: string, durationSeconds: number, unclearRanges: {start:number,end:number}[], speechSegments: number, english: string|null }>}
+ *
+ * With `translate`, the service also returns the whole transcript in English;
+ * a class taught in English is its own translation. The language-model fallback
+ * returns no English (null), and the caller translates.
  */
-async function transcribeFile(inputPath, { prompt, language } = {}) {
+async function transcribeFile(inputPath, { prompt, language, translate = false } = {}) {
   return withFallback('recording', async () => {
-    const result = await transcribeService.transcribeRecording(inputPath, { keywords: prompt, language });
+    const result = await transcribeService.transcribeRecording(inputPath, { keywords: prompt, language, translate });
     const { lines, seconds } = linesFromService(result);
     // The service drops silence before transcribing and reports no confidence, so it marks no unclear stretches.
-    return { transcript: lines.join('\n'), durationSeconds: Math.round(seconds), unclearRanges: [], speechSegments: lines.length };
-  }, () => transcribeFileWithModel(inputPath, { prompt }));
+    return {
+      transcript: lines.join('\n'),
+      durationSeconds: Math.round(seconds),
+      unclearRanges: [],
+      speechSegments: lines.length,
+      english: englishFromService(result),
+    };
+  }, async () => ({ ...(await transcribeFileWithModel(inputPath, { prompt })), english: null }));
+}
+
+function englishFromService(result) {
+  if (!result || result.no_speech_detected) return null;
+  const translated = typeof result.translated_text === 'string' ? result.translated_text.trim() : '';
+  if (translated) return translated;
+  if (result.detected_language === 'en' && typeof result.full_text === 'string') return result.full_text.trim() || null;
+  return null;
 }
 
 async function transcribeFileWithModel(inputPath, { prompt } = {}) {
@@ -308,4 +326,4 @@ async function transcribeChunkWithModel(filePath, { prompt, offsetSeconds = 0, f
   return { lines, seconds: Number(result.duration) || fallbackSeconds, speechSegments };
 }
 
-module.exports = { transcribeFile, transcribeChunk, linesFromService, classify, mergeRanges, stamp, UNCLEAR };
+module.exports = { transcribeFile, transcribeChunk, linesFromService, englishFromService, classify, mergeRanges, stamp, UNCLEAR };

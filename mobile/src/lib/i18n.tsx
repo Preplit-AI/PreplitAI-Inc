@@ -185,7 +185,8 @@ const en = {
     consent: "Only add material you're allowed to use. Your files are read for their text and not stored.",
   },
   lecture: {
-    summary: "Summary", terms: "Key terms", termsLine: "The lecture's own words, the ones your exam uses.", notes: "Notes",
+    summary: "Summary", terms: "Key terms", termsLine: "The lecture's own words, the ones your exam uses, with their English meaning.", notes: "Notes",
+    guide: "What the professor said", transcript: "Full transcript in English", showTranscript: "Show the whole transcript", hideTranscript: "Show less",
     flagged: "Your professor said this matters", quiz: "Quiz me on this", ask: "Ask Juno about this lecture",
     cards: (n: number) => (n === 1 ? "1 question" : `${n} questions`), delete: "Delete lecture",
     deleteConfirm: "Delete this lecture with its notes and questions? This can't be undone.",
@@ -432,7 +433,8 @@ const ko: Strings = {
     consent: "사용해도 되는 자료만 추가해 주세요. 파일은 글자만 읽고 저장하지 않아요.",
   },
   lecture: {
-    summary: "요약", terms: "핵심 용어", termsLine: "강의에서 쓴 말 그대로예요. 시험에 나오는 말이에요.", notes: "노트",
+    summary: "요약", terms: "핵심 용어", termsLine: "강의에서 쓴 말 그대로, 영어 뜻과 함께예요. 시험에 나오는 말이에요.", notes: "노트",
+    guide: "교수님이 한 이야기", transcript: "영어 전체 녹취록", showTranscript: "녹취록 전체 보기", hideTranscript: "접기",
     flagged: "교수님이 중요하다고 한 부분", quiz: "이 강의로 퀴즈", ask: "이 강의에 대해 Juno에게 묻기",
     cards: (n) => `질문 ${n}개`, delete: "강의 삭제",
     deleteConfirm: "이 강의를 노트, 질문과 함께 지울까요? 되돌릴 수 없어요.",

@@ -57,7 +57,7 @@ async function reason(res) {
   return typeof detail === 'string' ? detail : detail ? JSON.stringify(detail).slice(0, 300) : res.statusText;
 }
 
-async function formFor(filePath, { keywords, language }) {
+async function formFor(filePath, { keywords, language, translate = false }) {
   const ext = path.extname(filePath).toLowerCase();
   const form = new FormData();
   form.append('file', new Blob([await fsp.readFile(filePath)], { type: TYPES[ext] || 'application/octet-stream' }), 'lecture' + (TYPES[ext] ? ext : '.m4a'));
@@ -65,6 +65,11 @@ async function formFor(filePath, { keywords, language }) {
   form.append('language_mode', languageMode(language));
   const hint = keywordsFrom(keywords);
   if (hint) form.append('course_keywords', hint);
+  // The whole transcript in English as well, for the notes' English transcript.
+  if (translate) {
+    form.append('translate_transcript', 'true');
+    form.append('summary_language', 'English');
+  }
   return form;
 }
 
@@ -98,11 +103,11 @@ async function transcribeClip(filePath, { keywords, language, timeoutMs = 90 * 1
  * (429) is waited out a few times before giving up.
  * @returns {Promise<object>} the service's TranscribeResponse
  */
-async function transcribeRecording(filePath, { keywords, language, timeoutMs = 30 * 60 * 1000, pollMs = 2000, busyWaitMs = 15000 } = {}) {
+async function transcribeRecording(filePath, { keywords, language, translate = false, timeoutMs = 30 * 60 * 1000, pollMs = 2000, busyWaitMs = 15000 } = {}) {
   const deadline = Date.now() + timeoutMs;
   let started;
   for (let attempt = 0; ; attempt += 1) {
-    const res = await request(baseUrl() + '/api/transcribe/jobs', { method: 'POST', headers: authHeaders(), body: await formFor(filePath, { keywords, language }) }, 10 * 60 * 1000);
+    const res = await request(baseUrl() + '/api/transcribe/jobs', { method: 'POST', headers: authHeaders(), body: await formFor(filePath, { keywords, language, translate }) }, 10 * 60 * 1000);
     if (res.status === 429 && attempt < 3 && Date.now() + busyWaitMs < deadline) { await sleep(busyWaitMs); continue; }
     if (!res.ok) checkStart(res, await reason(res));
     started = await res.json();

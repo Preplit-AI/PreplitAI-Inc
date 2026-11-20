@@ -26,15 +26,18 @@ const SYSTEM_PROMPT = `너는 대학 강의 녹취록을 학생용 노트로 정
 4. 모든 문장은 한국어로 쓴다. 전문 용어는 처음 나올 때 원어를 괄호에 함께 쓴다. 예: 교착 상태(deadlock).
 5. 카드는 5~10장. 각 카드는 노트만 보고 답할 수 있어야 하고, 앞면은 질문 하나, 뒷면은 짧은 답이다.
 6. 노트는 자세하게 쓴다. 강의를 듣지 못한 학생이 이 노트만 읽고 강의를 따라갈 수 있어야 한다. 강의 순서대로 소제목을 나누고, 각 소제목에 교수가 말한 정의, 설명, 근거, 예시, 비교, 강조한 점을 빠짐없이 쓴다. 긴 강의일수록 소제목과 내용이 많아야 한다.
-7. JSON만 출력한다.`;
+7. guide는 강의를 처음부터 끝까지 따라가는 자세한 해설이다. 교수가 말한 순서대로, "교수는 먼저 ...를 설명했다", "이어서 ...라고 강조했다", "예로 ...를 들었다"처럼 교수가 무엇을 말했는지 이야기하듯 쓴다. 한 문단은 한 흐름(4~8문장)이고, 강의에 나온 정의, 설명, 예시, 질문과 답을 빠뜨리지 않는다. 50분 강의면 10문단 이상이다.
+8. terms의 english에는 반드시 영어 용어를 쓴다. 강의가 영어로 진행됐으면 term과 같아도 된다.
+9. JSON만 출력한다.`;
 
 const OUTPUT_SHAPE = `{
   "title": "강의 주제를 담은 짧은 제목 (40자 이내)",
   "summary": "두 문장 요약",
+  "guide": ["교수가 말한 내용을 순서대로 풀어 쓴 문단", "..."],
   "sections": [ { "heading": "소제목", "points": ["핵심 내용", "..."] } ],
   "flagged": [ { "quote": "교수가 한 말을 짧게 인용", "at": "mm:ss 또는 빈 문자열", "note": "무엇이 시험에 나오는지" } ],
   "cards": [ { "front": "질문", "back": "답" } ],
-  "terms": [ { "term": "강의에 나온 핵심 용어 (강의에서 쓴 원어 그대로)", "english": "영어 용어 (모르면 빈 문자열)", "meaning": "강의에서 설명한 뜻, 한 문장" } ]
+  "terms": [ { "term": "강의에 나온 핵심 용어 (강의에서 쓴 원어 그대로)", "english": "영어 용어 (반드시 채운다)", "meaning": "강의에서 설명한 뜻, 한 문장" } ]
 }`;
 
 /**
@@ -45,7 +48,7 @@ function systemPromptFor(language) {
   if (!language || language === 'Korean') return SYSTEM_PROMPT;
   return SYSTEM_PROMPT.replace(
     /4\. .*/,
-    `4. 학생은 유학생이다. 모든 문장(title, summary, heading, points, note, 카드, terms의 meaning)을 ${language}로 쓴다. 강의에 나온 전문 용어는 강의에서 쓴 원어 그대로 쓰고, 처음 나올 때 괄호에 ${language} 뜻을 붙인다. 예: 교착 상태 (deadlock). flagged의 quote는 교수가 한 말 그대로, 번역하지 않는다.`
+    `4. 학생은 유학생이다. 모든 문장(title, summary, guide, heading, points, note, 카드, terms의 meaning)을 ${language}로 쓴다. 강의에 나온 전문 용어는 강의에서 쓴 원어 그대로 쓰고, 처음 나올 때 괄호에 ${language} 뜻을 붙인다. 예: 교착 상태 (deadlock). flagged의 quote는 교수가 한 말 그대로, 번역하지 않는다.`
   );
 }
 
@@ -91,7 +94,10 @@ function clean(data) {
     .filter((t) => t.term && t.meaning && !seen.has(t.term.toLowerCase()) && seen.add(t.term.toLowerCase()))
     .slice(0, 20);
 
-  return { title: str(data.title, 120), summary: str(data.summary, 600), sections, flagged, cards, terms };
+  // The class told in order, paragraph by paragraph. Older notes have none.
+  const guide = (Array.isArray(data.guide) ? data.guide : []).map((g) => str(g, 3000)).filter(Boolean).slice(0, 60);
+
+  return { title: str(data.title, 120), summary: str(data.summary, 600), guide, sections, flagged, cards, terms };
 }
 
 function validate(data) {
@@ -157,7 +163,7 @@ async function writePart({ part, index, total, courseName, title, language }) {
   const userPrompt = `과목: ${courseName}
 학생이 붙인 제목: ${title || '(없음)'}
 
-이 녹취록은 긴 강의를 나눈 ${total}부분 중 ${index + 1}번째다. 이 부분에 있는 내용만 빠짐없이 자세하게 정리하고, 앞뒤 내용을 짐작하지 않는다. title과 summary는 빈 문자열로 둔다. 이 부분의 카드는 ${cardsHere}장만 만든다.
+이 녹취록은 긴 강의를 나눈 ${total}부분 중 ${index + 1}번째다. 이 부분에 있는 내용만 빠짐없이 자세하게 정리하고, 앞뒤 내용을 짐작하지 않는다. title과 summary는 빈 문자열로 둔다. guide는 이 부분의 내용만 순서대로 쓴다. 이 부분의 카드는 ${cardsHere}장만 만든다.
 
 출력 형식:
 ${OUTPUT_SHAPE}
@@ -200,7 +206,7 @@ async function titleAndSummary({ sections, courseName, title, language }) {
 }
 
 /**
- * @returns {Promise<{ title: string, summary: string, sections: {heading:string,points:string[]}[], flagged: {quote:string,at:string,note:string}[], cards: {front:string,back:string}[] }>}
+ * @returns {Promise<{ title: string, summary: string, guide: string[], sections: {heading:string,points:string[]}[], flagged: {quote:string,at:string,note:string}[], cards: {front:string,back:string}[] }>}
  */
 async function buildNotes({ transcript, courseName, title, language = null }) {
   const parts = splitTranscript(transcript);
@@ -239,6 +245,7 @@ ${transcript}`, language);
   return {
     title: noteTitle,
     summary,
+    guide: written.flatMap((p) => p.guide).slice(0, 60),
     sections,
     flagged: written.flatMap((p) => p.flagged),
     cards: pickEvenly(written.flatMap((p) => p.cards), MAX_CARDS),
@@ -246,4 +253,37 @@ ${transcript}`, language);
   };
 }
 
-module.exports = { buildNotes, validate, splitTranscript, pickEvenly, systemPromptFor };
+const TRANSLATE_PROMPT = `You translate a university lecture transcript into English.
+Translate everything that was said, in order, sentence by sentence. Do not summarise, shorten, explain or add anything.
+Leave out the [mm:ss] time marks. Where the transcript says [불명확], write [unclear].
+Keep technical terms accurate; where the professor used a Korean term, give the English term.
+Write plain paragraphs, a new paragraph where the topic moves on. Output only the translation.`;
+
+const TRANSLATE_PART_CHARS = 20000;
+
+/**
+ * The whole transcript in English, for when the transcription service gave
+ * none (the language-model fallback). A class taught in English is returned
+ * as it is, without its time marks. Without a translation the notes are still
+ * complete, so a failure here gives null, not a failed lecture.
+ * @returns {Promise<string|null>}
+ */
+async function translateTranscript(transcript) {
+  const plain = (transcript || '').replace(/^\[\d{2}:\d{2}(?::\d{2})?\]\s*/gm, '').trim();
+  if (!plain) return null;
+  const hangul = (plain.match(/[가-힣]/g) || []).length;
+  if (hangul < plain.length * 0.05) return plain.replace(/\[불명확\]/g, '[unclear]');
+  try {
+    const parts = splitTranscript(transcript, TRANSLATE_PART_CHARS);
+    const out = [];
+    for (const part of parts) {
+      out.push(await callLLM({ systemPrompt: TRANSLATE_PROMPT, userPrompt: part, primaryModel: NOTES_MODEL, patient: true }));
+    }
+    return out.join('\n\n').trim() || null;
+  } catch (err) {
+    console.warn('[notes] no English transcript:', err.message);
+    return null;
+  }
+}
+
+module.exports = { buildNotes, translateTranscript, validate, splitTranscript, pickEvenly, systemPromptFor };

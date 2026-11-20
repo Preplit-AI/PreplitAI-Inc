@@ -92,6 +92,8 @@ type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   body?: unknown;
   form?: FormData;
+  /** Bytes sent as they are (a slice of a recording). */
+  raw?: Blob;
   signal?: AbortSignal;
 };
 
@@ -101,6 +103,10 @@ export async function request<T>(path: string, options: RequestOptions = {}, ret
 
   let payload: BodyInit | undefined;
   if (options.form) payload = options.form;
+  else if (options.raw) {
+    headers["Content-Type"] = "application/octet-stream";
+    payload = options.raw;
+  }
   else if (options.body !== undefined) {
     headers["Content-Type"] = "application/json";
     payload = JSON.stringify(options.body);

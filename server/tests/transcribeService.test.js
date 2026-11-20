@@ -26,6 +26,7 @@ const SPEECH = { detected_language: 'en', no_speech_detected: false, full_text: 
   segments: [{ start: 0.5, end: 2, text: ' Round robin. ' }, { start: 3.2, end: 5, text: 'Quantum.' }, { start: 6, end: 6.5, text: '  ' }],
   summary: null, audio_stats: { original_duration_seconds: 20.4, trimmed_duration_seconds: 5, silence_removed_seconds: 15.4, silence_removed_percent: 75, speech_segments_count: 2 },
   audio_deleted: true, r2_deleted: true, provider: 'modal:lecture-transcriber', warnings: [] };
+const KOREAN = { ...SPEECH, detected_language: 'ko', full_text: '라운드 로빈.', translated_text: ' Round robin, in English. ' };
 const SILENCE = { ...SPEECH, no_speech_detected: true, full_text: '', segments: [], provider: 'vad:no-speech' };
 
 before(async () => {
@@ -37,10 +38,10 @@ before(async () => {
       const url = new URL(req.url, 'http://x');
       const field = (name) => { const m = new RegExp(`name="${name}"\\r\\n\\r\\n([^\\r]*)`).exec(body); return m ? m[1] : undefined; };
       requests.push({ method: req.method, path: url.pathname, consume: url.searchParams.get('consume'), key: req.headers['x-api-key'],
-        skip: field('skip_summary'), mode: field('language_mode'), keywords: field('course_keywords'), filename: (/filename="([^"]+)"/.exec(body) || [])[1] });
+        skip: field('skip_summary'), mode: field('language_mode'), keywords: field('course_keywords'), translate: field('translate_transcript'), summaryLanguage: field('summary_language'), filename: (/filename="([^"]+)"/.exec(body) || [])[1] });
       const send = (status, json) => { res.writeHead(status, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(json)); };
       if (req.headers['x-api-key'] !== KEY) return send(401, { detail: 'Invalid API key' });
-      const outcome = body.includes('BROKEN') ? 'broken' : body.includes('SILENCE') ? 'silence' : body.includes('FAILJOB') ? 'fail' : 'speech';
+      const outcome = body.includes('BROKEN') ? 'broken' : body.includes('SILENCE') ? 'silence' : body.includes('FAILJOB') ? 'fail' : body.includes('KOREAN') ? 'korean' : 'speech';
       if (req.method === 'POST' && url.pathname === '/api/transcribe') {
         if (outcome === 'broken') return send(400, { detail: 'Audio could not be decoded' });
         return send(200, outcome === 'silence' ? SILENCE : SPEECH);
@@ -57,7 +58,7 @@ before(async () => {
         if (job.polls < 2) return send(200, { job_id: m[1], status: 'processing', stage: 'Transcribing', result: null, error: null });
         if (url.searchParams.get('consume') === 'true') jobs.delete(m[1]);
         if (job.outcome === 'fail') return send(200, { job_id: m[1], status: 'failed', stage: 'Failed', result: null, error: 'GPU worker crashed' });
-        return send(200, { job_id: m[1], status: 'completed', stage: 'Done', result: job.outcome === 'silence' ? SILENCE : SPEECH, error: null });
+        return send(200, { job_id: m[1], status: 'completed', stage: 'Done', result: job.outcome === 'silence' ? SILENCE : job.outcome === 'korean' ? KOREAN : SPEECH, error: null });
       }
       send(404, { detail: 'Not found' });
     });
@@ -92,15 +93,26 @@ test('a piece with no speech adds no lines but still counts its time', async () 
 test('a whole recording goes through a job, polled until done and consumed', async () => {
   const before = requests.length;
   const result = await transcribeFile(audio('class.m4a', 'SPEECH'), { prompt: 'Operating Systems' });
-  assert.deepEqual(result, { transcript: '[00:00] Round robin.\n[00:03] Quantum.', durationSeconds: 20, unclearRanges: [], speechSegments: 2 });
+  assert.deepEqual(result, { transcript: '[00:00] Round robin.\n[00:03] Quantum.', durationSeconds: 20, unclearRanges: [], speechSegments: 2, english: 'Round robin. Quantum.' });
   const made = requests.slice(before);
   assert.equal(made[0].path, '/api/transcribe/jobs');
   assert.equal(made[0].skip, 'true');
+  assert.equal(made[0].translate, undefined, 'no translation unless asked');
   assert.ok(made.filter((r) => r.method === 'GET').length >= 2, 'polled until finished');
   assert.ok(made.filter((r) => r.method === 'GET').every((r) => r.consume === 'true'), 'results are not kept by the service');
 
   const silent = await transcribeFile(audio('empty.m4a', 'SILENCE'), {});
   assert.equal(silent.speechSegments, 0, 'so the lecture fails as no_speech');
+  assert.equal(silent.english, null);
+});
+
+test('a recording can be asked for in English too: the job translates the whole transcript', async () => {
+  const before = requests.length;
+  const result = await transcribeFile(audio('korean.m4a', 'KOREAN'), { prompt: 'Operating Systems', translate: true });
+  const made = requests.slice(before);
+  assert.equal(made[0].translate, 'true');
+  assert.equal(made[0].summaryLanguage, 'English');
+  assert.equal(result.english, 'Round robin, in English.');
 });
 
 test('failures are reported, not hidden: a job that failed in the background, a wrong key, unreadable audio', async () => {

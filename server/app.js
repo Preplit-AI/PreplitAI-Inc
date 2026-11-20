@@ -97,6 +97,7 @@ app.use('/api/profile', require('./routes/profile'));
 app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/listen', require('./routes/listen'));
+app.use('/api/recordings', require('./routes/recordings'));
 app.use('/api/campus', require('./routes/campus'));
 app.use('/api/community', require('./routes/community'));
 

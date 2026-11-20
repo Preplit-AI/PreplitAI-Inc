@@ -1,35 +1,35 @@
-import { useCallback, useEffect, useRef, useState, type ComponentRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Animated, Easing, Pressable, ScrollView, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ApiError, request } from "@/lib/api";
+import { ApiError } from "@/lib/api";
 import { useLang } from "@/lib/i18n";
-import { appendPiece, usePieceRecorder, type Piece } from "@/lib/listen";
+import { useClassRecorder } from "@/lib/listen";
+import { clearPending, discardPending, loadPending, savePending, sendRecording, type Pending } from "@/lib/recording";
 import { useCourses, useLectures, useOverview, useRefresh } from "@/lib/queries";
 import { color, courseTint, font, radius, space } from "@/lib/theme";
-import type { LectureSummary } from "@/lib/types";
+
 import { Button, Card, Icon, Loading, Notice, Row, Section, Sheet, T, useLayout } from "@/ui";
 import { CourseSheet } from "@/ui/forms";
 import { Juno } from "@/ui/Juno";
 import { Confirm, LectureRow } from "@/ui/parts";
 
 /*
- * Lecture Buddy. Choose the course, press one button, and Juno listens to the
- * class: the words appear as they are said, and pressing Stop saves the notes
- * to that course's workspace.
+ * Lecture Buddy. Choose the course, press one button, and Juno records the
+ * class. Pressing Stop sends the recording once and Juno writes the notes into
+ * that course's workspace.
  *
- * The class is recorded in short pieces. Each piece is sent to be written down
- * as soon as it is finished and then thrown away, so no recording is kept on
- * the phone or the server: only the transcript.
+ * Nothing is sent while the class goes on: the whole class is one recording,
+ * transcribed once. Until it has been sent the recording stays on the phone,
+ * so a send that fails can be tried again; once the notes are being written,
+ * the server deletes it.
  */
 
 const CONSENT_KEY = "preplit.listen.consent";
 const clock = (seconds: number) => `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(Math.floor(seconds) % 60).padStart(2, "0")}`;
 
-type Session = { id: string; courseId: string };
-type ChunkAnswer = { heard?: boolean; lines: string[]; session: { seconds: number } };
 
 export default function Buddy() {
   const params = useLocalSearchParams<{ courseId?: string }>();
@@ -46,17 +46,19 @@ export default function Buddy() {
   const [courseSheet, setCourseSheet] = useState(false);
   const [consenting, setConsenting] = useState(false);
   const [discarding, setDiscarding] = useState(false);
-  const [phase, setPhase] = useState<"idle" | "starting" | "listening" | "saving">("idle");
+  const [phase, setPhase] = useState<"idle" | "starting" | "listening" | "sending">("idle");
   const [error, setError] = useState<string | null>(null);
-  const [lines, setLines] = useState<string[]>([]);
-  const [written, setWritten] = useState(0);
   const [elapsed, setElapsed] = useState(0);
-  const [lost, setLost] = useState(0);
+  const [sent, setSent] = useState(0);
+  const [pending, setPending] = useState<Pending | null>(null);
 
-  const session = useRef<Session | null>(null);
-  const sending = useRef<Promise<void>>(Promise.resolve());
-  const seq = useRef(0);
-  const scroller = useRef<ComponentRef<typeof ScrollView>>(null);
+  const recording = useRef<{ courseId: string; recordedAt: string } | null>(null);
+  const recorder = useClassRecorder();
+
+  // A class that was recorded but not sent (no signal, the app was closed) is offered again.
+  useEffect(() => {
+    loadPending().then(setPending);
+  }, []);
 
   // Arriving from a course ("Record a lecture") chooses that course.
   useEffect(() => {
@@ -73,80 +75,34 @@ export default function Buddy() {
   const courseIndex = courses.data?.findIndex((c) => c.id === courseId) ?? -1;
   const course = courseIndex >= 0 ? courses.data![courseIndex] : null;
 
-  /** One finished piece: sent after the one before it, tried three times, then marked as lost. */
-  const send = useCallback((piece: Piece) => {
-    const mine = session.current;
-    if (!mine) return;
-    const n = seq.current++;
-    sending.current = sending.current.then(async () => {
-      for (let attempt = 0; attempt < 3; attempt++) {
-        if (session.current !== mine) return;
-        const form = new FormData();
-        form.append("seq", String(n));
-        form.append("seconds", piece.seconds.toFixed(1));
-        appendPiece(form, piece);
-        try {
-          const answer = await request<ChunkAnswer>(`/listen/${mine.id}/chunk`, { method: "POST", form });
-          if (answer.lines.length) setLines((before) => [...before, ...answer.lines]);
-          if (answer.heard === false) setLost((count) => count + 1);
-          setWritten(answer.session.seconds);
-          return;
-        } catch (err) {
-          // Refused for good (the class was closed, the piece is not audio): trying again will not help.
-          const status = err instanceof ApiError ? err.status : 0;
-          if (status >= 400 && status < 500 && status !== 408 && status !== 429) break;
-          await new Promise((resolve) => setTimeout(resolve, 1200 * (attempt + 1)));
-        }
-      }
-      setLost((count) => count + 1);
-    });
-  }, []);
-
-  const recorder = usePieceRecorder(send);
-
   // The clock, and the screen kept on, while Juno listens.
   useEffect(() => {
     if (phase !== "listening") return;
     const startedAt = Date.now() - elapsed * 1000;
     const tick = setInterval(() => setElapsed((Date.now() - startedAt) / 1000), 500);
-    activateKeepAwakeAsync("listening").catch(() => {});
-    return () => {
-      clearInterval(tick);
-      deactivateKeepAwake("listening").catch(() => {});
-    };
+    return () => clearInterval(tick);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
-
   useEffect(() => {
-    scroller.current?.scrollToEnd({ animated: true });
-  }, [lines.length]);
+    if (phase !== "listening" && phase !== "sending") return;
+    activateKeepAwakeAsync("listening").catch(() => {});
+    return () => {
+      deactivateKeepAwake("listening").catch(() => {});
+    };
+  }, [phase]);
 
   const begin = async () => {
     if (!course) return;
     setError(null);
     setPhase("starting");
-    try {
-      const made = await request<{ session: { id: string } }>("/listen", { method: "POST", body: { courseId: course.id } });
-      session.current = { id: made.session.id, courseId: course.id };
-      seq.current = 0;
-      sending.current = Promise.resolve();
-      setLines([]);
-      setWritten(0);
-      setElapsed(0);
-      setLost(0);
-      const ok = await recorder.start();
-      if (!ok) {
-        request(`/listen/${made.session.id}`, { method: "DELETE" }).catch(() => {});
-        session.current = null;
-        setPhase("idle");
-        return;
-      }
-      setPhase("listening");
-    } catch (err) {
-      session.current = null;
+    setElapsed(0);
+    const ok = await recorder.start();
+    if (!ok) {
       setPhase("idle");
-      setError(errorText(err));
+      return;
     }
+    recording.current = { courseId: course.id, recordedAt: new Date().toISOString() };
+    setPhase("listening");
   };
 
   /** The first time, Juno asks about permission to record; after that the button just starts. */
@@ -162,36 +118,61 @@ export default function Buddy() {
     begin();
   };
 
-  const stop = async () => {
-    const mine = session.current;
-    if (!mine) return;
-    setPhase("saving");
+  /** Sends a recorded class; if that fails it stays on the phone as a class waiting to be sent. */
+  const send = async (take: Pending) => {
+    setError(null);
+    setSent(0);
+    setPhase("sending");
     try {
-      await recorder.stop();
-      await sending.current;
-      const done = await request<{ lecture: LectureSummary }>(`/listen/${mine.id}/finish`, { method: "POST", body: {} });
-      session.current = null;
+      const lecture = await sendRecording(take, setSent);
+      setPending(null);
       refresh("lectures", "overview", "courses");
       setPhase("idle");
-      router.push({ pathname: "/lecture/[id]", params: { id: done.lecture.id } });
+      router.push({ pathname: "/lecture/[id]", params: { id: lecture.id } });
     } catch (err) {
-      session.current = null;
       setPhase("idle");
-      setError(err instanceof ApiError && err.code === "TooShort" ? t.listen.tooShort : errorText(err));
+      const code = err instanceof ApiError ? err.code : "";
+      if (code === "RecordingMissing") {
+        await discardPending(take);
+        setPending(null);
+        setError(t.listen.missing);
+        return;
+      }
+      setPending({ ...take });
+      setError(code === "MonthlyLimit" || code === "Busy" ? errorText(err) : t.listen.sendFailed);
     }
   };
 
-  const discard = async () => {
-    const mine = session.current;
-    session.current = null;
-    setDiscarding(false);
-    await recorder.stop().catch(() => {});
-    if (mine) request(`/listen/${mine.id}`, { method: "DELETE" }).catch(() => {});
-    setPhase("idle");
-    setLines([]);
+  const stop = async () => {
+    const mine = recording.current;
+    if (!mine) return;
+    recording.current = null;
+    setPhase("sending");
+    const take = await recorder.stop().catch(() => null);
+    if (!take) {
+      setPhase("idle");
+      setError(t.listen.tooShort);
+      return;
+    }
+    const waiting: Pending = { ...take, ...mine };
+    await savePending(waiting);
+    await send(waiting);
   };
 
-  const listening = phase === "listening" || phase === "saving";
+  const discard = async () => {
+    setDiscarding(false);
+    if (recording.current) {
+      recording.current = null;
+      await recorder.stop().catch(() => null);
+    } else {
+      await discardPending(pending);
+      setPending(null);
+    }
+    await clearPending();
+    setPhase("idle");
+  };
+
+  const listening = phase === "listening" || phase === "sending";
   const micProblem = recorder.state === "denied" ? t.listen.denied : recorder.state === "unsupported" ? t.listen.unsupported : null;
   const tint = courseIndex >= 0 ? courseTint(courseIndex) : null;
 
@@ -235,41 +216,45 @@ export default function Buddy() {
       <View style={{ alignItems: "center", gap: space.sm }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
           <Pulse on={phase === "listening"} />
-          <T variant="label" tone={color.brand}>{phase === "saving" ? t.listen.saving : t.listen.listening}</T>
+          <T variant="label" tone={color.brand}>{phase === "sending" ? t.listen.sending(Math.round(sent * 100)) : t.listen.listening}</T>
         </View>
         <T accessibilityLabel={clock(elapsed)} style={{ fontFamily: font.bold, fontSize: 56, lineHeight: 62, letterSpacing: -1.5, fontVariant: ["tabular-nums"] }}>{clock(elapsed)}</T>
-        <T variant="small">{written ? t.listen.heardUpTo(clock(written)) : t.listen.waiting}</T>
+        {phase === "sending" ? (
+          <View style={{ alignSelf: "stretch", height: 6, borderRadius: 3, backgroundColor: color.sunken, overflow: "hidden" }}>
+            <View style={{ width: `${Math.max(4, Math.round(sent * 100))}%`, height: 6, borderRadius: 3, backgroundColor: color.brand }} />
+          </View>
+        ) : null}
       </View>
 
-      <Card style={{ padding: 0, overflow: "hidden" }}>
-        <ScrollView ref={scroller} style={{ maxHeight: tablet ? 320 : 220 }} contentContainerStyle={{ padding: space.lg, gap: space.sm }} showsVerticalScrollIndicator={false}>
-          {lines.length ? lines.map((line, i) => {
-            const at = /^\[(\d{2}:\d{2})\] (.*)$/.exec(line);
-            const said = at ? at[2] : line;
-            const unclear = said === "[불명확]";
-            return (
-              <View key={i} style={{ flexDirection: "row", gap: space.md }}>
-                <T variant="small" tone={color.inkFaint} style={{ width: 46, fontSize: 12.5, fontVariant: ["tabular-nums"] }}>{at ? at[1] : ""}</T>
-                <T style={{ flex: 1, fontSize: 15, lineHeight: 22 }} tone={unclear ? color.inkFaint : color.ink}>{unclear ? t.listen.unclear : said}</T>
-              </View>
-            );
-          }) : (
-            <View style={{ flexDirection: "row", gap: space.md, alignItems: "center" }}>
-              <Juno size={36} mood="listen" />
-              <T variant="small" style={{ flex: 1 }}>{t.listen.waiting}</T>
-            </View>
-          )}
-        </ScrollView>
+      <Card style={{ flexDirection: "row", gap: space.md, alignItems: "center" }}>
+        <Juno size={40} mood={phase === "sending" ? "work" : "listen"} />
+        <T variant="small" style={{ flex: 1 }}>{phase === "sending" ? t.listen.sendingLine : t.listen.recordingLine}</T>
       </Card>
 
-      {lost ? <Notice tone="warn" text={t.listen.lost(lost)} /> : null}
-      <Button icon="square" label={t.listen.stop} loading={phase === "saving"} onPress={stop} />
+      <Button icon="square" label={t.listen.stop} loading={phase === "sending"} onPress={stop} />
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.md }}>
         <T variant="small" style={{ flex: 1 }}>{t.listen.keepOpen}</T>
-        <Button small variant="quiet" label={t.listen.discard} disabled={phase === "saving"} onPress={() => setDiscarding(true)} />
+        <Button small variant="quiet" label={t.listen.discard} disabled={phase === "sending"} onPress={() => setDiscarding(true)} />
       </View>
     </View>
   );
+
+  const pendingCourse = pending ? courses.data?.find((c) => c.id === pending.courseId) : null;
+  const waitingCard = pending && !listening ? (
+    <Card style={{ gap: space.md, marginTop: space.lg }}>
+      <View style={{ flexDirection: "row", gap: space.md, alignItems: "center" }}>
+        <Juno size={40} mood="work" />
+        <View style={{ flex: 1 }}>
+          <T variant="strong">{t.listen.pendingTitle}</T>
+          <T variant="small">{t.listen.pendingLine(pendingCourse?.name ?? "", clock(pending.seconds))}</T>
+        </View>
+      </View>
+      <View style={{ flexDirection: "row", gap: space.sm }}>
+        <Button small icon="upload" label={t.listen.send} onPress={() => send(pending)} />
+        <Button small variant="quiet" label={t.listen.discard} onPress={() => setDiscarding(true)} />
+      </View>
+    </Card>
+  ) : null;
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: color.ground }} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingTop: insets.top + space.lg, paddingBottom: 48, paddingHorizontal: tablet ? space.xxl : space.xl, width: "100%", maxWidth: 640, alignSelf: "center" }} showsVerticalScrollIndicator={false}>
@@ -286,7 +271,9 @@ export default function Buddy() {
       {error ? <View style={{ marginTop: space.lg }}><Notice tone="error" text={error} /></View> : null}
       {micProblem && !listening ? <View style={{ marginTop: space.lg }}><Notice tone="warn" icon="mic-off" text={micProblem} /></View> : null}
 
-      {courses.data?.length ? (listening ? live : idle) : null}
+      {waitingCard}
+
+      {courses.data?.length ? (listening ? live : pending ? null : idle) : null}
 
       {!listening ? (
         <>

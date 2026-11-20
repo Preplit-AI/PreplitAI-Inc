@@ -1,8 +1,12 @@
 'use strict';
+const fs = require('fs');
 const fsp = require('fs/promises');
+const os = require('os');
+const path = require('path');
+const crypto = require('crypto');
 const db = require('../db/database');
 const { transcribeFile } = require('./transcription');
-const { buildNotes } = require('./lectureService');
+const { buildNotes, translateTranscript } = require('./lectureService');
 const { newCard } = require('./scheduler');
 const { saveChunks } = require('./lectureChunks');
 const { notifyLectureFinished } = require('./reminders');
@@ -45,19 +49,26 @@ function pump() {
 
 const MIN_WORDS = 40;
 
-async function processLecture({ lectureId, userId, courseName, courseLanguage = null, title, audioPath, text, language = null, durationSeconds: knownSeconds = null }) {
+async function processLecture({ lectureId, userId, courseName, courseLanguage = null, title, audioPath, uploadId = null, text, language = null, durationSeconds: knownSeconds = null }) {
   let failureReason = 'processing_failed';
   try {
     let transcript;
     let durationSeconds = null;
     let unclearRanges = [];
+    let english = null;
+
+    if (uploadId) {
+      failureReason = 'upload_failed';
+      audioPath = await rebuildRecording(uploadId);
+    }
 
     if (audioPath) {
       failureReason = 'transcription_failed';
-      const result = await transcribeFile(audioPath, { prompt: courseName, language: courseLanguage });
+      const result = await transcribeFile(audioPath, { prompt: courseName, language: courseLanguage, translate: true });
       transcript = result.transcript;
-      durationSeconds = result.durationSeconds;
+      durationSeconds = result.durationSeconds || knownSeconds;
       unclearRanges = result.unclearRanges;
+      english = result.english;
       if (result.speechSegments === 0) failureReason = 'no_speech';
     } else {
       transcript = text;
@@ -75,6 +86,8 @@ async function processLecture({ lectureId, userId, courseName, courseLanguage = 
 
     failureReason = 'notes_failed';
     const notes = await buildNotes({ transcript, courseName, title, language });
+    // A recording's notes end with the whole class in English.
+    if (audioPath) notes.englishTranscript = english || (await translateTranscript(transcript));
 
     const now = new Date();
     await db.transaction(async (tx) => {
@@ -119,6 +132,34 @@ async function processLecture({ lectureId, userId, courseName, courseLanguage = 
 }
 
 /**
+ * Puts an uploaded recording's slices back together as one file, one slice in
+ * memory at a time, then deletes the slices: the file on disk is all that is
+ * left, and it is deleted when the lecture is done.
+ */
+async function rebuildRecording(uploadId) {
+  const upload = (await db.query('SELECT ext, parts FROM recording_uploads WHERE id = $1', [uploadId])).rows[0];
+  if (!upload) throw new Error('Recording upload ' + uploadId + ' is gone');
+  const filePath = path.join(os.tmpdir(), 'preplit-recording-' + crypto.randomBytes(8).toString('hex') + upload.ext);
+  const out = fs.createWriteStream(filePath);
+  const done = new Promise((resolve, reject) => { out.on('finish', resolve); out.on('error', reject); });
+  try {
+    for (let n = 0; n < upload.parts; n += 1) {
+      const row = (await db.query('SELECT bytes FROM recording_parts WHERE upload_id = $1 AND part = $2', [uploadId, n])).rows[0];
+      if (!row) throw new Error('Recording upload ' + uploadId + ' is missing slice ' + n);
+      if (!out.write(Buffer.from(row.bytes))) await new Promise((resolve) => out.once('drain', resolve));
+    }
+    out.end();
+    await done;
+  } catch (err) {
+    out.destroy();
+    await fsp.rm(filePath, { force: true }).catch(() => {});
+    throw err;
+  }
+  await db.query('DELETE FROM recording_uploads WHERE id = $1', [uploadId]);
+  return filePath;
+}
+
+/**
  * Juno shows one message at a time and never brings an old one back, so a
  * new message retires every earlier one.
  */
@@ -154,4 +195,4 @@ async function failInterruptedJobs() {
   if (result.rowCount) console.warn('[lecture] marked ' + result.rowCount + ' interrupted lecture(s) as failed');
 }
 
-module.exports = { enqueue, failInterruptedJobs, failStalledJobs };
+module.exports = { enqueue, failInterruptedJobs, failStalledJobs, rebuildRecording };

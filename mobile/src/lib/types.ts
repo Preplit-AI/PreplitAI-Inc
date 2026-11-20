@@ -91,6 +91,10 @@ export type Notes = {
   flagged: { quote: string; at: string; note: string }[];
   /** The lecture's own terms, with an English equivalent and a one-line meaning. Older notes have none. */
   terms?: { term: string; english: string; meaning: string }[];
+  /** The class told in order, paragraph by paragraph ("the professor said…"). Older notes have none. */
+  guide?: string[];
+  /** A recorded class, whole, in English. Older notes and typed material have none. */
+  englishTranscript?: string | null;
 };
 
 export type Card = { id: string; front: string; back: string };

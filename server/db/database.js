@@ -308,6 +308,28 @@ const SCHEMA = [
   )`,
   `CREATE INDEX IF NOT EXISTS listen_sessions_user_idx ON listen_sessions (user_id)`,
 
+  // A whole class recorded on the phone, uploaded in slices after Stop (a
+  // serverless request takes about 4.5 MB). The slices are put back together,
+  // sent once to the transcription service and deleted; nothing stays here.
+  `CREATE TABLE IF NOT EXISTS recording_uploads (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+    ext VARCHAR(8) NOT NULL,
+    parts SMALLINT NOT NULL CHECK (parts BETWEEN 1 AND 100),
+    bytes INT NOT NULL,
+    seconds INT,
+    recorded_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS recording_uploads_user_idx ON recording_uploads (user_id)`,
+  `CREATE TABLE IF NOT EXISTS recording_parts (
+    upload_id UUID NOT NULL REFERENCES recording_uploads(id) ON DELETE CASCADE,
+    part SMALLINT NOT NULL,
+    bytes BYTEA NOT NULL,
+    PRIMARY KEY (upload_id, part)
+  )`,
+
   // A notice from a university's own public board, with its title in English
   // and what kind of thing it is. `described` says the model has had its turn.
   `CREATE TABLE IF NOT EXISTS campus_items (

@@ -1,37 +1,32 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ListenState, Piece } from "./listen";
+import type { ListenState, Take } from "./listen";
 
 /*
- * Listening in a browser. The microphone is recorded in short pieces: every
- * PIECE_MS the recorder is stopped, which makes a complete file of its own, and
- * a new one is started on the same microphone at once. Each finished piece is
- * handed to `onPiece`, in order.
+ * Recording a class in a browser: one recording from Start to Stop. The
+ * recorder hands over what it has every few seconds, so a long class is held
+ * as many small pieces of one file rather than one growing buffer; at Stop they
+ * are joined into a single Blob. Nothing is sent while the class goes on.
  */
-
-export const PIECE_MS = 20_000;
 
 function pickFormat(): { mime: string; ext: string } | null {
   if (typeof MediaRecorder === "undefined") return null;
   const options = [
-    { mime: "audio/webm;codecs=opus", ext: "webm" },
-    { mime: "audio/webm", ext: "webm" },
-    { mime: "audio/mp4", ext: "m4a" },
-    { mime: "audio/ogg;codecs=opus", ext: "ogg" },
+    { mime: "audio/webm;codecs=opus", ext: ".webm" },
+    { mime: "audio/webm", ext: ".webm" },
+    { mime: "audio/mp4", ext: ".m4a" },
+    { mime: "audio/ogg;codecs=opus", ext: ".ogg" },
   ];
   return options.find((o) => MediaRecorder.isTypeSupported(o.mime)) ?? null;
 }
 
-export function usePieceRecorder(onPiece: (piece: Piece) => void) {
+type Live = { stream: MediaStream; recorder: MediaRecorder; parts: Blob[]; startedAt: number; ext: string; type: string };
+
+export function useClassRecorder() {
   const [state, setState] = useState<ListenState>(() => (pickFormat() && typeof navigator !== "undefined" && navigator.mediaDevices ? "idle" : "unsupported"));
-  const handler = useRef(onPiece);
-  handler.current = onPiece;
-  const live = useRef<{ stream: MediaStream; recorder: MediaRecorder | null; timer: ReturnType<typeof setTimeout> | null; active: boolean; done: (() => void) | null } | null>(null);
+  const live = useRef<Live | null>(null);
 
   const release = useCallback(() => {
-    const now = live.current;
-    if (!now) return;
-    if (now.timer) clearTimeout(now.timer);
-    now.stream.getTracks().forEach((track) => track.stop());
+    live.current?.stream.getTracks().forEach((track) => track.stop());
     live.current = null;
   }, []);
 
@@ -49,67 +44,46 @@ export function usePieceRecorder(onPiece: (piece: Piece) => void) {
       setState("denied");
       return false;
     }
-    const session = { stream, recorder: null as MediaRecorder | null, timer: null as ReturnType<typeof setTimeout> | null, active: true, done: null as (() => void) | null };
-    live.current = session;
-
-    const begin = () => {
-      const recorder = new MediaRecorder(stream, { mimeType: format.mime, audioBitsPerSecond: 32_000 });
-      const parts: Blob[] = [];
-      const startedAt = Date.now();
-      recorder.ondataavailable = (event) => {
-        if (event.data.size) parts.push(event.data);
-      };
-      recorder.onstop = () => {
-        const blob = new Blob(parts, { type: format.mime.split(";")[0] });
-        const seconds = (Date.now() - startedAt) / 1000;
-        // Less than half a second is the click of stopping, not speech.
-        if (blob.size && seconds > 0.5) handler.current({ blob, name: `piece.${format.ext}`, type: blob.type, seconds });
-        if (session.active) begin();
-        else {
-          session.done?.();
-          release();
-        }
-      };
-      session.recorder = recorder;
-      recorder.start();
-      session.timer = setTimeout(() => recorder.state === "recording" && recorder.stop(), PIECE_MS);
+    const recorder = new MediaRecorder(stream, { mimeType: format.mime, audioBitsPerSecond: 32_000 });
+    const session: Live = { stream, recorder, parts: [], startedAt: Date.now(), ext: format.ext, type: format.mime.split(";")[0] };
+    recorder.ondataavailable = (event) => {
+      if (event.data.size) session.parts.push(event.data);
     };
-    begin();
+    live.current = session;
+    recorder.start(10_000);
     setState("recording");
     return true;
-  }, [release]);
+  }, []);
 
-  /** Stops, and resolves once the last piece has been handed over. */
-  const stop = useCallback(() => {
+  /** Stops and returns the recording, or null if there was none. */
+  const stop = useCallback((): Promise<Take | null> => {
     const session = live.current;
-    if (!session || !session.active) return Promise.resolve();
-    session.active = false;
-    if (session.timer) clearTimeout(session.timer);
-    return new Promise<void>((resolve) => {
-      session.done = resolve;
-      if (session.recorder && session.recorder.state === "recording") session.recorder.stop();
-      else {
-        resolve();
+    if (!session) return Promise.resolve(null);
+    return new Promise<Take | null>((resolve) => {
+      const finish = () => {
+        const blob = new Blob(session.parts, { type: session.type });
+        const seconds = (Date.now() - session.startedAt) / 1000;
         release();
+        setState("idle");
+        resolve(blob.size && seconds > 0.5 ? { blob, ext: session.ext, type: session.type, seconds } : null);
+      };
+      if (session.recorder.state === "inactive") finish();
+      else {
+        session.recorder.onstop = finish;
+        session.recorder.stop();
       }
-      setState("idle");
     });
   }, [release]);
 
   // Leaving the screen lets go of the microphone.
   useEffect(() => () => {
     const session = live.current;
-    if (session) {
-      session.active = false;
-      session.done = null;
-      if (session.recorder && session.recorder.state === "recording") session.recorder.stop();
-      else release();
+    if (session && session.recorder.state !== "inactive") {
+      session.recorder.onstop = null;
+      session.recorder.stop();
     }
+    release();
   }, [release]);
 
   return { state, start, stop };
-}
-
-export function appendPiece(form: FormData, piece: Piece) {
-  if (piece.blob) form.append("audio", piece.blob, piece.name);
 }

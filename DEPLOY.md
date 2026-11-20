@@ -33,7 +33,7 @@ Usually also:
 | Name | What |
 | --- | --- |
 | `DATABASE_URL` | Leave empty to use the bundled `db`. Set it to keep using an existing database (the current production data is on Neon) |
-| `TRANSCRIBE_INTERNAL_API_KEY` (or `INTERNAL_API_KEY`) | Key for the Preplit transcription service (`https://transcribe.iw12.org`, override with `TRANSCRIBE_SERVICE_URL`). Lecture Buddy sends live pieces and recordings there; without it the AI model transcribes |
+| `TRANSCRIBE_INTERNAL_API_KEY` (or `INTERNAL_API_KEY`) | Key for the Preplit transcription service (`https://transcribe.iw12.org`, override with `TRANSCRIBE_SERVICE_URL`). Lecture Buddy sends each recorded class there once, as one job, and asks for an English translation; without it the AI model transcribes |
 | `CAMPUS_INGEST_KEY` | The campus reader's key (see [campus-reader/](campus-reader/README.md)). Same value as on the Cloudflare Worker |
 | `TRUST_PROXY` | Proxies in front of the API. Default `2` (Coolify's proxy, then nginx). `3` if Cloudflare also proxies the domain (orange cloud) |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google sign-in. Add `https://<domain>/api/auth/google/callback` to the OAuth client's redirect URIs |

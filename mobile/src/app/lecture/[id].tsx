@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,9 +13,12 @@ import { JunoChat } from "@/ui/JunoChat";
 import { Confirm } from "@/ui/parts";
 
 /*
- * One lecture, as Juno organised it: a summary, the lecture's own key terms
- * with what they mean, the notes in order, and anything the professor said
- * matters. From here the student can be quizzed on it or ask Juno about it.
+ * One lecture, as Juno organised it. A recorded class reads in this order:
+ * what the professor said, told through from start to end; what the professor
+ * said matters for the exam; the whole class in English; and the lecture's own
+ * key terms with their English meaning. Older lectures, and typed material,
+ * have a summary and notes by topic instead. From here the student can be
+ * quizzed on it or ask Juno about it.
  *
  * On a tablet the notes and Juno sit side by side, so a question can be asked
  * without leaving the page.
@@ -25,6 +28,7 @@ function Notes({ lecture }: { lecture: Lecture }) {
   const { t, lang } = useLang();
   const notes = lecture.notes;
   if (!notes) return null;
+  const guide = notes.guide ?? [];
   return (
     <>
       <Badge label={lecture.courseName} />
@@ -35,26 +39,17 @@ function Notes({ lecture }: { lecture: Lecture }) {
         {lecture.cards.length ? <Button small icon="zap" label={t.lecture.quiz} onPress={() => router.push({ pathname: "/quiz", params: { lectureId: lecture.id } })} /> : null}
       </View>
 
-      {notes.summary ? (
-        <Section title={t.lecture.summary}>
-          <Card><T style={{ fontSize: 16.5, lineHeight: 25 }}>{notes.summary}</T></Card>
+      {guide.length ? (
+        <Section title={t.lecture.guide}>
+          <Card style={{ gap: space.md }}>
+            {guide.map((paragraph, i) => <T key={i} style={{ fontSize: 16, lineHeight: 25 }}>{paragraph}</T>)}
+          </Card>
         </Section>
       ) : null}
 
-      {notes.terms?.length ? (
-        <Section title={t.lecture.terms}>
-          <T variant="small" style={{ marginTop: -space.sm, marginBottom: space.md }}>{t.lecture.termsLine}</T>
-          <View style={{ gap: space.sm }}>
-            {notes.terms.map((term) => (
-              <Card key={term.term} style={{ gap: 4 }}>
-                <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: space.sm }}>
-                  <T variant="heading">{term.term}</T>
-                  {term.english && term.english.toLowerCase() !== term.term.toLowerCase() ? <Badge label={term.english} bg={color.mist} fg={color.mistInk} /> : null}
-                </View>
-                <T tone={color.inkSoft}>{term.meaning}</T>
-              </Card>
-            ))}
-          </View>
+      {!guide.length && notes.summary ? (
+        <Section title={t.lecture.summary}>
+          <Card><T style={{ fontSize: 16.5, lineHeight: 25 }}>{notes.summary}</T></Card>
         </Section>
       ) : null}
 
@@ -75,25 +70,74 @@ function Notes({ lecture }: { lecture: Lecture }) {
         </Section>
       ) : null}
 
-      <Section title={t.lecture.notes}>
-        <View style={{ gap: space.md }}>
-          {notes.sections.map((section, i) => (
-            <Card key={i} style={{ gap: space.sm }}>
-              <T variant="heading">{section.heading}</T>
-              {section.points.map((point, j) => (
-                <View key={j} style={{ flexDirection: "row", gap: space.sm }}>
-                  <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: color.inkFaint, marginTop: 10 }} />
-                  <T style={{ flex: 1 }}>{point}</T>
+      {!guide.length ? (
+        <Section title={t.lecture.notes}>
+          <View style={{ gap: space.md }}>
+            {notes.sections.map((section, i) => (
+              <Card key={i} style={{ gap: space.sm }}>
+                <T variant="heading">{section.heading}</T>
+                {section.points.map((point, j) => (
+                  <View key={j} style={{ flexDirection: "row", gap: space.sm }}>
+                    <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: color.inkFaint, marginTop: 10 }} />
+                    <T style={{ flex: 1 }}>{point}</T>
+                  </View>
+                ))}
+              </Card>
+            ))}
+          </View>
+        </Section>
+      ) : null}
+
+      {notes.englishTranscript ? <Transcript text={notes.englishTranscript} /> : null}
+
+      {notes.terms?.length ? (
+        <Section title={t.lecture.terms}>
+          <T variant="small" style={{ marginTop: -space.sm, marginBottom: space.md }}>{t.lecture.termsLine}</T>
+          <View style={{ gap: space.sm }}>
+            {notes.terms.map((term) => (
+              <Card key={term.term} style={{ gap: 4 }}>
+                <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: space.sm }}>
+                  <T variant="heading">{term.term}</T>
+                  {term.english && term.english.toLowerCase() !== term.term.toLowerCase() ? <Badge label={term.english} bg={color.mist} fg={color.mistInk} /> : null}
                 </View>
-              ))}
-            </Card>
-          ))}
-        </View>
-      </Section>
+                <T tone={color.inkSoft}>{term.meaning}</T>
+              </Card>
+            ))}
+          </View>
+        </Section>
+      ) : null}
 
       <View style={{ marginTop: space.xl }}><Notice text={t.lecture.generated} /></View>
     </>
   );
+}
+
+/** The whole class in English. Long, so it opens on its first paragraphs. */
+function Transcript({ text }: { text: string }) {
+  const { t } = useLang();
+  const [open, setOpen] = useState(false);
+  const paragraphs = useMemo(() => paragraphsOf(text), [text]);
+  const shown = open ? paragraphs : paragraphs.slice(0, 3);
+  return (
+    <Section title={t.lecture.transcript}>
+      <Card style={{ gap: space.md }}>
+        {shown.map((paragraph, i) => <T key={i} tone={color.inkSoft} style={{ fontSize: 15, lineHeight: 23 }}>{paragraph}</T>)}
+        {paragraphs.length > 3 ? (
+          <Button small variant="quiet" icon={open ? "chevron-up" : "chevron-down"} label={open ? t.lecture.hideTranscript : t.lecture.showTranscript} onPress={() => setOpen(!open)} style={{ alignSelf: "flex-start" }} />
+        ) : null}
+      </Card>
+    </Section>
+  );
+}
+
+/** Paragraphs as written; a transcript that came as one block is cut every few sentences so it can be read. */
+function paragraphsOf(text: string): string[] {
+  const given = text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  if (given.length > 1) return given;
+  const sentences = text.replace(/\s+/g, " ").trim().match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) ?? [text];
+  const out: string[] = [];
+  for (let i = 0; i < sentences.length; i += 5) out.push(sentences.slice(i, i + 5).join("").trim());
+  return out.filter(Boolean);
 }
 
 export default function LectureScreen() {

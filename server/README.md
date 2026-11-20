@@ -38,7 +38,12 @@ All routes except `/api/health`, `/api/auth/config`, `signup`, `login`, `refresh
 | GET/POST | `/api/tasks` | Tasks and deadlines; `?state=open|done|all` |
 | PATCH/DELETE | `/api/tasks/:id` | Change, complete or delete a task |
 | POST | `/api/tasks/from-image` | multipart `image` (PNG, JPG, WebP) → the deadlines visible in it. Nothing is saved |
-| POST | `/api/listen` | `{ courseId }` → start listening to a class |
+| POST | `/api/recordings` | `{ courseId, ext, parts, bytes, seconds?, recordedAt? }` → start sending a recorded class, in 4 MB slices |
+| PUT | `/api/recordings/:id/parts/:n` | the raw bytes of slice `n`; any order, resendable |
+| GET | `/api/recordings/:id` | which slices have arrived, to carry on a cut-off send |
+| POST | `/api/recordings/:id/finish` | all slices in → the lecture (202); the file is rebuilt, sent as one transcription job with an English translation, then deleted |
+| DELETE | `/api/recordings/:id` | Throw a half-sent class away |
+| POST | `/api/listen` | `{ courseId }` → start listening to a class (the older live flow, kept for old app versions) |
 | POST | `/api/listen/:id/chunk` | multipart `audio`, `seq`, `seconds` → the words in that piece; the audio is deleted |
 | POST | `/api/listen/:id/finish` | Save the class as a lecture in its course (202, notes made in the background) |
 | DELETE | `/api/listen/:id` | Stop and keep nothing |
