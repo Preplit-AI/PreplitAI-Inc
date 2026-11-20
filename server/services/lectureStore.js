@@ -94,7 +94,7 @@ async function deleteLecture(userId, id) {
  */
 async function currentJunoMessage(userId) {
   const result = await db.query(
-    `SELECT id, title, source, status, card_count, unclear_ranges
+    `SELECT id, title, source, status, card_count, unclear_ranges, failure_reason
        FROM lectures
       WHERE user_id = $1 AND message_dismissed = false AND status IN ('ready', 'failed')
       ORDER BY finished_at DESC NULLS LAST
@@ -112,6 +112,8 @@ async function currentJunoMessage(userId) {
     source: row.source,
     cardCount: row.status === 'ready' ? row.card_count : 0,
     unclearRanges: kind === 'unclear' ? unclearRanges : [],
+    // Which step failed (no_speech, too_short, transcription_failed, notes_failed, ...), so Juno can say why.
+    failureReason: kind === 'failed' ? row.failure_reason || null : null,
   };
 }
 
