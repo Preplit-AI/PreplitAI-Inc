@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 20
     env:
       POSTGRES_PASSWORD: ci-only-database-password
-      GROQ_API_KEY: ci-not-a-real-key
+      OPENROUTER_API_KEY: ci-not-a-real-key
       PUBLIC_URL: http://localhost
       ALLOWED_ORIGINS: http://localhost
     steps:

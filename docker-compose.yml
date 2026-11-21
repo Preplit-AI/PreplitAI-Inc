@@ -33,8 +33,18 @@ services:
       TRUST_PROXY: ${TRUST_PROXY:-2}
       DATABASE_URL: ${DATABASE_URL:-postgres://preplit:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db:5432/preplit}
       PGSSL: ${PGSSL:-}
+      PGSSL_REJECT_UNAUTHORIZED: ${PGSSL_REJECT_UNAUTHORIZED:-}
       JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
-      GROQ_API_KEY: ${GROQ_API_KEY:?set GROQ_API_KEY}
+      # The language model: OpenRouter (Gemini 2.5 Flash). GEMINI_API_KEY or GROQ_API_KEY are used only without it.
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?set OPENROUTER_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      # Model names; empty means google/gemini-2.5-flash.
+      TRANSCRIBE_MODEL: ${TRANSCRIBE_MODEL:-}
+      NOTES_MODEL: ${NOTES_MODEL:-}
+      CHAT_MODEL: ${CHAT_MODEL:-}
+      VISION_MODEL: ${VISION_MODEL:-}
+      FALLBACK_MODELS: ${FALLBACK_MODELS:-}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
@@ -47,7 +57,13 @@ services:
       TRANSCRIBE_SERVICE_URL: ${TRANSCRIBE_SERVICE_URL:-https://transcribe.iw12.org}
       TRANSCRIBE_INTERNAL_API_KEY: ${TRANSCRIBE_INTERNAL_API_KEY:-${INTERNAL_API_KEY:-}}
       PILOT_INVITE_CODE: ${PILOT_INVITE_CODE:-}
+      # Limits; empty means the defaults in server/config/constants.js.
       MAX_AUDIO_MB: ${MAX_AUDIO_MB:-200}
+      MONTHLY_LECTURE_LIMIT: ${MONTHLY_LECTURE_LIMIT:-}
+      MONTHLY_CHAT_LIMIT: ${MONTHLY_CHAT_LIMIT:-}
+      DAILY_REVIEW_LIMIT: ${DAILY_REVIEW_LIMIT:-}
+      PROCESSING_CONCURRENCY: ${PROCESSING_CONCURRENCY:-}
+      NOTES_PART_CHARS: ${NOTES_PART_CHARS:-}
     depends_on:
       db:
         condition: service_healthy

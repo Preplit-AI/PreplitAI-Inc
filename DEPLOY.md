@@ -23,7 +23,7 @@ Required:
 | Name | What |
 | --- | --- |
 | `JWT_SECRET` | Long random string (`openssl rand -hex 32`). Changing it signs everyone out |
-| `GROQ_API_KEY` | Transcription, notes, Juno, screenshots, campus translations |
+| `OPENROUTER_API_KEY` | The language model (Gemini 2.5 Flash through OpenRouter): notes, Juno, screenshots, campus translations, and transcription when the transcription service is unavailable |
 | `POSTGRES_PASSWORD` | Password for the bundled database. Required by the compose file even when `DATABASE_URL` points elsewhere |
 | `PUBLIC_URL` | The site's address, e.g. `https://www.preplitai.com` (links in e-mails, sign-in redirects) |
 | `ALLOWED_ORIGINS` | Comma-separated origins allowed to call the API, e.g. `https://www.preplitai.com,https://preplitai.com` |
@@ -40,13 +40,16 @@ Usually also:
 | `RESEND_API_KEY`, `EMAIL_FROM` | Password-reset e-mails |
 | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | Web push |
 | `MAX_AUDIO_MB` | Largest lecture upload, default 200 |
+| `GEMINI_API_KEY`, `GROQ_API_KEY` | Other language-model providers, used only without `OPENROUTER_API_KEY` |
+| `TRANSCRIBE_MODEL`, `NOTES_MODEL`, `CHAT_MODEL`, `VISION_MODEL`, `FALLBACK_MODELS` | Model names; empty means `google/gemini-2.5-flash` |
+| `MONTHLY_LECTURE_LIMIT`, `MONTHLY_CHAT_LIMIT`, `DAILY_REVIEW_LIMIT`, `PROCESSING_CONCURRENCY`, `NOTES_PART_CHARS` | Limits; empty means the defaults in `server/config/constants.js` |
 | `PGSSL` | `disable` or `require` to override: by default a database on `localhost` or the container network is reached without TLS, anything else with it |
 
 ## Moving from Vercel
 
 - **Database.** To keep every account and lecture, set `DATABASE_URL` to the current Neon URL. To move onto the bundled database instead, copy the data first: `pg_dump "<neon url>" | docker compose exec -T db psql -U preplit preplit` (with the stack up, before anyone signs up). The API creates and updates its tables itself on start.
 - **Domain.** Point the domain's DNS at the Coolify server, or change the Cloudflare DNS record if Cloudflare proxies it. The mobile app and the campus reader both call `https://www.preplitai.com`, so neither needs changing.
-- **Lecture uploads.** On Vercel, whole-file lecture uploads answer 501 (a serverless limit); on this server they work (up to `MAX_AUDIO_MB`). Live listening works on both.
+- **Lecture uploads.** On Vercel, whole-file lecture uploads answer 501 (a serverless limit); on this server they work (up to `MAX_AUDIO_MB`). Lecture Buddy recordings work on both, and here a long class has no function time limit.
 - **Campus board.** Keep `CAMPUS_INGEST_KEY` set and the Cloudflare Worker keeps feeding Ajou's notices. (Ajou's site refuses Amazon and Microsoft networks. A Coolify server elsewhere may reach it directly, but the Worker does not depend on that.)
 
 ## Without Coolify
