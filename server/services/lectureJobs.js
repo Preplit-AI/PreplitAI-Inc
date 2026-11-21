@@ -187,10 +187,14 @@ async function failStalledJobs(userId) {
   );
 }
 
+// At start-up. Only lectures past the 15-minute limit: a younger one may still be
+// running on another instance sharing the database (Vercel and Coolify during a
+// move, or the old container during a redeploy). One this server was running
+// when it stopped is failed by failStalledJobs once it passes the limit.
 async function failInterruptedJobs() {
   const result = await db.query(
     `UPDATE lectures SET status = 'failed', failure_reason = 'interrupted', finished_at = now()
-      WHERE status = 'processing'`
+      WHERE status = 'processing' AND created_at < now() - interval '15 minutes'`
   );
   if (result.rowCount) console.warn('[lecture] marked ' + result.rowCount + ' interrupted lecture(s) as failed');
 }
