@@ -350,6 +350,9 @@ const SCHEMA = [
     UNIQUE (source, article)
   )`,
   `CREATE INDEX IF NOT EXISTS campus_items_idx ON campus_items (campus, posted_on DESC)`,
+  // True when posted_on is the date the notice was posted. Rows from before 21 November 2026 may
+  // hold a board's deadline instead, so they start false and are not shown with a date.
+  `ALTER TABLE campus_items ADD COLUMN IF NOT EXISTS posted_known BOOLEAN NOT NULL DEFAULT false`,
   `CREATE TABLE IF NOT EXISTS campus_fetches (
     campus VARCHAR(24) PRIMARY KEY,
     fetched_at TIMESTAMPTZ NOT NULL

@@ -14,7 +14,10 @@ const { CAMPUSES, parseBoard, readBoard } = require('./campusBoards');
  * set up below before it appears; a student at any other university is told
  * plainly that their campus is not connected yet.
  *
- * The boards are read at most once every three hours, a page each.
+ * The boards are read at most once an hour, a page of 30 each. The board is
+ * shown newest first, as the university's boards list it: by article number,
+ * which Ajou's site gives out in posting order across all its boards. Notices
+ * posted more than six months ago are left out.
  *
  * Ajou's site does not answer requests from Amazon's network, where Vercel
  * runs the API, although it answers almost every other network. So in
@@ -25,7 +28,9 @@ const { CAMPUSES, parseBoard, readBoard } = require('./campusBoards');
  */
 
 const KINDS = ['scholarship', 'job', 'program', 'event', 'academic', 'visa', 'housing', 'general'];
-const STALE_MS = 3 * 60 * 60 * 1000;
+const STALE_MS = 60 * 60 * 1000;
+/** Notices posted longer ago than this are left off the board. */
+const MAX_AGE_DAYS = 180;
 const BATCH = 12;
 /** The campus a student's university belongs to, if it has been set up. */
 function campusFor(university) {
@@ -87,7 +92,7 @@ async function describeWaiting(key) {
   try {
     const waiting = await db.query(
       `SELECT id, title, category, kind FROM campus_items WHERE campus = $1 AND described = false
-        ORDER BY intl DESC, posted_on DESC NULLS LAST LIMIT 48`,
+        ORDER BY intl DESC, article::bigint DESC LIMIT 48`,
       [key]
     );
     return await describe(waiting.rows);
@@ -105,9 +110,13 @@ async function storeBoards(key, results) {
     read += 1;
     for (const item of items) {
       await db.query(
-        `INSERT INTO campus_items (campus, source, article, title, title_en, kind, intl, category, url, posted_on, pinned)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-         ON CONFLICT (source, article) DO UPDATE SET title = EXCLUDED.title, pinned = EXCLUDED.pinned, posted_on = COALESCE(EXCLUDED.posted_on, campus_items.posted_on)`,
+        // A posting date, once known, is kept when a later read has none (a notice past the
+        // newest few whose own page is read); a date that was never known is dropped.
+        `INSERT INTO campus_items (campus, source, article, title, title_en, kind, intl, category, url, posted_on, pinned, posted_known)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $10::date IS NOT NULL)
+         ON CONFLICT (source, article) DO UPDATE SET title = EXCLUDED.title, pinned = EXCLUDED.pinned,
+           posted_on = CASE WHEN EXCLUDED.posted_known THEN EXCLUDED.posted_on WHEN campus_items.posted_known THEN campus_items.posted_on END,
+           posted_known = EXCLUDED.posted_known OR campus_items.posted_known`,
         [key, board.id, item.article, item.title, hasHangul(item.title) ? null : item.title, board.kind, board.intl, item.category, item.url, item.postedOn, item.pinned]
       );
       kept += 1;
@@ -194,7 +203,7 @@ const toItem = (row, boards) => ({
   source: (boards.find((b) => b.id === row.source) || {}).label || null,
   category: row.category,
   url: row.url,
-  postedOn: row.posted_on ? new Date(row.posted_on).toISOString().slice(0, 10) : null,
+  postedOn: row.posted_known && row.posted_on ? new Date(row.posted_on).toISOString().slice(0, 10) : null,
   pinned: row.pinned,
 });
 
@@ -217,9 +226,17 @@ async function campusBoard(key) {
   } else if (Date.now() - last > STALE_MS) {
     background = refreshCampus(key).catch((err) => console.warn('[campus] refresh failed:', err.message));
   }
+  // Newest first by article number. A notice without a known date is placed by its number:
+  // anything numbered below the oldest notice posted in the last six months is older than that.
   const rows = await db.query(
-    `SELECT * FROM campus_items WHERE campus = $1 ORDER BY posted_on DESC NULLS LAST, first_seen DESC LIMIT 120`,
-    [key]
+    `WITH recent AS (
+       SELECT MIN(article::bigint) AS first FROM campus_items
+        WHERE campus = $1 AND posted_known AND posted_on >= current_date - $2::int
+     )
+     SELECT campus_items.* FROM campus_items, recent
+      WHERE campus = $1 AND (recent.first IS NULL OR article::bigint >= recent.first)
+      ORDER BY article::bigint DESC LIMIT 120`,
+    [key, MAX_AGE_DAYS]
   );
   // Some titles are still in Korean: the next batch is translated behind this answer.
   if (!background && rows.rows.some((row) => !row.described)) {

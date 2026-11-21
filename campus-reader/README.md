@@ -1,6 +1,6 @@
 # Campus reader
 
-Reads the universities' notice boards every 3 hours and sends the notices to the API, which translates and stores them for the Campus tab. It runs as a free Cloudflare Worker.
+Reads the universities' notice boards every hour and sends the notices to the API, which translates and stores them for the Campus tab. It runs as a free Cloudflare Worker.
 
 ## Why it doesn't run inside the API
 
@@ -52,7 +52,7 @@ You need Node 22 and the Cloudflare account that holds preplitai.com. Run the co
    npm --prefix campus-reader/worker run key
    ```
 
-The Worker runs at 17 minutes past every third hour (UTC), so the first run comes within 3 hours. Its output (`read ajou-oia: 13 notices` … `sent: 56 notices from 4 boards`) appears in the Cloudflare dashboard under Workers & Pages → `preplit-campus-reader` → Observability → Logs, or live with:
+The Worker runs at 17 minutes past every hour, so the first run comes within the hour. Its output (`read ajou-oia: 13 notices` … `sent: 56 notices from 4 boards`) appears in the Cloudflare dashboard under Workers & Pages → `preplit-campus-reader` → Observability → Logs, or live with:
 
 ```bash
 npm --prefix campus-reader/worker run logs

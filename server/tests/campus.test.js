@@ -28,11 +28,15 @@ const notice = (no, title, { pinned = false, date = '2026-11-10', cate = 'Genera
 
 let siteDown = false;
 const fetched = [];
+/** How many board lists were read (not counting a notice's own page). */
+const listReads = () => fetched.filter((url) => !url.includes('mode=view')).length;
 const realFetch = global.fetch;
 global.fetch = async (url, options) => {
   if (typeof url === 'string' && url.includes('ajou.ac.kr')) {
     fetched.push(url);
     if (siteDown) return new Response('down', { status: 503 });
+    // A notice's own page, read for its posting date on a board whose list shows another date.
+    if (url.includes('mode=view')) return new Response('<meta property="article:published_time" content="2026-11-03T09:00:00Z"/><p>작성일 2026-11-03</p>', { status: 200 });
     const page = url.includes('/oia/')
       ? notice(101, '2026 Spring Semester Tuition Payment &amp; Visa Extension Guide', { pinned: true }) + notice(102, '외국인 유학생 근로장학생 모집', { date: '2026-11-12', cate: 'Scholarship' })
       : url.includes('scholarship') ? notice(201, '2027학년도 1학기 국가장학금 신청 안내') : notice(301 + fetched.length, 'Library closed on Sunday');
@@ -62,7 +66,7 @@ require.cache[llmPath].exports = {
 const app = require('../app');
 const db = require('../db/database');
 const { campusFor } = require('../services/campusFeed');
-const { parseBoard } = require('../services/campusBoards');
+const { parseBoard, postedOnPage } = require('../services/campusBoards');
 
 let server;
 let base;
@@ -100,11 +104,18 @@ async function student(email, university, name = 'Linh Tran') {
 }
 
 test('a board page becomes notices with their link, date and whether they are pinned', () => {
-  const board = { id: 'ajou-oia', url: 'https://www.ajou.ac.kr/oia/notice/notice.do' };
+  const board = { id: 'ajou-notice', url: 'https://www.ajou.ac.kr/kr/ajou/notice.do' };
   const items = parseBoard(notice(7, 'A &amp; B', { pinned: true }) + notice(7, 'A &amp; B') + notice(8, '둘째', { date: '26.11.01' }), board);
   assert.equal(items.length, 2, 'the same notice listed twice is one notice');
-  assert.deepEqual(items[0], { source: 'ajou-oia', article: '7', title: 'A & B', category: 'General', url: board.url + '?mode=view&articleNo=7', postedOn: '2026-11-10', pinned: true });
+  assert.deepEqual(items[0], { source: 'ajou-notice', article: '7', title: 'A & B', category: 'General', url: board.url + '?mode=view&articleNo=7', postedOn: '2026-11-10', pinned: true });
   assert.equal(items[1].postedOn, '2026-11-01');
+
+  // The international office lists a deadline or a "pinned until" date, never the posting date.
+  const oia = { id: 'ajou-oia', url: 'https://www.ajou.ac.kr/oia/notice/notice.do', listDate: 'until' };
+  assert.equal(parseBoard(notice(9, 'Credit transfer guide', { pinned: true, date: '2030-06-30' }), oia)[0].postedOn, null);
+  assert.equal(postedOnPage('<meta property="article:published_time" content="2026-11-01T20:51:00Z"/>'), '2026-11-01');
+  assert.equal(postedOnPage('<dt>작성일</dt> <dd>2026.10.28</dd>'), '2026-10-28');
+  assert.equal(postedOnPage('<p>no date here</p>'), null);
   assert.equal(campusFor('Ajou University').key, 'ajou');
   assert.equal(campusFor('아주대학교').key, 'ajou');
   assert.equal(campusFor('Hanyang University'), null);
@@ -117,7 +128,7 @@ test('a student at a connected campus gets its board, in English, without saying
   assert.equal(res.json.connected, true);
   assert.equal(res.json.campus.name, 'Ajou University');
   assert.ok(res.json.campus.links.some((link) => link.url.includes('eclass2')));
-  assert.equal(fetched.length, 4, 'each board was read once');
+  assert.equal(listReads(), 4, 'each board was read once');
 
   const byTitle = Object.fromEntries(res.json.items.map((item) => [item.title, item]));
   const job = byTitle['Work-study students wanted (international students)'];
@@ -132,7 +143,7 @@ test('a student at a connected campus gets its board, in English, without saying
   assert.equal(visa.pinned, true);
 
   await call('GET', '/campus', { token });
-  assert.equal(fetched.length, 4, 'asking again soon does not read the university\'s site again');
+  assert.equal(listReads(), 4, 'asking again soon does not read the university\'s site again');
 });
 
 test('a campus that is not set up says so, and a site that is down is not hidden', async () => {
@@ -196,15 +207,60 @@ test('the campus reader reads every board one at a time and sends them in with i
   const { sendCampus } = require('../services/campusSend');
   process.env.CAMPUS_INGEST_KEY = 'reader-key-for-the-tests-0123456789';
   try {
-    const before = fetched.length;
+    const before = listReads();
     const lines = [];
     const sent = await sendCampus('ajou', { target: base + '/campus/ingest', key: process.env.CAMPUS_INGEST_KEY, log: (line) => lines.push(line) });
-    assert.equal(fetched.length - before, 4, 'each board read once');
+    assert.equal(listReads() - before, 4, 'each board read once');
+    assert.ok(fetched.some((url) => url.includes('/oia/') && url.includes('mode=view')), 'the international office\'s notices were dated from their own pages');
+    assert.ok(fetched.some((url) => url.includes('articleLimit=30')), 'a page of 30 notices per board');
     assert.equal(sent.boards, 4);
     assert.ok(sent.notices >= 4);
     assert.ok(lines.some((line) => line.includes('sent:')));
     await assert.rejects(sendCampus('ajou', { target: base + '/campus/ingest', key: 'wrong', log: () => {} }), /401/);
     await assert.rejects(sendCampus('ajou', { target: base + '/campus/ingest', log: () => {} }), /not set/);
+  } finally {
+    delete process.env.CAMPUS_INGEST_KEY;
+  }
+});
+
+test('the board is newest first, like the university lists it, with nothing older than six months', async () => {
+  process.env.CAMPUS_INGEST_KEY = 'reader-key-for-the-tests-0123456789';
+  try {
+    await db.query("DELETE FROM campus_items WHERE campus = 'ajou'");
+    const day = (ago) => new Date(Date.now() - ago * 86400000).toISOString().slice(0, 10);
+    const oia = 'https://www.ajou.ac.kr/oia/notice/notice.do';
+    const kr = 'https://www.ajou.ac.kr/kr/ajou/notice.do';
+    const sch = 'https://www.ajou.ac.kr/kr/ajou/notice_scholarship.do';
+    const item = (url, article, title, postedOn, pinned = false) => ({ article: String(article), title, url: `${url}?mode=view&articleNo=${article}`, postedOn, pinned });
+    const send = (boards) => realFetch(base + '/campus/ingest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.CAMPUS_INGEST_KEY}` },
+      body: JSON.stringify({ campus: 'ajou', boards }),
+    });
+    await send([
+      { id: 'ajou-notice', items: [item(kr, 1000, 'Old notice', day(400), true), item(kr, 2000, 'Ten days ago', day(10)), item(kr, 3000, 'Today', day(0))] },
+      { id: 'ajou-oia', items: [item(oia, 1500, 'Old office notice', null, true), item(oia, 2500, 'Office notice', null)] },
+      { id: 'ajou-scholarship', items: [item(sch, 2200, 'Scholarship', day(3), true)] },
+    ]);
+    // A row stored before dates were checked keeps whatever the list showed, a deadline perhaps.
+    await db.query(
+      `INSERT INTO campus_items (campus, source, article, title, url, posted_on) VALUES ('ajou', 'ajou-oia', '2600', 'Stored earlier', $1, '2030-06-30')`,
+      [`${oia}?mode=view&articleNo=2600`]
+    );
+
+    const token = await student('order@example.com', 'Ajou University');
+    let items = (await call('GET', '/campus', { token })).json.items;
+    const byArticle = (list) => list.map((i) => /articleNo=(\d+)/.exec(i.url)[1]);
+    assert.deepEqual(byArticle(items), ['3000', '2600', '2500', '2200', '2000'], 'newest first; nothing posted before six months ago');
+    assert.equal(items.find((i) => i.url.endsWith('=2500')).postedOn, null, 'no date is shown that is not the posting date');
+    assert.equal(items.find((i) => i.url.endsWith('=2600')).postedOn, null, 'a deadline stored before is not shown as the date');
+    assert.equal(items.find((i) => i.url.endsWith('=2200')).postedOn, day(3));
+
+    // A date read from the notice's own page is kept when a later read has none.
+    await send([{ id: 'ajou-oia', items: [item(oia, 2500, 'Office notice', day(5))] }]);
+    await send([{ id: 'ajou-oia', items: [item(oia, 2500, 'Office notice', null)] }]);
+    items = (await call('GET', '/campus', { token })).json.items;
+    assert.equal(items.find((i) => i.url.endsWith('=2500')).postedOn, day(5));
   } finally {
     delete process.env.CAMPUS_INGEST_KEY;
   }
