@@ -41,8 +41,9 @@ export function useCampus() {
     queryKey: ["campus"],
     queryFn: () => request<CampusBoard>("/campus"),
     staleTime: 5 * 60_000,
-    // While Juno is still translating titles, look again every few seconds.
-    refetchInterval: (query) => (query.state.data?.connected && query.state.data.translating ? 6000 : false),
+    // While Juno is still translating titles, look again every few seconds; otherwise every
+    // 30 minutes while the app is open, as often as the campus reader brings new notices.
+    refetchInterval: (query) => (query.state.data?.connected && query.state.data.translating ? 6000 : 30 * 60_000),
   });
 }
 

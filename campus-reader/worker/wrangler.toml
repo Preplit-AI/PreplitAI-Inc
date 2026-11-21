@@ -8,8 +8,8 @@ workers_dev = false
 preview_urls = false
 
 [triggers]
-# Every hour, at 17 past.
-crons = ["17 * * * *"]
+# Every 30 minutes, at 17 and 47 past.
+crons = ["17,47 * * * *"]
 
 [vars]
 CAMPUS_INGEST_URL = "https://www.preplitai.com/api/campus/ingest"

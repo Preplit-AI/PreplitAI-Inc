@@ -14,7 +14,8 @@ const { CAMPUSES, parseBoard, readBoard } = require('./campusBoards');
  * set up below before it appears; a student at any other university is told
  * plainly that their campus is not connected yet.
  *
- * The boards are read at most once an hour, a page of 30 each. The board is
+ * The campus reader sends the boards every 30 minutes (read here at most once
+ * an hour when there is no reader), a page of 30 each. The board is
  * shown newest first, as the university's boards list it: by article number,
  * which Ajou's site gives out in posting order across all its boards. Notices
  * posted more than six months ago are left out.

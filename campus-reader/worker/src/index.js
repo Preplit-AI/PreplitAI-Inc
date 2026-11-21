@@ -1,7 +1,7 @@
 /**
  * The campus reader on Cloudflare. Ajou's website refuses Amazon and Microsoft
  * (where the API and GitHub run) but answers Cloudflare, so the boards are read
- * here every hour and sent to the API. The reading and sending code is the
+ * here every 30 minutes and sent to the API. The reading and sending code is the
  * server's own (server/services/campusSend.js); Wrangler bundles it in.
  */
 import campusSend from "../../../server/services/campusSend.js";
